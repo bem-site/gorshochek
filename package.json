@@ -1,0 +1,49 @@
+  {
+  "name": "bem-site-builder-core",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bem-site/snapshot-master.git"
+  },
+  "author": "Andrey Kuznetsov <andrey.kuznetsov48@yandex.ua> (http://github.com/tormozz48)",
+  "maintainers": [
+    "Andrey Kuznetsov <andrey.kuznetsov48@yandex.ua> (http://github.com/tormozz48)"
+  ],
+  "contributors": [
+    "Andrey Kuznetsov <andrey.kuznetsov48@yandex.ua> (http://github.com/tormozz48)",
+    "Nikolay Ilchenko <tavria@yandex-team.ru> (http://github.com/tavriaforever)",
+    "Gela Konstantinova <gela-d@yandex-team.ru> (http://github.com/gela-d)"
+  ],
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "dependencies": {
+    "bem-site-logger": "^0.0.x",
+    "fs-extra": "^0.18.x",
+    "inherit": "^2.2.x",
+    "lodash": "^3.1.x",
+    "moment": "^2.9.0",
+    "node-uuid": "~1.4.x",
+    "sha1": "~1.1.x",
+    "vow": "~0.4.x",
+    "vow-node": "^0.2.x"
+  },
+  "devDependencies": {
+    "mocha": "~2.2.x",
+    "mocha-lcov-reporter": "0.0.x",
+    "should": "~5.2.x",
+    "istanbul": "^0.3.x",
+    "jshint": "~2.7.x",
+    "jscs": "^1.11.x"
+  },
+  "scripts": {
+    "mocha": "NODE_ENV=testing node_modules/.bin/mocha",
+    "istanbul": "istanbul cover ./node_modules/mocha/bin/_mocha",
+    "codestyle": "node_modules/.bin/jshint . && node_modules/.bin/jscs -c .jscs.js .",
+    "cover": "istanbul cover _mocha",
+    "coveralls": "npm install coveralls && npm run cover && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
+    "test": "npm run coveralls"
+  },
+  "readmeFilename": "README.md",
+  "license": "MPL-2.0"
+}
