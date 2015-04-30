@@ -7,7 +7,7 @@ var fs = require('fs'),
 module.exports = inherit({
 
     _CONF: {
-        FOLDER: 'builder',
+        FOLDER: '.builder',
         FILE: 'make.js'
     },
 
@@ -20,6 +20,7 @@ module.exports = inherit({
     _tasks: undefined,
 
     __constructor: function (basePath) {
+        basePath = basePath || './';
         this._logger = Logger.createLogger(module);
 
         this._logger.info('start to initialize builder configuration from configuration file');
@@ -37,7 +38,7 @@ module.exports = inherit({
         }
 
         try {
-            config = require(configFilePath);
+            config = require(path.resolve(configFilePath));
         } catch (error) {
             errorMessage = util.format(
                 'Configuration file ./%s/%s can not be loaded.', this._CONF.FOLDER, this._CONF.FILE);
@@ -55,51 +56,102 @@ module.exports = inherit({
         this._logger.info('builder configuration has been initialized successfully');
     },
 
+    /**
+     * Sets array of given languages
+     * @param {Object} config - configuration object
+     * @returns {exports}
+     * @private
+     */
     _setLanguages: function (config) {
         this._languages = config.languages || ['en'];
         this._logger.debug('config: languages = %s', this._languages);
         return this;
     },
 
+    /**
+     * Sets logger settings
+     * @param {Object} config - configuration object
+     * @returns {exports}
+     * @private
+     */
     _setLoggerSettings: function (config) {
         this._loggerSettings = config.logger || { level: 'debug' };
         this._logger.debug('config: logLevel = %s', this._loggerSettings.level);
         return this;
     },
 
+    /**
+     * Sets path to model.json file
+     * @param {Object} config - configuration object
+     * @returns {exports}
+     * @private
+     */
     _setModelFilePath: function (config) {
         this._modelFilePath = config.modelFilePath || './model/model.json';
         this._logger.debug('config: model file path = %s', this._modelFilePath);
         return this;
     },
 
+    /**
+     * Sets path to destination folder
+     * @param {Object} config - configuration object
+     * @returns {exports}
+     * @private
+     */
     _setDestinationDirPath: function (config) {
         this._destinationDirPath = config.destDir || './data';
         this._logger.debug('config: destination dir path = %s', this._destinationDirPath);
         return this;
     },
 
+    /**
+     * Sets tasks for execution
+     * @param {Object} config - configuration object
+     * @returns {exports}
+     * @private
+     */
     _setTasks: function (config) {
         this._tasks = config.tasks || [];
         return this;
     },
 
+    /**
+     * Returns array with languages
+     * @returns {Array}
+     */
     getLanguages: function () {
-        return this;
+        return this._languages;
     },
 
+    /**
+     * Returns settings for logger
+     * @returns {Object}
+     */
     getLoggerSettings: function () {
         return this._loggerSettings;
     },
 
+    /**
+     * Returns path to model.json file
+     * @returns {String}
+     */
     getModelFilePath: function () {
         return this._modelFilePath;
     },
 
+    /**
+     * Returns destination folder path
+     * This folder will contain itself all build results
+     * @returns {String}
+     */
     getDestinationDirPath: function () {
         return this._destinationDirPath;
     },
 
+    /**
+     * Returns array of tasks
+     * @returns {Array}
+     */
     getTasks: function () {
         return this._tasks;
     }
