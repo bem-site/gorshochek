@@ -26,22 +26,14 @@ module.exports = inherit({
         this._logger.info('start to initialize builder configuration from configuration file');
 
         var configFilePath = path.join(basePath, this._CONF.FOLDER, this._CONF.FILE),
-            doesConfigurationFileExists = fs.existsSync(configFilePath),
             errorMessage,
             config;
-
-        if (!doesConfigurationFileExists) {
-            errorMessage = util.format(
-                'Configuration file ./%s/%s not found.', this._CONF.FOLDER, this._CONF.FILE);
-            this._logger.error(errorMessage);
-            throw new Error(errorMessage);
-        }
 
         try {
             config = require(path.resolve(configFilePath));
         } catch (error) {
             errorMessage = util.format(
-                'Configuration file ./%s/%s can not be loaded.', this._CONF.FOLDER, this._CONF.FILE);
+                'Configuration file ./%s/%s not found or invalid.', this._CONF.FOLDER, this._CONF.FILE);
             this._logger.error(errorMessage);
             throw new Error(errorMessage);
         }
