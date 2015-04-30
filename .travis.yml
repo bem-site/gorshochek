@@ -1,0 +1,7 @@
+language: node_js
+node_js:
+  - "0.10"
+notifications:
+  email:
+    - tormozz48@gmail.com
+    - yndx.tavria@yandex.ru
