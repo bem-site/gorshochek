@@ -6,14 +6,25 @@ var vow = require('vow'),
 module.exports = inherit({
     _config: undefined,
     _logger: undefined,
+    _tasks: undefined,
 
+    /**
+     * Initialize core builder module
+     * @returns {exports}
+     */
     init: function () {
         this._config = new Config('./');
         this._logger = Logger.setOptions(this._config.getLoggerSettings()).createLogger(module);
 
-        this._config.getTasks().forEach(function (task) {
-            task[0].init(this._config, task[1]);
+        if (!this._config.getTasks().length) {
+            this._tasks = [];
+        }
+
+        this._tasks = this._config.getTasks().map(function (task) {
+            return new task[0](this._config, task[1]);
         }, this);
+
+        return this;
     },
 
     /**
@@ -44,8 +55,8 @@ module.exports = inherit({
      */
     run: function () {
         this._logger.info('-- START BUILD DATA --');
-        return this._config.getTasks().reduce(function (prev, task) {
-            return prev.then(task[0].run);
+        return this._tasks.reduce(function (prev, task) {
+            return prev.then(task.run.bind(task));
         }, vow.resolve())
             .then(this._onSuccess.bind(this))
             .fail(this._onError.bind(this));
