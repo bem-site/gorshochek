@@ -17,3 +17,4 @@ data
 cache
 model
 .builder
+launcher.js
