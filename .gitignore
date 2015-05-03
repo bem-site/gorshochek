@@ -15,6 +15,5 @@ node_modules
 coverage
 data
 cache
-model
 .builder
 launcher.js
