@@ -55,14 +55,14 @@ describe('Config', function () {
                 var r = config._setModelFilePath({ modelFilePath: './model/model1.json' });
                 r.should.be.instanceOf(Config);
                 config.getModelFilePath().should.be.instanceOf(String);
-                config.getModelFilePath().should.equal('./model/model1.json');
+                config.getModelFilePath().should.equal(path.resolve('./model/model1.json'));
             });
 
             it('should set with default value', function () {
                 var r = config._setModelFilePath({});
                 r.should.be.instanceOf(Config);
                 config.getModelFilePath().should.be.instanceOf(String);
-                config.getModelFilePath().should.equal('./model/model.json');
+                config.getModelFilePath().should.equal(path.resolve('./model/model.json'));
             });
         });
 
@@ -71,14 +71,14 @@ describe('Config', function () {
                 var r = config._setDestinationDirPath({ destDir: './data1' });
                 r.should.be.instanceOf(Config);
                 config.getDestinationDirPath().should.be.instanceOf(String);
-                config.getDestinationDirPath().should.equal('./data1');
+                config.getDestinationDirPath().should.equal(path.resolve('./data1'));
             });
 
             it('should set with default value', function () {
                 var r = config._setDestinationDirPath({});
                 r.should.be.instanceOf(Config);
                 config.getDestinationDirPath().should.be.instanceOf(String);
-                config.getDestinationDirPath().should.equal('./data');
+                config.getDestinationDirPath().should.equal(path.resolve('./data'));
             });
         });
 
@@ -119,12 +119,12 @@ describe('Config', function () {
 
         it('should return model file path', function () {
             config.getModelFilePath().should.be.instanceOf(String);
-            config.getModelFilePath().should.equal('./model/model.json');
+            config.getModelFilePath().should.equal(path.resolve('./model/model.json'));
         });
 
         it('should return destination folder path', function () {
             config.getDestinationDirPath().should.be.instanceOf(String);
-            config.getDestinationDirPath().should.equal('./data');
+            config.getDestinationDirPath().should.equal(path.resolve('./data'));
         });
 
         it('should return task objects', function () {
