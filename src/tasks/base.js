@@ -1,4 +1,5 @@
-var inherit = require('inherit'),
+var vow = require('vow'),
+    inherit = require('inherit'),
     Logger = require('bem-site-logger');
 
 module.exports = inherit({
@@ -38,5 +39,6 @@ module.exports = inherit({
 
     run: function () {
         // TODO implement in inheritances
+        return vow.resolve(true);
     }
 });
