@@ -28,7 +28,7 @@ module.exports = inherit(Base, {
      */
     run: function () {
         var newModelFilePath = path.resolve(this.getBaseConfig().getModelFilePath()),
-            oldModelFilePath = path.resolve(this.getBaseConfig().getDestinationDirPath(), 'model.json'),
+            oldModelFilePath = path.resolve(this.getBaseConfig().getCacheDirPath, 'model.json'),
             newModel,
             oldModel;
 
