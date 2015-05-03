@@ -19,35 +19,22 @@ module.exports = inherit(Base, {
      * @returns {string} - name of task
      */
     getName: function () {
-        return 'load model files';
+        return 'save model file';
     },
 
     /**
      * Performs task
      * @returns {Promise}
      */
-    run: function () {
+    run: function (model) {
         this.logger.info('Start to execute "%s" task', this.getName());
 
         var newModelFilePath = this.getBaseConfig().getModelFilePath(),
-            oldModelFilePath = path.join(this.getBaseConfig().getCacheDirPath(), 'model.json'),
-            newModel,
-            oldModel;
+            oldModelFilePath = path.join(this.getBaseConfig().getCacheDirPath(), 'model.json');
 
-        try {
-            newModel = fsExtra.readJSONSync(newModelFilePath);
-        } catch (error) {
-            this.logger.error('Can\'t read or parse model file "%s"', newModelFilePath);
-            throw error;
-        }
-
-        try {
-            oldModel = fsExtra.readJSONSync(oldModelFilePath);
-        } catch (error) {
-            this.logger.warn('Can\'t read or parse model file "%s". New model will be created', newModelFilePath);
-            oldModel = [];
-        }
-
-        return vow.resolve({ newModel: newModel, oldModel: oldModel });
+        this.logger.debug('Copy new model file from %s to %s', newModelFilePath, oldModelFilePath);
+        fsExtra.copySync(newModelFilePath, oldModelFilePath);
+        return vow.resolve(model);
     }
 });
+
