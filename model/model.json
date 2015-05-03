@@ -1,0 +1,58 @@
+[
+  {
+    "url": "/",
+    "oldUrls": [],
+    "view": "post",
+    "ru": {
+      "published": true,
+      "title": "Лего",
+      "createDate": null,
+      "authors": [],
+      "translators": [],
+      "tags": [],
+      "sourceUrl": "https://github.yandex-team.ru/lego/lego-site/tree/master/content/index/index.ru.md"
+    }
+  },
+  {
+    "url": "/roadmap",
+    "oldUrls": [],
+    "view": "post",
+    "ru": {
+      "published": true,
+      "title": "Roadmap",
+      "createDate": null,
+      "authors": [],
+      "translators": [],
+      "tags": [],
+      "sourceUrl": "https://github.yandex-team.ru/lego/lego-site/tree/master/content/roadmap/roadmap.ru.md"
+    }
+  },
+  {
+    "url": "/manifest",
+    "oldUrls": [],
+    "view": "post",
+    "ru": {
+      "published": true,
+      "title": "Манифест Лего",
+      "createDate": null,
+      "authors": [],
+      "translators": [],
+      "tags": [],
+      "sourceUrl": "https://github.yandex-team.ru/lego/manifest/blob/master/README.md"
+    }
+  },
+  {
+    "url": "/project-stub",
+    "oldUrls": [],
+    "view": "post",
+    "ru": {
+      "published": true,
+      "title": "Project Stub",
+      "createDate": null,
+      "authors": [],
+      "translators": [],
+      "tags": [],
+      "sourceUrl": "https://github.yandex-team.ru/project-stub/generator-project-stub/blob/master/README.md"
+    }
+  }
+]
