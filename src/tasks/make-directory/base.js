@@ -2,7 +2,7 @@ var path = require('path'),
     vow = require('vow'),
     inherit = require('inherit'),
     fsExtra = require('fs-extra'),
-    Base = require('./base');
+    Base = require('../base');
 
 module.exports = inherit(Base, {
 
@@ -19,7 +19,11 @@ module.exports = inherit(Base, {
      * @returns {string} - name of task
      */
     getName: function () {
-        return 'make destination directory';
+        return 'make base directory';
+    },
+
+    getFolderPath: function () {
+        return path.resolve('./');
     },
 
     /**
@@ -27,13 +31,9 @@ module.exports = inherit(Base, {
      * @returns {Promise}
      */
     run: function () {
-        var dir;
-
         this.logger.info('Start to execute "%s" task', this.getName());
 
-        dir = this.getBaseConfig().getDestinationDirPath();
-        dir = path.resolve(dir);
-
+        var dir = this.getFolderPath();
         this.logger.debug('Ensure that directory "%s" exists. Otherwise it will be created', dir);
 
         fsExtra.ensureDirSync(dir);
