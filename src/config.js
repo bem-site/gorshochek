@@ -128,7 +128,7 @@ module.exports = inherit({
      * @returns {String}
      */
     getModelFilePath: function () {
-        return this._modelFilePath;
+        return path.resolve(this._modelFilePath);
     },
 
     /**
@@ -137,7 +137,15 @@ module.exports = inherit({
      * @returns {String}
      */
     getDestinationDirPath: function () {
-        return this._destinationDirPath;
+        return path.resolve(this._destinationDirPath);
+    },
+
+    /**
+     * Returns path to cache directory
+     * @returns {*|String}
+     */
+    getCacheDirPath: function () {
+        return path.resolve('./cache');
     },
 
     /**
