@@ -1,4 +1,4 @@
-  {
+{
   "name": "bem-site-builder-core",
   "version": "0.0.1",
   "repository": {
@@ -19,6 +19,8 @@
   },
   "dependencies": {
     "bem-site-logger": "^0.0.x",
+    "deep-diff": "^0.3.2",
+    "deep-extend": "^0.3.3",
     "fs-extra": "^0.18.x",
     "inherit": "^2.2.x",
     "lodash": "^3.1.x",
