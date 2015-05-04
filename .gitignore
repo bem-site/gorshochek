@@ -17,3 +17,5 @@ data
 cache
 .builder
 launcher.js
+lib
+test/babelhook-compiled*

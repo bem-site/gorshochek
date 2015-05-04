@@ -31,20 +31,20 @@
     "vow-node": "^0.2.x"
   },
   "devDependencies": {
+    "babel": "^5.2.9",
+    "istanbul": "^0.3.x",
+    "jscs": "^1.11.x",
+    "jshint": "~2.7.x",
     "mocha": "~2.2.x",
     "mocha-lcov-reporter": "0.0.x",
-    "should": "~5.2.x",
-    "istanbul": "^0.3.x",
-    "jshint": "~2.7.x",
-    "jscs": "^1.11.x"
+    "should": "~5.2.x"
   },
   "scripts": {
-    "mocha": "NODE_ENV=testing node_modules/.bin/mocha",
-    "istanbul": "istanbul cover ./node_modules/mocha/bin/_mocha",
+    "compile": "babel src --out-dir lib",
+    "mocha": "NODE_ENV=testing mocha --require test/babelhook --reporter spec --compilers es6.js:babel/register",
     "codestyle": "node_modules/.bin/jshint . && node_modules/.bin/jscs -c .jscs.js .",
-    "cover": "istanbul cover _mocha",
-    "coveralls": "npm install coveralls && npm run cover && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
-    "test": "npm run coveralls"
+    "cover": "NODE_ENV=testing node --harmony ./node_modules/.bin/istanbul cover _mocha --report lcovonly --hook-run-in-context -- --require test/babelhook --compilers es6.js:babel/register",
+    "test": "npm run cover"
   },
   "readmeFilename": "README.md",
   "license": "MPL-2.0"

@@ -54,5 +54,6 @@ module.exports = {
         requireParamTypes: true
     },
     requireSpaceAfterLineComment: true,
-    disallowNewlineBeforeBlockStatements: true
+    disallowNewlineBeforeBlockStatements: true,
+    esnext: true
 };
