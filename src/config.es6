@@ -13,13 +13,12 @@ export default class Config {
         this.logger.info('start to initialize builder configuration from configuration file');
 
         var configFilePath = path.join(basePath, CONF.FOLDER, CONF.FILE),
-            errorMessage,
             config;
 
         try {
             config = require(path.resolve(configFilePath));
         } catch (error) {
-            errorMessage = 'Configuration file ./${CONF.FOLDER}/${CONF.FILE} not found or invalid.';
+            let errorMessage = 'Configuration file ./${CONF.FOLDER}/${CONF.FILE} not found or invalid.';
             this.logger.error(errorMessage);
             throw new Error(errorMessage);
         }

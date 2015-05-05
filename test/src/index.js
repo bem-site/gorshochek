@@ -35,7 +35,7 @@ describe('builder', function () {
     it('run', function (done) {
         var builder = new Builder();
         builder.init();
-        builder.run().then(function() {
+        builder.run().then(function () {
             // TODO implement more precise test
             done();
         });

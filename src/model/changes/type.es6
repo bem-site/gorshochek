@@ -1,57 +1,50 @@
 'use strict';
 
-var inherit = require('inherit');
-
-module.exports = inherit({
-    _type: undefined,
-    _added: undefined,
-    _modified: undefined,
-    _removed: undefined,
-
-    __constructor: function (type) {
+export default class ChangeType {
+    constructor(type) {
         this._type = type;
         this._added = [];
         this._modified = [];
         this._removed = [];
-    },
+    }
 
     /**
      * Verify if data of given type were modified
      * @returns {Boolean}
      */
-    areModified: function () {
-        return this._added.length || this._modified.length || this._removed.length;
-    },
+    areModified() {
+        return this.added.length || this.modified.length || this.removed.length;
+    }
 
     /**
      * Add new items to added group
      * @param {Object} item
      * @returns {*}
      */
-    addAdded: function (item) {
+    addAdded(item) {
         this._added.push(item);
         return this;
-    },
+    }
 
     /**
      * Add new items to modified group
      * @param {Object} item
      * @returns {*}
      */
-    addModified: function (item) {
+    addModified(item) {
         this._modified.push(item);
         return this;
-    },
+    }
 
     /**
      * Add new items to removed group
      * @param {Object} item
      * @returns {*}
      */
-    addRemoved: function (item) {
+    addRemoved(item) {
         this._removed.push(item);
         return this;
-    },
+    }
 
     /**
      * Returns items of added group
@@ -59,7 +52,7 @@ module.exports = inherit({
      */
     get added() {
         return this._added;
-    },
+    }
 
     /**
      * Returns items of modified group
@@ -67,7 +60,7 @@ module.exports = inherit({
      */
     get modified() {
         return this._modified;
-    },
+    }
 
     /**
      * Returns items of removed group
@@ -76,4 +69,4 @@ module.exports = inherit({
     get removed() {
         return this._removed;
     }
-});
+}

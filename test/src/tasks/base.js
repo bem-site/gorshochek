@@ -1,8 +1,8 @@
 var path = require('path'),
     should = require('should'),
     Logger = require('bem-site-logger'),
-    Config = require('../../../src/config'),
-    TaskBase = require('../../../src/tasks/base.js');
+    Config = require('../../../src/config.es6'),
+    TaskBase = require('../../../src/tasks/base.es6');
 
 describe('TaskBase', function () {
     before(function () {
@@ -18,7 +18,7 @@ describe('TaskBase', function () {
 
         before(function () {
             var config = new Config();
-            task = new TaskBase(config, {});
+            task = new TaskBase(config, {}, { module: module, name: 'test base' });
         });
 
         it('getBaseConfig', function () {
@@ -28,14 +28,6 @@ describe('TaskBase', function () {
         it('getTaskConfig', function () {
             task.getTaskConfig().should.be.instanceOf(Object);
             Object.keys(task.getTaskConfig()).should.have.length(0);
-        });
-
-        it('createLogger', function () {
-            task.createLogger(module).should.instanceOf(Logger);
-        });
-
-        it('getName', function () {
-            task.getName().should.equal('base');
         });
 
         it('run', function (done) {

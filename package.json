@@ -22,11 +22,8 @@
     "deep-diff": "^0.3.2",
     "deep-extend": "^0.3.3",
     "fs-extra": "^0.18.x",
-    "inherit": "^2.2.x",
     "lodash": "^3.1.x",
     "moment": "^2.9.0",
-    "node-uuid": "~1.4.x",
-    "sha1": "~1.1.x",
     "vow": "~0.4.x",
     "vow-node": "^0.2.x"
   },

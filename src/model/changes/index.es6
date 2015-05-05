@@ -1,26 +1,21 @@
 'use strict';
 
-var inherit = require('inherit'),
-    ChangeType = require('./type');
+import ChangeType from './type.es6';
 
-module.exports = inherit({
-    _docs: undefined,
-    _pages: undefined,
-    _libraries: undefined,
-
-    __constructor: function () {
+export default class Changes {
+    constructor() {
         this._docs = new ChangeType('docs');
         this._pages = new ChangeType('pages');
         this._libraries = new ChangeType('libraries');
-    },
+    }
 
     /**
      * Returns modified state of changes
      * @returns {*|Boolean}
      */
-    areModified: function () {
+    areModified() {
         return this.docs.areModified() || this.pages.areModified() || this.libraries.areModified();
-    },
+    }
 
     /**
      * Returns documentation changes
@@ -28,7 +23,7 @@ module.exports = inherit({
      */
     get docs() {
         return this._docs;
-    },
+    }
 
     /**
      * Returns page changes
@@ -36,7 +31,7 @@ module.exports = inherit({
      */
     get pages() {
         return this._pages;
-    },
+    }
 
     /**
      * Returns library changes
@@ -45,4 +40,4 @@ module.exports = inherit({
     get libraries() {
         return this._libraries;
     }
-});
+}

@@ -3,7 +3,8 @@ module.exports = {
         'coverage',
         'node_modules',
         '.*',
-        'test'
+        'test',
+        'lib'
     ],
     requireSpaceAfterKeywords: ['if', 'else', 'for', 'while', 'do', 'switch', 'return', 'try', 'catch'],
     requireSpaceBeforeBlockStatements: true,

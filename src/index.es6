@@ -1,5 +1,4 @@
-var vow = require('vow'),
-    Logger = require('bem-site-logger');
+var Logger = require('bem-site-logger');
 
 import Config from './config.es6';
 
@@ -54,8 +53,8 @@ export default class Builder {
         this._logger.info('-- START BUILD DATA --');
         return this._tasks.reduce((prev, task) => {
             return prev.then(task.run.bind(task));
-        }, vow.resolve())
+        }, Promise.resolve())
             .then(this._onSuccess.bind(this))
-            .fail(this._onError.bind(this));
+            .catch(this._onError.bind(this));
     }
 }
