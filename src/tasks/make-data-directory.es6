@@ -21,6 +21,11 @@ export default class MakeDataDirectory extends Base {
     run() {
         this.beforeRun(this.name);
 
+        /*
+         * Нужно убедиться что директория ./data
+         * (или другая сконфигурированная целевая директория для расположения конечных файлов)
+         * существует. Если она не существует, то нужно ее создать.
+         */
         var dir = this.getBaseConfig().getDestinationDirPath();
         this.logger.debug(`Ensure that directory "${dir}" exists. Otherwise it will be created`);
 
