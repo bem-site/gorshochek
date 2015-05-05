@@ -1,6 +1,6 @@
 var Logger = require('bem-site-logger');
 
-import Config from './config.es6';
+import Config from './config';
 
 export default class Builder {
 

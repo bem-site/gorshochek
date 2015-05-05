@@ -1,7 +1,7 @@
 var path = require('path'),
     should = require('should'),
-    Config = require('../../../src/config.es6'),
-    AnalyzeModel = require('../../../src/tasks/analyze-model.es6');
+    Config = require('../../../lib/config'),
+    AnalyzeModel = require('../../../lib/tasks/analyze-model');
 
 describe('AnalyzeModel', function () {
 

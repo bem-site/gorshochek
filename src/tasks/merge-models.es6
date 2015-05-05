@@ -1,9 +1,9 @@
 var _ = require('lodash'),
     deepDiff = require('deep-diff'),
-    deepExtend = require('deep-extend'),
-    Model = require('../model/model.es6');
+    deepExtend = require('deep-extend');
 
-import Base from './base.es6';
+import Model from '../model/model';
+import Base from './base';
 
 const META = {
     module: _.pick(module, 'filename'),

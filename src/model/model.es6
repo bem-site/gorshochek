@@ -1,27 +1,22 @@
-var inherit = require('inherit'),
-    Changes = require('./changes');
+import Changes from './changes/index';
 
-module.exports = inherit({
+export default class Model {
 
-    _changes: undefined,
-
-    _commonPages: undefined,
-
-    __constructor: function () {
+    constructor() {
         this._changes = new Changes();
         this._commonPages = [];
-    },
+    }
 
-    getChanges: function () {
+    getChanges() {
         return this._changes;
-    },
+    }
 
-    getCommonPages: function () {
+    getCommonPages() {
         return this._commonPages;
-    },
+    }
 
-    setCommonPages: function (pages) {
+    setCommonPages(pages) {
         this._commonPages = pages;
         return this;
     }
-});
+}

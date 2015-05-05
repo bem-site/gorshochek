@@ -1,6 +1,6 @@
 'use strict';
 
-import ChangeType from './type.es6';
+import ChangeType from './type';
 
 export default class Changes {
     constructor() {

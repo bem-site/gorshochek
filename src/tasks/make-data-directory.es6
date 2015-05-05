@@ -2,7 +2,7 @@ var _ = require('lodash'),
     path = require('path'),
     fsExtra = require('fs-extra');
 
-import Base from './base.es6';
+import Base from './base';
 
 const META = {
     module: _.pick(module, 'filename'),

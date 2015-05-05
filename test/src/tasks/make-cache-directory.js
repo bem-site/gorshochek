@@ -2,8 +2,8 @@ var fs = require('fs'),
     path = require('path'),
     should = require('should'),
     fsExtra = require('fs-extra'),
-    Config = require('../../../src/config.es6'),
-    MakeCacheDirectory = require('../../../src/tasks/make-cache-directory.es6');
+    Config = require('../../../lib/config'),
+    MakeCacheDirectory = require('../../../lib/tasks/make-cache-directory');
 
 describe('MakeCacheDirectory', function () {
     before(function () {

@@ -1,6 +1,6 @@
 var path = require('path'),
     should = require('should'),
-    Config = require('../../src/config');
+    Config = require('../../lib/config');
 
 describe('Config', function () {
     before(function () {
