@@ -18,7 +18,7 @@ export default class Config {
         try {
             config = require(path.resolve(configFilePath));
         } catch (error) {
-            let errorMessage = 'Configuration file ./${CONF.FOLDER}/${CONF.FILE} not found or invalid.';
+            let errorMessage = `Configuration file ./${CONF.FOLDER}/${CONF.FILE} not found or invalid.`;
             this.logger.error(errorMessage);
             throw new Error(errorMessage);
         }
@@ -41,7 +41,7 @@ export default class Config {
      */
     _setLanguages(config) {
         this.languages = config.languages || ['en'];
-        this.logger.debug('config: languages = ${this.languages}');
+        this.logger.debug(`config: languages = ${this.languages}`);
         return this;
     }
 
@@ -53,7 +53,7 @@ export default class Config {
      */
     _setLoggerSettings(config) {
         this.loggerSettings = config.logger || { level: 'debug' };
-        this.logger.debug('config: logLevel = ${this.loggerSettings.level}');
+        this.logger.debug(`config: logLevel = ${this.loggerSettings.level}`);
         return this;
     }
 
@@ -65,7 +65,7 @@ export default class Config {
      */
     _setModelFilePath(config) {
         this.modelFilePath = config.modelFilePath || './model/model.json';
-        this.logger.debug('config: model file path = ${this.modelFilePath}');
+        this.logger.debug(`config: model file path = ${this.modelFilePath}`);
         return this;
     }
 
@@ -77,7 +77,7 @@ export default class Config {
      */
     _setDestinationDirPath(config) {
         this.destinationDirPath = config.destDir || './data';
-        this.logger.debug('config: destination dir path = ${this.destinationDirPath}');
+        this.logger.debug(`config: destination dir path = ${this.destinationDirPath}`);
         return this;
     }
 

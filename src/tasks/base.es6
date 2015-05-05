@@ -27,11 +27,11 @@ export default class Base {
     }
 
     afterInitialization() {
-        this.logger.info('Initialize "${this.name}" task successfully');
+        this.logger.info(`Initialize "${this.name}" task successfully`);
     }
 
     beforeRun(name) {
-        this.logger.info('Start to execute "${this.name}" task');
+        this.logger.info(`Start to execute "${this.name}" task`);
     }
 
     run() {

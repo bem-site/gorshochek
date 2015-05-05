@@ -29,14 +29,15 @@ export default class LoadModelFiles extends Base {
         try {
             newModel = fsExtra.readJSONSync(newModelFilePath);
         } catch (error) {
-            this.logger.error('Can\'t read or parse model file "${newModelFilePath}"');
-            throw error;
+            let errorMessage = `Can\'t read or parse model file "${newModelFilePath}"`;
+            this.logger.error(errorMessage);
+            return Promise.reject(new Error(errorMessage));
         }
 
         try {
             oldModel = fsExtra.readJSONSync(oldModelFilePath);
         } catch (error) {
-            this.logger.warn('Can\'t read or parse model file "${newModelFilePath}". New model will be created');
+            this.logger.warn(`Can\'t read or parse model file "${newModelFilePath}". New model will be created`);
             oldModel = [];
         }
 

@@ -26,7 +26,7 @@ export default class AnalyzeModel extends Base {
     }
 
     _analyzePage(page, languages) {
-        this.logger.debug('Analyze page with url: ${page.url}');
+        this.logger.debug(`Analyze page with url: ${page.url}`);
 
         page.oldUrls = page.oldUrls || [];
         page.view = page.view || 'post';
@@ -38,7 +38,7 @@ export default class AnalyzeModel extends Base {
 
             if (!page[language].title) {
                 this.logger.warn(
-                    'Page with url ${page.url} hasn\'t title for language ${language}. It will be hidden.');
+                    `Page with url ${page.url} hasn\'t title for language ${language}. It will be hidden.`);
                 page[language].published = false;
             }
 

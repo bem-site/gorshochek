@@ -58,7 +58,7 @@ export default class MergeModels extends Base {
         removedPages = _.difference(oldPages, newPages);
 
         removedPages.forEach(url => {
-            this.logger.debug('Page with url: ${url} was removed from model');
+            this.logger.debug(`Page with url: ${url} was removed from model`);
             resultModel.getChanges().pages.addRemoved({ url: url });
         }, this);
 
@@ -83,7 +83,7 @@ export default class MergeModels extends Base {
         // add new pages
         resultModel.setCommonPages(
             resultModel.getCommonPages().concat(addedPages.map(url => {
-                this.logger.debug('Page with url: ${url} was added to model');
+                this.logger.debug(`Page with url: ${url} was added to model`);
                 resultModel.getChanges().pages.addAdded({ url: url });
                 return newModel[url];
             }, this))
@@ -103,7 +103,7 @@ export default class MergeModels extends Base {
         // add modified pages
         resultModel.setCommonPages(
             resultModel.getCommonPages().concat(modifiedPages.map(url => {
-                this.logger.debug('Page with url: ${url} was modified');
+                this.logger.debug(`Page with url: ${url} was modified`);
                 resultModel.getChanges().pages.addModified({ url: url });
                 return deepExtend(oldModel[url], newModel[url]);
             }, this))

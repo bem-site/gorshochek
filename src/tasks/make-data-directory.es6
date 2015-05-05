@@ -22,7 +22,7 @@ export default class MakeDataDirectory extends Base {
         this.beforeRun(this.name);
 
         var dir = this.getBaseConfig().getDestinationDirPath();
-        this.logger.debug('Ensure that directory "${dir}" exists. Otherwise it will be created');
+        this.logger.debug(`Ensure that directory "${dir}" exists. Otherwise it will be created`);
 
         fsExtra.ensureDirSync(dir);
         return Promise.resolve();

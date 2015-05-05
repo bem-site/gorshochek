@@ -1,13 +1,15 @@
 var path = require('path'),
     should = require('should'),
+    fsExtra = require('fs-extra'),
     Logger = require('bem-site-logger'),
-    Config = require('../../src/config'),
-    Builder = require('../../src/index');
+    Config = require('../../lib/config'),
+    Builder = require('../../lib/index');
 
 describe('builder', function () {
-
     before(function () {
         process.chdir(path.resolve(__dirname, '../stub'));
+        fsExtra.removeSync('./cache');
+        fsExtra.removeSync('./data');
     });
 
     it('init', function () {
@@ -42,6 +44,8 @@ describe('builder', function () {
     });
 
     after(function () {
+        fsExtra.removeSync('./cache');
+        fsExtra.removeSync('./data');
         process.chdir(path.resolve(__dirname, '../../'));
     });
 });

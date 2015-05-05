@@ -1,8 +1,8 @@
 var path = require('path'),
     should = require('should'),
     Logger = require('bem-site-logger'),
-    Config = require('../../../src/config'),
-    TaskBase = require('../../../src/tasks/base');
+    Config = require('../../../lib/config'),
+    TaskBase = require('../../../lib/tasks/base');
 
 describe('TaskBase', function () {
     before(function () {

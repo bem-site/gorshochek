@@ -1,6 +1,6 @@
 var path = require('path'),
     should = require('should'),
-    Config = require('../../src/config');
+    Config = require('../../lib/config');
 
 describe('Config', function () {
     before(function () {
@@ -8,7 +8,19 @@ describe('Config', function () {
     });
 
     describe('constructor', function () {
+        it('should throw error in case of missing configuration file', function () {
+            (function () { return new Config('../');})
+                .should.throw('Configuration file ./.builder/make.js not found or invalid.')
+        });
 
+        it ('success', function () {
+            var config = new Config();
+            config.languages.should.be.instanceOf(Array);
+            config.loggerSettings.should.be.instanceOf(Object);
+            config.modelFilePath.should.be.instanceOf(String);
+            config.destinationDirPath.should.be.instanceOf(String);
+            config.tasks.should.be.instanceOf(Array);
+        });
     });
 
     describe('setters', function () {
@@ -129,7 +141,7 @@ describe('Config', function () {
 
         it('should return task objects', function () {
             config.getTasks().should.be.instanceOf(Array);
-            config.getTasks().should.have.length(0);
+            config.getTasks().should.have.length(6);
         });
     });
 

@@ -1,5 +1,5 @@
-var ChangesType = require('../../../../src/model/changes/type'),
-    Changes = require('../../../../src/model/changes');
+var ChangesType = require('../../../../lib/model/changes/type'),
+    Changes = require('../../../../lib/model/changes');
 
 describe('model/changes', function () {
     it('should be initialized successfully', function () {

@@ -12,10 +12,6 @@ export default class Builder {
         this._config = new Config('./');
         this._logger = Logger.setOptions(this._config.getLoggerSettings()).createLogger(module);
 
-        if (!this._config.getTasks().length) {
-            this._tasks = [];
-        }
-
         this._tasks = this._config.getTasks().map(task => {
             return new task[ 0 ](this._config, task[ 1 ]);
         }, this);

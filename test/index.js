@@ -1,5 +1,5 @@
 require('./src/config.js');
-//require('./src/index.js');
+require('./src/model/model');
 require('./src/model/changes/index');
 require('./src/model/changes/type');
 require('./src/tasks/base');
@@ -9,3 +9,4 @@ require('./src/tasks/load-model-files');
 require('./src/tasks/merge-models');
 require('./src/tasks/save-model-file');
 require('./src/tasks/analyze-model');
+require('./src/index.js');
