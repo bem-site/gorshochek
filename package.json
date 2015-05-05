@@ -38,9 +38,9 @@
   },
   "scripts": {
     "compile": "babel src --out-dir lib",
-    "mocha": "npm run compile && NODE_ENV=testing mocha --reporter spec",
+    "mocha": "NODE_ENV=testing mocha --require test/babelhook --reporter spec --compilers es6.js:babel/register",
     "codestyle": "node_modules/.bin/jshint . && node_modules/.bin/jscs -c .jscs.js .",
-    "test": "npm run compile && NODE_ENV=testing node --harmony ./node_modules/.bin/istanbul cover _mocha"
+    "test": "NODE_ENV=testing node --harmony ./node_modules/.bin/istanbul cover _mocha --hook-run-in-context -- --require test/babelhook --compilers es6.js:babel/register"
   },
   "readmeFilename": "README.md",
   "license": "MPL-2.0"

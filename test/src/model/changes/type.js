@@ -1,4 +1,4 @@
-var ChangesType = require('../../../../lib/model/changes/type');
+var ChangesType = require('../../../../src/model/changes/type');
 
 describe('model/changes/type', function () {
     it('should be initialized successfully by given type', function () {

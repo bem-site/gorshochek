@@ -2,8 +2,8 @@ var fs = require('fs'),
     path = require('path'),
     should = require('should'),
     fsExtra = require('fs-extra'),
-    Config = require('../../../lib/config'),
-    MakeDataDirectory = require('../../../lib/tasks/make-data-directory');
+    Config = require('../../../src/config'),
+    MakeDataDirectory = require('../../../src/tasks/make-data-directory');
 
 describe('MakeDataDirectory', function () {
     before(function () {

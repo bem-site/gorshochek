@@ -1,8 +1,8 @@
 var path = require('path'),
     should = require('should'),
     Logger = require('bem-site-logger'),
-    Config = require('../../lib/config'),
-    Builder = require('../../lib/index');
+    Config = require('../../src/config'),
+    Builder = require('../../src/index');
 
 describe('builder', function () {
 
