@@ -34,7 +34,7 @@ export default class AnalyzeModel extends Base {
      */
     _analyzePage(page, languages) {
         this.logger.debug(`Analyze page with url: ${page.url}`);
-        
+
         /**
          * В каждом объекте модели есть одно обязательное поле url
          * Для остальных полей нужно провести проверку и выставить значения по умолчанию
