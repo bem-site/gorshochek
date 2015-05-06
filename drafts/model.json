@@ -1,0 +1,5318 @@
+[
+  {
+    "url": "/",
+    "oldUrls": [],
+    "view": "index",
+    "en": {
+      "title": "BEM. Block, Element, Modifier",
+      "published": true
+    },
+    "ru": {
+      "title": "БЭМ. Блок, Элемент, Модификатор",
+      "published": true
+    }
+  },
+  {
+    "url": "/method",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Methodology",
+      "published": true,
+      "createDate": "02-10-2012",
+      "authors": [
+        "harisov-vitaly",
+        "berezhnoy-sergey"
+      ],
+      "translators": [
+        "belov-sergey"
+      ],
+      "tags": [
+        "methodology",
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/method/index/index.en.md"
+    },
+    "ru": {
+      "title": "Методология",
+      "published": true,
+      "createDate": "26-09-2012",
+      "authors": [
+        "harisov-vitaly",
+        "berezhnoy-sergey"
+      ],
+      "tags": [
+        "methodology",
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/method/index/index.ru.md"
+    }
+  },
+  {
+    "url": "/method/definitions",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Definitions",
+      "published": true,
+      "createDate": "03-10-2012",
+      "authors": [
+        "harisov-vitaly",
+        "berezhnoy-sergey"
+      ],
+      "translators": [
+        "grinenko-vladimir"
+      ],
+      "tags": [
+        "methodology",
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/method/definitions/definitions.en.md"
+    },
+    "ru": {
+      "title": "Определения",
+      "published": true,
+      "createDate": "03-10-2012",
+      "authors": [
+        "harisov-vitaly",
+        "berezhnoy-sergey"
+      ],
+      "tags": [
+        "methodology",
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/method/definitions/definitions.ru.md"
+    }
+  },
+  {
+    "url": "/method/filesystem",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Filesystem",
+      "published": true,
+      "createDate": "02-10-2012",
+      "authors": [
+        "harisov-vitaly",
+        "berezhnoy-sergey"
+      ],
+      "translators": [
+        "belov-sergey"
+      ],
+      "tags": [
+        "methodology",
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/method/filesystem/filesystem.en.md"
+    },
+    "ru": {
+      "title": "Организация файловой системы",
+      "published": true,
+      "createDate": "01-10-2012",
+      "authors": [
+        "harisov-vitaly",
+        "berezhnoy-sergey"
+      ],
+      "tags": [
+        "methodology",
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/method/filesystem/filesystem.ru.md"
+    }
+  },
+  {
+    "url": "/method/history",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "History",
+      "published": true,
+      "createDate": "02-10-2012",
+      "authors": [
+        "harisov-vitaly",
+        "berezhnoy-sergey"
+      ],
+      "tags": [
+        "methodology",
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/method/history/history.en.md"
+    },
+    "ru": {
+      "title": "История создания",
+      "published": true,
+      "createDate": "26-09-2012",
+      "authors": [
+        "harisov-vitaly",
+        "berezhnoy-sergey"
+      ],
+      "tags": [
+        "methodology",
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/method/history/history.ru.md"
+    }
+  },
+  {
+    "url": "/tools",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Tools",
+      "published": true,
+      "createDate": "16-01-2014",
+      "authors": [
+        "grinenko-vladimir"
+      ],
+      "tags": [
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/tools/index/index.en.md"
+    },
+    "ru": {
+      "title": "Инструменты",
+      "published": true,
+      "createDate": "16-01-2014",
+      "authors": [
+        "grinenko-vladimir"
+      ],
+      "tags": [
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/tools/index/index.ru.md"
+    }
+  },
+  {
+    "url": "/tools/bem",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "Build",
+      "published": true
+    },
+    "ru": {
+      "title": "Сборка",
+      "published": true
+    }
+  },
+  {
+    "url": "/tools/bem/bem-tools",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "bem-tools",
+      "published": true,
+      "createDate": "17-10-2012",
+      "authors": [
+        "harisov-vitaly"
+      ],
+      "translators": [],
+      "tags": [
+        "bem-tools",
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/index/index.en.md"
+    },
+    "ru": {
+      "title": "bem-tools",
+      "published": true,
+      "createDate": "17-10-2012",
+      "authors": [
+        "harisov-vitaly"
+      ],
+      "translators": [],
+      "tags": [
+        "bem-tools",
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/index/index.ru.md"
+    }
+  },
+  {
+    "url": "/tools/bem/bem-tools/installation",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Installation",
+      "published": true,
+      "createDate": "03-10-2012",
+      "authors": [
+        "alaev-vladimir"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/installation/installation.en.md"
+    },
+    "ru": {
+      "title": "Установка",
+      "published": true,
+      "createDate": "03-10-2012",
+      "authors": [
+        "alaev-vladimir"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/installation/installation.ru.md"
+    }
+  },
+  {
+    "url": "/tools/bem/bem-tools/commands",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Commands",
+      "published": true,
+      "createDate": "19-10-2012",
+      "authors": [
+        "grinenko-vladimir"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/commands/commands.en.md"
+    },
+    "ru": {
+      "title": "Команды",
+      "published": true,
+      "createDate": "19-10-2012",
+      "authors": [
+        "grinenko-vladimir"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/commands/commands.ru.md"
+    }
+  },
+  {
+    "url": "/tools/bem/bem-tools/levels",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Levels",
+      "published": true,
+      "createDate": "03-10-2012",
+      "authors": [
+        "alaev-vladimir"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/levels/levels.en.md"
+    },
+    "ru": {
+      "title": "Уровни переопределения",
+      "published": true,
+      "createDate": "03-10-2012",
+      "authors": [
+        "alaev-vladimir"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/levels/levels.ru.md"
+    }
+  },
+  {
+    "url": "/tools/bem/bem-tools/customization",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Customization",
+      "published": true,
+      "createDate": "03-10-2012",
+      "authors": [
+        "alaev-vladimir"
+      ],
+      "translators": [
+        "varankin-vladimir"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/customization/customization.en.md"
+    },
+    "ru": {
+      "title": "Настройка",
+      "published": true,
+      "createDate": "03-10-2012",
+      "authors": [
+        "alaev-vladimir"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/customization/customization.ru.md"
+    }
+  },
+  {
+    "url": "/tools/bem/bem-tools/tech-modules",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Tech modules",
+      "published": true,
+      "createDate": "03-10-2012",
+      "authors": [
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/tech-modules/tech-modules.en.md"
+    },
+    "ru": {
+      "title": "Модули технологий",
+      "published": true,
+      "createDate": "03-10-2012",
+      "authors": [
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/tech-modules/tech-modules.ru.md"
+    }
+  },
+  {
+    "url": "/tools/bem/bem-tools/api",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "API usage",
+      "published": true,
+      "createDate": "03-10-2012",
+      "authors": [
+        "alaev-vladimir"
+      ],
+      "tags": [
+        "bem-tools",
+        "api"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/api/api.en.md"
+    },
+    "ru": {
+      "title": "Использование через API",
+      "published": true,
+      "createDate": "03-10-2012",
+      "authors": [
+        "alaev-vladimir"
+      ],
+      "tags": [
+        "bem-tools",
+        "api"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/api/api.ru.md"
+    }
+  },
+  {
+    "url": "/tools/bem/bem-tools/creating-subcommands",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Creating subcommands",
+      "published": true,
+      "createDate": "05-09-2013",
+      "authors": [
+        "tatarincev-sergej"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/creating-subcommands/creating-subcommands.en.md"
+    },
+    "ru": {
+      "title": "Создание подкоманд",
+      "published": true,
+      "createDate": "05-09-2013",
+      "authors": [
+        "tatarincev-sergej"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/creating-subcommands/creating-subcommands.ru.md"
+    }
+  },
+  {
+    "url": "/tools/bem/bem-tools/contribute",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Contribute to development",
+      "published": true,
+      "createDate": "03-10-2012",
+      "authors": [
+        "alaev-vladimir"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/contribute/contribute.en.md"
+    },
+    "ru": {
+      "title": "Участие в разработке",
+      "published": true,
+      "createDate": "03-10-2012",
+      "authors": [
+        "alaev-vladimir"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/contribute/contribute.ru.md"
+    }
+  },
+  {
+    "url": "/tools/bem/bem-tools/changelog",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Changelog",
+      "published": true,
+      "createDate": "03-04-2014",
+      "authors": [
+        "alaev-vladimir"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/blob/support-0.8.x-bem-info/ChangeLog.md"
+    },
+    "ru": {
+      "title": "История изменений",
+      "published": true,
+      "createDate": "03-04-2014",
+      "authors": [
+        "alaev-vladimir"
+      ],
+      "translators": [
+        "psianina-iryne"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/blob/russianChangelog/ChangeLog.ru.md"
+    }
+  },
+  {
+    "url": "/tools/bem/autoprefixer",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Autoprefixer",
+      "published": true,
+      "createDate": "13-07-2014",
+      "authors": [
+        "varankin-vladimir"
+      ],
+      "tags": [
+        "css"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools-autoprefixer/blob/master/README.md"
+    },
+    "ru": {
+      "title": "Autoprefixer",
+      "published": true,
+      "createDate": "13-07-2014",
+      "authors": [
+        "varankin-vladimir"
+      ],
+      "tags": [
+        "css"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools-autoprefixer/blob/master/README.ru.md"
+    }
+  },
+  {
+    "url": "/tools/bem/enb-bem",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "enb-bem",
+      "published": true
+    }
+  },
+  {
+    "url": "/tools/bem/enb-bem-examples",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "enb-bem-examples",
+      "published": false
+    },
+    "ru": {
+      "title": "enb-bem-examples",
+      "published": true,
+      "createDate": "07-05-2014",
+      "authors": [
+        "abramov-andrey"
+      ],
+      "tags": [
+        "enb"
+      ],
+      "sourceUrl": "https://github.com/enb-bem/enb-bem-examples/blob/master/README.md"
+    }
+  },
+  {
+    "url": "/tools/bem/enb-bem-techs",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "enb-bem-techs",
+      "published": false
+    },
+    "ru": {
+      "title": "enb-bem-techs",
+      "published": true,
+      "createDate": "23-09-2014",
+      "authors": [
+        "abramov-andrey"
+      ],
+      "tags": [
+        "enb"
+      ],
+      "sourceUrl": "https://github.com/enb-bem/enb-bem-techs/blob/master/README.md"
+    }
+  },
+  {
+    "url": "/tools/bem/enb-bem-specs",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "enb-bem-specs",
+      "published": false
+    },
+    "ru": {
+      "title": "enb-bem-specs",
+      "published": true,
+      "createDate": "12-05-2014",
+      "authors": [
+        "abramov-andrey"
+      ],
+      "sourceUrl": "https://github.com/enb-bem/enb-bem-specs/blob/master/README.md"
+    }
+  },
+  {
+    "url": "/tools/bem/enb-bem-tmpl-specs",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "enb-bem-tmpl-specs",
+      "published": false
+    },
+    "ru": {
+      "title": "enb-bem-tmpl-specs",
+      "published": true,
+      "createDate": "12-05-2014",
+      "authors": [
+        "abramov-andrey"
+      ],
+      "tags": [
+        "enb"
+      ],
+      "sourceUrl": "https://github.com/enb-bem/enb-bem-tmpl-specs/blob/master/README.md"
+    }
+  },
+  {
+    "url": "/tools/bem/enb-bem-docs",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "enb-bem-docs",
+      "published": false
+    },
+    "ru": {
+      "title": "enb-bem-docs",
+      "published": true,
+      "createDate": "12-05-2014",
+      "authors": [
+        "abramov-andrey"
+      ],
+      "tags": [
+        "enb"
+      ],
+      "sourceUrl": "https://github.com/enb-bem/enb-bem-docs/blob/master/README.md"
+    }
+  },
+  {
+    "url": "/tools/bem/enb-xjst",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "enb-xjst",
+      "published": false
+    },
+    "ru": {
+      "title": "enb-xjst",
+      "published": true,
+      "createDate": "12-05-2014",
+      "authors": [
+        "abramov-andrey"
+      ],
+      "tags": [
+        "enb",
+        "xjst"
+      ],
+      "sourceUrl": "https://github.com/enb-bem/enb-xjst/blob/master/README.md"
+    }
+  },
+  {
+    "url": "/tools/bem/enb-bemxjst",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "enb-bemxjst",
+      "published": false
+    },
+    "ru": {
+      "title": "enb-bemxjst",
+      "published": true,
+      "createDate": "12-05-2014",
+      "authors": [
+        "abramov-andrey"
+      ],
+      "tags": [
+        "xjst"
+      ],
+      "sourceUrl": "https://github.com/enb-bem/enb-bemxjst/blob/master/README.md"
+    }
+  },
+  {
+    "url": "/tools/bem/enb-bh",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "enb-bh",
+      "published": false
+    },
+    "ru": {
+      "title": "enb-bh",
+      "published": true,
+      "createDate": "12-05-2014",
+      "authors": [
+        "abramov-andrey"
+      ],
+      "tags": [
+        "bh"
+      ],
+      "sourceUrl": "https://github.com/enb-bem/enb-bh/blob/master/README.md"
+    }
+  },
+  {
+    "url": "/tools/bem/enb-bem-pseudo-levels",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "enb-bem-pseudo-levels",
+      "published": false
+    },
+    "ru": {
+      "title": "enb-bem-pseudo-levels",
+      "published": true,
+      "createDate": "12-05-2014",
+      "authors": [
+        "abramov-andrey"
+      ],
+      "sourceUrl": "https://github.com/enb-bem/enb-bem-pseudo-levels/blob/master/README.md"
+    }
+  },
+  {
+    "url": "/tools/testing",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "Testing",
+      "published": true
+    },
+    "ru": {
+      "title": "Тестирование",
+      "published": true
+    }
+  },
+  {
+    "url": "/tools/testing/gemini",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Gemini",
+      "published": true,
+      "createDate": "27-10-2014",
+      "authors": [
+        "tatarincev-sergej"
+      ],
+      "translators": [],
+      "tags": [
+        "gemini",
+        "testing"
+      ],
+      "sourceUrl": "https://github.com/gemini-testing/gemini/blob/master/README.md"
+    },
+    "ru": {
+      "title": "Gemini",
+      "published": true,
+      "createDate": "27-10-2014",
+      "authors": [
+        "tatarincev-sergej"
+      ],
+      "translators": [],
+      "tags": [
+        "gemini",
+        "testing"
+      ],
+      "sourceUrl": "https://github.com/gemini-testing/gemini/blob/master/README.ru.md"
+    }
+  },
+  {
+    "url": "/tools/testing/gemini/config",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Gemini configuration",
+      "published": true,
+      "createDate": "27-10-2014",
+      "authors": [
+        "tatarincev-sergej"
+      ],
+      "tags": [
+        "gemini",
+        "testing"
+      ],
+      "sourceUrl": "https://github.com/gemini-testing/gemini/blob/master/doc/config.md"
+    },
+    "ru": {
+      "title": "Конфигурация Gemini",
+      "published": true,
+      "createDate": "27-10-2014",
+      "authors": [
+        "tatarincev-sergej"
+      ],
+      "tags": [
+        "gemini",
+        "testing"
+      ],
+      "sourceUrl": "https://github.com/gemini-testing/gemini/blob/master/doc/config.ru.md"
+    }
+  },
+  {
+    "url": "/tools/testing/gemini/testing",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Writing Gemini tests",
+      "published": true,
+      "createDate": "27-10-2014",
+      "authors": [
+        "tatarincev-sergej"
+      ],
+      "tags": [
+        "gemini",
+        "testing"
+      ],
+      "sourceUrl": "https://github.com/gemini-testing/gemini/blob/master/doc/tests.md"
+    },
+    "ru": {
+      "title": "Создание тестов в Gemini",
+      "published": true,
+      "createDate": "27-10-2014",
+      "authors": [
+        "tatarincev-sergej"
+      ],
+      "tags": [
+        "gemini",
+        "testing"
+      ],
+      "sourceUrl": "https://github.com/gemini-testing/gemini/blob/master/doc/tests.ru.md"
+    }
+  },
+  {
+    "url": "/tools/testing/gemini/commands",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Gemini commands",
+      "published": true,
+      "createDate": "27-10-2014",
+      "authors": [
+        "tatarincev-sergej"
+      ],
+      "tags": [
+        "gemini",
+        "testing"
+      ],
+      "sourceUrl": "https://github.com/gemini-testing/gemini/blob/master/doc/commands.md"
+    },
+    "ru": {
+      "title": "Команды для работы с Gemini",
+      "published": true,
+      "createDate": "27-10-2014",
+      "authors": [
+        "tatarincev-sergej"
+      ],
+      "tags": [
+        "gemini",
+        "testing"
+      ],
+      "sourceUrl": "https://github.com/gemini-testing/gemini/blob/master/doc/commands.ru.md"
+    }
+  },
+  {
+    "url": "/tools/testing/gemini/api",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Programmatic API (experimental)",
+      "published": true,
+      "createDate": "27-10-2014",
+      "authors": [
+        "tatarincev-sergej"
+      ],
+      "tags": [
+        "gemini",
+        "testing"
+      ],
+      "sourceUrl": "https://github.com/gemini-testing/gemini/blob/master/doc/programmatic-api.md"
+    },
+    "ru": {
+      "title": "Программный интерфейс Gemini (в разработке)",
+      "published": true,
+      "createDate": "27-10-2014",
+      "authors": [
+        "tatarincev-sergej"
+      ],
+      "tags": [
+        "gemini",
+        "testing"
+      ],
+      "sourceUrl": "https://github.com/gemini-testing/gemini/blob/master/doc/programmatic-api.ru.md"
+    }
+  },
+  {
+    "url": "/tools/testing/html-differ",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "html-differ",
+      "published": true,
+      "createDate": "23-09-2014",
+      "authors": [
+        "gavryushin-evgeny"
+      ],
+      "tags": [
+        "testing"
+      ],
+      "sourceUrl": "https://github.com/bem/html-differ/blob/master/README.md"
+    },
+    "ru": {
+      "title": "html-differ",
+      "published": true,
+      "createDate": "23-09-2014",
+      "authors": [
+        "gavryushin-evgeny"
+      ],
+      "tags": [
+        "testing"
+      ],
+      "sourceUrl": "https://github.com/bem/html-differ/blob/master/README.ru.md"
+    }
+  },
+  {
+    "url": "/tools/optimizers",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "Optimizers",
+      "published": true
+    },
+    "ru": {
+      "title": "Оптимизаторы",
+      "published": true
+    }
+  },
+  {
+    "url": "/tools/optimizers/borschik",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "borschik",
+      "published": true,
+      "createDate": "29-06-2013",
+      "authors": [
+        "androsov-alexey"
+      ],
+      "tags": [
+        "borschik"
+      ],
+      "sourceUrl": "https://github.com/bem/borschik/tree/master/docs/index/index.en.md"
+    },
+    "ru": {
+      "title": "borschik",
+      "published": true,
+      "createDate": "29-06-2013",
+      "authors": [
+        "androsov-alexey"
+      ],
+      "tags": [
+        "borschik"
+      ],
+      "sourceUrl": "https://github.com/bem/borschik/tree/master/docs/index/index.ru.md"
+    }
+  },
+  {
+    "url": "/tools/optimizers/borschik/freeze",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Static resources 'freeze'",
+      "published": true,
+      "createDate": "09-09-2013",
+      "authors": [
+        "androsov-alexey"
+      ],
+      "tags": [
+        "borschik"
+      ],
+      "sourceUrl": "https://github.com/bem/borschik/tree/master/docs/freeze/freeze.en.md"
+    },
+    "ru": {
+      "title": "Заморозка (freeze) статических ресурсов",
+      "published": true,
+      "createDate": "09-09-2013",
+      "authors": [
+        "androsov-alexey"
+      ],
+      "translators": [
+        "baranov-mikhail"
+      ],
+      "tags": [
+        "borschik"
+      ],
+      "sourceUrl": "https://github.com/bem/borschik/blob/master/docs/freeze/freeze.ru.md"
+    }
+  },
+  {
+    "url": "/tools/optimizers/borschik/where-is-my-tech",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Where is my tech",
+      "published": true,
+      "createDate": "02-10-2013",
+      "authors": [
+        "androsov-alexey"
+      ],
+      "tags": [
+        "borschik"
+      ],
+      "sourceUrl": "https://github.com/bem/borschik/tree/master/docs/where-is-my-tech/where-is-my-tech.en.md"
+    },
+    "ru": {
+      "title": "borschik и технологии",
+      "published": true,
+      "createDate": "02-10-2013",
+      "authors": [
+        "androsov-alexey"
+      ],
+      "translators": [
+        "baranov-mikhail"
+      ],
+      "tags": [
+        "borschik"
+      ],
+      "sourceUrl": "https://github.com/bem/borschik/blob/master/docs/where-is-my-tech/where-is-my-tech.ru.md"
+    }
+  },
+  {
+    "url": "/tools/optimizers/borschik/borschik-server",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "borschik-server",
+      "published": true,
+      "createDate": "02-08-2013",
+      "authors": [
+        "androsov-alexey"
+      ],
+      "tags": [
+        "borschik"
+      ],
+      "sourceUrl": "https://github.com/bem/borschik-server/tree/master/README.md"
+    },
+    "ru": {
+      "title": "borschik-server",
+      "published": true,
+      "createDate": "14-08-2013",
+      "authors": [
+        "androsov-alexey"
+      ],
+      "tags": [
+        "borschik"
+      ],
+      "sourceUrl": "https://github.com/bem/borschik-server/tree/master/README.ru.md"
+    }
+  },
+  {
+    "url": "/tools/optimizers/borschik/changelog",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Changelog",
+      "published": true,
+      "createDate": "06-07-2013",
+      "authors": [
+        "androsov-alexey",
+        "belov-sergey"
+      ],
+      "tags": [
+        "borschik"
+      ],
+      "sourceUrl": "https://github.com/bem/borschik/tree/master/CHANGELOG.md"
+    },
+    "ru": {
+      "title": "История изменений",
+      "published": true,
+      "createDate": "03-04-2014",
+      "authors": [
+        "androsov-alexey",
+        "belov-sergey"
+      ],
+      "translators": [
+        "grinenko-vladimir"
+      ],
+      "tags": [
+        "borschik"
+      ],
+      "sourceUrl": "https://github.com/bem/borschik/blob/master/CHANGELOG.ru.md"
+    }
+  },
+  {
+    "url": "/tools/optimizers/borschik/js-include",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "JS include notations",
+      "published": true,
+      "createDate": "08-09-2013",
+      "authors": [
+        "androsov-alexey"
+      ],
+      "tags": [
+        "borschik"
+      ],
+      "sourceUrl": "https://github.com/bem/borschik/tree/master/docs/js-include/js-include.en.md"
+    },
+    "ru": {
+      "title": "Нотация для JS include",
+      "published": true,
+      "createDate": "08-09-2013",
+      "authors": [
+        "androsov-alexey"
+      ],
+      "translators": [
+        "baranov-mikhail"
+      ],
+      "tags": [
+        "borschik"
+      ],
+      "sourceUrl": "https://github.com/bem/borschik/blob/master/docs/js-include/js-include.ru.md"
+    }
+  },
+  {
+    "url": "/tools/optimizers/csso",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "CSSO",
+      "published": true,
+      "createDate": "17-11-2012",
+      "authors": [
+        "harisov-vitaly"
+      ],
+      "translators": [
+        "khachaturov-leonid"
+      ],
+      "tags": [
+        "css"
+      ],
+      "sourceUrl": "https://github.com/css/csso/tree/master/docs/index/index.en.md"
+    },
+    "ru": {
+      "title": "CSSO",
+      "published": true,
+      "createDate": "17-10-2012",
+      "authors": [
+        "harisov-vitaly"
+      ],
+      "tags": [
+        "css"
+      ],
+      "sourceUrl": "https://github.com/css/csso/tree/master/docs/index/index.ru.md"
+    }
+  },
+  {
+    "url": "/tools/optimizers/csso/description",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Description",
+      "published": true,
+      "createDate": "17-10-2012",
+      "authors": [
+        "harisov-vitaly"
+      ],
+      "tags": [
+        "css"
+      ],
+      "sourceUrl": "https://github.com/css/csso/tree/master/docs/description/description.en.md"
+    },
+    "ru": {
+      "title": "Описание",
+      "published": true,
+      "createDate": "17-10-2012",
+      "authors": [
+        "harisov-vitaly"
+      ],
+      "tags": [
+        "css"
+      ],
+      "sourceUrl": "https://github.com/css/csso/tree/master/docs/description/description.ru.md"
+    }
+  },
+  {
+    "url": "/tools/optimizers/csso/install",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Installation",
+      "published": true,
+      "createDate": "17-10-2012",
+      "authors": [
+        "harisov-vitaly"
+      ],
+      "translators": [
+        "khachaturov-leonid"
+      ],
+      "tags": [
+        "css"
+      ],
+      "sourceUrl": "https://github.com/css/csso/tree/master/docs/install/install.en.md"
+    },
+    "ru": {
+      "title": "Установка",
+      "published": true,
+      "createDate": "17-10-2012",
+      "authors": [
+        "harisov-vitaly"
+      ],
+      "tags": [
+        "css"
+      ],
+      "sourceUrl": "https://github.com/css/csso/tree/master/docs/install/install.ru.md"
+    }
+  },
+  {
+    "url": "/tools/optimizers/csso/usage",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Usage",
+      "published": true,
+      "createDate": "17-10-2012",
+      "authors": [
+        "harisov-vitaly"
+      ],
+      "translators": [
+        "khachaturov-leonid"
+      ],
+      "tags": [
+        "css"
+      ],
+      "sourceUrl": "https://github.com/css/csso/tree/master/docs/usage/usage.en.md"
+    },
+    "ru": {
+      "title": "Использование",
+      "published": true,
+      "createDate": "17-10-2012",
+      "authors": [
+        "harisov-vitaly"
+      ],
+      "tags": [
+        "css"
+      ],
+      "sourceUrl": "https://github.com/css/csso/tree/master/docs/usage/usage.ru.md"
+    }
+  },
+  {
+    "url": "/tools/optimizers/svgo",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "SVGO",
+      "published": true
+    },
+    "ru": {
+      "title": "SVGO",
+      "published": true
+    }
+  },
+  {
+    "url": "/tools/optimizers/svgo/svgo",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "SVG Optimizer",
+      "published": true,
+      "createDate": "23-11-2012",
+      "authors": [
+        "belevich-kir"
+      ],
+      "translators": [],
+      "tags": [
+        "svgo"
+      ],
+      "sourceUrl": "https://github.com/svg/svgo/tree/master/README.md"
+    },
+    "ru": {
+      "title": "SVG Optimizer",
+      "published": true,
+      "createDate": "03-12-2012",
+      "authors": [
+        "belevich-kir"
+      ],
+      "tags": [
+        "svgo"
+      ],
+      "sourceUrl": "https://github.com/svg/svgo/tree/master/README.ru.md"
+    }
+  },
+  {
+    "url": "/tools/optimizers/svgo/how-it-works",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "How SVGO works",
+      "published": true,
+      "createDate": "04-12-2012",
+      "authors": [
+        "belevich-kir"
+      ],
+      "tags": [
+        "svgo"
+      ],
+      "sourceUrl": "https://github.com/svg/svgo/tree/master/docs/how-it-works/en.md"
+    },
+    "ru": {
+      "title": "Как работает SVGO",
+      "published": true,
+      "createDate": "04-12-2012",
+      "authors": [
+        "belevich-kir"
+      ],
+      "tags": [
+        "svgo"
+      ],
+      "sourceUrl": "https://github.com/svg/svgo/tree/master/docs/how-it-works/ru.md"
+    }
+  },
+  {
+    "url": "/tools/templating-engines",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "Template engines",
+      "published": true
+    },
+    "ru": {
+      "title": "Шаблонизаторы",
+      "published": true
+    }
+  },
+  {
+    "url": "/tools/templating-engines/xjst",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "XJST",
+      "published": true,
+      "createDate": "02-11-2011",
+      "authors": [
+        "indutny-fedor"
+      ],
+      "tags": [
+        "xjst"
+      ],
+      "sourceUrl": "https://github.com/veged/xjst/tree/master/README.md"
+    },
+    "ru": {
+      "title": "XJST",
+      "published": true,
+      "createDate": "02-11-2011",
+      "authors": [
+        "indutny-fedor"
+      ],
+      "tags": [
+        "xjst"
+      ]
+    }
+  },
+  {
+    "url": "/tools/templating-engines/bemxjst",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BEM-XJST",
+      "published": true,
+      "createDate": "18-04-2013",
+      "authors": [
+        "indutny-fedor"
+      ],
+      "tags": [
+        "xjst"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-xjst/blob/master/README.md"
+    },
+    "ru": {
+      "title": "BEM-XJST",
+      "published": true,
+      "createDate": "18-04-2013",
+      "authors": [
+        "indutny-fedor"
+      ],
+      "tags": [
+        "xjst"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-xjst/blob/master/README.ru.md"
+    }
+  },
+  {
+    "url": "/tools/bem",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "",
+      "published": true
+    },
+    "ru": {
+      "title": "",
+      "published": true
+    }
+  },
+  {
+    "url": "/tools/bem/coa",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "COA",
+      "published": true,
+      "createDate": "16-07-2014",
+      "authors": [
+        "berezhnoy-sergey"
+      ],
+      "tags": [
+        "javascript"
+      ],
+      "sourceUrl": "https://github.com/veged/coa/blob/master/README.md"
+    },
+    "ru": {
+      "title": "COA",
+      "published": true,
+      "createDate": "16-07-2014",
+      "authors": [
+        "berezhnoy-sergey"
+      ],
+      "translators": [
+        "baranov-mikhail"
+      ],
+      "tags": [
+        "javascript"
+      ],
+      "sourceUrl": "https://github.com/veged/coa/blob/master/README.ru.md"
+    }
+  },
+  {
+    "url": "/tools/bem/modules",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "YModules",
+      "published": true,
+      "createDate": "16-07-2014",
+      "authors": [
+        "filatov-dmitry"
+      ],
+      "tags": [
+        "javascript"
+      ],
+      "sourceUrl": "https://github.com/ymaps/modules/blob/master/README.md"
+    },
+    "ru": {
+      "title": "YModules",
+      "published": true,
+      "createDate": "16-07-2014",
+      "authors": [
+        "filatov-dmitry"
+      ],
+      "tags": [
+        "javascript"
+      ],
+      "sourceUrl": "https://github.com/ymaps/modules/blob/master/README.ru.md"
+    }
+  },
+  {
+    "url": "/tools/bem/bower-npm-install",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "bower-npm-install",
+      "published": true,
+      "createDate": "07-05-2014",
+      "authors": [
+        "belov-sergey"
+      ],
+      "tags": [
+        "javascript"
+      ],
+      "sourceUrl": "https://github.com/arikon/bower-npm-install/blob/master/README.md"
+    },
+    "ru": {
+      "title": "bower-npm-install",
+      "published": true,
+      "createDate": "07-05-2014",
+      "authors": [
+        "belov-sergey"
+      ],
+      "tags": [
+        "javascript"
+      ],
+      "sourceUrl": "https://github.com/arikon/bower-npm-install/blob/master/README.ru.md"
+    }
+  },
+  {
+    "url": "/tools/bem/bem-stub",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "generator-bem-stub",
+      "published": true,
+      "createDate": "07-05-2014",
+      "authors": [
+        "gavryushin-evgeny"
+      ],
+      "tags": [
+        "project-stub"
+      ],
+      "sourceUrl": "https://github.com/bem/generator-bem-stub/blob/master/README.md"
+    },
+    "ru": {
+      "title": "generator-bem-stub",
+      "published": true,
+      "createDate": "07-05-2014",
+      "authors": [
+        "gavryushin-evgeny"
+      ],
+      "tags": [
+        "project-stub"
+      ],
+      "sourceUrl": "https://github.com/bem/generator-bem-stub/blob/master/README.ru.md"
+    }
+  },
+  {
+    "url": "/tools/bem/bem-naming",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "bem-naming",
+      "published": true,
+      "createDate": "12-05-2014",
+      "authors": [
+        "abramov-andrey"
+      ],
+      "translators": [
+        "jetpyspayeva-yelena"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-naming/blob/master/README.md"
+    },
+    "ru": {
+      "title": "bem-naming",
+      "published": true,
+      "createDate": "12-05-2014",
+      "authors": [
+        "abramov-andrey"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-naming/blob/master/README.ru.md"
+    }
+  },
+  {
+    "url": "/libs",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Libraries",
+      "published": true,
+      "createDate": "16-01-2014",
+      "authors": [
+        "grinenko-vladimir"
+      ],
+      "translators": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/libs/index/index.en.md"
+    },
+    "ru": {
+      "title": "Библиотеки",
+      "published": true,
+      "createDate": "16-01-2014",
+      "authors": [
+        "grinenko-vladimir"
+      ],
+      "tags": [
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/libs/index/index.ru.md"
+    }
+  },
+  {
+    "url": "/libs/bem-core",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "bem-core",
+      "published": true
+    },
+    "ru": {
+      "title": "bem-core",
+      "published": true
+    }
+  },
+  {
+    "url": "/libs/bem-components",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "bem-components",
+      "published": true
+    },
+    "ru": {
+      "title": "bem-components",
+      "published": true
+    }
+  },
+  {
+    "url": "/libs/bem-bl",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "bem-bl",
+      "published": true
+    },
+    "ru": {
+      "title": "bem-bl",
+      "published": true
+    }
+  },
+  {
+    "url": "/libs/bem-mvc",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "bem-mvc",
+      "published": true
+    },
+    "ru": {
+      "title": "bem-mvc",
+      "published": true
+    }
+  },
+  {
+    "url": "/libs/bem-history",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "bem-history",
+      "published": true
+    },
+    "ru": {
+      "title": "bem-history",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "Technology",
+      "published": true
+    },
+    "ru": {
+      "title": "Технологии",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/bemhtml",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "BEMHTML",
+      "published": true
+    },
+    "ru": {
+      "title": "BEMHTML",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/bemhtml/v2",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "bem-core v2",
+      "published": true
+    },
+    "ru": {
+      "title": "bem-core v2",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/bemhtml/v2/intro",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BEMHTML quick start",
+      "published": true,
+      "createDate": "09-07-2013",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "translators": [
+        "nekhaieva-aleksandra"
+      ],
+      "tags": [
+        "bemhtml",
+        "bem-core-v2"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/intro/intro.en.md"
+    },
+    "ru": {
+      "title": "Быстрый старт по BEMHTML",
+      "published": true,
+      "createDate": "01-01-2013",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "tags": [
+        "bemhtml",
+        "bem-core-v2"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/intro/intro.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemhtml/v2/rationale",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BEMHTML templating engine description and its benefits",
+      "published": true,
+      "createDate": "02-09-2013",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "translators": [
+        "nekhaieva-aleksandra"
+      ],
+      "tags": [
+        "bemhtml",
+        "overview",
+        "bem-core-v2"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/rationale/rationale.en.md"
+    },
+    "ru": {
+      "title": "BEMHTML: описание шаблонизатора и его преимуществ",
+      "published": true,
+      "createDate": "02-09-2013",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "tags": [
+        "bemhtml",
+        "overview",
+        "bem-core-v2"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/rationale/rationale.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemhtml/v2/templating",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Data templating in bem-core",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "templates",
+        "bemhtml",
+        "bemtree",
+        "bem-xsjt",
+        "overview",
+        "bem-core-v2"
+      ]
+    },
+    "ru": {
+      "title": "Шаблонизация данных в bem-core",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "templates",
+        "bemhtml",
+        "bemtree",
+        "bem-xsjt",
+        "overview",
+        "bem-core-v2"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/templating/templating.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemhtml/v2/reference",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Tutorial on BEMHTML",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "maslinsky-kirill",
+        "ivanichenko-sergey"
+      ],
+      "translators": [
+        "nekhaieva-aleksandra",
+        "ksirov-rasul"
+      ],
+      "tags": [
+        "bemhtml",
+        "bem-core-v2"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/tree/v2/common.docs/reference/reference.en.md"
+    },
+    "ru": {
+      "title": "Справочное руководство по шаблонизатору BEMHTML",
+      "published": true,
+      "createDate": "06-03-2013",
+      "authors": [
+        "maslinsky-kirill",
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "bemhtml",
+        "bem-core-v2"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/reference/reference.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemhtml/v2/bemhtml-js-syntax",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BEMHTML JS-syntax. Migration tutorial",
+      "published": true,
+      "createDate": "20-03-2014",
+      "authors": [
+        "ivanichenko-sergey",
+        "jetpyspayeva-yelena"
+      ],
+      "translators": [
+        "belaya-inna"
+      ],
+      "tags": [
+        "bemhtml",
+        "javascript",
+        "bem-core-v2"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/bemhtml-js-syntax/bemhtml-js-syntax.en.md"
+    },
+    "ru": {
+      "title": "JS-синтаксис BEMHTML. Руководство по миграции",
+      "published": true,
+      "createDate": "20-03-2014",
+      "authors": [
+        "ivanichenko-sergey",
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "bemhtml",
+        "javascript",
+        "bem-core-v2"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/tree/v2/common.docs/bemhtml-js-syntax/bemhtml-js-syntax.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemhtml/2.5.0",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "bem-core 2.5.0",
+      "published": true
+    },
+    "ru": {
+      "title": "bem-core 2.5.0",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/bemhtml/2.5.0/intro",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BEMHTML quick start",
+      "published": true,
+      "createDate": "09-07-2013",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "translators": [
+        "nekhaieva-aleksandra"
+      ],
+      "tags": [
+        "bemhtml",
+        "bem-core-v2.5.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/intro/intro.en.md"
+    },
+    "ru": {
+      "title": "Быстрый старт по BEMHTML",
+      "published": true,
+      "createDate": "01-01-2013",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "tags": [
+        "bemhtml",
+        "bem-core-v2.5.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/intro/intro.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemhtml/2.5.0/rationale",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BEMHTML templating engine description and its benefits",
+      "published": true,
+      "createDate": "02-09-2013",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "translators": [
+        "nekhaieva-aleksandra"
+      ],
+      "tags": [
+        "bemhtml",
+        "overview",
+        "bem-core-v2.5.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/rationale/rationale.en.md"
+    },
+    "ru": {
+      "title": "BEMHTML: описание шаблонизатора и его преимуществ",
+      "published": true,
+      "createDate": "02-09-2013",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "tags": [
+        "bemhtml",
+        "overview",
+        "bem-core-v2.5.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/rationale/rationale.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemhtml/2.5.0/templating",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Data templating in bem-core",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "templates",
+        "bemhtml",
+        "bemtree",
+        "bem-xsjt",
+        "overview",
+        "bem-core-v2.5.0"
+      ]
+    },
+    "ru": {
+      "title": "Шаблонизация данных в bem-core",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "templates",
+        "bemhtml",
+        "bemtree",
+        "bem-xsjt",
+        "overview",
+        "bem-core-v2.5.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/templating/templating.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemhtml/2.5.0/reference",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Tutorial on BEMHTML",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "maslinsky-kirill",
+        "ivanichenko-sergey"
+      ],
+      "translators": [
+        "nekhaieva-aleksandra",
+        "ksirov-rasul"
+      ],
+      "tags": [
+        "bemhtml",
+        "bem-core-v2.5.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/tree/v2/common.docs/reference/reference.en.md"
+    },
+    "ru": {
+      "title": "Справочное руководство по шаблонизатору BEMHTML",
+      "published": true,
+      "createDate": "06-03-2013",
+      "authors": [
+        "maslinsky-kirill",
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "bemhtml",
+        "bem-core-v2.5.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/reference/reference.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemhtml/2.5.0/bemhtml-js-syntax",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BEMHTML JS-syntax. Migration tutorial",
+      "published": true,
+      "createDate": "20-03-2014",
+      "authors": [
+        "ivanichenko-sergey",
+        "jetpyspayeva-yelena"
+      ],
+      "translators": [
+        "belaya-inna"
+      ],
+      "tags": [
+        "bemhtml",
+        "javascript",
+        "bem-core-v2.5.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/bemhtml-js-syntax/bemhtml-js-syntax.en.md"
+    },
+    "ru": {
+      "title": "JS-синтаксис BEMHTML. Руководство по миграции",
+      "published": true,
+      "createDate": "20-03-2014",
+      "authors": [
+        "ivanichenko-sergey",
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "bemhtml",
+        "javascript",
+        "bem-core-v2.5.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/tree/v2/common.docs/bemhtml-js-syntax/bemhtml-js-syntax.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemhtml/2.3.0",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "bem-core 2.3.0",
+      "published": true
+    },
+    "ru": {
+      "title": "bem-core 2.3.0",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/bemhtml/2.3.0/intro",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BEMHTML quick start",
+      "published": true,
+      "createDate": "09-07-2013",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "translators": [
+        "nekhaieva-aleksandra"
+      ],
+      "tags": [
+        "bemhtml",
+        "bem-core-v2.3.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2.3.0/common.docs/intro/intro.en.md"
+    },
+    "ru": {
+      "title": "Быстрый старт по BEMHTML",
+      "published": true,
+      "createDate": "01-01-2013",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "tags": [
+        "bemhtml",
+        "bem-core-v2.3.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2.3.0/common.docs/intro/intro.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemhtml/2.3.0/rationale",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BEMHTML templating engine description and its benefits",
+      "published": true,
+      "createDate": "02-09-2013",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "translators": [
+        "nekhaieva-aleksandra"
+      ],
+      "tags": [
+        "bemhtml",
+        "overview",
+        "bem-core-v2.3.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2.3.0/common.docs/rationale/rationale.en.md"
+    },
+    "ru": {
+      "title": "BEMHTML: описание шаблонизатора и его преимуществ",
+      "published": true,
+      "createDate": "02-09-2013",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "tags": [
+        "bemhtml",
+        "overview",
+        "bem-core-v2.3.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2.3.0/common.docs/rationale/rationale.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemhtml/2.3.0/templating",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Data templating in bem-core",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "templates",
+        "bemhtml",
+        "bemtree",
+        "bem-xsjt",
+        "overview",
+        "bem-core-v2.3.0"
+      ]
+    },
+    "ru": {
+      "title": "Шаблонизация данных в bem-core",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "templates",
+        "bemhtml",
+        "bemtree",
+        "bem-xsjt",
+        "overview",
+        "bem-core-v2.3.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2.3.0/common.docs/templating/templating.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemhtml/2.3.0/reference",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Tutorial on BEMHTML",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "maslinsky-kirill",
+        "ivanichenko-sergey"
+      ],
+      "translators": [
+        "nekhaieva-aleksandra",
+        "ksirov-rasul"
+      ],
+      "tags": [
+        "bemhtml",
+        "bem-core-v2.3.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/tree/v2.3.0/common.docs/reference/reference.en.md"
+    },
+    "ru": {
+      "title": "Справочное руководство по шаблонизатору BEMHTML",
+      "published": true,
+      "createDate": "06-03-2013",
+      "authors": [
+        "maslinsky-kirill",
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "bemhtml",
+        "bem-core-v2.3.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2.3.0/common.docs/reference/reference.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemhtml/2.3.0/bemhtml-js-syntax",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BEMHTML JS-syntax. Migration tutorial",
+      "published": true,
+      "createDate": "20-03-2014",
+      "authors": [
+        "ivanichenko-sergey",
+        "jetpyspayeva-yelena"
+      ],
+      "translators": [
+        "belaya-inna"
+      ],
+      "tags": [
+        "bemhtml",
+        "javascript",
+        "bem-core-v2.3.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/bemhtml-js-syntax/bemhtml-js-syntax.en.md"
+    },
+    "ru": {
+      "title": "JS-синтаксис BEMHTML. Руководство по миграции",
+      "published": true,
+      "createDate": "20-03-2014",
+      "authors": [
+        "ivanichenko-sergey",
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "bemhtml",
+        "javascript",
+        "bem-core-v2.3.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/tree/v2.3.0/common.docs/bemhtml-js-syntax/bemhtml-js-syntax.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemhtml/dev",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "bem-bl dev",
+      "published": true
+    },
+    "ru": {
+      "title": "bem-bl dev",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/bemhtml/dev/intro",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BEMHTML quick start",
+      "published": true,
+      "createDate": "09-07-2013",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "translators": [
+        "nekhaieva-aleksandra"
+      ],
+      "tags": [
+        "bemhtml",
+        "bem-bl-dev"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-bl/tree/dev/common.docs/intro/intro.en.md"
+    },
+    "ru": {
+      "title": "Быстрый старт по BEMHTML",
+      "published": true,
+      "createDate": "01-01-2013",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "tags": [
+        "bemhtml",
+        "bem-bl-dev"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-bl/tree/dev/common.docs/intro/intro.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemhtml/dev/rationale",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BEMHTML templating engine description and its benefits",
+      "published": true,
+      "createDate": "02-09-2013",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "translators": [
+        "nekhaieva-aleksandra"
+      ],
+      "tags": [
+        "bemhtml",
+        "overview",
+        "bem-bl-dev"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-bl/tree/dev/common.docs/rationale/rationale.en.md"
+    },
+    "ru": {
+      "title": "BEMHTML: описание шаблонизатора и его преимуществ",
+      "published": true,
+      "createDate": "02-09-2013",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "tags": [
+        "bemhtml",
+        "overview",
+        "bem-bl-dev"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-bl/tree/dev/common.docs/rationale/rationale.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemhtml/dev/reference",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Tutorial on BEMHTML",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "maslinsky-kirill",
+        "ivanichenko-sergey"
+      ],
+      "translators": [
+        "nekhaieva-aleksandra"
+      ],
+      "tags": [
+        "bemhtml",
+        "bem-bl-dev"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-bl/tree/dev/common.docs/reference/reference.en.md"
+    },
+    "ru": {
+      "title": "Cправочное руководство по шаблонизатору BEMHTML",
+      "published": true,
+      "createDate": "06-03-2013",
+      "authors": [
+        "maslinsky-kirill",
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "bemhtml",
+        "bem-bl-dev"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-bl/tree/dev/common.docs/reference/reference.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemtree",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "BEMTREE",
+      "published": true
+    },
+    "ru": {
+      "title": "BEMTREE",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/bemtree/v2",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "bem-core v2",
+      "published": true
+    },
+    "ru": {
+      "title": "bem-core v2",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/bemtree/v2/bemtree",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Tutorial for BEMTREE template engine",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "bemtree",
+        "bemhtml",
+        "bem-core-v2"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/bemtree-reference/bemtree-reference.en.md"
+    },
+    "ru": {
+      "title": "Справочное руководство по шаблонизатору BEMTREE",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "bemtree",
+        "bemhtml",
+        "bem-core-v2"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/bemtree-reference/bemtree-reference.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemtree/2.5.0",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "bem-core 2.5.0",
+      "published": true
+    },
+    "ru": {
+      "title": "bem-core 2.5.0",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/bemtree/2.5.0/bemtree",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Tutorial for BEMTREE template engine",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "bemtree",
+        "bemhtml",
+        "bem-core-v2.5.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/bemtree-reference/bemtree-reference.en.md"
+    },
+    "ru": {
+      "title": "Справочное руководство по шаблонизатору BEMTREE",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "bemtree",
+        "bemhtml",
+        "bem-core-v2.5.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/bemtree-reference/bemtree-reference.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemtree/2.3.0",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "bem-core 2.3.0",
+      "published": true
+    },
+    "ru": {
+      "title": "bem-core 2.3.0",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/bemtree/2.3.0/bemtree",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Tutorial for BEMTREE template engine",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "bemtree",
+        "bemhtml",
+        "bem-core-v2.3.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/bemtree-reference/bemtree-reference.en.md"
+    },
+    "ru": {
+      "title": "Справочное руководство по шаблонизатору BEMTREE",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "bemtree",
+        "bemhtml",
+        "bem-core-v2.3.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2.3.0/common.docs/bemtree-reference/bemtree-reference.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemjson",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "BEMJSON",
+      "published": true
+    },
+    "ru": {
+      "title": "BEMJSON",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/bemjson/v2",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "bem-core v2",
+      "published": true
+    },
+    "ru": {
+      "title": "bem-core v2",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/bemjson/v2/bemjson",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Tutorial for BEMJSON template engine",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "maslinsky-kirill",
+        "ivanichenko-sergey"
+      ],
+      "translators": [
+        "ksirov-rasul"
+      ],
+      "tags": [
+        "bemjson",
+        "bemhtml",
+        "bem-core-v2"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/bemjson/bemjson.en.md"
+    },
+    "ru": {
+      "title": "Справочное руководство по BEMJSON",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "maslinsky-kirill",
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "bemjson",
+        "bemhtml",
+        "bem-core-v2"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/bemjson/bemjson.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemjson/2.5.0",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "bem-core 2.5.0",
+      "published": true
+    },
+    "ru": {
+      "title": "bem-core 2.5.0",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/bemjson/2.5.0/bemjson",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Tutorial for BEMJSON template engine",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "maslinsky-kirill",
+        "ivanichenko-sergey"
+      ],
+      "translators": [
+        "ksirov-rasul"
+      ],
+      "tags": [
+        "bemjson",
+        "bemhtml",
+        "bem-core-v2.5.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/bemjson/bemjson.en.md"
+    },
+    "ru": {
+      "title": "Справочное руководство по BEMJSON",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "maslinsky-kirill",
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "bemjson",
+        "bemhtml",
+        "bem-core-v2.5.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/bemjson/bemjson.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bemjson/2.3.0",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "bem-core 2.3.0",
+      "published": true
+    },
+    "ru": {
+      "title": "bem-core 2.3.0",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/bemjson/2.3.0/bemjson",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Tutorial for BEMJSON template engine",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "maslinsky-kirill",
+        "ivanichenko-sergey"
+      ],
+      "translators": [
+        "ksirov-rasul"
+      ],
+      "tags": [
+        "bemjson",
+        "bemhtml",
+        "bem-core-v2.3.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/bemjson/bemjson.en.md"
+    },
+    "ru": {
+      "title": "Справочное руководство по BEMJSON",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "maslinsky-kirill",
+        "ivanichenko-sergey"
+      ],
+      "tags": [
+        "bemjson",
+        "bemhtml",
+        "bem-core-v2.3.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2.3.0/common.docs/bemjson/bemjson.ru.md"
+    }
+  },
+  {
+    "url": "/technology/i-bem",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "i-bem",
+      "published": true
+    },
+    "ru": {
+      "title": "i-bem",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/i-bem/v2",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "bem-core v2",
+      "published": true
+    },
+    "ru": {
+      "title": "bem-core v2",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/i-bem/v2/i-bem-js",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "i-bem.js: user manual",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "tags": [
+        "bem-core",
+        "i-bem",
+        "javascript",
+        "bem-core-v2"
+      ]
+    },
+    "ru": {
+      "title": "i-bem.js: руководство пользователя",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "tags": [
+        "bem-core",
+        "i-bem",
+        "javascript",
+        "bem-core-v2"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/tree/v2/common.docs/i-bem-js/i-bem-js.ru.md"
+    }
+  },
+  {
+    "url": "/technology/i-bem/2.5.0",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "bem-core 2.5.0",
+      "published": true
+    },
+    "ru": {
+      "title": "bem-core 2.5.0",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/i-bem/2.5.0/i-bem-js",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "i-bem.js: user manual",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "tags": [
+        "bem-core",
+        "i-bem",
+        "javascript",
+        "bem-core-v2.5.0"
+      ]
+    },
+    "ru": {
+      "title": "i-bem.js: руководство пользователя",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "tags": [
+        "bem-core",
+        "i-bem",
+        "javascript",
+        "bem-core-v2"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/tree/v2/common.docs/i-bem-js/i-bem-js.ru.md"
+    }
+  },
+  {
+    "url": "/technology/i-bem/2.3.0",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "bem-core 2.3.0",
+      "published": true
+    },
+    "ru": {
+      "title": "bem-core 2.3.0",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/i-bem/2.3.0/i-bem-js",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "i-bem.js: user manual",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "tags": [
+        "bem-core",
+        "i-bem",
+        "javascript",
+        "bem-core-v2.3.0"
+      ]
+    },
+    "ru": {
+      "title": "i-bem.js: руководство пользователя",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "maslinsky-kirill"
+      ],
+      "tags": [
+        "bem-core",
+        "i-bem",
+        "javascript",
+        "bem-core-v2.3.0"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/tree/v2.3.0/common.docs/i-bem-js/i-bem-js.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bh",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "BH",
+      "published": true
+    },
+    "ru": {
+      "title": "BH",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/bh/v4",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "v4.0.0",
+      "published": true
+    },
+    "ru": {
+      "title": "v4.0.0",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/bh/v4/about",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BH Template Engine",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "troshev-mikhail"
+      ],
+      "sourceUrl": "https://github.com/bem/bh/blob/v4.0.0/README.md"
+    },
+    "ru": {
+      "title": "Шаблонизатор BH",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "troshev-mikhail"
+      ],
+      "sourceUrl": "https://github.com/bem/bh/blob/v4.0.0/README.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bh/v4/changelog",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Changelog",
+      "published": true,
+      "authors": [
+        "troshev-mikhail"
+      ],
+      "tags": [
+        "bh"
+      ],
+      "sourceUrl": "https://github.com/bem/bh/blob/v4.0.0/CHANGELOG.md"
+    },
+    "ru": {
+      "title": "История изменений",
+      "published": true,
+      "authors": [
+        "troshev-mikhail"
+      ],
+      "tags": [
+        "bh"
+      ],
+      "sourceUrl": "https://github.com/bem/bh/blob/v4.0.0/CHANGELOG.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bh/v3",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "v3.3.0",
+      "published": true
+    },
+    "ru": {
+      "title": "v3.3.0",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/bh/v3/about",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BH Template Engine",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "troshev-mikhail"
+      ],
+      "sourceUrl": "https://github.com/bem/bh/blob/v3.3.0/README.md"
+    },
+    "ru": {
+      "title": "Шаблонизатор BH",
+      "published": true,
+      "createDate": "18-04-2014",
+      "authors": [
+        "troshev-mikhail"
+      ],
+      "sourceUrl": "https://github.com/bem/bh/blob/v3.3.0/README.ru.md"
+    }
+  },
+  {
+    "url": "/technology/bh/v3/changelog",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Changelog",
+      "published": true,
+      "authors": [
+        "troshev-mikhail"
+      ],
+      "tags": [
+        "bh"
+      ],
+      "sourceUrl": "https://github.com/bem/bh/blob/v3.3.0/CHANGELOG.md"
+    },
+    "ru": {
+      "title": "История изменений",
+      "published": true,
+      "authors": [
+        "troshev-mikhail"
+      ],
+      "tags": [
+        "bh"
+      ],
+      "sourceUrl": "https://github.com/bem/bh/blob/v3.3.0/CHANGELOG.ru.md"
+    }
+  },
+  {
+    "url": "/technology/deps",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "DEPS",
+      "published": true
+    },
+    "ru": {
+      "title": "DEPS",
+      "published": true
+    }
+  },
+  {
+    "url": "/technology/deps/about",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Dependencies",
+      "published": true,
+      "createDate": "27-08-2013",
+      "authors": [
+        "bashinsky-pavel"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/depsjs/depsjs.en.md"
+    },
+    "ru": {
+      "title": "Зависимости",
+      "published": true,
+      "createDate": "27-08-2013",
+      "authors": [
+        "bashinsky-pavel"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-tools/tree/dev/docs/depsjs/depsjs.ru.md"
+    }
+  },
+  {
+    "url": "/tutorials",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Tutorials",
+      "published": true,
+      "createDate": "04-02-2014",
+      "authors": [
+        "stepanova-varvara"
+      ],
+      "translators": [
+        "stepanova-varvara"
+      ],
+      "tags": [
+        "BEM"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/tutorials/index/index.en.md"
+    },
+    "ru": {
+      "title": "Руководства",
+      "published": true,
+      "createDate": "04-02-2014",
+      "authors": [
+        "stepanova-varvara"
+      ],
+      "tags": [
+        "BEM"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/tutorials/index/index.ru.md"
+    }
+  },
+  {
+    "url": "/tutorials/quick-start-static",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Static quick-start",
+      "published": true,
+      "createDate": "27-01-15",
+      "authors": [
+        "mikulyanets-anfisa"
+      ],
+      "tags": [
+        "methodology",
+        "overview",
+        "project-stub"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/articles/quick-start-static/quick-start-static.en.md"
+    },
+    "ru": {
+      "title": "Собираем статическую страницу на БЭМ",
+      "published": true,
+      "createDate": "27-01-15",
+      "authors": [
+        "mikulyanets-anfisa"
+      ],
+      "tags": [
+        "methodology",
+        "overview",
+        "project-stub"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/articles/quick-start-static/quick-start-static.ru.md"
+    }
+  },
+  {
+    "url": "/tutorials/bem-js-tutorial",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "i-bem.js tutorial",
+      "published": true,
+      "createDate": "04-02-2014",
+      "authors": [
+        "stepanova-varvara"
+      ],
+      "translators": [
+        "stepanova-varvara"
+      ],
+      "tags": [
+        "bem-core",
+        "i-bem",
+        "javascript"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-js-tutorial/blob/master/00-Intro/00-Intro.en.md"
+    },
+    "ru": {
+      "title": "Справочное руководство по i-bem.js",
+      "published": true,
+      "createDate": "04-02-2014",
+      "authors": [
+        "stepanova-varvara"
+      ],
+      "tags": [
+        "bem-core",
+        "i-bem",
+        "javascript"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-js-tutorial/blob/master/00-Intro/00-Intro.ru.md"
+    }
+  },
+  {
+    "url": "/tutorials/bem-js-tutorial/01-block-structure",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Block structure",
+      "published": true,
+      "createDate": "04-02-2014",
+      "authors": [
+        "stepanova-varvara"
+      ],
+      "translators": [
+        "stepanova-varvara"
+      ],
+      "tags": [
+        "i-bem",
+        "javascript"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-js-tutorial/blob/master/01-Block-structure/01-Block-structure.en.md"
+    },
+    "ru": {
+      "title": "Структура блока",
+      "published": true,
+      "createDate": "04-02-2014",
+      "authors": [
+        "stepanova-varvara"
+      ],
+      "tags": [
+        "i-bem",
+        "javascript"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-js-tutorial/blob/master/01-Block-structure/01-Block-structure.ru.md"
+    }
+  },
+  {
+    "url": "/tutorials/bem-js-tutorial/02-modifiers",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Modifiers",
+      "published": true,
+      "createDate": "04-02-2014",
+      "authors": [
+        "stepanova-varvara"
+      ],
+      "translators": [
+        "stepanova-varvara"
+      ],
+      "tags": [
+        "i-bem",
+        "javascript"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-js-tutorial/blob/master/02-Modifiers/02-Modifiers.en.md"
+    },
+    "ru": {
+      "title": "Модификаторы",
+      "published": true,
+      "createDate": "04-02-2014",
+      "authors": [
+        "stepanova-varvara"
+      ],
+      "tags": [
+        "i-bem",
+        "javascript"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-js-tutorial/blob/master/02-Modifiers/02-Modifiers.ru.md"
+    }
+  },
+  {
+    "url": "/tutorials/bem-js-tutorial/03-live-initialization",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Live-initialization",
+      "published": true,
+      "createDate": "04-02-2014",
+      "authors": [
+        "stepanova-varvara"
+      ],
+      "translators": [
+        "stepanova-varvara"
+      ],
+      "tags": [
+        "i-bem",
+        "javascript"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-js-tutorial/blob/master/03-Live-initialization/03-Live-initialization.en.md"
+    },
+    "ru": {
+      "title": "Живая (ленивая) инициализация",
+      "published": true,
+      "createDate": "04-02-2014",
+      "authors": [
+        "stepanova-varvara"
+      ],
+      "tags": [
+        "i-bem",
+        "javascript"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-js-tutorial/blob/master/03-Live-initialization/03-Live-initialization.ru.md"
+    }
+  },
+  {
+    "url": "/tutorials/project-stub",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Project stub",
+      "published": true,
+      "createDate": "24-09-2013",
+      "authors": [
+        "belaya-inna"
+      ],
+      "translators": [],
+      "tags": [
+        "project-stub"
+      ],
+      "sourceUrl": "https://github.com/bem/project-stub/blob/bem-core/README.md"
+    },
+    "ru": {
+      "title": "Заготовка проекта",
+      "published": true,
+      "createDate": "24-09-2013",
+      "authors": [
+        "belaya-inna"
+      ],
+      "translators": [],
+      "tags": [
+        "project-stub"
+      ],
+      "sourceUrl": "https://github.com/bem/project-stub/blob/bem-core/README.ru.md"
+    }
+  },
+  {
+    "url": "/tutorials/start-with-project-stub",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Starting your own BEM project",
+      "published": true,
+      "createDate": "12-02-2013",
+      "authors": [
+        "stepanova-varvara"
+      ],
+      "tags": [
+        "methodology",
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/articles/start-with-project-stub/start-with-project-stub.en.md"
+    },
+    "ru": {
+      "title": "Создаем свой проект на БЭМ",
+      "published": true,
+      "createDate": "12-12-12",
+      "authors": [
+        "stepanova-varvara"
+      ],
+      "tags": [
+        "methodology",
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/articles/start-with-project-stub/start-with-project-stub.ru.md"
+    }
+  },
+  {
+    "url": "/tutorials/yamapsbem",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Creating a menu of geo objects collections with Yandex.Maps API and BEM",
+      "published": true,
+      "createDate": "17-07-2013",
+      "authors": [
+        "hananein-denis"
+      ],
+      "tags": [
+        "api"
+      ],
+      "sourceUrl": "https://github.com/zloylos/ymapsbem/blob/master/README.md"
+    },
+    "ru": {
+      "title": "Создаем меню для показа коллекций геообъектов с API Яндекс.Карт и БЭМ",
+      "published": true,
+      "createDate": "17-07-2013",
+      "authors": [
+        "hananein-denis"
+      ],
+      "tags": [
+        "api"
+      ],
+      "sourceUrl": "https://github.com/zloylos/ymapsbem/blob/master/README.ru.md"
+    }
+  },
+  {
+    "url": "/tutorials/firm-card-story",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Creating BEM application on Leaflet and 2GIS API",
+      "published": true,
+      "createDate": "09-07-2013",
+      "authors": [
+        "geonya-andrey"
+      ],
+      "translators": [
+        "nekhaieva-aleksandra"
+      ],
+      "tags": [
+        "api"
+      ],
+      "sourceUrl": "https://github.com/dab/firmCardStory/blob/master/docs/firm-card-story/firm-card-story.en.md"
+    },
+    "ru": {
+      "title": "Создаем БЭМ-приложение на Leaflet и API 2GIS",
+      "published": true,
+      "createDate": "23-11-2012",
+      "authors": [
+        "geonya-andrey"
+      ],
+      "tags": [
+        "api"
+      ],
+      "sourceUrl": "https://github.com/dab/firmCardStory/blob/master/docs/firm-card-story/firm-card-story.ru.md"
+    }
+  },
+  {
+    "url": "/articles",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "Articles",
+      "published": true
+    },
+    "ru": {
+      "title": "Статьи",
+      "published": true
+    }
+  },
+  {
+    "url": "/articles/side-effects-in-css",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Side Effects in CSS",
+      "published": true,
+      "createDate": "17-03-2015",
+      "authors": [
+        "walton-philip"
+      ],
+      "tags": [
+        "css"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/articles/side-effects-in-css/side-effects-in-css.en.md"
+    },
+    "ru": {
+      "published": false
+    }
+  },
+  {
+    "url": "/articles/mailru-unified-design",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "Унификация дизайна: Фреймворк Mail.Ru",
+      "published": true,
+      "createDate": "26-02-2015",
+      "authors": [
+        "vetrov-yury"
+      ],
+      "tags": [
+        "js"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/articles/mailru-unified-design/mailru-unified-design.ru.md"
+    }
+  },
+  {
+    "url": "/articles/isomorphic-bem",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "Изоморфный БЭМ",
+      "published": true,
+      "createDate": "26-02-2015",
+      "authors": [
+        "savin-alexandr"
+      ],
+      "tags": [
+        "js"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/articles/isomorphic-bem/isomorphic-bem.ru.md"
+    }
+  },
+  {
+    "url": "/articles/bem-full-stack-site",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "Сайт с нуля на полном стеке БЭМ-технологий",
+      "published": true,
+      "createDate": "20-01-2015",
+      "authors": [
+        "belitsky-dmitry"
+      ],
+      "tags": [
+        "methodology",
+        "css",
+        "js",
+        "i-bem.js"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/articles/bem-full-stack/bem-full-stack.ru.md"
+    }
+  },
+  {
+    "url": "/articles/bem-for-small-projects",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BEM methodology for small projects",
+      "published": true,
+      "createDate": "10-09-2014",
+      "authors": [
+        "shirshin-maxim"
+      ],
+      "tags": [
+        "methodology",
+        "css",
+        "i-bem.js"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/articles/bem-for-small-projects/bem-for-small-projects.en.md"
+    },
+    "ru": {
+      "title": "БЭМ-методология на небольших проектах",
+      "published": true,
+      "createDate": "10-09-2014",
+      "authors": [
+        "shirshin-maxim"
+      ],
+      "tags": [
+        "methodology",
+        "css",
+        "i-bem.js"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/articles/bem-for-small-projects/bem-for-small-projects.ru.md"
+    }
+  },
+  {
+    "url": "/articles/bem-js-main-terms",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "JavaScript for BEM: the main terms",
+      "published": true,
+      "createDate": "16-07-2013",
+      "authors": [
+        "stepanova-varvara"
+      ],
+      "translators": [
+        "nekhaieva-aleksandra"
+      ],
+      "tags": [
+        "i-bem",
+        "javascript",
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/articles/bem-js-main-terms/bem-js-main-terms.en.md"
+    },
+    "ru": {
+      "title": "JavaScript по БЭМ: основные понятия",
+      "published": true,
+      "createDate": "27-03-2013",
+      "authors": [
+        "stepanova-varvara"
+      ],
+      "tags": [
+        "i-bem",
+        "javascript",
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/articles/bem-js-main-terms/bem-js-main-terms.ru.md"
+    }
+  },
+  {
+    "url": "/articles/borschik",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "borschik",
+      "published": true,
+      "createDate": "22-04-2013",
+      "authors": [
+        "androsov-alexey"
+      ],
+      "tags": [
+        "borschik"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/articles/borschik/borschik.en.md"
+    },
+    "ru": {
+      "title": "borschik",
+      "published": true,
+      "createDate": "22-04-2013",
+      "authors": [
+        "androsov-alexey"
+      ],
+      "tags": [
+        "borschik"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/articles/borschik/borschik.ru.md"
+    }
+  },
+  {
+    "url": "/articles/smartcd",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "smartcd: how to launch tools locally",
+      "published": true,
+      "createDate": "19-06-2013",
+      "authors": [
+        "belov-sergey"
+      ],
+      "translators": [
+        "nekhaieva-aleksandra"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/articles/smartcd/smartcd.en.md"
+    },
+    "ru": {
+      "title": "smartcd: локальный запуск инструментов",
+      "published": true,
+      "createDate": "13-06-2013",
+      "authors": [
+        "belov-sergey"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/articles/smartcd/smartcd.ru.md"
+    }
+  },
+  {
+    "url": "/articles/yandex-frontend-dev",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "What you can borrow from Yandex frontend dev",
+      "published": true,
+      "createDate": "18-02-2013",
+      "authors": [
+        "stepanova-varvara"
+      ],
+      "tags": [
+        "conf",
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/articles/yandex-frontend-dev/yandex-frontend-dev.en.md"
+    },
+    "ru": {
+      "title": "Учимся у разработчиков интерфейсов Яндекса",
+      "published": true,
+      "createDate": "18-02-2013",
+      "authors": [
+        "stepanova-varvara"
+      ],
+      "tags": [
+        "conf",
+        "overview"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/articles/yandex-frontend-dev/yandex-frontend-dev.ru.md"
+    }
+  },
+  {
+    "url": "/articles/bemhtml-cache-experimental",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Bemhtml cache experimental",
+      "published": true,
+      "createDate": "11-06-2013",
+      "authors": [
+        "indutny-fedor"
+      ],
+      "tags": [
+        "api"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-core/blob/v2/common.docs/bemhtml-cache-experimental/bemhtml-cache-experimental.en.md"
+    },
+    "ru": {
+      "title": "Bemhtml cache experimental",
+      "published": false
+    }
+  },
+  {
+    "url": "/talks",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "Talks",
+      "published": true
+    },
+    "ru": {
+      "title": "Выступления",
+      "published": true
+    }
+  },
+  {
+    "url": "/talks/beminar-css-2015",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "Видео вебинара по БЭМ: верстаем веб-страницу",
+      "published": true,
+      "createDate": "02-04-2015",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "video"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/video/beminar-css-2015/beminar-css-2015.ru.md"
+    }
+  },
+  {
+    "url": "/talks/loftschool-music-2015",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "Видео вебинара для Loftschool: верстаем Яндекс.Музыку",
+      "published": true,
+      "createDate": "18-02-2015",
+      "authors": [
+        "ilchenko-nikolay"
+      ],
+      "tags": [
+        "video"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/video/loftschool-music-2015/lofschool-music-2015.ru.md"
+    }
+  },
+  {
+    "url": "/talks/campjs-melbourne-2014",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BEM for JavaScript talk on Camp JS",
+      "published": true,
+      "createDate": "19-11-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "video"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/video/campjs-melbourne-2014/campjs-melbourne-2014.en.md"
+    },
+    "ru": {
+      "title": "БЭМ для JavaScript на конференции Camp JS",
+      "published": true,
+      "createDate": "19-11-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "video"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/video/campjs-melbourne-2014/campjs-melbourne-2014.ru.md"
+    }
+  },
+  {
+    "url": "/talks/rif-voronezh-2014",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "БЭМ на конференции РИФ-Воронеж 2014",
+      "published": true,
+      "createDate": "19-11-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "video"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/video/rif-voronezh-2014/rif-voronezh-2014.ru.md"
+    }
+  },
+  {
+    "url": "/talks/girls-not-bombs-minsk-2014",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "bem-components на Girls Not Bombs 2014 в Минске",
+      "published": true,
+      "createDate": "30-09-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "video"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/video/girls-not-bombs-minsk-2014/girls-not-bombs-minsk-2014.ru.md"
+    }
+  },
+  {
+    "url": "/talks/bemup-spb-2014",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "BEMup в Санкт-Петербурге: видео",
+      "published": true,
+      "createDate": "22-09-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "bemhtml",
+        "bemtree",
+        "i-bem",
+        "bemup",
+        "video"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/video/bemup-spb-2014/bemup-spb-2014.ru.md"
+    }
+  },
+  {
+    "url": "/talks/bem-odessajs-2014",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "Мастер-класс по БЭМ на OdessaJS 2014",
+      "published": true,
+      "createDate": "22-09-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "bemhtml",
+        "bemtree",
+        "i-bem",
+        "video"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/video/bem-odessajs-2014/bem-odessajs-2014.ru.md"
+    }
+  },
+  {
+    "url": "/talks/gemini-odessajs-2014",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "Тестирование с Gemini на OdessaJS 2014",
+      "published": true,
+      "createDate": "22-09-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "video"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/video/gemini-odessajs-2014/gemini-odessajs-2014.ru.md"
+    }
+  },
+  {
+    "url": "/talks/bemup-moscow-2014",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "BEMup в Москве: видео",
+      "published": true,
+      "createDate": "20-05-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "bemhtml",
+        "bemtree",
+        "i-bem",
+        "bemup",
+        "video"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/video/bemup-moscow-2014/bemup-moscow-2014.ru.md"
+    }
+  },
+  {
+    "url": "/talks/bemup-minsk-2014",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "BEMup в Минске: видео",
+      "published": true,
+      "createDate": "30-04-2013",
+      "authors": [
+        "jetpyspayeva-yelena",
+        "konstantinov-eugeny"
+      ],
+      "tags": [
+        "bemhtml",
+        "bemtree",
+        "i-bem",
+        "bemup",
+        "video"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/video/bemup-minsk-2014/bemup-minsk-2014.ru.md"
+    }
+  },
+  {
+    "url": "/talks/metarefresh-bangalore-2013",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BEM at MetaRefresh 2013",
+      "published": true,
+      "createDate": "22-02-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news",
+        "metarefresh",
+        "video"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/blog/2013-02-maintainable-frontend-dev-with-bem/2013-02-maintainable-frontend-dev-with-bem.en.md"
+    },
+    "ru": {
+      "title": "БЭМ на MetaRefresh 2013",
+      "published": true,
+      "createDate": "22-02-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news",
+        "metarefresh",
+        "video"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/blog/2013-02-maintainable-frontend-dev-with-bem/2013-02-maintainable-frontend-dev-with-bem.ru.md"
+    }
+  },
+  {
+    "url": "/events",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "Events",
+      "published": true
+    },
+    "ru": {
+      "title": "События",
+      "published": true
+    }
+  },
+  {
+    "url": "/events/beminar-april-2015",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "Вебинар по БЭМ: сборка и оптимизация проекта",
+      "published": true,
+      "createDate": "23-04-2015",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/events/beminar-april-2015/beminar-april-2015.ru.md"
+    }
+  },
+  {
+    "url": "/events/beminar-march-2015",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "Вебинар по БЭМ: верстаем веб-страницу",
+      "published": true,
+      "createDate": "13-03-2015",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/events/beminar-march-2015/beminar-march-2015.ru.md"
+    }
+  },
+  {
+    "url": "/events/codefest-novosibirsk-2015",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "БЭМ на конференции CodeFest&nbsp;2015",
+      "published": true,
+      "createDate": "13-03-2015",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/events/codefest-novosibirsk-2015/codefest-novosibirsk-2015.ru.md"
+    }
+  },
+  {
+    "url": "/events/bem-hackaton-2014",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "Хакатон по БЭМ",
+      "published": true,
+      "createDate": "27-10-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/events/bem-hackaton-2014/bem-hackaton-2014.ru.md"
+    }
+  },
+  {
+    "url": "/events/rif-voronezh-2014",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "БЭМ на конференции РИФ-Воронеж 2014",
+      "published": true,
+      "createDate": "20-09-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/events/rif-voronezh-2014/rif-voronezh-2014.ru.md"
+    }
+  },
+  {
+    "url": "/events/bemup-spb-2014",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "BEMup в Санкт-Петербурге",
+      "published": true,
+      "createDate": "06-08-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/events/bemup-spb-2014/bemup-spb-2014.ru.md"
+    }
+  },
+  {
+    "url": "/events/bemup-moscow-2014",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "BEMup в Москве",
+      "published": true,
+      "createDate": "29-04-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news",
+        "bemup"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/events/bemup-moscow-2014/bemup-moscow-2014.ru.md"
+    }
+  },
+  {
+    "url": "/events/campjs-melbourne-2014",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BEM for JS talk on CampJS",
+      "published": true,
+      "createDate": "06-09-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/events/campjs-melbourne-2014/campjs-melbourne-2014.en.md"
+    },
+    "ru": {
+      "title": "БЭМ для JavaScript на конференции Camp JS",
+      "published": true,
+      "createDate": "14-04-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/events/campjs-melbourne-2014/campjs-melbourne-2014.ru.md"
+    }
+  },
+  {
+    "url": "/events/bemup-minsk-2014",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "BEMup в Минске",
+      "published": true,
+      "createDate": "08-04-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news",
+        "bemup"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/events/bemup-minsk2014/bemup-mink2014.ru.md"
+    }
+  },
+  {
+    "url": "/events/bemup-yac-2013",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "Второй BEMup — в рамках конференции YaC 2013",
+      "published": true,
+      "createDate": "06-09-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news",
+        "bemup",
+        "yac"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/events/bemup-yac2013/bemup-yac2013.ru.md"
+    }
+  },
+  {
+    "url": "/events/bemup-2013",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "BEMup — первый митап по БЭМ!",
+      "published": true,
+      "createDate": "23-07-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "bemup"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/events/bemup/bemup.ru.md"
+    }
+  },
+  {
+    "url": "/events/metarefresh-bangalore-2013",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BEM on Metarefresh conference",
+      "published": true,
+      "createDate": "12-02-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news",
+        "metarefresh",
+        "video"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/events/2013-02-bem-goes-to-india/2013-02-bem-goes-to-india.en.md"
+    },
+    "ru": {
+      "title": "БЭМ на конференции Metarefresh",
+      "published": true,
+      "createDate": "12-02-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news",
+        "metarefresh",
+        "video"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/events/2013-02-bem-goes-to-india/2013-02-bem-goes-to-india.ru.md"
+    }
+  },
+  {
+    "url": "/blog",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "Blog",
+      "published": true
+    },
+    "ru": {
+      "title": "Блог",
+      "published": true
+    }
+  },
+  {
+    "url": "/blog/digest-4",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "Дайджест новостей БЭМ. Выпуск четвертый.",
+      "published": true,
+      "createDate": "10-04-2015",
+      "authors": [
+        "belitsky-dmitry"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/digest-4/digest-4.ru.md"
+    }
+  },
+  {
+    "url": "/blog/bh-v4",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "Шаблонизатор BH, версия 4.0.0",
+      "published": true,
+      "createDate": "02-04-2015",
+      "authors": [
+        "troshev-mikhail"
+      ],
+      "tags": [
+        "news",
+        "bh"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/bh-v4/bh-v4.ru.md"
+    }
+  },
+  {
+    "url": "/blog/first-bem-block",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "Хакатон: проект «Блоки»",
+      "published": true,
+      "createDate": "24-03-2015",
+      "authors": [
+        "konstantinov-eugeny",
+        "aristov-slava"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/first-bem-block/first-bem-block.ru.md"
+    }
+  },
+  {
+    "url": "/blog/bem-competition-winners",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "Проекты и победители конкурса разработки проектов",
+      "published": true,
+      "createDate": "17-03-2015",
+      "authors": [
+        "ilchenko-nikolay"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/bem-competition-winners/bem-competition-winners.ru.md"
+    }
+  },
+  {
+    "url": "/blog/digest-3",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "Дайджест новостей БЭМ. Выпуск третий.",
+      "published": true,
+      "createDate": "11-03-2015",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/digest-3/digest-3.ru.md"
+    }
+  },
+  {
+    "url": "/blog/bem-competition-results",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "Итоги конкурса разработки проектов",
+      "published": true,
+      "createDate": "27-02-2015",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/bem-competition-results/bem-competition-results.ru.md"
+    }
+  },
+  {
+    "url": "/blog/bem-forum-en-launch",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BEM Forum goes live!",
+      "published": true,
+      "createDate": "18-01-2015",
+      "authors": [
+        "ilchenko-nikolay"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/bem-forum-launch/bem-forum-launch.en.md"
+    },
+    "ru": {
+      "published": false
+    }
+  },
+  {
+    "url": "/blog/first-bem-board",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Hackathon: BEM Dashboard",
+      "published": false
+    },
+    "ru": {
+      "title": "Хакатон: проект «Приборная панель»",
+      "published": true,
+      "createDate": "12-02-2015",
+      "authors": [
+        "tikvach-alexandr"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/first-bem-board/first-bem-board.ru.md"
+    }
+  },
+  {
+    "url": "/blog/bem-components-v2",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Release: bem-components v2.0.0",
+      "published": true,
+      "createDate": "30-01-2015",
+      "authors": [
+        "belaya-inna"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/bem-components-v2/bem-components-v2.en.md"
+    },
+    "ru": {
+      "title": "Релиз: bem-components v2.0.0",
+      "published": true,
+      "createDate": "30-01-2015",
+      "authors": [
+        "belaya-inna"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/bem-components-v2/bem-components-v2.ru.md"
+    }
+  },
+  {
+    "url": "/blog/digest-2",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "Дайджест новостей БЭМ. Выпуск второй.",
+      "published": true,
+      "createDate": "29-01-2015",
+      "authors": [
+        "belitsky-dmitry"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/digest-2/digest-2.ru.md"
+    }
+  },
+  {
+    "url": "/blog/first-bem-blog",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Hackathon: BEM Blog",
+      "published": true,
+      "createDate": "27-01-2015",
+      "authors": [
+        "grinenko-vladimir"
+      ],
+      "translators": [
+        "ksirov-rasul"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/first-bem-blog/first-bem-blog.en.md"
+    },
+    "ru": {
+      "title": "Хакатон: проект «Блог»",
+      "published": true,
+      "createDate": "27-01-2015",
+      "authors": [
+        "grinenko-vladimir"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/first-bem-blog/first-bem-blog.ru.md"
+    }
+  },
+  {
+    "url": "/blog/first-bem-forum",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Hackathon: BEM Forum",
+      "published": true,
+      "createDate": "22-01-2015",
+      "authors": [
+        "ilchenko-nikolay",
+        "kuznetsov-andrey"
+      ],
+      "translators": [
+        "ksirov-rasul"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/first-bem-forum/first-bem-forum.en.md"
+    },
+    "ru": {
+      "title": "Хакатон: проект «Форум»",
+      "published": true,
+      "createDate": "22-01-2015",
+      "authors": [
+        "ilchenko-nikolay",
+        "kuznetsov-andrey"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/first-bem-forum/first-bem-forum.ru.md"
+    }
+  },
+  {
+    "url": "/blog/first-bem-build",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Hackathon: BEM Build",
+      "published": true,
+      "createDate": "26-11-2014",
+      "authors": [
+        "abramov-andrey"
+      ],
+      "translators": [
+        "ksirov-rasul"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/first-bem-build/first-bem-build.en.md"
+    },
+    "ru": {
+      "title": "Хакатон: проект «Сборка»",
+      "published": true,
+      "createDate": "26-11-2014",
+      "authors": [
+        "abramov-andrey"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/first-bem-build/first-bem-build.ru.md"
+    }
+  },
+  {
+    "url": "/blog/first-bem-ide",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Hackathon: BEM IDE",
+      "published": true,
+      "createDate": "16-12-2014",
+      "authors": [
+        "belyanskii-alexandr"
+      ],
+      "translators": [
+        "ksirov-rasul"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/first-bem-ide/first-bem-ide.en.md"
+    },
+    "ru": {
+      "title": "Хакатон: проект «BEM IDE»",
+      "published": true,
+      "createDate": "16-12-2014",
+      "authors": [
+        "belyanskii-alexandr"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/first-bem-ide/first-bem-ide.ru.md"
+    }
+  },
+  {
+    "url": "/blog/first-bem-img",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Hackathon: Images",
+      "published": true,
+      "createDate": "16-12-2014",
+      "authors": [
+        "kondratov-alexey"
+      ],
+      "translators": [
+        "ksirov-rasul"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/first-bem-img/first-bem-img.en.md"
+    },
+    "ru": {
+      "title": "Хакатон: проект «Картинки» (src2img)",
+      "published": true,
+      "createDate": "16-12-2014",
+      "authors": [
+        "kondratov-alexey"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/first-bem-img/first-bem-img.ru.md"
+    }
+  },
+  {
+    "url": "/blog/first-bem-doc",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Hackathon: BEM Documentation",
+      "published": true,
+      "createDate": "26-11-2014",
+      "authors": [
+        "belaya-inna"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/first-bem-doc/first-bem-doc.en.md"
+    },
+    "ru": {
+      "title": "Хакатон: проект «Документация»",
+      "published": true,
+      "createDate": "26-11-2014",
+      "authors": [
+        "belaya-inna"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/first-bem-doc/first-bem-doc.ru.md"
+    }
+  },
+  {
+    "url": "/blog/first-bem-hack",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Hackathon: we did it!",
+      "published": true,
+      "createDate": "26-11-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "translators": [
+        "ksirov-rasul"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/first-bem-hack/first-bem-hack.en.md"
+    },
+    "ru": {
+      "title": "Хакатон: как это было",
+      "published": true,
+      "createDate": "26-11-2014",
+      "authors": [
+        "jetpyspayeva-yelena",
+        "konstantinov-eugeny"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/first-bem-hack/first-bem-hack.ru.md"
+    }
+  },
+  {
+    "url": "/blog/digest-1",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "Дайджест новостей БЭМ. Выпуск первый.",
+      "published": true,
+      "createDate": "19-12-2014",
+      "authors": [
+        "belitsky-dmitry"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/digest-1/digest-1.ru.md"
+    }
+  },
+  {
+    "url": "/blog/beminfo-mobile",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "bem.info goes mobile",
+      "published": true,
+      "createDate": "19-11-2014",
+      "authors": [
+        "konstantinova-gela"
+      ],
+      "translators": [
+        "ksirov-rasul"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/beminfo-mobile/beminfo-mobile.en.md"
+    },
+    "ru": {
+      "title": "Мобильный bem.info",
+      "published": true,
+      "createDate": "19-11-2014",
+      "authors": [
+        "konstantinova-gela"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/beminfo-mobile/beminfo-mobile.ru.md"
+    }
+  },
+  {
+    "url": "/blog/alfa-lab-seminar-2014",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "«Яндекс» в гостях у «Альфа-Лаборатории»",
+      "published": true,
+      "createDate": "09-09-2014",
+      "authors": [
+        "vinogradov-anton"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/alfa-lab-seminar-2014/alfa-lab-seminar-2014.ru.md"
+    }
+  },
+  {
+    "url": "/blog/libs-distribution",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Ways we distribute bem-components",
+      "published": true,
+      "createDate": "10-09-2014",
+      "authors": [
+        "grinenko-vladimir"
+      ],
+      "translators": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news",
+        "bem-components"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/libs-distribution/libs-distribution.en.md"
+    },
+    "ru": {
+      "title": "Варианты поставки bem-components",
+      "published": true,
+      "createDate": "10-09-2014",
+      "authors": [
+        "grinenko-vladimir"
+      ],
+      "tags": [
+        "news",
+        "bem-components"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/libs-distribution/libs-distribution.ru.md"
+    }
+  },
+  {
+    "url": "/blog/bem-forum-launch",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "На bem.info заработал форум",
+      "published": true,
+      "createDate": "31-07-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/bem-forum-launch/bem-forum-launch.ru.md"
+    }
+  },
+  {
+    "url": "/blog/bem-core-v3-plans",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "bem-core@v3 development plans",
+      "published": true,
+      "createDate": "23-07-2014",
+      "authors": [
+        "grinenko-vladimir"
+      ],
+      "translators": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news",
+        "bem-core"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/bem-core-v3-plans/bem-core-v3-plans.en.md"
+    },
+    "ru": {
+      "title": "Планы по разработке bem-core@v3",
+      "published": true,
+      "createDate": "23-07-2014",
+      "authors": [
+        "grinenko-vladimir"
+      ],
+      "translators": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news",
+        "bem-core"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/bem-core-v3-plans/bem-core-v3-plans.ru.md"
+    }
+  },
+  {
+    "url": "/blog/site-technologies",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "New on site: sections, navigation, meaning of «technologies», call for articles",
+      "published": true,
+      "createDate": "23-07-2014",
+      "authors": [
+        "jetpyspayeva-yelena",
+        "belaya-inna"
+      ],
+      "translators": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/site-technologies/site-technologies.en.md"
+    },
+    "ru": {
+      "title": "Новости сайта: разделы, навигация, понятие «технологий», прием статей",
+      "published": true,
+      "createDate": "23-07-2014",
+      "authors": [
+        "jetpyspayeva-yelena",
+        "belaya-inna"
+      ],
+      "translators": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/site-technologies/site-technologies.ru.md"
+    }
+  },
+  {
+    "url": "/blog/bem-tools-status-freeze",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "bem-tools status",
+      "published": true,
+      "createDate": "23-07-2014",
+      "authors": [
+        "grinenko-vladimir"
+      ],
+      "translators": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news",
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/bem-tools-status-freeze/bem-tools-status-freeze.en.md"
+    },
+    "ru": {
+      "title": "Статус bem-tools",
+      "published": true,
+      "createDate": "23-07-2014",
+      "authors": [
+        "grinenko-vladimir"
+      ],
+      "translators": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news",
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/bem-tools-status-freeze/bem-tools-status-freeze.ru.md"
+    }
+  },
+  {
+    "url": "/blog/bem-forum",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "bem-forum на замену клубу БЭМ в Я.ру",
+      "published": true,
+      "createDate": "07-07-2014",
+      "authors": [
+        "grinenko-vladimir"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/bem-forum/bem-forum.ru.md"
+    }
+  },
+  {
+    "url": "/blog/new-in-borschik-and-bem-tools",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Latest releases: borschik 1.0.0 and bem-tools 0.8.0",
+      "published": true,
+      "createDate": "03-04-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/new-in-borschik-and-bem-tools/new-in-borschik-and-bem-tools.en.md"
+    },
+    "ru": {
+      "title": "Новости последних релизов: borschik 1.0.0 и bem-tools 0.8.0",
+      "published": true,
+      "createDate": "03-04-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/new-in-borschik-and-bem-tools/new-in-borschik-and-bem-tools.ru.md"
+    }
+  },
+  {
+    "url": "/blog/bemup-minsk-2014",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "published": false
+    },
+    "ru": {
+      "title": "BEMup в 2014: формат, города, докладчики",
+      "published": true,
+      "createDate": "01-04-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news",
+        "bemup"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/blog/bemup-minsk-2014/bemup-minsk-2014.ru.md"
+    }
+  },
+  {
+    "url": "/blog/new-beminfo-site",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "New bem.info",
+      "published": true,
+      "createDate": "21-11-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/blog/new-beminfo-site/new-beminfo-site.en.md"
+    },
+    "ru": {
+      "title": "Новый bem.info",
+      "published": true,
+      "createDate": "21-11-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/blog/new-beminfo-site/new-beminfo-site.ru.md"
+    }
+  },
+  {
+    "url": "/blog/bem-tools-0-6-4",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "bem-tools v0.6.4",
+      "published": true,
+      "createDate": "02-07-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/blog/bem-tools-0-6-4/bem-tools-0-6-4.en.md"
+    },
+    "ru": {
+      "title": "Версия bem-tools 0.6.4",
+      "published": true,
+      "createDate": "02-07-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/blog/bem-tools-0-6-4/bem-tools-0-6-4.ru.md"
+    }
+  },
+  {
+    "url": "/blog/bemup-talks",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "First BEMup talks archive",
+      "published": true,
+      "createDate": "20-08-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "bemup",
+        "video"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/blog/bemup-talks/bemup-talks.en.md"
+    },
+    "ru": {
+      "title": "Видео докладов первого BEMup'а",
+      "published": true,
+      "createDate": "20-08-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "bemup",
+        "video"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/blog/bemup-talks/bemup-talks.ru.md"
+    }
+  },
+  {
+    "url": "/blog/bemup-promo",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "BEMup — watch it, feel it!",
+      "published": true,
+      "createDate": "13-08-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "bemup",
+        "video"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/blog/bemup-promo/bemup-promo.en.md"
+    },
+    "ru": {
+      "title": "BEMup — как это было",
+      "published": true,
+      "createDate": "13-08-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "bemup",
+        "video"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/blog/bemup-promo/bemup-promo.ru.md"
+    }
+  },
+  {
+    "url": "/blog/bem-components",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Rename of 'bem-controls' to 'bem-components'",
+      "published": true,
+      "createDate": "05-08-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/blog/bem-components/bem-components.en.md"
+    },
+    "ru": {
+      "title": "Переименование bem-controls в bem-components",
+      "published": true,
+      "createDate": "05-08-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/blog/bem-components/bem-components.ru.md"
+    }
+  },
+  {
+    "url": "/blog/bem-cli",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "bem-cli: launch bem-tools locally",
+      "published": true,
+      "createDate": "09-07-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news",
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/blog/bem-cli/bem-cli.en.md"
+    },
+    "ru": {
+      "title": "bem-cli: запусти bem-tools локально",
+      "published": true,
+      "createDate": "09-07-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news",
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/blog/bem-cli/bem-cli.ru.md"
+    }
+  },
+  {
+    "url": "/blog/bem-tools-0-5-33",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "bem-tools v0.5.33",
+      "published": true,
+      "createDate": "02-07-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news",
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/blog/bem-tools-0-5-33/bem-tools-0-5-33.en.md"
+    },
+    "ru": {
+      "title": "Версия bem-tools 0.5.33",
+      "published": true,
+      "createDate": "02-07-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news",
+        "bem-tools"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/blog/bem-tools-0-5-33/bem-tools-0-5-33.ru.md"
+    }
+  },
+  {
+    "url": "/blog/anygrid-bem-notations",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "AnyGrid – CSS Grids Generator that uses BEM-notations and etc.!",
+      "published": true,
+      "createDate": "18-06-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news",
+        "css"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/blog/anygrid-bem-notations/anygrid-bem-notations.en.md"
+    },
+    "ru": {
+      "title": "Генератор сеток AnyGrid для CSS в БЭМ-нотациях и многого другого!",
+      "published": true,
+      "createDate": "18-06-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "tags": [
+        "news",
+        "css"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/blog/anygrid-bem-notations/anygrid-bem-notations.ru.md"
+    }
+  },
+  {
+    "url": "/forum",
+    "oldUrls": [],
+    "view": "forum",
+    "en": {
+      "title": "Forum",
+      "published": true
+    },
+    "ru": {
+      "title": "Форум",
+      "published": true
+    }
+  },
+  {
+    "url": "/jobs",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Jobs",
+      "published": true,
+      "createDate": "24-09-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/pages/jobs/jobs.en.md"
+    },
+    "ru": {
+      "title": "Работа",
+      "published": true,
+      "createDate": "24-09-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/pages/jobs/jobs.ru.md"
+    }
+  },
+  {
+    "url": "/built-with-b",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Build with BEM",
+      "published": true,
+      "createDate": "17-03-2015",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/projects/projects.en.md"
+    },
+    "ru": {
+      "title": "Проекты на БЭМ",
+      "published": true,
+      "createDate": "05-09-2014",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/projects/projects.ru.md"
+    }
+  },
+  {
+    "url": "/authors",
+    "oldUrls": [],
+    "view": "authors",
+    "en": {
+      "title": "Authors",
+      "published": true
+    },
+    "ru": {
+      "title": "Авторы",
+      "published": true
+    }
+  },
+  {
+    "url": "/acknowledgement",
+    "oldUrls": [],
+    "view": "post",
+    "en": {
+      "title": "Acknowledgements",
+      "published": true,
+      "createDate": "09-07-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/pages/acknowledgement/acknowledgement.en.md"
+    },
+    "ru": {
+      "title": "Благодарности",
+      "published": true,
+      "createDate": "09-07-2013",
+      "authors": [
+        "jetpyspayeva-yelena"
+      ],
+      "sourceUrl": "https://github.com/bem/bem-method/tree/bem-info-data/pages/acknowledgement/acknowledgement.ru.md"
+    }
+  },
+  {
+    "url": "/tags",
+    "oldUrls": [],
+    "view": "tags",
+    "en": {
+      "title": "Tags",
+      "published": true
+    },
+    "ru": {
+      "title": "Теги",
+      "published": true
+    }
+  },
+  {
+    "url": "/forum",
+    "oldUrls": [],
+    "view": "forum",
+    "en": {
+      "title": "Forum",
+      "published": true
+    },
+    "ru": {
+      "title": "Форум",
+      "published": true
+    }
+  },
+  {
+    "url": "http://www.facebook.com/#!/groups/209713935765634/",
+    "oldUrls": [],
+    "view": "posts",
+    "en": {
+      "title": "",
+      "published": true
+    },
+    "ru": {
+      "title": "",
+      "published": true
+    }
+  }
+]
