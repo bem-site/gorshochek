@@ -25,6 +25,7 @@
     "fs-extra": "^0.18.x",
     "lodash": "^3.1.x",
     "moment": "^2.9.0",
+    "request": "^2.55.0",
     "vow": "~0.4.x",
     "vow-node": "^0.2.x"
   },
