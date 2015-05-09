@@ -28,7 +28,6 @@ describe('LoadModelFiles', function () {
 
         after(function (done) {
             fsExtra.move('./model/_model.json', './model/model.json', function () {
-
                 done();
             });
         });
