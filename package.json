@@ -18,25 +18,25 @@
     "node": ">= 0.10.0"
   },
   "dependencies": {
-    "babel-runtime": "^5.2.14",
+    "babel-runtime": "^5.2.x",
     "bem-site-logger": "^0.0.x",
-    "deep-diff": "^0.3.2",
-    "deep-extend": "^0.3.3",
-    "fs-extra": "^0.18.x",
-    "lodash": "^3.1.x",
-    "moment": "^2.9.0",
-    "request": "^2.55.0",
+    "deep-diff": "^0.3.x",
+    "deep-extend": "^0.4.x",
+    "fs-extra": "^0.x",
+    "lodash": "^3.x",
+    "moment": "^2.x",
+    "request": "^2.x",
     "vow": "~0.4.x",
-    "vow-node": "^0.2.x"
+    "vow-node": "^0.3.x"
   },
   "devDependencies": {
-    "babel": "^5.2.9",
+    "babel": "^5.2.x",
     "istanbul": "^0.3.x",
     "jscs": "^1.11.x",
     "jshint": "~2.7.x",
     "mocha": "~2.2.x",
     "mocha-lcov-reporter": "0.0.x",
-    "should": "~5.2.x"
+    "should": "~6.x"
   },
   "scripts": {
     "start": "npm run compile && node launcher.js",
