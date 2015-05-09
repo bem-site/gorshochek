@@ -91,6 +91,8 @@ npm run codestyle
 
 * Ильченко Николай (http://github.com/tavriaforever)
 * Константинова Гела (http://github.com/gela-d)
+* Гриненко Владимир (http://github.com/tadatuta)
+* Абрамов Андрей (https://github.com/blond)
 
 Разработчик Кузнецов Андрей Серргеевич @tormozz48
 Вопросы и предложения присылать по адресу: tormozz48@gmail.com
