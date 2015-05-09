@@ -22,12 +22,12 @@ describe('Model', function () {
         });
 
         it ('getCommonPages', function () {
-            model.getCommonPages().should.be.instanceOf(Array).and.have.length(0);
+            model.getPages().should.be.instanceOf(Array).and.have.length(0);
         });
 
         it ('setCommonPages', function () {
-            model.setCommonPages([1, 2]).should.be.instanceOf(Model);
-            model.getCommonPages().should.be.instanceOf(Array).and.have.length(2);
+            model.setPages([1, 2]).should.be.instanceOf(Model);
+            model.getPages().should.be.instanceOf(Array).and.have.length(2);
         });
     });
 });
