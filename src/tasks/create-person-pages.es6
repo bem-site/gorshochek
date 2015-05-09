@@ -30,11 +30,11 @@ export default class CreatePersonPages extends Base {
          */
         var baseUrl = this.getTaskConfig().baseUrl,
             type = this.getTaskConfig().type,
+            pagesMap = new Map(),
             ids = {
                 authors: model.getMeta().getAuthors(),
                 translators: model.getMeta().getTranslators()
-            }[type],
-            pagesHash = {};
+            }[type];
 
         this.logger.debug(`Create ${type} pages with base url: ${baseUrl}`);
 
@@ -45,16 +45,16 @@ export default class CreatePersonPages extends Base {
             for (let personId of ids[lang].values()) {
                 this.logger.verbose(`create person page: ${personId} for language: ${lang}`);
 
-                pagesHash[personId] = pagesHash[personId] || {
+                pagesMap.set(personId, {
                     url: `${baseUrl}/${personId}`,
                     oldUrls: [],
                     view: type.replace(/s$/, '') // убираем концевую 's' из type (authors -> author)
-                };
+                });
 
                 // выбираем данные по человеку из модели людей (people.json) по
                 // по уникальному id человека и локали
                 let person = model.getPeople().getByIdAndLang(personId, lang);
-                pagesHash[personId][lang] = _.extend({}, person,
+                pagesMap.get(personId)[lang] = _.extend({}, person,
                     { title: model.getPeople().getFullNameByIdAndLang(personId, lang) });
             }
         });
@@ -62,7 +62,7 @@ export default class CreatePersonPages extends Base {
         this.logger.debug(`pages for ${type} were successfully created`);
 
         // добавляем сгенерированне страницы к массиву общих страниц
-        model.setPages(model.getPages().concat(_.values(pagesHash)));
+        model.setPages(model.getPages().concat(pagesMap.values()));
         return Promise.resolve(model);
     }
 }

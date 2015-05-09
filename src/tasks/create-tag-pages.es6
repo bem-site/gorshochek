@@ -29,7 +29,7 @@ export default class CreateTagPages extends Base {
         var baseUrl = this.getTaskConfig().baseUrl,
             type = 'tags',
             tags = model.getMeta().getTags(),
-            pagesHash = {};
+            pagesMap = new Map();
 
         this.logger.debug(`Create ${type} pages with base url: ${baseUrl}`);
 
@@ -40,19 +40,19 @@ export default class CreateTagPages extends Base {
             for (let tag of tags[lang].values()) {
                 this.logger.verbose(`create person page: ${tag} for language: ${lang}`);
 
-                pagesHash[tag] = pagesHash[tag] || {
+                pagesMap.set(tag, {
                     url: `${baseUrl}/${tag}`,
                     oldUrls: [],
                     view: type.replace(/s$/, '')
-                };
-                pagesHash[tag][lang] = _.extend({}, { title: tag });
+                });
+                pagesMap.get(tag)[lang] = _.extend({}, { title: tag });
             }
         });
 
         this.logger.debug(`pages for ${type} were successfully created`);
 
         // добавляем сгенерированне страницы к массиву общих страниц
-        model.setPages(model.getPages().concat(_.values(pagesHash)));
+        model.setPages(model.getPages().concat(pagesMap.values()));
         return Promise.resolve(model);
     }
 }
