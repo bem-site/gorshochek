@@ -81,8 +81,8 @@ export default class MergeModels extends Base {
         Сначала добавляем как есть новые страницы, которых еще не было на сайте
         */
         // add new pages
-        resultModel.setCommonPages(
-            resultModel.getCommonPages().concat(addedPages.map(url => {
+        resultModel.setPages(
+            resultModel.getPages().concat(addedPages.map(url => {
                 this.logger.debug(`Page with url: ${url} was added to model`);
                 resultModel.getChanges().pages.addAdded({ url: url });
                 return newModel[url];
@@ -91,8 +91,8 @@ export default class MergeModels extends Base {
 
         // Добавляем те страницы, которые не были изменены
         // add non-modified pages
-        resultModel.setCommonPages(
-            resultModel.getCommonPages().concat(nonModifiedPages.map(url => {
+        resultModel.setPages(
+            resultModel.getPages().concat(nonModifiedPages.map(url => {
                 return oldModel[url];
             }))
         );
@@ -101,8 +101,8 @@ export default class MergeModels extends Base {
         // пришли и новой модели
         // merge modifications
         // add modified pages
-        resultModel.setCommonPages(
-            resultModel.getCommonPages().concat(modifiedPages.map(url => {
+        resultModel.setPages(
+            resultModel.getPages().concat(modifiedPages.map(url => {
                 this.logger.debug(`Page with url: ${url} was modified`);
                 resultModel.getChanges().pages.addModified({ url: url });
                 return deepExtend(oldModel[url], newModel[url]);

@@ -1,4 +1,5 @@
 import Changes from './changes/index';
+import People from './people';
 import Meta from './meta';
 
 export default class Model {
@@ -12,11 +13,11 @@ export default class Model {
         return this._changes;
     }
 
-    getCommonPages() {
+    getPages() {
         return this._commonPages;
     }
 
-    setCommonPages(pages) {
+    setPages(pages) {
         this._commonPages = pages;
         return this;
     }
@@ -28,5 +29,14 @@ export default class Model {
 
     getMeta() {
         return this._meta;
+    }
+
+    initPeople(people) {
+        this._people = new People(people);
+        return this;
+    }
+
+    getPeople() {
+        return this._people;
     }
 }

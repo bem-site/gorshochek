@@ -1,6 +1,7 @@
 var fs = require('fs'),
     path = require('path'),
     request = require('request'),
+    fsExtra = require('fs-extra'),
     _ = require('lodash');
 
 import Base from './base';
@@ -10,7 +11,7 @@ const META = {
     name: 'load people data'
 };
 
-export default class LoadModelFiles extends Base {
+export default class LoadPeople extends Base {
     constructor(baseConfig, taskConfig) {
         super(baseConfig, taskConfig, META);
     }
@@ -22,6 +23,10 @@ export default class LoadModelFiles extends Base {
     run(model) {
         this.beforeRun(this.name);
 
+        /**
+         * Необходимо загрузить json файл c данными по людям с удаленного источника и сохранить
+         * локально на файловую систему в папку cache
+         */
         var destinationPath = path.join(this.getBaseConfig().getCacheDirPath(), 'people.json');
 
         this.logger.debug('load people.json file:');
@@ -39,6 +44,7 @@ export default class LoadModelFiles extends Base {
                 })
                 .on('close', () => {
                     this.logger.debug('people.json file was loaded successfully and saved to cache');
+                    model.initPeople(fsExtra.readJSONSync(destinationPath));
                     resolve(model);
                 });
         });

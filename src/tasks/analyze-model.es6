@@ -19,7 +19,7 @@ export default class AnalyzeModel extends Base {
         this.beforeRun(this.name);
 
         var languages = this.getBaseConfig().getLanguages();
-        model.setCommonPages(model.getCommonPages().map(item => {
+        model.setPages(model.getPages().map(item => {
             return this._analyzePage(item, languages);
         }, this));
         return Promise.resolve(model);
