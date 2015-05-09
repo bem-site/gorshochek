@@ -18,22 +18,42 @@ export default class Base {
         this.logger = Logger.setOptions(this.getBaseConfig().getLoggerSettings()).createLogger(m);
     }
 
+    /**
+     * Returns general configuration object
+     * @returns {Object}
+     */
     getBaseConfig() {
         return this._baseConfig;
     }
 
+    /**
+     * Returns special task configuration module
+     * @returns {Object}
+     */
     getTaskConfig() {
         return this._taskConfig;
     }
 
+    /**
+     * This function is called after task initialization
+     * Also you can override it in your own task module
+     */
     afterInitialization() {
         this.logger.info(`Initialize "${this.name}" task successfully`);
     }
 
+    /**
+     * Prints log message. Also you can override it in your own task module
+     * @param {String} name - task name
+     */
     beforeRun(name) {
         this.logger.info(`Start to execute "${this.name}" task`);
     }
 
+    /**
+     * Performs task logic
+     * @returns {*|Promise.<boolean>}
+     */
     run() {
         // TODO implement in inheritances
         return Promise.resolve(true);
