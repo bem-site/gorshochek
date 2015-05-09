@@ -39,6 +39,7 @@
     "should": "~5.2.x"
   },
   "scripts": {
+    "start": "npm run compile && node launcher.js",
     "compile": "babel src --optional runtime --out-dir lib",
     "mocha": "npm run compile && NODE_ENV=testing mocha --reporter spec",
     "codestyle": "node_modules/.bin/jshint . && node_modules/.bin/jscs -c .jscs.js .",
