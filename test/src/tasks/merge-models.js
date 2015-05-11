@@ -7,7 +7,7 @@ describe('MergeModels', function () {
     var config, task;
 
     before(function () {
-        config = new Config(),
+        config = new Config();
         task = new MergeModels(config, {});
     });
 
