@@ -63,7 +63,7 @@ export default class MergeModels extends Base {
         }, this);
 
         // отбрасываем удаленные страницы
-        oldPages = _.without(oldPages, removedPages);
+        oldPages = _.difference(oldPages, removedPages);
 
         /*
           страницы в старой модели делятся на 2 группы:
