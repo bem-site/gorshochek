@@ -3,6 +3,7 @@ var path = require('path'),
     fsExtra = require('fs-extra');
 
 import Base from './base';
+import Meta from '../model/meta';
 
 const META = {
     module: _.pick(module, 'filename'),
@@ -26,9 +27,12 @@ export default class CreateTagPages extends Base {
          * Создаются объекты моделей страниц с уникальными урлами построенными по правилу /{baseUrl}/{tag},
          * где baseUrl - базовый урл, который задается в конфигурации модуля, а tag - название тега.
          */
-        var baseUrl = this.getTaskConfig().baseUrl,
+        var cacheDir = this.getBaseConfig().getCacheDirPath(),
+            metaFilePath = path.join(cacheDir, Meta.getFileName()),
+            baseUrl = this.getTaskConfig().baseUrl,
             type = 'tags',
-            tags = model.getMeta().getTags(),
+            meta = Meta.init(metaFilePath),
+            tags = meta.getTags(),
             pagesMap = new Map();
 
         this.logger.debug(`Create ${type} pages with base url: ${baseUrl}`);
@@ -37,7 +41,7 @@ export default class CreateTagPages extends Base {
         // внутри во вложенном цикле перебираем все теги
         // собранные модулем "collect-meta"
         this.getBaseConfig().getLanguages().forEach(lang => {
-            for (let tag of tags[lang].values()) {
+            tags[lang].forEach(tag => {
                 this.logger.verbose(`create person page: ${tag} for language: ${lang}`);
 
                 pagesMap.set(tag, {
@@ -46,7 +50,7 @@ export default class CreateTagPages extends Base {
                     view: type.replace(/s$/, '')
                 });
                 pagesMap.get(tag)[lang] = _.extend({}, { title: tag });
-            }
+            });
         });
 
         this.logger.debug(`pages for ${type} were successfully created`);

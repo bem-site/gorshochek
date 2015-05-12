@@ -3,6 +3,7 @@ var _ = require('lodash'),
     fsExtra = require('fs-extra');
 
 import Base from './base';
+import Meta from '../model/meta';
 
 const META = {
     module: _.pick(module, 'filename'),
@@ -37,7 +38,9 @@ export default class CollectMeta extends Base {
          * }
          * Используя полученные данные инициализаируем объект класса meta внутри модели
          */
-        var authors = this._initializeMetaStructure(),
+        var cacheDir = this.getBaseConfig().getCacheDirPath(),
+            filePath = path.join(cacheDir, Meta.getFileName()),
+            authors = this._initializeMetaStructure(),
             translators = this._initializeMetaStructure(),
             tags = this._initializeMetaStructure();
 
@@ -56,7 +59,7 @@ export default class CollectMeta extends Base {
             this.logger.debug(`Number of tags for lang ${lang} ==> ${tags[lang].size}`);
         });
 
-        model.initMeta(authors, translators, tags);
+        Meta.save(filePath, authors, translators, tags);
         return Promise.resolve(model);
     }
 }

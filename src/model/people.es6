@@ -1,3 +1,5 @@
+var fsExtra = require('fs-extra');
+
 export default class People {
     constructor(people) {
         this._people = people;
@@ -31,5 +33,21 @@ export default class People {
     getFullNameByIdAndLang(id, lang) {
         var p = this.getByIdAndLang(id, lang);
         return `${p.firstName} ${p.lastName}`
+    }
+
+    /**
+     * Returns file name for saving people data on local filesystem
+     * @returns {String} - name of file
+     */
+    static getFileName() {
+        return 'people.json';
+    }
+
+    /**
+     * Initialize people model from json file
+     * @param {String} file - name of file
+     */
+    static init(file) {
+        return new People(fsExtra.readJSONSync(file));
     }
 }

@@ -3,6 +3,8 @@ var path = require('path'),
     fsExtra = require('fs-extra');
 
 import Base from './base';
+import Meta from '../model/meta';
+import People from '../model/people';
 
 const META = {
     module: _.pick(module, 'filename'),
@@ -28,13 +30,15 @@ export default class CreatePersonPages extends Base {
          * урл, который задается в конфигурации модуля, а personId - уникальный идентификатор человека
          * из файла people.json.
          */
-        var baseUrl = this.getTaskConfig().baseUrl,
+        var cacheDir = this.getBaseConfig().getCacheDirPath(),
+            metaFilePath = path.join(cacheDir, Meta.getFileName()),
+            peopleFilePath = path.join(cacheDir, People.getFileName()),
+            baseUrl = this.getTaskConfig().baseUrl,
             type = this.getTaskConfig().type,
+            meta = Meta.init(metaFilePath),
+            people = People.init(peopleFilePath),
             pagesMap = new Map(),
-            ids = {
-                authors: model.getMeta().getAuthors(),
-                translators: model.getMeta().getTranslators()
-            }[type];
+            ids = { authors: meta.getAuthors(), translators: meta.getTranslators() }[type];
 
         this.logger.debug(`Create ${type} pages with base url: ${baseUrl}`);
 
@@ -42,7 +46,7 @@ export default class CreatePersonPages extends Base {
         // внутри во вложенном цикле перебираем все id авторов (или переводчиков)
         // собранные модулем "collect-meta"
         this.getBaseConfig().getLanguages().forEach(lang => {
-            for (let personId of ids[lang].values()) {
+            ids[lang].forEach(personId => {
                 this.logger.verbose(`create person page: ${personId} for language: ${lang}`);
 
                 pagesMap.set(personId, {
@@ -53,10 +57,10 @@ export default class CreatePersonPages extends Base {
 
                 // выбираем данные по человеку из модели людей (people.json) по
                 // по уникальному id человека и локали
-                let person = model.getPeople().getByIdAndLang(personId, lang);
+                let person = people.getByIdAndLang(personId, lang);
                 pagesMap.get(personId)[lang] = _.extend({}, person,
-                    { title: model.getPeople().getFullNameByIdAndLang(personId, lang) });
-            }
+                    { title: people.getFullNameByIdAndLang(personId, lang) });
+            });
         });
 
         this.logger.debug(`pages for ${type} were successfully created`);
