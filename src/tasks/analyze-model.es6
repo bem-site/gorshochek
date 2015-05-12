@@ -44,9 +44,8 @@ export default class AnalyzeModel extends Base {
         page.view = page.view || 'post'; // поле представления страницы
 
         languages.forEach(language => {
-            if (page[language].published !== false) {
-                page[language].published = true; // флаг видимости страницы
-            }
+            // флаг видимости страницы
+            page[language].published = !!page[language].published;
 
             // каждый языковой вариант страницы должен иметь обязательное поле "title"
             // в противном случае, скрываем страницу из показа
