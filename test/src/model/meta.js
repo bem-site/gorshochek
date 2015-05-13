@@ -3,18 +3,15 @@ var path = require('path'),
     Meta = require('../../../lib/model/meta');
 
 describe('Meta', function () {
-    it('initialization', function () {
-        var meta = new Meta({}, {}, {});
-        meta._authors.should.be.instanceOf(Object);
-        meta._translators.should.be.instanceOf(Object);
-        meta._tags.should.be.instanceOf(Object);
-    });
-
     describe('instance methods', function () {
         var meta;
 
         before(function () {
-            meta = new Meta({}, {}, {});
+            meta = new Meta({
+                authors: {},
+                translators: {},
+                tags: {}
+            });
         });
 
         it('getAuthors', function () {

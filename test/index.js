@@ -1,6 +1,7 @@
 require('./src/config.js');
 require('./src/model/model');
 require('./src/model/meta');
+require('./src/model/people');
 require('./src/model/changes/index');
 require('./src/model/changes/type');
 require('./src/tasks/base');
