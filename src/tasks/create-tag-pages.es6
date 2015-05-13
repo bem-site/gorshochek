@@ -15,6 +15,14 @@ export default class CreateTagPages extends Base {
         super(baseConfig, taskConfig, META);
     }
 
+    _arrayFromMap(m) {
+        var arr = [];
+        for (let value of m.values()) {
+            arr.push(value);
+        }
+        return arr;
+    }
+
     /**
      * Performs task
      * @returns {Promise}
@@ -56,7 +64,7 @@ export default class CreateTagPages extends Base {
         this.logger.debug(`pages for ${type} were successfully created`);
 
         // добавляем сгенерированне страницы к массиву общих страниц
-        model.setPages(model.getPages().concat(pagesMap.values()));
+        model.setPages(model.getPages().concat(this._arrayFromMap(pagesMap)));
         return Promise.resolve(model);
     }
 }
