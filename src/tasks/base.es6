@@ -48,7 +48,7 @@ export default class Base {
      */
     beforeRun(name) {
         console.log('\n');
-        console.log(`____________________ ${this.name.toUpperCase()} ____________________`)
+        this.logger.info(`${this.name.toUpperCase()}`)
         this.logger.info(`Start to execute "${this.name}" task`);
     }
 
