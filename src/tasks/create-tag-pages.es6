@@ -57,7 +57,7 @@ export default class CreateTagPages extends Base {
                     oldUrls: [],
                     view: type.replace(/s$/, '')
                 });
-                pagesMap.get(tag)[lang] = _.extend({}, { title: tag });
+                pagesMap.get(tag)[lang] = _.extend({}, { published: true, title: tag });
             });
         });
 

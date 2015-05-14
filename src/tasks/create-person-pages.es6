@@ -67,7 +67,7 @@ export default class CreatePersonPages extends Base {
                 // по уникальному id человека и локали
                 let person = people.getByIdAndLang(personId, lang);
                 pagesMap.get(personId)[lang] = _.extend({}, person,
-                    { title: people.getFullNameByIdAndLang(personId, lang) });
+                    { published: true, title: people.getFullNameByIdAndLang(personId, lang) });
             });
         });
 
