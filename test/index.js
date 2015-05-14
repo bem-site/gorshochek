@@ -15,4 +15,5 @@ require('./src/tasks/collect-meta');
 require('./src/tasks/load-people');
 require('./src/tasks/create-person-pages');
 require('./src/tasks/create-tag-pages');
+require('./src/tasks/build-sitemap-xml');
 //require('./src/index.js');

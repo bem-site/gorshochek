@@ -5,5 +5,8 @@ var path = require('path'),
 
 describe('CollectMeta', function () {
 
+    describe('instance methods', function () {
+
+    });
 });
 

@@ -1,4 +1,5 @@
-var peoplesUrl = 'https://raw.githubusercontent.com/bem/bem-method/bem-info-data/people/people.json';
+var hosts = { en: 'https://bem.info', ru: 'https://ru.bem.info' },
+    peoplesUrl = 'https://raw.githubusercontent.com/bem/bem-method/bem-info-data/people/people.json';
 
 module.exports = {
     languages: ['ru'],
@@ -18,6 +19,8 @@ module.exports = {
         [require('../../../lib/tasks/load-people'), { url: peoplesUrl }],
         [require('../../../lib/tasks/create-person-pages'), { baseUrl: '/authors', type: 'authors' }],
         [require('../../../lib/tasks/create-person-pages'), { baseUrl: '/translators', type: 'translators' }],
-        [require('../../../lib/tasks/create-tag-pages'), { baseUrl: '/tags' }]
+        [require('../../../lib/tasks/create-tag-pages'), { baseUrl: '/tags' }],
+        [require('../../../lib/tasks/build-sitemap-xml'), { hosts: hosts }],
+        [require('../../../lib/tasks/save-data-file')]
     ]
 };

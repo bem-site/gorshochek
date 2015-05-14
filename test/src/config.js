@@ -141,7 +141,7 @@ describe('Config', function () {
 
         it('should return task objects', function () {
             config.getTasks().should.be.instanceOf(Array);
-            config.getTasks().should.have.length(11);
+            config.getTasks().should.have.length(13);
         });
     });
 
