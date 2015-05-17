@@ -1,12 +1,23 @@
-var path = require('path'),
-    should = require('should'),
+var fs = require('fs'),
+    mockFs = require('mock-fs'),
     Logger = require('bem-site-logger'),
     Config = require('../../../lib/config'),
     TaskBase = require('../../../lib/tasks/base');
 
 describe('TaskBase', function () {
     before(function () {
-        process.chdir(path.resolve(__dirname, '../../stub'));
+        var configFile = fs.readFileSync('./test/stub/.builder/make.js', { encoding: 'utf-8' });
+        mockFs({
+            '.builder': {
+              'make.js': configFile
+            },
+            cache: {},
+            data: {}
+        });
+    });
+
+    after(function () {
+        mockFs.restore();
     });
 
     it('initialization', function () {
@@ -36,9 +47,5 @@ describe('TaskBase', function () {
                 done();
             });
         });
-    });
-
-    after(function () {
-        process.chdir(path.resolve(__dirname, '../../../'));
     });
 });

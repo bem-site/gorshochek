@@ -1,13 +1,20 @@
 var fs = require('fs'),
-    path = require('path'),
-    should = require('should'),
-    fsExtra = require('fs-extra'),
+    mockFs = require('mock-fs'),
     Config = require('../../../lib/config'),
     MakeDataDirectory = require('../../../lib/tasks/make-data-directory');
 
 describe('MakeDataDirectory', function () {
     before(function () {
-        process.chdir(path.resolve(__dirname, '../../stub'));
+        var configFile = fs.readFileSync('./test/stub/.builder/make.js', { encoding: 'utf-8' });
+        mockFs({
+            '.builder': {
+                'make.js': configFile
+            }
+        });
+    });
+
+    after(function () {
+        mockFs.restore();
     });
 
     describe('instance methods', function () {
@@ -25,10 +32,5 @@ describe('MakeDataDirectory', function () {
                 done();
             });
         });
-    });
-
-    after(function () {
-        fsExtra.removeSync('./data');
-        process.chdir(path.resolve(__dirname, '../../../'));
     });
 });

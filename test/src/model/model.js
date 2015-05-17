@@ -1,6 +1,4 @@
-var path = require('path'),
-    should = require('should'),
-    Changes = require('../../../lib/model/changes'),
+var Changes = require('../../../lib/model/changes'),
     Model = require('../../../lib/model/model');
 
 describe('Model', function () {

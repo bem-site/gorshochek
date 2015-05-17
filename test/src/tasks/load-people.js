@@ -1,30 +1,36 @@
 var fs = require('fs'),
-    path = require('path'),
-    should = require('should'),
-    fsExtra = require('fs-extra'),
+    mockFs = require('mock-fs'),
     Config = require('../../../lib/config'),
     Model = require('../../../lib/model/model'),
     LoadPeople = require('../../../lib/tasks/load-people');
 
 describe('LoadPeople', function () {
     before(function () {
-        process.chdir(path.resolve(__dirname, '../../stub'));
+        var configFile = fs.readFileSync('./test/stub/.builder/make.js', { encoding: 'utf-8' });
+        mockFs({
+            '.builder': {
+                'make.js': configFile
+            },
+            cache: {},
+            data: {}
+        });
+    });
+
+    after(function () {
+        mockFs.restore();
     });
 
     describe('invalid url', function () {
         var peopleUrl = 'https://raw.githubusercontent.com/bem/bem-method/bem-info-data/people/people1.json',
-            task,
-            config;
+            task;
 
         before(function () {
-            config = new Config();
-            task = new LoadPeople(config, { url: peopleUrl });
-            fsExtra.mkdirpSync(config.getCacheDirPath());
+            task = new LoadPeople(new Config(), { url: peopleUrl });
         });
 
         it('run', function (done) {
             var model = new Model();
-            task.run(model).catch(function (error) {
+            task.run(model).catch(function () {
                 fs.existsSync('./cache/people.json').should.equal(false);
                 done();
             });
@@ -33,13 +39,10 @@ describe('LoadPeople', function () {
 
     describe('success', function () {
         var peopleUrl = 'https://raw.githubusercontent.com/bem/bem-method/bem-info-data/people/people.json',
-            task,
-            config;
+            task;
 
         before(function () {
-            config = new Config();
-            task = new LoadPeople(config, { url: peopleUrl });
-            fsExtra.mkdirpSync(config.getCacheDirPath());
+            task = new LoadPeople(new Config(), { url: peopleUrl });
         });
 
         it('run', function (done) {
@@ -49,10 +52,5 @@ describe('LoadPeople', function () {
                 done();
             });
         });
-    });
-
-    after(function () {
-        fsExtra.removeSync('./cache');
-        process.chdir(path.resolve(__dirname, '../../../'));
     });
 });

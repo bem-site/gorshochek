@@ -60,7 +60,7 @@ export default class BuildSitemapXML extends Base {
      * @returns {string|*}
      * @private
      */
-    _getSitemapXmlFilePath() {
+    _getSiteMapXmlFilePath() {
         // путь по которому будет сохранен файл sitemap.xml
         return path.join(this.getBaseConfig().getDestinationDirPath(), 'sitemap.xml');
     }
@@ -115,11 +115,11 @@ export default class BuildSitemapXML extends Base {
             siteMap = js2xml('urlset', { url: this._buildSiteMapModel(model, hosts, languages) });
 
         this.logger.debug('Save sitemap.xml file:');
-        this.logger.debug(`==> to ${this._getSitemapXmlFilePath()}`);
+        this.logger.debug(`==> to ${this._getSiteMapXmlFilePath()}`);
 
         // содержимое sitemap.xml сохраняется в соответствующий файл
         return new Promise((resolve, reject) => {
-            fs.writeFile(this._getSitemapXmlFilePath(), siteMap, (error) => {
+            fs.writeFile(this._getSiteMapXmlFilePath(), siteMap, (error) => {
                 if (error) {
                     this.logger.error('Error occur while saving sitemap.xml file');
                     this.logger.error(error.message);

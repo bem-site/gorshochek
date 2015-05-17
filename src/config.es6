@@ -113,7 +113,7 @@ export default class Config {
      * @returns {String}
      */
     getModelFilePath() {
-        return path.resolve(this.modelFilePath);
+        return this.modelFilePath;
     }
 
     /**
@@ -122,7 +122,7 @@ export default class Config {
      * @returns {String}
      */
     getDestinationDirPath() {
-        return path.resolve(this.destinationDirPath);
+        return this.destinationDirPath;
     }
 
     /**
@@ -130,7 +130,7 @@ export default class Config {
      * @returns {*|String}
      */
     getCacheDirPath() {
-        return path.resolve('./cache');
+        return './cache';
     }
 
     /**

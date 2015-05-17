@@ -1,10 +1,20 @@
-var path = require('path'),
+var fs = require('fs'),
+    mockFs = require('mock-fs'),
     should = require('should'),
     Config = require('../../lib/config');
 
 describe('Config', function () {
     before(function () {
-        process.chdir(path.resolve(__dirname, '../stub'));
+        var configFile = fs.readFileSync('./test/stub/.builder/make.js', { encoding: 'utf-8' });
+        mockFs({
+            '.builder': {
+                'make.js': configFile
+            }
+        });
+    });
+
+    after(function () {
+        mockFs.restore();
     });
 
     describe('constructor', function () {
@@ -67,14 +77,14 @@ describe('Config', function () {
                 var r = config._setModelFilePath({ modelFilePath: './model/model1.json' });
                 r.should.be.instanceOf(Config);
                 config.getModelFilePath().should.be.instanceOf(String);
-                config.getModelFilePath().should.equal(path.resolve('./model/model1.json'));
+                config.getModelFilePath().should.equal('./model/model1.json');
             });
 
             it('should set with default value', function () {
                 var r = config._setModelFilePath({});
                 r.should.be.instanceOf(Config);
                 config.getModelFilePath().should.be.instanceOf(String);
-                config.getModelFilePath().should.equal(path.resolve('./model/model.json'));
+                config.getModelFilePath().should.equal('./model/model.json');
             });
         });
 
@@ -83,14 +93,14 @@ describe('Config', function () {
                 var r = config._setDestinationDirPath({ destDir: './data1' });
                 r.should.be.instanceOf(Config);
                 config.getDestinationDirPath().should.be.instanceOf(String);
-                config.getDestinationDirPath().should.equal(path.resolve('./data1'));
+                config.getDestinationDirPath().should.equal('./data1');
             });
 
             it('should set with default value', function () {
                 var r = config._setDestinationDirPath({});
                 r.should.be.instanceOf(Config);
                 config.getDestinationDirPath().should.be.instanceOf(String);
-                config.getDestinationDirPath().should.equal(path.resolve('./data'));
+                config.getDestinationDirPath().should.equal('./data');
             });
         });
 
@@ -120,7 +130,7 @@ describe('Config', function () {
 
         it('should return languages', function () {
             config.getLanguages().should.be.instanceOf(Array);
-            config.getLanguages().should.have.length(1);
+            config.getLanguages().should.have.length(2);
         });
 
         it('should return logger settings', function () {
@@ -131,21 +141,17 @@ describe('Config', function () {
 
         it('should return model file path', function () {
             config.getModelFilePath().should.be.instanceOf(String);
-            config.getModelFilePath().should.equal(path.resolve('./model/model.json'));
+            config.getModelFilePath().should.equal('./model/model.json');
         });
 
         it('should return destination folder path', function () {
             config.getDestinationDirPath().should.be.instanceOf(String);
-            config.getDestinationDirPath().should.equal(path.resolve('./data'));
+            config.getDestinationDirPath().should.equal('./data');
         });
 
         it('should return task objects', function () {
             config.getTasks().should.be.instanceOf(Array);
             config.getTasks().should.have.length(13);
         });
-    });
-
-    after(function () {
-        process.chdir(path.resolve(__dirname, '../../'));
     });
 });

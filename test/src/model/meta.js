@@ -1,12 +1,21 @@
 var fs = require('fs'),
-    path = require('path'),
-    fsExtra = require('fs-extra'),
     should = require('should'),
+    mockFs = require('mock-fs'),
     Meta = require('../../../lib/model/meta');
 
 describe('Meta', function () {
     before(function () {
-        process.chdir(path.resolve(__dirname, '../../stub'));
+        var metaData = fs.readFileSync('./test/stub/meta.json', { encoding: 'utf-8' });
+        mockFs({
+            cache: {
+                'meta.json': metaData
+            },
+            data: {}
+        })
+    });
+
+    after(function () {
+        mockFs.restore();
     });
 
     it('should return valid name of file', function () {
@@ -14,14 +23,14 @@ describe('Meta', function () {
     });
 
     it('static initialization', function () {
-        var meta = Meta.init('./model/meta.json');
+        var meta = Meta.init('./cache/meta.json');
         meta._authors.should.be.instanceOf(Object);
         meta._translators.should.be.instanceOf(Object);
         meta._tags.should.be.instanceOf(Object);
     });
 
     it('static save', function () {
-        var file = './model/meta-save.json',
+        var file = './cache/meta.json',
             authors = { en: new Set(), ru: new Set() },
             translators = { en: new Set(), ru: new Set() },
             tags = { en: new Set(), ru: new Set() };
@@ -55,10 +64,5 @@ describe('Meta', function () {
         it('getTags', function () {
             should.deepEqual(meta.getTags(), meta._tags);
         });
-    });
-
-    after(function () {
-        fsExtra.removeSync('./model/meta-save.json');
-        process.chdir(path.resolve(__dirname, '../../../'));
     });
 });

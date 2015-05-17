@@ -1,35 +1,40 @@
 var fs = require('fs'),
-    path = require('path'),
-    should = require('should'),
-    fsExtra = require('fs-extra'),
+    mockFs = require('mock-fs'),
     Config = require('../../../lib/config'),
     SaveModelFile = require('../../../lib/tasks/save-model-file');
 
 describe('SaveModelFile', function () {
     before(function () {
-        process.chdir(path.resolve(__dirname, '../../stub'));
-    });
-
-    describe('instance methods', function () {
-        var task,
-            config;
-
-        before(function () {
-            config = new Config();
-            task = new SaveModelFile(config, {});
-            fsExtra.mkdirpSync(config.getCacheDirPath());
-        });
-
-        it('run', function (done) {
-            task.run().then(function () {
-                fs.existsSync('./cache/model.json').should.equal(true);
-                done();
-            });
+        var configFile = fs.readFileSync('./test/stub/.builder/make.js', { encoding: 'utf-8' }),
+            modelFile = fs.readFileSync('./test/stub/model/model.json', { encoding: 'utf-8' });
+        mockFs({
+            '.builder': {
+                'make.js': configFile
+            },
+            model: {
+                'model.json': modelFile
+            },
+            cache: {},
+            data: {}
         });
     });
 
     after(function () {
-        fsExtra.removeSync('./cache');
-        process.chdir(path.resolve(__dirname, '../../../'));
+        mockFs.restore();
+    });
+
+    describe('instance methods', function () {
+        var task;
+
+        before(function () {
+            task = new SaveModelFile(new Config(), {});
+        });
+
+        it('run', function (done) {
+            task.run().then(function () {
+                mockFs.fs.existsSync('./cache/model.json').should.equal(true);
+                done();
+            });
+        });
     });
 });

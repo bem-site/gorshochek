@@ -1,6 +1,6 @@
-var _ = require('lodash'),
+var fs = require('fs'),
     path = require('path'),
-    fsExtra = require('fs-extra');
+    _ = require('lodash');
 
 import Base from './base';
 
@@ -29,7 +29,14 @@ export default class MakeDataDirectory extends Base {
         var dir = this.getBaseConfig().getDestinationDirPath();
         this.logger.debug(`Ensure that directory "${dir}" exists. Otherwise it will be created`);
 
-        fsExtra.ensureDirSync(dir);
-        return Promise.resolve();
+        return new Promise((resolve, reject) => {
+            fs.mkdir(dir, error => {
+                if(!error || (error && error.code === 'EEXIST')){
+                    resolve();
+                } else {
+                    reject(error);
+                }
+            });
+        });
     }
 }

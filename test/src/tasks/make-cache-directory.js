@@ -1,34 +1,36 @@
 var fs = require('fs'),
-    path = require('path'),
+    mockFs = require('mock-fs'),
     should = require('should'),
-    fsExtra = require('fs-extra'),
     Config = require('../../../lib/config'),
     MakeCacheDirectory = require('../../../lib/tasks/make-cache-directory');
 
 describe('MakeCacheDirectory', function () {
     before(function () {
-        process.chdir(path.resolve(__dirname, '../../stub'));
-    });
-
-    describe('instance methods', function () {
-        var task,
-            config;
-
-        before(function () {
-            config = new Config();
-            task = new MakeCacheDirectory(config, {});
-        });
-
-        it('run', function (done) {
-            task.run().then(function () {
-                fs.existsSync('./cache').should.equal(true);
-                done();
-            });
+        var configFile = fs.readFileSync('./test/stub/.builder/make.js', { encoding: 'utf-8' });
+        mockFs({
+            '.builder': {
+                'make.js': configFile
+            }
         });
     });
 
     after(function () {
-        fsExtra.removeSync('./cache');
-        process.chdir(path.resolve(__dirname, '../../../'));
+        mockFs.restore();
+    });
+
+    describe('instance methods', function () {
+        var task;
+
+        before(function () {
+            task = new MakeCacheDirectory(new Config(), {});
+        });
+
+        it('run', function (done) {
+            task.run().then(function () {
+                var exists = fs.existsSync('./cache')
+                exists.should.equal(true);
+                done();
+            });
+        });
     });
 });

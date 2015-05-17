@@ -1,10 +1,21 @@
-var path = require('path'),
+var fs = require('fs'),
     should = require('should'),
+    mockFs = require('mock-fs'),
     People = require('../../../lib/model/people');
 
 describe('People', function () {
     before(function () {
-        process.chdir(path.resolve(__dirname, '../../stub'));
+        var peopleData = fs.readFileSync('./test/stub/people.json', { encoding: 'utf-8' });
+        mockFs({
+            cache: {
+                'people.json': peopleData
+            },
+            data: {}
+        });
+    });
+
+    after(function () {
+        mockFs.restore();
     });
 
     it('should return valid name of file', function () {
@@ -12,7 +23,7 @@ describe('People', function () {
     });
 
     it('static initialization', function () {
-        var people = People.init('./model/people.json');
+        var people = People.init('./cache/people.json');
         people._people.should.be.instanceOf(Object);
         Object.keys(people._people).should.have.length(45);
     });
@@ -21,7 +32,7 @@ describe('People', function () {
         var people;
 
         before(function () {
-            people = People.init('./model/people.json');
+            people = People.init('./cache/people.json');
         });
 
         it('getById', function () {
@@ -60,9 +71,5 @@ describe('People', function () {
             people.getFullNameByIdAndLang('alaev-vladimir', 'en').should.be.instanceOf(String);
             people.getFullNameByIdAndLang('alaev-vladimir', 'en').should.equal(d.firstName + ' ' + d.lastName);
         });
-    });
-
-    after(function () {
-        process.chdir(path.resolve(__dirname, '../../../'));
     });
 })

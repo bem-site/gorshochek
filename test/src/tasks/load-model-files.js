@@ -1,33 +1,38 @@
 var fs = require('fs'),
-    path = require('path'),
-    should = require('should'),
-    fsExtra = require('fs-extra'),
+    mockFs = require('mock-fs'),
     Config = require('../../../lib/config'),
     LoadModelFiles = require('../../../lib/tasks/load-model-files');
 
 describe('LoadModelFiles', function () {
-    describe('model file does not exist', function () {
-        var task,
-            config;
+    before(function () {
+        var configFile = fs.readFileSync('./test/stub/.builder/make.js', { encoding: 'utf-8' }),
+            modelFile = fs.readFileSync('./test/stub/model/model.json', { encoding: 'utf-8' });
+        mockFs({
+            '.builder': {
+                'make.js': configFile
+            },
+            model: {
+                '_model.json': modelFile
+            },
+            cache: {},
+            data: {}
+        });
+    });
 
-        before(function (done) {
-            process.chdir(path.resolve(__dirname, '../../stub'));
-            config = new Config();
-            task = new LoadModelFiles(config, {});
-            fsExtra.move('./model/model.json', './model/_model.json', function () {
-                done();
-            });
+    after(function () {
+        mockFs.restore();
+    });
+
+    describe('model file does not exist', function () {
+        var task;
+
+        before(function () {
+            task = new LoadModelFiles(new Config(), {});
         });
 
         it('run', function (done) {
             task.run().catch(function (error) {
                 error.message.indexOf('Can\'t read or parse model file').should.above(-1);
-                done();
-            });
-        });
-
-        after(function (done) {
-            fsExtra.move('./model/_model.json', './model/model.json', function () {
                 done();
             });
         });

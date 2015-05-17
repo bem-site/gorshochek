@@ -1,4 +1,5 @@
-var path = require('path'),
+var fs = require('fs'),
+    mockFs = require('mock-fs'),
     should = require('should'),
     fsExtra = require('fs-extra'),
     Config = require('../../../lib/config'),
@@ -9,11 +10,26 @@ describe('AnalyzeModel', function () {
     var languages, config, task;
 
     before(function () {
-        process.chdir(path.resolve(__dirname, '../../stub'));
+        var configFile = fs.readFileSync('./test/stub/.builder/make.js', { encoding: 'utf-8' }),
+            modelFile = fs.readFileSync('./test/stub/model/model.json', { encoding: 'utf-8' });
+        mockFs({
+            '.builder': {
+                'make.js': configFile
+            },
+            model: {
+              'model.json': modelFile
+            },
+            cache: {},
+            data: {}
+        });
 
-        languages = ['en', 'ru'],
+        languages = ['en', 'ru'];
         config = new Config();
         task = new AnalyzeModel(config, {});
+    });
+
+    after(function () {
+        mockFs.restore();
     });
 
     describe('_analyzePage', function () {
@@ -156,9 +172,5 @@ describe('AnalyzeModel', function () {
         task.run(model).then(function () {
             done();
         });
-    });
-
-    after(function () {
-        process.chdir(path.resolve(__dirname, '../../../'));
     });
 });
