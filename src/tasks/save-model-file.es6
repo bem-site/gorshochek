@@ -1,6 +1,6 @@
-var _ = require('lodash'),
+var fs = require('fs'),
     path = require('path'),
-    fsExtra = require('fs-extra');
+    _ = require('lodash');
 
 import Base from './base';
 
@@ -33,7 +33,18 @@ export default class SaveModelFile extends Base {
         this.logger.debug(`==> from ${newModelFilePath}`);
         this.logger.debug(`==> to ${oldModelFilePath}`);
 
-        fsExtra.copySync(newModelFilePath, oldModelFilePath);
-        return Promise.resolve(model);
+        return new Promise((resolve, reject) => {
+            fs.createReadStream(newModelFilePath)
+                .pipe(fs.createWriteStream(oldModelFilePath))
+                .on('error', (error) => {
+                    reject(error);
+                })
+                .on('close', () => {
+                    resolve(model);
+                });
+        });
+
+        //fsExtra.copySync(newModelFilePath, oldModelFilePath);
+        //return Promise.resolve(model);
     }
 }

@@ -32,7 +32,7 @@ describe('SaveModelFile', function () {
 
         it('run', function (done) {
             task.run().then(function () {
-                mockFs.fs.existsSync('./cache/model.json').should.equal(true);
+                fs.existsSync('./cache/model.json').should.equal(true);
                 done();
             });
         });

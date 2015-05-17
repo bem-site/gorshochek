@@ -47,7 +47,7 @@ describe('BuildSiteMapXML', function () {
 
         it('should return valid sitemap.xml file path', function () {
             task = new BuildSiteMapXML(config, {});
-            task['_getSiteMapXmlFilePath']().indexOf('/data/sitemap.xml').should.above(-1);
+            task['_getSiteMapXmlFilePath']().indexOf('data/sitemap.xml').should.above(-1);
         });
     });
 
