@@ -1,7 +1,6 @@
 var fs = require('fs'),
     path = require('path'),
-    request = require('request'),
-    fsExtra = require('fs-extra'),
+    https = require('https'),
     _ = require('lodash');
 
 import Base from './base';
@@ -15,6 +14,13 @@ const META = {
 export default class LoadPeople extends Base {
     constructor(baseConfig, taskConfig) {
         super(baseConfig, taskConfig, META);
+    }
+
+    _onError(error, reject) {
+        let errorMessage = 'Error occur while loading people.json file';
+        this.logger.error(errorMessage);
+        this.logger.error(error ? error.message : 'Error');
+        return reject(new Error(errorMessage));
     }
 
     /**
@@ -35,18 +41,15 @@ export default class LoadPeople extends Base {
         this.logger.debug(`to: ==> ${destinationPath}`);
 
         return new Promise((resolve, reject) => {
-            request({ url: this.getTaskConfig().url, json: true }, (error, response, body) => {
-                if (error || response.statusCode !== 200) {
-                    let errorMessage = 'Error occur while loading people.json file';
-                    this.logger.error(errorMessage);
-                    this.logger.error(error ? error.message : 'Error');
-                    return reject(new Error(errorMessage));
+            https.get(this.getTaskConfig().url, response => {
+                if (!response || response.statusCode !== 200) {
+                    return this._onError(null, reject);
                 }
 
-                fsExtra.writeJSONSync(destinationPath, body);
-                this.logger.debug('people.json file was loaded successfully and saved to cache');
-                return resolve(model);
-            });
+                response
+                    .pipe(fs.createWriteStream(destinationPath))
+                    .on('finish', () => { resolve(model); });
+            }).on('error', error => this._onError(error, reject));
         });
     }
 }

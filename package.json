@@ -26,7 +26,6 @@
     "js2xmlparser": "^0.1.9",
     "lodash": "^3.x",
     "moment": "^2.x",
-    "request": "^2.x",
     "vow": "~0.4.x",
     "vow-node": "^0.3.x"
   },
