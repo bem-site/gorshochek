@@ -48,7 +48,10 @@ export default class LoadPeople extends Base {
 
                 response
                     .pipe(fs.createWriteStream(destinationPath))
-                    .on('finish', () => { resolve(model); });
+                    .on('finish', () => {
+                        this.logger.debug('people.json was successfully downloaded and saved to local filesystem');
+                        resolve(model);
+                    });
             }).on('error', error => this._onError(error, reject));
         });
     }

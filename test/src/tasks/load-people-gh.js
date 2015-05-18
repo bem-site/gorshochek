@@ -2,7 +2,7 @@ var fs = require('fs'),
     mockFs = require('mock-fs'),
     Config = require('../../../lib/config'),
     Model = require('../../../lib/model/model'),
-    LoadPeople = require('../../../lib/tasks/load-people');
+    LoadPeople = require('../../../lib/tasks/load-people-gh');
 
 describe('LoadPeople', function () {
     before(function () {
