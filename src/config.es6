@@ -28,6 +28,7 @@ export default class Config {
             ._setLoggerSettings(config)
             ._setModelFilePath(config)
             ._setDestinationDirPath(config)
+            ._setCacheDirPath(config)
             ._setTasks(config);
 
         this.logger.info('builder configuration has been initialized successfully');
@@ -70,14 +71,26 @@ export default class Config {
     }
 
     /**
-     * Sets path to destination folder
+     * Sets path to destination data folder
      * @param {Object} config - configuration object
      * @returns {Config}
      * @private
      */
     _setDestinationDirPath(config) {
-        this.destinationDirPath = config.destDir || './data';
+        this.destinationDirPath = config.dataDir || './data';
         this.logger.debug(`config: destination dir path = ${this.destinationDirPath}`);
+        return this;
+    }
+
+    /**
+     * Sets path to cache folder
+     * @param {Object} config - configuration object
+     * @returns {Config}
+     * @private
+     */
+    _setCacheDirPath(config) {
+        this.cacheDirPath = config.cacheDir || './.builder/cache';
+        this.logger.debug(`config: cache dir path = ${this.cacheDirPath}`);
         return this;
     }
 
@@ -130,7 +143,7 @@ export default class Config {
      * @returns {*|String}
      */
     getCacheDirPath() {
-        return './cache';
+        return this.cacheDirPath;
     }
 
     /**
