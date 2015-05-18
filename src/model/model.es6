@@ -8,6 +8,24 @@ export default class Model {
         this._pages = [];
     }
 
+    get newModel() {
+        return this._newModel;
+    }
+
+    set newModel(model) {
+        this._newModel = model;
+        return this;
+    }
+
+    get oldModel() {
+        return this._oldModel;
+    }
+
+    set oldModel(model) {
+        this._oldModel = model;
+        return this;
+    }
+
     getChanges() {
         return this._changes;
     }

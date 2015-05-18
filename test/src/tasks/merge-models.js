@@ -1,6 +1,7 @@
 var _ = require('lodash'),
     should = require('should'),
     Config = require('../../../lib/config'),
+    Model = require('../../../lib/model/model'),
     MergeModels = require('../../../lib/tasks/merge-models');
 
 describe('MergeModels', function () {
@@ -27,7 +28,11 @@ describe('MergeModels', function () {
                 { url: '/url7', a: 'a7', b: 7, c: { c1: 'c17', c2: 'c27' } }
             ];
 
-        task.run({ oldModel: oldModel, newModel: newModel }).then(function (model) {
+        var model = new Model();
+        model.oldModel = oldModel;
+        model.newModel = newModel;
+
+        task.run(model).then(function (model) {
             model.getPages().should.be.instanceOf(Array).and.have.length(5);
             should.deepEqual(_.sortBy(model.getPages(), 'url'), _.sortBy(newModel, 'url'));
             should.deepEqual(model.getChanges().pages.added, [{ url: '/url6' }, { url: '/url7' }]);

@@ -18,13 +18,11 @@ export default class LoadModelFiles extends Base {
      * Performs task
      * @returns {Promise}
      */
-    run() {
+    run(model) {
         this.beforeRun(this.name);
 
         var newModelFilePath = this.getBaseConfig().getModelFilePath(),
-            oldModelFilePath = path.join(this.getBaseConfig().getCacheDirPath(), 'model.json'),
-            newModel,
-            oldModel;
+            oldModelFilePath = path.join(this.getBaseConfig().getCacheDirPath(), 'model.json');
 
 
         /**
@@ -38,7 +36,7 @@ export default class LoadModelFiles extends Base {
          * В этом случае старая модель инициализаируется пустой
          */
         try {
-            newModel = fsExtra.readJSONSync(newModelFilePath);
+            model.newModel = fsExtra.readJSONSync(newModelFilePath);
         } catch (error) {
             let errorMessage = `Can\'t read or parse model file "${newModelFilePath}"`;
             this.logger.error(errorMessage);
@@ -46,12 +44,12 @@ export default class LoadModelFiles extends Base {
         }
 
         try {
-            oldModel = fsExtra.readJSONSync(oldModelFilePath);
+            model.oldModel = fsExtra.readJSONSync(oldModelFilePath);
         } catch (error) {
             this.logger.warn(`Can\'t read or parse model file "${newModelFilePath}". New model will be created`);
-            oldModel = [];
+            model.oldModel = [];
         }
 
-        return Promise.resolve({ newModel: newModel, oldModel: oldModel });
+        return Promise.resolve(model);
     }
 }

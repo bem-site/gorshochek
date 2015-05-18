@@ -1,6 +1,7 @@
 var Logger = require('bem-site-logger');
 
 import Config from './config';
+import Model from './model/model';
 
 export default class Builder {
 
@@ -49,7 +50,7 @@ export default class Builder {
         this._logger.info('-- START BUILD DATA --');
         return this._tasks.reduce((prev, task) => {
             return prev.then(task.run.bind(task));
-        }, Promise.resolve())
+        }, Promise.resolve(new Model()))
             .then(this._onSuccess.bind(this))
             .catch(this._onError.bind(this));
     }

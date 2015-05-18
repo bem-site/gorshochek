@@ -2,7 +2,6 @@ var _ = require('lodash'),
     deepDiff = require('deep-diff'),
     deepExtend = require('deep-extend');
 
-import Model from '../model/model';
 import Base from './base';
 
 const META = {
@@ -26,18 +25,17 @@ export default class MergeModels extends Base {
      * Performs task
      * @returns {Promise}
      */
-    run(data) {
+    run(model) {
         this.beforeRun(this.name);
 
-        var newModel = data.newModel,
-            oldModel = data.oldModel,
+        var newModel = model.newModel,
+            oldModel = model.oldModel,
             newPages,
             oldPages,
             addedPages,
             modifiedPages = [],
             nonModifiedPages = [],
-            removedPages,
-            resultModel = new Model();
+            removedPages;
 
         /*
          Для массивов объектов из нового и старого файлов моделей
@@ -59,7 +57,7 @@ export default class MergeModels extends Base {
 
         removedPages.forEach(url => {
             this.logger.debug(`Page with url: ${url} was removed from model`);
-            resultModel.getChanges().pages.addRemoved({ url: url });
+            model.getChanges().pages.addRemoved({ url: url });
         }, this);
 
         // отбрасываем удаленные страницы
@@ -81,18 +79,18 @@ export default class MergeModels extends Base {
         Сначала добавляем как есть новые страницы, которых еще не было на сайте
         */
         // add new pages
-        resultModel.setPages(
-            resultModel.getPages().concat(addedPages.map(url => {
+        model.setPages(
+            model.getPages().concat(addedPages.map(url => {
                 this.logger.debug(`Page with url: ${url} was added to model`);
-                resultModel.getChanges().pages.addAdded({ url: url });
+                model.getChanges().pages.addAdded({ url: url });
                 return newModel[url];
             }, this))
         );
 
         // Добавляем те страницы, которые не были изменены
         // add non-modified pages
-        resultModel.setPages(
-            resultModel.getPages().concat(nonModifiedPages.map(url => {
+        model.setPages(
+            model.getPages().concat(nonModifiedPages.map(url => {
                 return oldModel[url];
             }))
         );
@@ -101,15 +99,15 @@ export default class MergeModels extends Base {
         // пришли и новой модели
         // merge modifications
         // add modified pages
-        resultModel.setPages(
-            resultModel.getPages().concat(modifiedPages.map(url => {
+        model.setPages(
+            model.getPages().concat(modifiedPages.map(url => {
                 this.logger.debug(`Page with url: ${url} was modified`);
-                resultModel.getChanges().pages.addModified({ url: url });
+                model.getChanges().pages.addModified({ url: url });
                 return deepExtend(oldModel[url], newModel[url]);
             }, this))
         );
 
         this.logger.info('Models were merged successfully');
-        return Promise.resolve(resultModel);
+        return Promise.resolve(model);
     }
 }
