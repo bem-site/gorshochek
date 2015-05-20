@@ -2,4 +2,4 @@
 --ui bdd
 --growl
 --require should
---timeout 2000
+--timeout 5000
