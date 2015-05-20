@@ -6,11 +6,7 @@ var fs = require('fs'),
 
 describe('LoadPeople', function () {
     before(function () {
-        var configFile = fs.readFileSync('./test/stub/.builder/make.js', { encoding: 'utf-8' });
         mockFs({
-            '.builder': {
-                'make.js': configFile
-            },
             cache: {},
             data: {}
         });
@@ -25,7 +21,7 @@ describe('LoadPeople', function () {
             task;
 
         before(function () {
-            task = new LoadPeople(new Config(), { url: peopleUrl });
+            task = new LoadPeople(new Config('./test/stub/'), { url: peopleUrl });
         });
 
         it('run', function (done) {
@@ -42,7 +38,7 @@ describe('LoadPeople', function () {
             task;
 
         before(function () {
-            task = new LoadPeople(new Config(), { url: peopleUrl });
+            task = new LoadPeople(new Config('./test/stub/'), { url: peopleUrl });
         });
 
         it('run', function (done) {

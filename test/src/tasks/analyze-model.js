@@ -10,12 +10,8 @@ describe('AnalyzeModel', function () {
     var languages, config, task;
 
     before(function () {
-        var configFile = fs.readFileSync('./test/stub/.builder/make.js', { encoding: 'utf-8' }),
-            modelFile = fs.readFileSync('./test/stub/model/model.json', { encoding: 'utf-8' });
+        var modelFile = fs.readFileSync('./test/stub/model/model.json', { encoding: 'utf-8' });
         mockFs({
-            '.builder': {
-                'make.js': configFile
-            },
             model: {
               'model.json': modelFile
             },
@@ -24,7 +20,7 @@ describe('AnalyzeModel', function () {
         });
 
         languages = ['en', 'ru'];
-        config = new Config();
+        config = new Config('./test/stub/');
         task = new AnalyzeModel(config, {});
     });
 

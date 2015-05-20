@@ -5,7 +5,9 @@ var mockFs = require('mock-fs'),
 
 describe('BuildSiteMapXML', function () {
     before(function () {
-        mockFs({ data: {} });
+        mockFs({
+            data: {}
+        });
     });
 
     after(function () {
@@ -14,7 +16,7 @@ describe('BuildSiteMapXML', function () {
 
     describe('_getHosts', function () {
         var hosts = { en: 'https://bem.info', ru: 'https://ru.bem.info'},
-            config = new Config(),
+            config = new Config('./test/stub/'),
             task;
 
         it('should throw error if hosts were not set', function () {
@@ -32,7 +34,7 @@ describe('BuildSiteMapXML', function () {
     });
 
     describe('_getDefaultSearchParams', function () {
-        var config = new Config(),
+        var config = new Config('./test/stub/'),
             task;
 
         it('should return valid default search parameters', function () {
@@ -42,7 +44,7 @@ describe('BuildSiteMapXML', function () {
     });
 
     describe('_getSiteMapXmlFilePath', function () {
-        var config = new Config(),
+        var config = new Config('./test/stub/'),
             task;
 
         it('should return valid sitemap.xml file path', function () {

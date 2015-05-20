@@ -12,11 +12,11 @@ export default class Config {
         this.logger = Logger.createLogger(module);
         this.logger.info('start to initialize builder configuration from configuration file');
 
-        var configFilePath = path.join(basePath, CONF.FOLDER, CONF.FILE),
+        var configFilePath = path.resolve(basePath, CONF.FOLDER, CONF.FILE),
             config;
 
         try {
-            config = require(path.resolve(configFilePath));
+            config = require(configFilePath);
         } catch (error) {
             let errorMessage = `Configuration file ./${CONF.FOLDER}/${CONF.FILE} not found or invalid.`;
             this.logger.error(errorMessage);

@@ -22,7 +22,7 @@ describe('MakeDirectory', function () {
         var task;
 
         before(function () {
-            task = new MakeDirectory(new Config(), { path: './custom-dir' });
+            task = new MakeDirectory(new Config('./test/stub/'), { path: './custom-dir' });
         });
 
         it('run', function (done) {

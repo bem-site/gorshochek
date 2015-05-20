@@ -6,11 +6,7 @@ var fs = require('fs'),
 
 describe('TaskBase', function () {
     before(function () {
-        var configFile = fs.readFileSync('./test/stub/.builder/make.js', { encoding: 'utf-8' });
         mockFs({
-            '.builder': {
-              'make.js': configFile
-            },
             cache: {},
             data: {}
         });
@@ -28,7 +24,7 @@ describe('TaskBase', function () {
         var task;
 
         before(function () {
-            var config = new Config();
+            var config = new Config('./test/stub/');
             task = new TaskBase(config, {}, { module: module, name: 'test base' });
         });
 

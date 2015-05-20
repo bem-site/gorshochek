@@ -11,7 +11,7 @@ require('./src/tasks/merge-models');
 require('./src/tasks/save-model-file');
 require('./src/tasks/analyze-model');
 require('./src/tasks/collect-meta');
-require('./src/tasks/load-people');
+require('./src/tasks/load-people-gh');
 require('./src/tasks/create-person-pages');
 require('./src/tasks/create-tag-pages');
 require('./src/tasks/build-sitemap-xml');

@@ -1,22 +1,10 @@
 var fs = require('fs'),
+    path = require('path'),
     mockFs = require('mock-fs'),
     should = require('should'),
     Config = require('../../lib/config');
 
 describe('Config', function () {
-    before(function () {
-        var configFile = fs.readFileSync('./test/stub/.builder/make.js', { encoding: 'utf-8' });
-        mockFs({
-            '.builder': {
-                'make.js': configFile
-            }
-        });
-    });
-
-    after(function () {
-        mockFs.restore();
-    });
-
     describe('constructor', function () {
         it('should throw error in case of missing configuration file', function () {
             (function () { return new Config('../');})
@@ -24,7 +12,7 @@ describe('Config', function () {
         });
 
         it ('success', function () {
-            var config = new Config();
+            var config = new Config('./test/stub/');
             config.languages.should.be.instanceOf(Array);
             config.loggerSettings.should.be.instanceOf(Object);
             config.modelFilePath.should.be.instanceOf(String);
@@ -37,7 +25,7 @@ describe('Config', function () {
         var config;
 
         before(function () {
-            config = new Config();
+            config = new Config('./test/stub/');
         });
 
         describe('_setLanguages', function () {
@@ -90,7 +78,7 @@ describe('Config', function () {
 
         describe('_setDestinationDirPath', function () {
             it('should set with given value', function () {
-                var r = config._setDestinationDirPath({ destDir: './data1' });
+                var r = config._setDestinationDirPath({ dataDir: './data1' });
                 r.should.be.instanceOf(Config);
                 config.getDestinationDirPath().should.be.instanceOf(String);
                 config.getDestinationDirPath().should.equal('./data1');
@@ -125,7 +113,7 @@ describe('Config', function () {
         var config;
 
         before(function () {
-            config = new Config();
+            config = new Config('./test/stub/');
         });
 
         it('should return languages', function () {
@@ -151,7 +139,6 @@ describe('Config', function () {
 
         it('should return task objects', function () {
             config.getTasks().should.be.instanceOf(Array);
-            config.getTasks().should.have.length(13);
         });
     });
 });

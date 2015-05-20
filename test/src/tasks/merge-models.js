@@ -8,7 +8,7 @@ describe('MergeModels', function () {
     var config, task;
 
     before(function () {
-        config = new Config();
+        config = new Config('./test/stub/');
         task = new MergeModels(config, {});
     });
 

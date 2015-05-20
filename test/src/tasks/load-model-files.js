@@ -5,12 +5,8 @@ var fs = require('fs'),
 
 describe('LoadModelFiles', function () {
     before(function () {
-        var configFile = fs.readFileSync('./test/stub/.builder/make.js', { encoding: 'utf-8' }),
-            modelFile = fs.readFileSync('./test/stub/model/model.json', { encoding: 'utf-8' });
+        var modelFile = fs.readFileSync('./test/stub/model/model.json', { encoding: 'utf-8' });
         mockFs({
-            '.builder': {
-                'make.js': configFile
-            },
             model: {
                 '_model.json': modelFile
             },
@@ -27,7 +23,7 @@ describe('LoadModelFiles', function () {
         var task;
 
         before(function () {
-            task = new LoadModelFiles(new Config(), {});
+            task = new LoadModelFiles(new Config('./test/stub/'), {});
         });
 
         it('run', function (done) {

@@ -5,12 +5,8 @@ var fs = require('fs'),
 
 describe('SaveModelFile', function () {
     before(function () {
-        var configFile = fs.readFileSync('./test/stub/.builder/make.js', { encoding: 'utf-8' }),
-            modelFile = fs.readFileSync('./test/stub/model/model.json', { encoding: 'utf-8' });
+        var modelFile = fs.readFileSync('./test/stub/model/model.json', { encoding: 'utf-8' });
         mockFs({
-            '.builder': {
-                'make.js': configFile
-            },
             model: {
                 'model.json': modelFile
             },
@@ -27,7 +23,7 @@ describe('SaveModelFile', function () {
         var task;
 
         before(function () {
-            task = new SaveModelFile(new Config(), {});
+            task = new SaveModelFile(new Config('./test/stub/'), {});
         });
 
         it('run', function (done) {
