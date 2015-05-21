@@ -29,15 +29,17 @@ export default class MakeDirectory extends Base {
         this.logger.debug(`Ensure that directory "${dir}" exists. Otherwise it will be created`);
 
         return new Promise((resolve, reject) => {
-                fs.mkdir(dir, error => {
-                if(!error || (error && error.code === 'EEXIST')){
-            resolve(model);
-        } else {
-            reject(error);
-        }
-    });
-});
-}
+            fs.mkdir(dir, error => {
+                if(!error || (error && error.code === 'EEXIST')) {
+                    resolve(model);
+                } else {
+                    this.logger.error('Directory creation error occur %s', dir);
+                    this.logger.error(error.message);
+                    reject(error);
+                }
+            });
+        });
+    }
 }
 
 

@@ -36,15 +36,8 @@ export default class SaveModelFile extends Base {
         return new Promise((resolve, reject) => {
             fs.createReadStream(newModelFilePath)
                 .pipe(fs.createWriteStream(oldModelFilePath))
-                .on('error', (error) => {
-                    reject(error);
-                })
-                .on('close', () => {
-                    resolve(model);
-                });
+                .on('error', (error) => { reject(error); })
+                .on('close', () => { resolve(model); });
         });
-
-        //fsExtra.copySync(newModelFilePath, oldModelFilePath);
-        //return Promise.resolve(model);
     }
 }

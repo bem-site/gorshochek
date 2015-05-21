@@ -46,7 +46,7 @@ export default class LoadModelFiles extends Base {
         try {
             model.oldModel = fsExtra.readJSONSync(oldModelFilePath);
         } catch (error) {
-            this.logger.warn(`Can\'t read or parse model file "${newModelFilePath}". New model will be created`);
+            this.logger.warn(`Can\'t read or parse model file "${newModelFilePath}". New model will be created instead`);
             model.oldModel = [];
         }
 

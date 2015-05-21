@@ -15,7 +15,7 @@ describe('BuildSiteMapXML', function () {
     });
 
     describe('_getHosts', function () {
-        var hosts = { en: 'https://bem.info', ru: 'https://ru.bem.info'},
+        var hosts = { en: 'https://my.site.com', ru: 'https://my.site.ru'},
             config = new Config('./test/stub/'),
             task;
 
@@ -25,10 +25,10 @@ describe('BuildSiteMapXML', function () {
         });
 
         it('should make host object in case of string param', function () {
-            task = new BuildSiteMapXML(config, { hosts: 'https://bem.info' });
+            task = new BuildSiteMapXML(config, { hosts: 'https://my.site.com' });
             should.deepEqual(task['_getHosts'](), {
-                en: 'https://bem.info',
-                ru: 'https://bem.info'
+                en: 'https://my.site.com',
+                ru: 'https://my.site.com'
             });
         });
     });
@@ -55,5 +55,5 @@ describe('BuildSiteMapXML', function () {
 
     describe('_buildSiteMapModel', function () {
 
-    })
+    });
 });

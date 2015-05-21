@@ -36,7 +36,7 @@ export default class CollectMeta extends Base {
          *  en: [id1, id2, ...],
          *  ru: [id1, id2, ...]
          * }
-         * Используя полученные данные инициализаируем объект класса meta внутри модели
+         * Используя полученные данные сохраняем собранные данные в отдельный файл ./cache/meta.json
          */
         var cacheDir = this.getBaseConfig().getCacheDirPath(),
             filePath = path.join(cacheDir, Meta.getFileName()),
@@ -44,7 +44,9 @@ export default class CollectMeta extends Base {
             translators = this._initializeMetaStructure(),
             tags = this._initializeMetaStructure();
 
+        // для каждой страницы
         model.getPages().forEach(page => {
+            // для каждого языка
             this.getBaseConfig().getLanguages().forEach(lang => {
                 page[lang].authors.forEach(item => { authors[lang].add(item); });
                 page[lang].translators.forEach(item => { translators[lang].add(item); });
@@ -52,6 +54,7 @@ export default class CollectMeta extends Base {
             });
         });
 
+        // выводим итоги о собранной информации в консоль
         this.logger.debug('Meta information from model was collected');
         this.getBaseConfig().getLanguages().forEach(lang => {
             this.logger.debug(`Number of authors for lang ${lang} ==> ${authors[lang].size}`);
@@ -59,6 +62,7 @@ export default class CollectMeta extends Base {
             this.logger.debug(`Number of tags for lang ${lang} ==> ${tags[lang].size}`);
         });
 
+        // сохраняем файл с собранной мета-информацией
         Meta.save(filePath, authors, translators, tags);
         return Promise.resolve(model);
     }

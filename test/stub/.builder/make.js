@@ -1,6 +1,6 @@
 var dataPath = './data',
     cachePath = './cache',
-    hosts = { en: 'https://bem.info', ru: 'https://ru.bem.info' },
+    hosts = { en: 'https://my.site.com', ru: 'https://my.site.ru' },
     peoplesUrl = 'https://raw.githubusercontent.com/bem/bem-method/bem-info-data/people/people.json';
 
 module.exports = {
