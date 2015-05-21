@@ -1,4 +1,5 @@
 require('./src/config.js');
+require('./src/github.js');
 require('./src/model/model');
 require('./src/model/meta');
 require('./src/model/people');

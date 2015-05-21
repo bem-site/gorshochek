@@ -15,6 +15,12 @@ class Base {
     }
 
     executeAPIMethod(method, options, headers, callback) {
+        this.logger.verbose('github API call with options: ');
+        this.logger.verbose(' - host: %s', options.host || 'N/A');
+        this.logger.verbose(' - user: %s', options.user || 'N/A');
+        this.logger.verbose(' - repo: %s', options.repo || 'N/A');
+        this.logger.verbose(' - ref: %s',  options.ref  || 'N/A');
+        this.logger.verbose(' - path: %s', options.path || 'N/A');
         return this.api['repos'][method](_.extend(headers ? { headers: headers } : {}, options), callback);
     }
 
@@ -86,6 +92,10 @@ class Base {
 
 class Custom extends Base {
 
+    constructor(options){
+        super(options);
+    }
+
     /**
      * Returns name of default branch
      * @param {Object} options for api request. Fields:
@@ -143,7 +153,7 @@ class Public extends Custom {
         this.api['authenticate']({ type: 'oauth', token: this.options.token });
     }
 
-    static get type() {
+    static getType() {
         return 'public';
     }
 }
@@ -161,25 +171,46 @@ class Private extends Custom {
         }, Base.getBaseConfig()));
     }
 
-    static get type() {
+    static getType() {
         return 'private';
     }
 }
 
-export default class Github {
+export default class Github extends Custom {
     constructor(options) {
+        super(options);
         this.apis = new Map();
-        this.apis.set(Public.type, new Public(options));
-        this.apis.set(Private.type, new Private(options));
+        this.apis.set(Public.getType(), new Public(options));
+        this.apis.set(Private.getType(), new Private(options));
     }
 
-    /**
-     * Returns public or private api depending of given type of repository
-     * @param {Object} options - options fo api request. Fields:
-     *    - type {String} type of repository privacy ('public' or 'private')
-     * @returns {*}
-     */
-    get(options) {
-        this.apis.get(options.type);
+    _getApiByHost(options) {
+        var host = options.host,
+            type = host.indexOf('github.com') > -1 ? Public.getType() : Private.getType();
+        return this.apis.get(type);
+    }
+
+    getContent(options, headers, callback) {
+        return super.getContent.apply(this._getApiByHost(options), arguments);
+    }
+
+    getCommits(options, headers, callback) {
+        return super.getCommits.apply(this._getApiByHost(options), arguments);
+    }
+
+    getBranch(options, headers, callback) {
+        return super.getBranch.apply(this._getApiByHost(options), arguments);
+    }
+
+    getRepo(options, headers, callback) {
+        return super.getRepo.apply(this._getApiByHost(options), arguments);
+    }
+
+    getDefaultBranch(options, headers, callback) {
+        return super.getDefaultBranch.apply(this._getApiByHost(options), arguments);
+    }
+
+    isBranchExists(options, headers, callback) {
+        return super.isBranchExists.apply(this._getApiByHost(options), arguments);
     }
 }

@@ -23,6 +23,7 @@
     "deep-diff": "^0.3.x",
     "deep-extend": "^0.4.x",
     "fs-extra": "^0.x",
+    "github": "^0.2.x",
     "js2xmlparser": "^0.1.9",
     "lodash": "^3.x",
     "moment": "^2.x",

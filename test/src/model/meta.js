@@ -31,9 +31,9 @@ describe('Meta', function () {
 
     it('static save', function () {
         var file = './cache/meta.json',
-            authors = { en: new Set(), ru: new Set() },
-            translators = { en: new Set(), ru: new Set() },
-            tags = { en: new Set(), ru: new Set() };
+            authors = { en: [], ru: [] },
+            translators = { en: [], ru: [] },
+            tags = { en: [], ru: [] };
 
         Meta.save(file, authors, translators, tags);
         fs.existsSync(file).should.equal(true);
