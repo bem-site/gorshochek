@@ -10,10 +10,6 @@ class Base {
         this.logger = Logger.setOptions(options.logger).createLogger(module);
     }
 
-    getOptions() {
-        return this.options;
-    }
-
     executeAPIMethod(method, options, headers, callback) {
         this.logger.verbose('github API call with options: ');
         this.logger.verbose(' - host: %s', options.host || 'N/A');
@@ -80,7 +76,7 @@ class Base {
         return this.executeAPIMethod('get', options, headers, callback);
     }
 
-    static getBaseConfig() {
+    getBaseConfig() {
         return {
             version: '3.0.0',
             protocol: 'https',
@@ -142,7 +138,7 @@ class Custom extends Base {
 class Public extends Custom {
     constructor(options) {
         super(options);
-        this.api = new Api(_.extend({ host: 'api.github.com' }, Base.getBaseConfig()));
+        this.api = new Api(_.extend({ host: 'api.github.com' }, super.getBaseConfig()));
 
         if (!this.options.token) {
             this.logger.warn('No github authorization token were set. ' +
@@ -168,7 +164,7 @@ class Private extends Custom {
         this.api = new Api(_.extend({
             host: 'github.yandex-team.ru',
             pathPrefix: '/api/v3'
-        }, Base.getBaseConfig()));
+        }, super.getBaseConfig()));
     }
 
     static getType() {
