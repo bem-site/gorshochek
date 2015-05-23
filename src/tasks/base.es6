@@ -1,4 +1,6 @@
-var Logger = require('bem-site-logger');
+var fs = require('fs'),
+    path = require('path'),
+    Logger = require('bem-site-logger');
 
 export default class Base {
     constructor(baseConfig, taskConfig, meta) {
@@ -50,6 +52,51 @@ export default class Base {
         console.log('\n');
         this.logger.info(`${this.name.toUpperCase()}`)
         this.logger.info(`Start to execute "${this.name}" task`);
+    }
+
+    /**
+     * Reads file from cache folder
+     * @param {String} filePath - path to file (relative to cache folder)
+     * @returns {Promise}
+     */
+    readFileFromCache(filePath){
+        var o = { encoding: 'utf-8' },
+            basePath = this.getBaseConfig().getCacheDirPath();
+
+        return new Promise((resolve, reject) => {
+            fs.readFile(path.join(basePath, filePath), o, (error, content) => {
+                if (error) {
+                    this.logger.error(`Error occur while loading file ${filePath} from cache`);
+                    this.logger.error(error.message);
+                    reject(error);
+                } else {
+                    resolve(content);
+                }
+            });
+        });
+    }
+
+    /**
+     * Writes file to cache folder
+     * @param {String} filePath - path to file (relative to cache folder)
+     * @param {String} content of file
+     * @returns {Promise}
+     */
+    writeFileToCache(filePath, content){
+        var o = { encoding: 'utf-8' },
+            basePath = this.getBaseConfig().getCacheDirPath();
+
+        return new Promise((resolve, reject) => {
+            fs.writeFile(path.join(basePath, filePath), content, o, (error) => {
+                if(error) {
+                    this.logger.error(`Error occur while saving file ${filePath} to cache`);
+                    this.logger.error(error.message);
+                    reject(error);
+                } else {
+                    resolve();
+                }
+            });
+        });
     }
 
     /**
