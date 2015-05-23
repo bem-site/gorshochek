@@ -1,4 +1,5 @@
 var fs = require('fs'),
+    url = require('url'),
     path = require('path'),
     https = require('https'),
     _ = require('lodash');
@@ -41,7 +42,8 @@ export default class LoadPeople extends Base {
         this.logger.debug(`to: ==> ${destinationPath}`);
 
         return new Promise((resolve, reject) => {
-            https.get(this.getTaskConfig().url, response => {
+            var options = _.pick(url.parse(this.getTaskConfig().url), 'host', 'path');
+            https.get(options, response => {
                 if (!response || response.statusCode !== 200) {
                     return this._onError(null, reject);
                 }
