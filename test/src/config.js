@@ -1,110 +1,125 @@
-var fs = require('fs'),
-    path = require('path'),
-    mockFs = require('mock-fs'),
-    should = require('should'),
+var should = require('should'),
     Config = require('../../lib/config');
 
 describe('Config', function () {
     describe('constructor', function () {
-        it('should throw error in case of missing configuration file', function () {
-            (function () { return new Config('../');})
-                .should.throw('Configuration file ./.builder/make.js not found or invalid.')
-        });
+        var config;
 
         it ('success', function () {
-            var config = new Config('./test/stub/');
-            config.languages.should.be.instanceOf(Array);
-            config.loggerSettings.should.be.instanceOf(Object);
-            config.modelFilePath.should.be.instanceOf(String);
-            config.destinationDirPath.should.be.instanceOf(String);
-            config.tasks.should.be.instanceOf(Array);
+            config = new Config('debug');
+        });
+
+        describe('default settings after initialization', function () {
+            beforeEach(function () {
+                config = new Config('debug');
+            });
+
+            it('should have default languages set', function () {
+                should.deepEqual(config._languages, ['en']);
+            });
+
+            it('should have default logger settings', function () {
+                should.deepEqual(config._loggerSettings, { level: 'debug' });
+            });
+
+            it('should have default path to model file', function () {
+                config._modelFilePath.should.equal('./model/model.json');
+            });
+
+            it('should have default path to destination data folder', function () {
+                config._dataFolder.should.equal('./data');
+            });
+
+            it('should have default path to cache folder', function () {
+                config._cacheFolder.should.equal('./.builder/cache');
+            });
+        });
+    });
+
+    it('should return valid default settings', function () {
+        var config = new Config('debug');
+        should.deepEqual(config.defaults, {
+            languages: ['en'],
+            modelFilePath: './model/model.json',
+            dataFolder: './data',
+            cacheFolder: './.builder/cache'
         });
     });
 
     describe('setters', function () {
         var config;
 
-        before(function () {
-            config = new Config('./test/stub/');
+        beforeEach(function () {
+            config = new Config('debug');
         });
 
-        describe('_setLanguages', function () {
+        describe('setLanguages', function () {
             it('should set with given value', function () {
-                var r = config._setLanguages({ languages: ['en', 'ru'] });
-                r.should.be.instanceOf(Config);
+                config.setLanguages(['en', 'ru']).should.be.instanceOf(Config);
                 config.getLanguages().should.be.instanceOf(Array).and.have.length(2);
                 should.deepEqual(config.getLanguages(), ['en', 'ru']);
             });
 
             it('should set with default value', function () {
-                var r = config._setLanguages({});
-                r.should.be.instanceOf(Config);
+                config.setLanguages().should.be.instanceOf(Config);
                 config.getLanguages().should.be.instanceOf(Array).and.have.length(1);
                 should.deepEqual(config.getLanguages(), ['en']);
             });
         });
 
-        describe('_setLoggerSettings', function () {
+        describe('setLoggerSettings', function () {
             it('should set with given value', function () {
-                var r = config._setLoggerSettings({ logger: { level: 'info' } });
-                r.should.be.instanceOf(Config);
+                config.setLogLevel('info').should.be.instanceOf(Config);
                 config.getLoggerSettings().should.be.instanceOf(Object);
                 should.deepEqual(config.getLoggerSettings(), { level: 'info' });
             });
 
             it('should set with default value', function () {
-                var r = config._setLoggerSettings({});
-                r.should.be.instanceOf(Config);
+                config.setLogLevel().should.be.instanceOf(Config);
                 config.getLoggerSettings().should.be.instanceOf(Object);
                 should.deepEqual(config.getLoggerSettings(), { level: 'debug' });
             });
         });
 
-        describe('_setModelFilePath', function () {
+        describe('setModelFilePath', function () {
             it('should set with given value', function () {
-                var r = config._setModelFilePath({ modelFilePath: './model/model1.json' });
-                r.should.be.instanceOf(Config);
+                config.setModelFilePath('./foo/bar.json').should.be.instanceOf(Config);
                 config.getModelFilePath().should.be.instanceOf(String);
-                config.getModelFilePath().should.equal('./model/model1.json');
+                config.getModelFilePath().should.equal('./foo/bar.json');
             });
 
             it('should set with default value', function () {
-                var r = config._setModelFilePath({});
-                r.should.be.instanceOf(Config);
+                config.setModelFilePath().should.be.instanceOf(Config);
                 config.getModelFilePath().should.be.instanceOf(String);
                 config.getModelFilePath().should.equal('./model/model.json');
             });
         });
 
-        describe('_setDestinationDirPath', function () {
+        describe('setDataFolder', function () {
             it('should set with given value', function () {
-                var r = config._setDestinationDirPath({ dataDir: './data1' });
-                r.should.be.instanceOf(Config);
-                config.getDestinationDirPath().should.be.instanceOf(String);
-                config.getDestinationDirPath().should.equal('./data1');
+                config.setDataFolder('./data1').should.be.instanceOf(Config);
+                config.getDataFolder().should.be.instanceOf(String);
+                config.getDataFolder().should.equal('./data1');
             });
 
             it('should set with default value', function () {
-                var r = config._setDestinationDirPath({});
-                r.should.be.instanceOf(Config);
-                config.getDestinationDirPath().should.be.instanceOf(String);
-                config.getDestinationDirPath().should.equal('./data');
+                config.setDataFolder().should.be.instanceOf(Config);
+                config.getDataFolder().should.be.instanceOf(String);
+                config.getDataFolder().should.equal('./data');
             });
         });
 
-        describe('_setTasks', function () {
+        describe('setCacheFolder', function () {
             it('should set with given value', function () {
-                var r = config._setTasks({ tasks: [{}, {}] });
-                r.should.be.instanceOf(Config);
-                config.getTasks().should.be.instanceOf(Array).and.have.length(2);
-                should.deepEqual(config.getTasks(), [{}, {}]);
+                config.setCacheFolder('./cache1').should.be.instanceOf(Config);
+                config.getCacheFolder().should.be.instanceOf(String);
+                config.getCacheFolder().should.equal('./cache1');
             });
 
             it('should set with default value', function () {
-                var r = config._setTasks({});
-                r.should.be.instanceOf(Config);
-                config.getTasks().should.be.instanceOf(Array).and.have.length(0);
-                should.deepEqual(config.getTasks(), []);
+                config.setCacheFolder().should.be.instanceOf(Config);
+                config.getCacheFolder().should.be.instanceOf(String);
+                config.getCacheFolder().should.equal('./.builder/cache');
             });
         });
     });
@@ -112,13 +127,13 @@ describe('Config', function () {
     describe('getters', function () {
         var config;
 
-        before(function () {
-            config = new Config('./test/stub/');
+        beforeEach(function () {
+            config = new Config('debug');
         });
 
         it('should return languages', function () {
             config.getLanguages().should.be.instanceOf(Array);
-            config.getLanguages().should.have.length(2);
+            config.getLanguages().should.have.length(1);
         });
 
         it('should return logger settings', function () {
@@ -132,13 +147,14 @@ describe('Config', function () {
             config.getModelFilePath().should.equal('./model/model.json');
         });
 
-        it('should return destination folder path', function () {
-            config.getDestinationDirPath().should.be.instanceOf(String);
-            config.getDestinationDirPath().should.equal('./data');
+        it('should return destination data folder path', function () {
+            config.getDataFolder().should.be.instanceOf(String);
+            config.getDataFolder().should.equal('./data');
         });
 
-        it('should return task objects', function () {
-            config.getTasks().should.be.instanceOf(Array);
+        it('should return cache folder path', function () {
+            config.getCacheFolder().should.be.instanceOf(String);
+            config.getCacheFolder().should.equal('./.builder/cache');
         });
     });
 });
