@@ -1,5 +1,4 @@
-var path = require('path'),
-    Logger = require('bem-site-logger');
+var Logger = require('bem-site-logger');
 
 export default class Config {
     constructor(logLevel) {
