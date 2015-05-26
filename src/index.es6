@@ -9,14 +9,82 @@ export default class Builder {
      * Initialize core builder module
      * @returns {exports}
      */
-    init() {
-        this._config = new Config('./');
-        this._logger = Logger.setOptions(this._config.getLoggerSettings()).createLogger(module);
+    static init(logLevel) {
+        return new Builder(logLevel);
+    }
 
-        this._tasks = this._config.getTasks().map(task => {
-            return new task[ 0 ](this._config, task[ 1 ]);
-        }, this);
+    constructor(logLevel) {
+        this._config = new Config(logLevel);
+        this.logger = Logger
+            .setOptions(this.getConfig().getLoggerSettings())
+            .createLogger(module);
+        this._tasks = [];
+    }
 
+    /**
+     * Returns tool configuration
+     * @returns {*}
+     */
+    getConfig() {
+        return this._config;
+    }
+
+    /**
+     * Returns array of task that should be performed
+     * @returns {Array}
+     */
+    getTasks() {
+        return this._tasks;
+    }
+
+    /**
+     * Override configured languages
+     * @param {Array} languages array
+     * @returns {Builder}
+     */
+    setLanguages(languages) {
+        this.getConfig().setLanguages(languages);
+        return this;
+    }
+
+    /**
+     * Overrides path to cache folder
+     * @param {String} cacheFolder - path to cache folder
+     * @returns {Builder}
+     */
+    setCacheFolder(cacheFolder) {
+        this.getConfig().setCacheFolder(cacheFolder);
+        return this;
+    }
+
+    /**
+     * Overrides path to destination data folder
+     * @param {String} dataFolder - path to data folder
+     * @returns {Builder}
+     */
+    setDataFolder(dataFolder) {
+        this.getConfig().setDataFolder(dataFolder);
+        return this;
+    }
+
+    /**
+     * Overrides path to model file
+     * @param {String} modelFilePath - path to model file
+     * @returns {Builder}
+     */
+    setModelFilePath(modelFilePath) {
+        this.getConfig().setModelFilePath(modelFilePath);
+        return this;
+    }
+
+    /**
+     * Adds task to execution stack
+     * @param {Base} Task - inheritance of Base task class
+     * @param {Object} taskOptions - special task options
+     * @returns {Builder}
+     */
+    addTask(Task, taskOptions = {}) {
+        this.getTasks().push(new Task(this.getConfig(), taskOptions));
         return this;
     }
 
@@ -27,7 +95,7 @@ export default class Builder {
      * @private
      */
     _onSuccess(result) {
-        this._logger.info('-- BUILD HAS BEEN FINISHED SUCCESSFULLY --');
+        this.logger.info('-- BUILD HAS BEEN FINISHED SUCCESSFULLY --');
         return result;
     }
 
@@ -37,8 +105,8 @@ export default class Builder {
      * @private
      */
     _onError(error) {
-        this._logger.error(error.message);
-        this._logger.error('-- BUILD HAS BEEN FAILED --');
+        this.logger.error(error.message);
+        this.logger.error('-- BUILD HAS BEEN FAILED --');
         throw error;
     }
 
@@ -47,8 +115,8 @@ export default class Builder {
      * @returns {Promise}
      */
     run() {
-        this._logger.info('-- START BUILD DATA --');
-        return this._tasks.reduce((prev, task) => {
+        this.logger.info('-- START BUILD DATA --');
+        return this.getTasks().reduce((prev, task) => {
             return prev.then(task.run.bind(task));
         }, Promise.resolve(new Model()))
             .then(this._onSuccess.bind(this))
