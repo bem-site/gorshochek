@@ -17,58 +17,6 @@ $ npm install --save bsb-core
 
 ## Конфигурация
 
-Для работы сборщика в рабочей директории необходимо создать директорию `.builder`,
-в которую следует поместить файл `make.js`. Данный файл будет содержать:
-
-* Базовые настройки сборщика (общие для всех задач которые быдут выполнены в ходе сборки)
-* Список задач сборки (как массив подключаемых модулей с собсвенными конфигурациями)
-
-Пример такого файла можно увидеть ниже:
-
-```
-var peoplesUrl = 'https://raw.githubusercontent.com/bem/bem-method/bem-info-data/people/people.json';
-
-module.exports = {
-    languages: ['ru', 'en'],
-    logger: {
-        level: 'debug'
-    },
-    modelFilePath: './model/model.json',
-    destDir: './data',
-    tasks: [
-        [require('../lib/tasks/make-cache-directory')],
-        [require('../lib/tasks/make-data-directory')],
-        [require('../lib/tasks/load-model-files')],
-        [require('../lib/tasks/merge-models')],
-        [require('../lib/tasks/save-model-file')],
-        [require('../lib/tasks/analyze-model')],
-        [require('../lib/tasks/collect-meta')],
-        [require('../lib/tasks/load-people'), { url: peoplesUrl }],
-        [require('../lib/tasks/create-person-pages'), { baseUrl: '/authors', type: 'authors' }],
-        [require('../lib/tasks/create-person-pages'), { baseUrl: '/translators', type: 'translators' }],
-        [require('../lib/tasks/create-tag-pages'), { baseUrl: '/tags'}]
-    ]
-};
-```
-
-Здесь:
-
-* `languages` - массив языковых локалей, для которых будет выполняться сборка
-* `logger` - настройки инструмента логгирования
-* `modelFilePath` -  относительный путь к файлу модели
-* `destDir` - целевая директория, в которую будут помещены собранные файлы
-* `tasks` - массив задач, которые будут выполнены в ходе сборки в том же порядке в котором
-они перечислены в конфигурационном файле.
-
-##### Примечание #1
-
-Каждая задача сама по себе является массивом, в котором нулевой элемент - подключаемый
-модуль с кодом задачи сборки, а первый элемент - объект с настройками, специфичными для задачи.
-
-##### Примечание #2
-
-В процессе работы сборщика в рабочей директории создается директория `cache`.
-Необходимо убедиться, что директория с таким именем не используются для других целей.
 
 ## Тестирование
 
