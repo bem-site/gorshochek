@@ -1,5 +1,4 @@
 import Changes from './changes/index';
-import Meta from './meta';
 
 export default class Model {
 
@@ -8,32 +7,59 @@ export default class Model {
         this._pages = [];
     }
 
-    get newModel() {
+    /**
+     * Returns new model object
+     * @returns {Object}
+     */
+    getNewModel() {
         return this._newModel;
     }
 
-    set newModel(model) {
+    /**
+     * Sets new model
+     * @param {Object} model object
+     */
+    setNewModel(model) {
         this._newModel = model;
-        return this;
     }
 
-    get oldModel() {
+    /**
+     * Returns old model object
+     * @returns {Object}
+     */
+    getOldModel() {
         return this._oldModel;
     }
 
-    set oldModel(model) {
+    /**
+     * Sets old model object
+     * @param {Object} model object
+     */
+    setOldModel(model) {
         this._oldModel = model;
-        return this;
     }
 
+    /**
+     * Returns changes model
+     * @returns {*}
+     */
     getChanges() {
         return this._changes;
     }
 
+    /**
+     * Returns array of pages
+     * @returns {Array|*}
+     */
     getPages() {
         return this._pages;
     }
 
+    /**
+     * Sets array of pages
+     * @param {Array} pages array
+     * @returns {Model}
+     */
     setPages(pages) {
         this._pages = pages;
         return this;
