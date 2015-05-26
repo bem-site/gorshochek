@@ -20,17 +20,40 @@ export default class DocsLoadGithub extends Base {
         this.api = new GitHub(ghOptions);
     }
 
+    /**
+     * Returns github API class instance
+     * @returns {Github}
+     * @private
+     */
     _getAPI() {
         return this.api;
     }
 
+    /**
+     * Returns url pattern for http urls of gh sources
+     * @returns {RegExp}
+     * @private
+     */
     _getGhUrlPattern() {
+        // Например: https://github.com/bem/bem-method/tree/bem-info-data/method/index/index.en.md
         return /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/;
     }
 
+    /**
+     * Returns parsed repository info for language version of page. Otherwise returns false
+     * @param {Object} page - page model object
+     * @param {String} lang - language
+     * @returns {Object|false}
+     * @private
+     */
     _getGhSource(page, lang) {
         var sourceUrl,
             repoInfo;
+
+        //1. page должен иметь поле {lang}
+        //2. page[lang] должен иметь поле 'sourceUrl'
+        //3. page[lang].sourceUrl должен матчится на регулярное выражение из _getGhUrlPattern()
+        //4. если хотя бы одно из условий не выполняется, то вернется false
 
         if (!page[lang]) {
             return false;
@@ -45,6 +68,7 @@ export default class DocsLoadGithub extends Base {
         if (!repoInfo) {
             return false;
         }
+
         return {
             host: repoInfo[1],
             user: repoInfo[2],
@@ -54,7 +78,16 @@ export default class DocsLoadGithub extends Base {
         };
     }
 
+    /**
+     * Returns pages with anyone language version satisfy _hasMdFile function criteria
+     * @param {Array} pages - model pages
+     * @param {Array} languages - configured languages array
+     * @returns {Array} filtered array of pages
+     * @private
+     */
     _getPagesWithGHSources(pages, languages) {
+        // здесь происходит поиск страниц в модели у которых
+        // хотя бы одна из языковых версий удовлетворяет критерию из функции _getGhSource
         return pages.filter(page => {
            return languages.some(lang => {
                 return this._getGhSource(page, lang);
@@ -62,56 +95,23 @@ export default class DocsLoadGithub extends Base {
         });
     }
 
-    _makePageFolders(page, skip) {
-        var mkFolder = (baseFolder, url) => {
-            return new Promise((resolve, reject) => {
-                fsExtra.ensureDir(path.join(baseFolder, url), (error) => {
-                    error ? reject(error) : resolve();
-                });
-            });
-        };
-
-        if (skip) {
-            return vow.resolve();
-        }
-
-        return vow.all([
-            mkFolder(this.getBaseConfig().getCacheDirPath(), page.url) //,
-            //mkFolder(this.getBaseConfig().getDestinationDirPath(), page.url)
-        ]);
-    }
-
-    _loadPageCacheInfo(page, lang) {
-        var cacheFilePath = path.join(this.getBaseConfig().getCacheDirPath(), page.url, lang + '.json');
-        return new Promise((resolve) => {
-            fsExtra.readJSONFile(cacheFilePath, (error, cache) => {
-                error ? resolve(null) : resolve(cache);
-            });
-        });
-    }
-
-    _savePageCacheInfo(page, lang, cache) {
-        var cacheFilePath = path.join(this.getBaseConfig().getCacheDirPath(), page.url, lang + '.json');
-        return new Promise((resolve, reject) => {
-            fsExtra.writeJSONFile(cacheFilePath, cache, (error, cache) => {
-                error ? reject(error) : resolve(cache);
-            });
-        });
-    }
-
-    _savePageContentToCache(filePath, content) {
-        var cacheFilePath = path.join(this.getBaseConfig().getCacheDirPath(), filePath);
-        return new Promise((resolve, reject) => {
-            fs.writeFile(cacheFilePath, content, { encoding: 'utf-8' }, (error, cache) => {
-                error ? reject(error) : resolve(cache);
-            });
-        });
-    }
-
+    /**
+     * Creates header object from cached etag
+     * @param {Object} cache object
+     * @returns {{If-None-Match: *}}
+     * @private
+     */
     _getHeadersByCache(cache) {
         return (cache && cache.etag) ? { 'If-None-Match': cache.etag } : null;
     }
 
+    /**
+     * Loads content from github via github API
+     * @param {Object} repoInfo - gh file object path settings
+     * @param {Object} headers - gh api headers
+     * @returns {Promise}
+     * @private
+     */
     _getContentFromGh(repoInfo, headers){
         return new Promise((resolve, reject) => {
             this._getAPI().getContent(repoInfo, headers, (error, result) => {
@@ -131,40 +131,48 @@ export default class DocsLoadGithub extends Base {
         });
     }
 
-    /*
-    _copyContentFromCacheToData(filePath){
-        var cachePath = path.join(this.getBaseConfig().getCacheDirPath(), filePath),
-            dataPath = path.join(this.getBaseConfig().getDestinationDirPath(), filePath);
-
-        return new Promise((resolve, reject) => {
-            return fsExtra.copy(cachePath, dataPath, (error) => {
-                error ? reject(error) : resolve();
-            });
-        });
-    }
-    */
-
+    /**
+     * Synchronize docs for all page language version
+     * @param {Model} model - data model
+     * @param {Object} page - page model object
+     * @param {Array} languages - array of languages
+     * @returns {*|Promise.<T>}
+     * @private
+     */
     _syncDoc(model, page, languages) {
         return vow.allResolved(languages.map((language, index) => {
             var repoInfo = this._getGhSource(page, language);
+
+            // Проверяем на наличие правильного поля contentFile
+            // это сделано потому, что предварительный фильтр мог сработать
+            // для страниц у которых только часть из языковых версий удовлетворяла критерию
             if (!repoInfo) {
                 return vow.resolve();
             }
 
+
+            // сначала нужно проверить информацию в кеше
+            // там есть etag и sha загруженного файла
             this.logger.debug(`Load doc file for language: => ${language} and page with url: => ${page.url}`);
-            return this._makePageFolders(page, index > 0)
-                .then(() => {
-                    return this._loadPageCacheInfo(page, language);
+            return this.readFileFromCache(path.join(page.url, language + '.json'))
+                .then(content => {
+                    return JSON.parse(content);
                 })
-                .then((cache) => {
+                .then(cache => {
                     cache = cache || {};
+                    // выполняется запрос на gh
                     return this._getContentFromGh(repoInfo, this._getHeadersByCache(cache))
                         .then((result) => {
+
+                            // если запрос был послан с header содержащим meta etag
+                            // и данные не менялись то возвращается 304 статус
+                            // берем данные из кеша
                             if (result.meta.status === '304 Not Modified') {
                                 this.logger.verbose('Document was not changed: %s', page.url);
                                 return Promise.resolve(path.join(page.url, cache.fileName));
                             }
 
+                            // дополнительная проверка изменения в файле путем сравнения sha сум
                             if(cache.sha === result.sha) {
                                 return Promise.resolve(path.join(page.url, cache.fileName));
                             }
@@ -177,6 +185,7 @@ export default class DocsLoadGithub extends Base {
                                 model.getChanges().docs.addModified({ url: page.url, title: page[language].title });
                             }
 
+                            // меняем/добавляем данные в кеш
                             cache.etag = result.meta.etag;
                             cache.sha = result.sha;
 
@@ -187,19 +196,20 @@ export default class DocsLoadGithub extends Base {
 
                             cache.fileName = fileName;
 
+                            // записываем файл мета-данных и файл с контентом в кеш
                             return vow.all([
-                                this._savePageCacheInfo(page, language, cache),
-                                this._savePageContentToCache(filePath, content)
+                                this.writeFileToCache(path.join(page.url, lang + '.json'), JSON.stringify(cache, null, 4)),
+                                this.writeFileToCache(filePath, content)
                             ]).then(() => {
                                 return filePath;
                             });
                         })
                         .then((filePath) => {
+                            // добавляем соответствующее поле в модель
                             page[language]['contentFile'] = filePath;
                             return filePath;
                         });
                 });
-
         })).then(() => {
             return page;
         });
@@ -212,7 +222,7 @@ export default class DocsLoadGithub extends Base {
     run(model) {
         this.beforeRun(this.name);
 
-        var portionSize = 5,
+        var PORTION_SIZE = 5,
             languages,
             pagesWithGHSources,
             portions,
@@ -220,12 +230,12 @@ export default class DocsLoadGithub extends Base {
 
         languages = this.getBaseConfig().getLanguages();
         pagesWithGHSources = this._getPagesWithGHSources(model.getPages(), languages);
-        portions = _.chunk(pagesWithGHSources, portionSize);
+        portions = _.chunk(pagesWithGHSources, PORTION_SIZE);
 
         loadDocs = portions.reduce((prev, portion, index) => {
             prev = prev.then(() => {
                 this.logger.debug('Synchronize portion of pages in range %s - %s',
-                    index * portionSize, (index + 1) * portionSize);
+                    index * PORTION_SIZE, (index + 1) * PORTION_SIZE);
                 return vow.allResolved(portion.map((page) => {
                     return this._syncDoc(model, page, languages);
                 }));
@@ -234,7 +244,6 @@ export default class DocsLoadGithub extends Base {
         }, vow.resolve());
 
         return loadDocs.then(() => {
-            //TODO implement setPages with new fields here
             return Promise.resolve(model);
         });
     }

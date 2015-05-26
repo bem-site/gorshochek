@@ -109,10 +109,11 @@ export default class DocsMdToHtml extends Base {
             mdFileDirectory = path.dirname(mdFilePath);
             htmlFilePath = path.join(mdFileDirectory, language + '.html');
 
-            // последовательно считываем файл
-            // конвертируем его в html синтаксис
-            // сохраняем обратно под другим именем с учетом нового формата
-            // меняем соответствующее поле в модели страницы
+            // последовательно:
+            // 1. считываем файл
+            // 2. конвертируем его в html синтаксис
+            // 3. сохраняем обратно под другим именем с учетом нового формата
+            // 4. меняем соответствующее поле в модели страницы
             return this.readFileFromCache(mdFilePath)
                 .then((md) => {
                     this.logger.verbose(`success read ${mdFilePath} from cache`);
