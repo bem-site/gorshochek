@@ -1,5 +1,6 @@
 var path = require('path'),
     _ = require('lodash'),
+    mkdirp = require('mkdirp'),
     fsExtra = require('fs-extra');
 
 import Base from './base';
@@ -24,7 +25,7 @@ export default class MakePagesCache extends Base {
         // Для каждой страницы создается папка в директории кеша путь которой совпадает с url страницы
         var make = (baseFolder, url) => {
             return new Promise((resolve, reject) => {
-                fsExtra.ensureDir(path.join(baseFolder, url), (error) => {
+                mkdirp(path.join(baseFolder, url), (error) => {
                     if(error) {
                         this.logger.error(`Error occur while creating cache folder for page: => ${url}`);
                         this.logger.error(error.message);

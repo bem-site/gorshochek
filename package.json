@@ -28,6 +28,7 @@
     "glob": "^5.0.9",
     "js2xmlparser": "^0.1.9",
     "lodash": "^3.x",
+    "mkdirp": "^0.5.1",
     "moment": "^2.x",
     "rsync": "^0.4.0",
     "vow": "~0.4.x",
