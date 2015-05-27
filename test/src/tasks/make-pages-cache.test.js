@@ -38,6 +38,23 @@ describe('MakePagesCache', function () {
             ]);
         });
 
+        describe('_makeFolder', function () {
+            it('should successfully create cache folder for page', function (done) {
+                task._makeFolder({ url: '/foo' }).then(function () {
+                    fs.existsSync('./cache/foo').should.equal(true);
+                    done();
+                });
+            });
+
+            it('should reject on empty page.url', function (done) {
+                task._makeFolder({}).catch(function (error) {
+                    error.message.should.equal('Arguments to path.join must be strings');
+                    fs.existsSync('./cache/foo').should.equal(false);
+                    done();
+                });
+            });
+        });
+
         describe('run', function () {
             it('should successfully create cache sub-folders', function (done) {
                 task.run(model)
@@ -46,16 +63,7 @@ describe('MakePagesCache', function () {
                         fs.existsSync('./cache/foo2/bar2').should.equal(true);
                         done();
                     });
-
             });
-
-            //it('should fail if data folder does not exists', function (done) {
-            //    fs.rmdirSync('./data');
-            //    task.run(model).catch(function (error) {
-            //        error.code.should.equal('ENOENT');
-            //        done();
-            //    });
-            //});
         });
     });
 });
