@@ -5,26 +5,41 @@ var fs = require('fs'),
     MakeDirectory = require('../../../lib/tasks/make-directory');
 
 describe('MakeDirectory', function () {
-    before(function () {
+    beforeEach(function () {
         mockFs({});
     });
 
-    after(function () {
+    afterEach(function () {
         mockFs.restore();
     });
 
     describe('instance methods', function () {
-        var task;
+        describe('run', function (done) {
+            it('should create new dir if it does not exists yet', function (done) {
+                var task = new MakeDirectory(new Config(), { path: './foo' });
+                task.run().then(function () {
+                    var exists = fs.existsSync('./foo');
+                    exists.should.equal(true);
+                    done();
+                });
+            });
 
-        before(function () {
-            task = new MakeDirectory(new Config(), { path: './custom-dir' });
-        });
+            it('should successfully resolved if directory already exists', function (done) {
+                fs.mkdirSync('./foo');
+                var task = new MakeDirectory(new Config(), { path: './foo' });
+                task.run().then(function () {
+                    var exists = fs.existsSync('./foo');
+                    exists.should.equal(true);
+                    done();
+                });
+            });
 
-        it('run', function (done) {
-            task.run().then(function () {
-                var exists = fs.existsSync('./custom-dir')
-                exists.should.equal(true);
-                done();
+            it('should rejected if directory path invalid', function (done) {
+                var task = new MakeDirectory(new Config(), { path: './foo/bar' });
+                task.run().catch(function (error) {
+                    error.code.should.equal('ENOENT');
+                    done();
+                });
             });
         });
     });

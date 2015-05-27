@@ -5,26 +5,26 @@ var fs = require('fs'),
     TaskBase = require('../../../lib/tasks/base');
 
 describe('TaskBase', function () {
-    before(function () {
+    beforeEach(function () {
         mockFs({
-            cache: {},
-            data: {}
+            '.builder': {
+                cache: {
+                    file1: 'foo1',
+                    file2: 'foo2'
+                }
+            }
         });
     });
 
-    after(function () {
+    afterEach(function () {
         mockFs.restore();
-    });
-
-    it('initialization', function () {
-        // TODO implement initialization tests
     });
 
     describe('instance methods', function () {
         var task;
 
         before(function () {
-            var config = new Config('./test/stub/');
+            var config = new Config();
             task = new TaskBase(config, {}, { module: module, name: 'test base' });
         });
 
@@ -34,7 +34,40 @@ describe('TaskBase', function () {
 
         it('getTaskConfig', function () {
             task.getTaskConfig().should.be.instanceOf(Object);
-            Object.keys(task.getTaskConfig()).should.have.length(0);
+        });
+
+        describe('readFileFromCache', function () {
+            it('should resolved with content of file', function (done) {
+                task.readFileFromCache('./file1').then(function (content) {
+                    content.should.equal('foo1');
+                    done();
+                });
+            });
+
+            it('should rejected on error if file does not exists', function (done) {
+                task.readFileFromCache('./invalid-file').catch(function (error) {
+                    error.code.should.equal('ENOENT');
+                    done();
+                });
+            });
+        });
+
+        describe('writeFileToCache', function () {
+            it('should resolved after success file saving', function (done) {
+                task.writeFileToCache('./file2', 'foo3').then(function () {
+                    task.readFileFromCache('./file2').then(function (content) {
+                        content.should.equal('foo3');
+                        done();
+                    });
+                });
+            });
+
+            it('should rejected on error if path to file is invalid', function (done) {
+                task.writeFileToCache('./foo/bar', 'foo1').catch(function (error) {
+                    error.code.should.equal('ENOENT');
+                    done();
+                });
+            });
         });
 
         it('run', function (done) {
