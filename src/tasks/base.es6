@@ -5,7 +5,7 @@ var fs = require('fs'),
 export default class Base {
     constructor(baseConfig, taskConfig, meta) {
         this._baseConfig = baseConfig;
-        this._taskConfig = taskConfig;
+        this._taskConfig = taskConfig || {};
         this.name = meta.name;
         this.setLogger(meta.module);
         this.afterInitialization();
@@ -61,7 +61,7 @@ export default class Base {
      */
     readFileFromCache(filePath){
         var o = { encoding: 'utf-8' },
-            basePath = this.getBaseConfig().getCacheDirPath();
+            basePath = this.getBaseConfig().getCacheFolder();
 
         return new Promise((resolve, reject) => {
             fs.readFile(path.join(basePath, filePath), o, (error, content) => {
@@ -84,7 +84,7 @@ export default class Base {
      */
     writeFileToCache(filePath, content){
         var o = { encoding: 'utf-8' },
-            basePath = this.getBaseConfig().getCacheDirPath();
+            basePath = this.getBaseConfig().getCacheFolder();
 
         return new Promise((resolve, reject) => {
             fs.writeFile(path.join(basePath, filePath), content, o, (error) => {

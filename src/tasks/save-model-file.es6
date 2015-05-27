@@ -22,7 +22,7 @@ export default class SaveModelFile extends Base {
         this.beforeRun(this.name);
 
         var newModelFilePath = this.getBaseConfig().getModelFilePath(),
-            oldModelFilePath = path.join(this.getBaseConfig().getCacheDirPath(), 'model.json');
+            oldModelFilePath = path.join(this.getBaseConfig().getCacheFolder(), 'model.json');
 
         /**
          * После сравнения старого и нового файла моделей, нужно поместить новый файл модели

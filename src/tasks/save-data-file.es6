@@ -21,7 +21,7 @@ export default class SaveModelFile extends Base {
     run(model) {
         this.beforeRun(this.name);
 
-        var dataFilePath = path.join(this.getBaseConfig().getDestinationDirPath(), 'data.json');
+        var dataFilePath = path.join(this.getBaseConfig().getDataFolder(), 'data.json');
 
         this.logger.debug('Save data file:');
         this.logger.debug(`==> to ${dataFilePath}`);

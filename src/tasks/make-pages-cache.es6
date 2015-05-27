@@ -37,7 +37,7 @@ export default class MakePagesCache extends Base {
         };
 
         this.logger.verbose(`make cache folder for page: => ${page.url}`);
-        return make(this.getBaseConfig().getCacheDirPath(), page.url);
+        return make(this.getBaseConfig().getCacheFolder(), page.url);
     }
 
     /**

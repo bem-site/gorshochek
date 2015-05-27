@@ -22,8 +22,7 @@ export default class MakeDirectory extends Base {
         this.beforeRun(this.name);
 
         /*
-         * Нужно убедиться что директория ./cache существуетю Если она не существует, то нужно ее создать.
-         * В директории ./cache будут находиться промежуточные и всмопогательные файлы для сборки
+         * Нужно убедиться что директория существует Если она не существует, то нужно ее создать.
          */
         var dir = this.getTaskConfig().path;
         this.logger.debug(`Ensure that directory "${dir}" exists. Otherwise it will be created`);

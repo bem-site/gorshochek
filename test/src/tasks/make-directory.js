@@ -6,12 +6,7 @@ var fs = require('fs'),
 
 describe('MakeDirectory', function () {
     before(function () {
-        var configFile = fs.readFileSync('./test/stub/.builder/make.js', { encoding: 'utf-8' });
-        mockFs({
-            '.builder': {
-                'make.js': configFile
-            }
-        });
+        mockFs({});
     });
 
     after(function () {
@@ -22,7 +17,7 @@ describe('MakeDirectory', function () {
         var task;
 
         before(function () {
-            task = new MakeDirectory(new Config('./test/stub/'), { path: './custom-dir' });
+            task = new MakeDirectory(new Config(), { path: './custom-dir' });
         });
 
         it('run', function (done) {

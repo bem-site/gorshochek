@@ -22,7 +22,7 @@ export default class LoadModelFiles extends Base {
         this.beforeRun(this.name);
 
         var newModelFilePath = this.getBaseConfig().getModelFilePath(),
-            oldModelFilePath = path.join(this.getBaseConfig().getCacheDirPath(), 'model.json');
+            oldModelFilePath = path.join(this.getBaseConfig().getCacheFolder(), 'model.json');
 
 
         /**

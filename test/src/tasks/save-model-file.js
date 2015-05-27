@@ -20,10 +20,12 @@ describe('SaveModelFile', function () {
     });
 
     describe('instance methods', function () {
-        var task;
+        var config = new Config('debug'),
+            task;
 
         before(function () {
-            task = new SaveModelFile(new Config('./test/stub/'), {});
+            config.setCacheFolder('./cache');
+            task = new SaveModelFile(config, {});
         });
 
         it('run', function (done) {
