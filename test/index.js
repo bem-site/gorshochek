@@ -10,3 +10,4 @@ require('./src/tasks/load-model-files');
 require('./src/tasks/merge-models');
 require('./src/tasks/save-model-file');
 require('./src/tasks/analyze-model');
+require('./src/tasks/save-data-file');
