@@ -15,5 +15,4 @@ node_modules
 coverage
 data
 .builder
-launcher.js
 lib
