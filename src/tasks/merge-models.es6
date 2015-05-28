@@ -28,8 +28,8 @@ export default class MergeModels extends Base {
     run(model) {
         this.beforeRun(this.name);
 
-        var newModel = model.newModel,
-            oldModel = model.oldModel,
+        var newModel = model.getNewModel(),
+            oldModel = model.getOldModel(),
             newPages,
             oldPages,
             addedPages,

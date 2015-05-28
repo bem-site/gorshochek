@@ -2,7 +2,6 @@ var Builder = require('../lib/index'),
 
     dataPath = './data',
     cachePath = './.builder/cache',
-// token = '7a073062f4280dd2ef3b7c0472b08ba295e3c8ed',
 // hosts = { en: 'https://bem.info', ru: 'https://ru.bem.info' },
 // peoplesUrl = 'https://raw.githubusercontent.com/bem/bem-method/bem-info-data/people/people.json',
     builder;
