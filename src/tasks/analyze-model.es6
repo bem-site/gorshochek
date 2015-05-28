@@ -56,13 +56,13 @@ export default class AnalyzeModel extends Base {
             }
 
             // выставляем мета-информацию об авторов если она не была указана
-            page[language].authors = page[language].authors || [];
+            //page[language].authors = page[language].authors || [];
 
             // выставляем мета-информацию о переводчиках если она не была указана
-            page[language].translators = page[language].translators || [];
+            //page[language].translators = page[language].translators || [];
 
             // выставляем мета-информацию о тегах если она не была указана
-            page[language].tags = page[language].tags || [];
+            //page[language].tags = page[language].tags || [];
         }, this);
 
         return page;

@@ -110,6 +110,7 @@ describe('AnalyzeModel', function () {
             });
         });
 
+        /*
         describe('authors', function () {
             it('given and default', function () {
                 var page = {
@@ -160,6 +161,7 @@ describe('AnalyzeModel', function () {
                 should.deepEqual(task._analyzePage(page, languages).ru.tags, []);
             });
         });
+        */
     });
 
     it('run', function (done) {

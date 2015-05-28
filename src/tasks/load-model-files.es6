@@ -36,7 +36,7 @@ export default class LoadModelFiles extends Base {
          * В этом случае старая модель инициализаируется пустой
          */
         try {
-            model.newModel = fsExtra.readJSONSync(newModelFilePath);
+            model.setNewModel(fsExtra.readJSONSync(newModelFilePath));
         } catch (error) {
             let errorMessage = `Can\'t read or parse model file "${newModelFilePath}"`;
             this.logger.error(errorMessage);
@@ -44,10 +44,10 @@ export default class LoadModelFiles extends Base {
         }
 
         try {
-            model.oldModel = fsExtra.readJSONSync(oldModelFilePath);
+            model.setOldModel(fsExtra.readJSONSync(oldModelFilePath));
         } catch (error) {
             this.logger.warn(`Can\'t read or parse model file "${newModelFilePath}". New model will be created instead`);
-            model.oldModel = [];
+            model.setOldModel([]);
         }
 
         return Promise.resolve(model);

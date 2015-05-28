@@ -1,36 +1,69 @@
 var fs = require('fs'),
+    should = require('should'),
     mockFs = require('mock-fs'),
     Config = require('../../../lib/config'),
+    Model = require('../../../lib/model/model'),
     LoadModelFiles = require('../../../lib/tasks/load-model-files');
 
 describe('LoadModelFiles', function () {
-    before(function () {
-        var modelFile = fs.readFileSync('./test/stub/model/model.json', { encoding: 'utf-8' });
+    var config,
+        model,
+        task;
+
+    beforeEach(function () {
         mockFs({
             model: {
-                '_model.json': modelFile
+                'model.json': JSON.stringify([])
             },
-            cache: {},
-            data: {}
+            '.builder': {
+                cache: {}
+            }
         });
+
+        model = new Model();
+        config = new Config('debug');
+        task = new LoadModelFiles(config, {});
     });
 
-    after(function () {
+    afterEach(function () {
         mockFs.restore();
     });
 
-    describe('model file does not exist', function () {
-        var task;
-
-        before(function () {
-            task = new LoadModelFiles(new Config('./test/stub/'), {});
+    it('should be rejected if new model file is missed or invalid', function (done) {
+        config.setModelFilePath('./model/invalid_model.json');
+        task.run(model).catch(function (error) {
+            error.message.indexOf('Can\'t read or parse model file').should.above(-1);
+            done();
         });
+    });
 
-        it('run', function (done) {
-            task.run().catch(function (error) {
-                error.message.indexOf('Can\'t read or parse model file').should.above(-1);
-                done();
-            });
+    it('should be resolved if new model file exists', function (done) {
+        task.run(model).then(function (model) {
+            should.deepEqual(model.getNewModel(), []);
+            done();
+        });
+    });
+
+    it('should take old model if it exists', function (done) {
+        fs.writeFileSync('./.builder/cache/model.json', JSON.stringify([
+            {
+                url: '/old-model/url'
+            }
+        ]));
+        task.run(model).then(function (model) {
+            should.deepEqual(model.getNewModel(), []);
+            should.deepEqual(model.getOldModel(), [{
+                url: '/old-model/url'
+            }]);
+            done();
+        });
+    });
+
+    it('should create empty old model if it does not exist', function (done) {
+        task.run(model).then(function (model) {
+            should.deepEqual(model.getNewModel(), []);
+            should.deepEqual(model.getOldModel(), []);
+            done();
         });
     });
 });
