@@ -12,7 +12,7 @@ Core data builder for bem-site
 
 Пакет устанавливается как обычная npm зависимость
 ```
-$ npm install --save bsb-core
+$ npm install --save bs-builder-core
 ```
 
 ## Конфигурация
