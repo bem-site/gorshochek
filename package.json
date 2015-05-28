@@ -1,9 +1,9 @@
 {
   "name": "bs-builder-core",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": {
     "type": "git",
-    "url": "git://github.com/bem-site/snapshot-master.git"
+    "url": "git://github.com/bem-site/builder-core.git"
   },
   "author": "Andrey Kuznetsov <andrey.kuznetsov48@yandex.ua> (http://github.com/tormozz48)",
   "maintainers": [
@@ -53,5 +53,8 @@
     "test": "npm run compile && NODE_ENV=testing ./node_modules/.bin/istanbul cover _mocha"
   },
   "readmeFilename": "README.md",
-  "license": "MPL-2.0"
+  "license": {
+    "type": "MPL-2.0",
+    "url": "https://github.com/bem-site/builder-core/blob/master/LICENSE"
+  }
 }
