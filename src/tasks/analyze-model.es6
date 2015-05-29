@@ -1,14 +1,14 @@
-var _ = require('lodash');
+import _ from 'lodash';
 import Base from './base';
 
-const META = {
-    module: _.pick(module, 'filename'),
-    name: 'analyze model'
-};
-
 export default class AnalyzeModel extends Base {
-    constructor(baseConfig, taskConfig) {
-        super(baseConfig, taskConfig, META);
+
+    static getLoggerName() {
+        return module;
+    }
+
+    static getName() {
+        return 'analyze model';
     }
 
     /**

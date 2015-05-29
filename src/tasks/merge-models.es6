@@ -1,17 +1,16 @@
-var _ = require('lodash'),
-    deepDiff = require('deep-diff'),
-    deepExtend = require('deep-extend');
-
+import _ from 'lodash';
+import deepDiff from 'deep-diff';
+import deepExtend from 'deep-extend';
 import Base from './base';
 
-const META = {
-    module: _.pick(module, 'filename'),
-    name: 'merge models'
-};
-
 export default class MergeModels extends Base {
-    constructor(baseConfig, taskConfig) {
-        super(baseConfig, taskConfig, META);
+
+    static getLoggerName() {
+        return module;
+    }
+
+    static getName() {
+        return 'merge models';
     }
 
     static _generateUrlPageMap(arr) {

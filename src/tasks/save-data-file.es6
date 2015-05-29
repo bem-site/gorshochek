@@ -1,17 +1,16 @@
-var _ = require('lodash'),
-    fs = require('fs'),
-    path = require('path');
-
+import fs from 'fs';
+import path from 'path';
+import _ from 'lodash';
 import Base from './base';
 
-const META = {
-    module: _.pick(module, 'filename'),
-    name: 'save data file'
-};
-
 export default class SaveModelFile extends Base {
-    constructor(baseConfig, taskConfig) {
-        super(baseConfig, taskConfig, META);
+
+    static getLoggerName() {
+        return module;
+    }
+
+    static getName() {
+        return 'save data file';
     }
 
     /**

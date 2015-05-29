@@ -20,6 +20,10 @@ describe('TaskBase', function () {
         mockFs.restore();
     });
 
+    it('should return valid task name', function () {
+       TaskBase.getName().should.equal('base');
+    });
+
     describe('instance methods', function () {
         var task;
 

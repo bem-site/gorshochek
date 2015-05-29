@@ -1,17 +1,16 @@
-var _ = require('lodash'),
-    path = require('path'),
-    fsExtra = require('fs-extra');
-
+import path from 'path';
+import _ from 'lodash';
+import fsExtra from 'fs-extra';
 import Base from './base';
 
-const META = {
-    module: _.pick(module, 'filename'),
-    name: 'load model files'
-};
-
 export default class LoadModelFiles extends Base {
-    constructor(baseConfig, taskConfig) {
-        super(baseConfig, taskConfig, META);
+
+    static getLoggerName() {
+        return module;
+    }
+
+    static getName() {
+        return 'load model files';
     }
 
     /**

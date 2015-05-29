@@ -15,6 +15,10 @@ describe('MakePagesCache', function () {
         mockFs.restore();
     });
 
+    it('should return valid task name', function () {
+        MakePagesCache.getName().should.equal('make pages cache folders');
+    });
+
     describe('instance methods', function () {
         var config,
             model,

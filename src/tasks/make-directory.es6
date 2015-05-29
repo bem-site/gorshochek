@@ -1,17 +1,17 @@
-var fs = require('fs'),
-    path = require('path'),
-    _ = require('lodash');
+import fs from 'fs';
+import path from 'path';
 
+import _ from 'lodash';
 import Base from './base';
 
-const META = {
-    module: _.pick(module, 'filename'),
-    name: 'make directory'
-};
-
 export default class MakeDirectory extends Base {
-    constructor(baseConfig, taskConfig) {
-        super(baseConfig, taskConfig, META);
+
+    static getLoggerName() {
+        return module;
+    }
+
+    static getName() {
+        return 'make directory';
     }
 
     /**
@@ -19,7 +19,7 @@ export default class MakeDirectory extends Base {
      * @returns {Promise}
      */
     run(model) {
-        this.beforeRun(this.name);
+        this.beforeRun();
 
         /*
          * Нужно убедиться что директория существует Если она не существует, то нужно ее создать.

@@ -29,6 +29,10 @@ describe('LoadModelFiles', function () {
         mockFs.restore();
     });
 
+    it('should return valid task name', function () {
+        LoadModelFiles.getName().should.equal('load model files');
+    });
+
     it('should be rejected if new model file is missed or invalid', function (done) {
         config.setModelFilePath('./model/invalid_model.json');
         task.run(model).catch(function (error) {

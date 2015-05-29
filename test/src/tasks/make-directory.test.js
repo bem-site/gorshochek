@@ -13,6 +13,10 @@ describe('MakeDirectory', function () {
         mockFs.restore();
     });
 
+    it('should return valid task name', function () {
+        MakeDirectory.getName().should.equal('make directory');
+    });
+
     describe('instance methods', function () {
         describe('run', function (done) {
             it('should create new dir if it does not exists yet', function (done) {

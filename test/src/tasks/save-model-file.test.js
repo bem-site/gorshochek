@@ -19,6 +19,10 @@ describe('SaveModelFile', function () {
         mockFs.restore();
     });
 
+    it('should return valid task name', function () {
+        SaveModelFile.getName().should.equal('save model file');
+    });
+
     describe('instance methods', function () {
         var config = new Config('debug'),
             task;

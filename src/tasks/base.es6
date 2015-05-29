@@ -1,23 +1,25 @@
-var fs = require('fs'),
+var os = require('os'),
+    fs = require('fs'),
     path = require('path'),
     Logger = require('bem-site-logger');
 
 export default class Base {
-    constructor(baseConfig, taskConfig, meta) {
+    constructor(baseConfig, taskConfig) {
         this._baseConfig = baseConfig;
         this._taskConfig = taskConfig || {};
-        this.name = meta.name;
-        this.setLogger(meta.module);
+        this.logger = Logger
+            .setOptions(this.getBaseConfig().getLoggerSettings())
+            .createLogger(this.constructor.getLoggerName());
+
         this.afterInitialization();
     }
 
-    /**
-     * Creates task logger
-     * @param {Module} m - task module
-     * @returns {*}
-     */
-    setLogger(m) {
-        this.logger = Logger.setOptions(this.getBaseConfig().getLoggerSettings()).createLogger(m);
+    static getLoggerName() {
+        return module;
+    }
+
+    static getName() {
+        return 'base';
     }
 
     /**
@@ -41,17 +43,17 @@ export default class Base {
      * Also you can override it in your own task module
      */
     afterInitialization() {
-        this.logger.info(`Initialize "${this.name}" task successfully`);
+        this.logger.info(`Initialize "${this.constructor.getName()}" task successfully`);
     }
 
     /**
      * Prints log message. Also you can override it in your own task module
      * @param {String} name - task name
      */
-    beforeRun(name) {
-        console.log('\n');
-        this.logger.info(`${this.name.toUpperCase()}`)
-        this.logger.info(`Start to execute "${this.name}" task`);
+    beforeRun() {
+        console.log(os.EOL);
+        this.logger.info(`${this.constructor.getName().toUpperCase()}`)
+        this.logger.info(`Start to execute "${this.constructor.getName()}" task`);
     }
 
     /**

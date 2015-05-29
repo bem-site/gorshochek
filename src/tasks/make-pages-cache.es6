@@ -1,18 +1,17 @@
-var path = require('path'),
-    _ = require('lodash'),
-    mkdirp = require('mkdirp'),
-    fsExtra = require('fs-extra');
-
+import path from 'path';
+import _ from 'lodash';
+import mkdirp from 'mkdirp';
+import fsExtra from 'fs-extra';
 import Base from './base';
 
-const META = {
-    module: _.pick(module, 'filename'),
-    name: 'make pages cache folders'
-};
-
 export default class MakePagesCache extends Base {
-    constructor(baseConfig, taskConfig) {
-        super(baseConfig, taskConfig, META);
+
+    static getLoggerName() {
+        return module;
+    }
+
+    static getName() {
+        return 'make pages cache folders';
     }
 
     /**

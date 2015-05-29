@@ -12,6 +12,10 @@ describe('MergeModels', function () {
         task = new MergeModels(config, {});
     });
 
+    it('should return valid task name', function () {
+        MergeModels.getName().should.equal('merge models');
+    });
+
     it('run', function (done) {
         var oldModel = [
                 { url: '/url1', a: 'a1', b: 1, c: { c1: 'c11', c2: 'c21' } },

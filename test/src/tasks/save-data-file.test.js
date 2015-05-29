@@ -15,6 +15,10 @@ describe('SaveDataFile', function () {
         mockFs.restore();
     });
 
+    it('should return valid task name', function () {
+        SaveDataFile.getName().should.equal('save data file');
+    });
+
     describe('instance methods', function () {
         var config,
             model,

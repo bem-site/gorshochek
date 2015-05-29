@@ -28,6 +28,10 @@ describe('AnalyzeModel', function () {
         mockFs.restore();
     });
 
+    it('should return valid task name', function () {
+        AnalyzeModel.getName().should.equal('analyze model');
+    });
+
     describe('_analyzePage', function () {
         describe('oldUrls', function () {
             it('given', function () {
