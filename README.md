@@ -152,8 +152,8 @@ var builder = Builder
 Пример использования:
 
 ```
-var tasks = require('../index').tasks,
-    Builder = require('../index').Builder,
+var tasks = require('bs-builder-core').tasks,
+    Builder = require('bs-builder-core').Builder,
 
     builder;
 
@@ -174,8 +174,8 @@ builder = Builder.init('debug')
 В случае ошибки возвращает promise с объектом ошибки вызвавшим завершение сборки.
 
 ```
-var tasks = require('../index').tasks,
-    Builder = require('../index').Builder,
+var tasks = require('bs-builder-core').tasks,
+    Builder = require('bs-builder-core').Builder,
 
     builder;
 
