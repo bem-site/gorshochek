@@ -26,11 +26,11 @@ describe('MergeModels', function () {
                 { url: '/url5', a: 'b5', b: 5, c: { c1: 'c15', c2: 'd25' } },
                 { url: '/url6', a: 'a6', b: 6, c: { c1: 'c16', c2: 'c26' } },
                 { url: '/url7', a: 'a7', b: 7, c: { c1: 'c17', c2: 'c27' } }
-            ];
+            ],
+            model = new Model();
 
-        var model = new Model();
-        model.oldModel = oldModel;
-        model.newModel = newModel;
+        model.setOldModel(oldModel);
+        model.setNewModel(newModel);
 
         task.run(model).then(function (model) {
             model.getPages().should.be.instanceOf(Array).and.have.length(5);
