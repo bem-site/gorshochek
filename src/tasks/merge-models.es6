@@ -56,7 +56,7 @@ export default class MergeModels extends Base {
 
         removedPages.forEach(url => {
             this.logger.debug(`Page with url: ${url} was removed from model`);
-            model.getChanges().pages.addRemoved({ url: url });
+            model.getChanges().pages.addRemoved({ type: 'page', url: url });
         }, this);
 
         // отбрасываем удаленные страницы
@@ -81,7 +81,7 @@ export default class MergeModels extends Base {
         model.setPages(
             model.getPages().concat(addedPages.map(url => {
                 this.logger.debug(`Page with url: ${url} was added to model`);
-                model.getChanges().pages.addAdded({ url: url });
+                model.getChanges().pages.addAdded({ type: 'page', url: url });
                 return newModel[url];
             }, this))
         );
@@ -101,7 +101,7 @@ export default class MergeModels extends Base {
         model.setPages(
             model.getPages().concat(modifiedPages.map(url => {
                 this.logger.debug(`Page with url: ${url} was modified`);
-                model.getChanges().pages.addModified({ url: url });
+                model.getChanges().pages.addModified({ type: 'page', url: url });
                 return deepExtend(oldModel[url], newModel[url]);
             }, this))
         );

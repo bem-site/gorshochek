@@ -4,9 +4,7 @@ import ChangeType from './type';
 
 export default class Changes {
     constructor() {
-        this._docs = new ChangeType('docs');
         this._pages = new ChangeType('pages');
-        this._libraries = new ChangeType('libraries');
     }
 
     /**
@@ -14,15 +12,7 @@ export default class Changes {
      * @returns {*|Boolean}
      */
     areModified() {
-        return this.docs.areModified() || this.pages.areModified() || this.libraries.areModified();
-    }
-
-    /**
-     * Returns documentation changes
-     * @returns {Array<ChangeType>}
-     */
-    get docs() {
-        return this._docs;
+        return this.pages.areModified();
     }
 
     /**
@@ -31,13 +21,5 @@ export default class Changes {
      */
     get pages() {
         return this._pages;
-    }
-
-    /**
-     * Returns library changes
-     * @returns {Array<ChangeType>}
-     */
-    get libraries() {
-        return this._libraries;
     }
 }

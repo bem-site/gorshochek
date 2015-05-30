@@ -39,9 +39,18 @@ describe('MergeModels', function () {
         task.run(model).then(function (model) {
             model.getPages().should.be.instanceOf(Array).and.have.length(5);
             should.deepEqual(_.sortBy(model.getPages(), 'url'), _.sortBy(newModel, 'url'));
-            should.deepEqual(model.getChanges().pages.added, [{ url: '/url6' }, { url: '/url7' }]);
-            should.deepEqual(model.getChanges().pages.modified, [{ url: '/url4' }, { url: '/url5' }]);
-            should.deepEqual(model.getChanges().pages.removed, [{ url: '/url2' }, { url: '/url3' }]);
+            should.deepEqual(model.getChanges().pages.added, [
+                { type: 'page', url: '/url6' },
+                { type: 'page', url: '/url7' }
+            ]);
+            should.deepEqual(model.getChanges().pages.removed, [
+                { type: 'page', url: '/url2' },
+                { type: 'page', url: '/url3' }
+            ]);
+            should.deepEqual(model.getChanges().pages.modified, [
+                { type: 'page', url: '/url4' },
+                { type: 'page', url: '/url5' }
+            ]);
             done();
         });
     });
