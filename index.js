@@ -7,6 +7,7 @@ exports.tasks = {
     MakeDirectory: require('./lib/tasks/make-directory'),
     MakePagesCache: require('./lib/tasks/make-pages-cache'),
     MergeModels: require('./lib/tasks/merge-models'),
+    RsyncPages: require('./lib/tasks/rsync-pages'),
     SaveDataFile: require('./lib/tasks/save-data-file'),
     SaveModelFile: require('./lib/tasks/save-model-file')
 };
