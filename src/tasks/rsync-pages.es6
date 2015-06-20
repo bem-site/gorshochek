@@ -64,7 +64,7 @@ export default class RsyncPages extends Base {
                     source: sources, // все папки откуда нужно совершить rsync
                     destination: this.getBaseConfig().getDataFolder(), //целевая папака
                     flags: 'rd' //рекурсивно и с учетом директорий
-                }
+                };
             })
             .value();
 

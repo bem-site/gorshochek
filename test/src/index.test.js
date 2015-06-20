@@ -1,5 +1,4 @@
 var should = require('should'),
-    Logger = require('bem-site-logger'),
     Config = require('../../lib/config'),
     Builder = require('../../lib/index');
 
@@ -99,7 +98,9 @@ describe('Builder', function () {
 
         describe('addTask', function () {
             it('should return builder', function () {
-                var Task = function (baseConfig, taskConfig) {};
+                var Task = function (baseConfig) {
+                    baseConfig;
+                };
                 builder.addTask(Task, {}).should.be.instanceOf(Builder);
             });
         });

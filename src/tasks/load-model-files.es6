@@ -1,5 +1,4 @@
 import path from 'path';
-import _ from 'lodash';
 import fsExtra from 'fs-extra';
 import Base from './base';
 

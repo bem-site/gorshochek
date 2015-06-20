@@ -1,7 +1,5 @@
 import path from 'path';
-import _ from 'lodash';
 import mkdirp from 'mkdirp';
-import fsExtra from 'fs-extra';
 import Base from './base';
 
 export default class MakePagesCache extends Base {
@@ -28,7 +26,7 @@ export default class MakePagesCache extends Base {
                     if(error) {
                         this.logger.error(`Error occur while creating cache folder for page: => ${url}`);
                         this.logger.error(error.message);
-                        reject(error)
+                        reject(error);
                     } else {
                         resolve();
                     }

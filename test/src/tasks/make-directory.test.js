@@ -1,6 +1,5 @@
 var fs = require('fs'),
     mockFs = require('mock-fs'),
-    should = require('should'),
     Config = require('../../../lib/config'),
     MakeDirectory = require('../../../lib/tasks/make-directory');
 
@@ -18,7 +17,7 @@ describe('MakeDirectory', function () {
     });
 
     describe('instance methods', function () {
-        describe('run', function (done) {
+        describe('run', function () {
             it('should create new dir if it does not exists yet', function (done) {
                 var task = new MakeDirectory(new Config(), { path: './foo' });
                 task.run().then(function () {

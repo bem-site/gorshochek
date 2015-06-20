@@ -1,7 +1,7 @@
-var os = require('os'),
-    fs = require('fs'),
-    path = require('path'),
-    Logger = require('bem-site-logger');
+import os from 'os';
+import fs from 'fs';
+import path from 'path';
+import Logger from 'bem-site-logger';
 
 export default class Base {
     constructor(baseConfig, taskConfig) {
@@ -52,7 +52,7 @@ export default class Base {
      */
     beforeRun() {
         console.log(os.EOL);
-        this.logger.info(`${this.constructor.getName().toUpperCase()}`)
+        this.logger.info(`${this.constructor.getName().toUpperCase()}`);
         this.logger.info(`Start to execute "${this.constructor.getName()}" task`);
     }
 

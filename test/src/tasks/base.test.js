@@ -1,6 +1,4 @@
-var fs = require('fs'),
-    mockFs = require('mock-fs'),
-    Logger = require('bem-site-logger'),
+var mockFs = require('mock-fs'),
     Config = require('../../../lib/config'),
     TaskBase = require('../../../lib/tasks/base');
 

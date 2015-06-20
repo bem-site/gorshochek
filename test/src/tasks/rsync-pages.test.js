@@ -1,4 +1,5 @@
 var fs = require('fs'),
+    path = require('path'),
     mockFs = require('mock-fs'),
     Config = require('../../../lib/config'),
     Model = require('../../../lib/model/model'),
@@ -56,7 +57,7 @@ describe('RsyncPages', function () {
                 });
             });
 
-            it('should create valid files in target path', function () {
+            it('should create valid files in target path', function (done) {
                 task.run(model).then(function () {
                     fs.readFileSync(path.resolve('./data/url1/en.md'), 'utf-8').should.equal('en md');
                     fs.readFileSync(path.resolve('./data/url1/en.json'), 'utf-8').should.equal('en json');
