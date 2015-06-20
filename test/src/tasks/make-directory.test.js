@@ -1,15 +1,15 @@
 var fs = require('fs'),
-    mockFs = require('mock-fs'),
+    fsExtra = require('fs-extra'),
     Config = require('../../../lib/config'),
     MakeDirectory = require('../../../lib/tasks/make-directory');
 
 describe('MakeDirectory', function () {
     beforeEach(function () {
-        mockFs({});
+        fsExtra.deleteSync('./foo');
     });
 
     afterEach(function () {
-        mockFs.restore();
+        fsExtra.deleteSync('./foo');
     });
 
     it('should return valid task name', function () {

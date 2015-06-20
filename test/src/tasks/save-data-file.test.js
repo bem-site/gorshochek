@@ -1,18 +1,16 @@
 var fs = require('fs'),
-    mockFs = require('mock-fs'),
+    fsExtra = require('fs-extra'),
     Config = require('../../../lib/config'),
     Model = require('../../../lib/model/model'),
     SaveDataFile = require('../../../lib/tasks/save-data-file');
 
 describe('SaveDataFile', function () {
     beforeEach(function () {
-        mockFs({
-            data: {}
-        });
+        fsExtra.ensureDirSync('./data');
     });
 
     afterEach(function () {
-        mockFs.restore();
+        fsExtra.deleteSync('./data');
     });
 
     it('should return valid task name', function () {

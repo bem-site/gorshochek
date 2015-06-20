@@ -51,7 +51,9 @@ export default class Base {
      * @param {String} name - task name
      */
     beforeRun() {
-        console.log(os.EOL);
+        if (process.env.NODE_ENV !== 'testing') {
+            console.log(os.EOL);
+        }
         this.logger.info(`${this.constructor.getName().toUpperCase()}`);
         this.logger.info(`Start to execute "${this.constructor.getName()}" task`);
     }

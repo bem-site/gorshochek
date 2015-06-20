@@ -1,6 +1,4 @@
-var fs = require('fs'),
-    mockFs = require('mock-fs'),
-    should = require('should'),
+var should = require('should'),
     fsExtra = require('fs-extra'),
     Config = require('../../../lib/config'),
     Model = require('../../../lib/model/model'),
@@ -10,14 +8,8 @@ describe('AnalyzeModel', function () {
     var languages, config, task;
 
     before(function () {
-        var modelFile = fs.readFileSync('./test/stub/model/model.json', { encoding: 'utf-8' });
-        mockFs({
-            model: {
-              'model.json': modelFile
-            },
-            cache: {},
-            data: {}
-        });
+        fsExtra.ensureDirSync('./model');
+        fsExtra.copySync('./test/stub/model/model.json',  './model/model.json');
 
         languages = ['en', 'ru'];
         config = new Config('./test/stub/');
@@ -25,7 +17,7 @@ describe('AnalyzeModel', function () {
     });
 
     after(function () {
-        mockFs.restore();
+        fsExtra.deleteSync('./model');
     });
 
     it('should return valid task name', function () {

@@ -1,6 +1,6 @@
 var fs = require('fs'),
+    fsExtra = require('fs-extra'),
     should = require('should'),
-    mockFs = require('mock-fs'),
     Config = require('../../../lib/config'),
     Model = require('../../../lib/model/model'),
     LoadModelFiles = require('../../../lib/tasks/load-model-files');
@@ -11,14 +11,9 @@ describe('LoadModelFiles', function () {
         task;
 
     beforeEach(function () {
-        mockFs({
-            model: {
-                'model.json': JSON.stringify([])
-            },
-            '.builder': {
-                cache: {}
-            }
-        });
+        fsExtra.ensureDirSync('./model');
+        fsExtra.ensureDirSync('./.builder/cache');
+        fs.writeFileSync('./model/model.json', JSON.stringify([]), { encoding: 'utf-8' });
 
         model = new Model();
         config = new Config('debug');
@@ -26,7 +21,8 @@ describe('LoadModelFiles', function () {
     });
 
     afterEach(function () {
-        mockFs.restore();
+        fsExtra.deleteSync('./model');
+        fsExtra.deleteSync('./.builder/cache');
     });
 
     it('should return valid task name', function () {

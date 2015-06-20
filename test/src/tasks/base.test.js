@@ -1,21 +1,17 @@
-var mockFs = require('mock-fs'),
+var fs = require('fs'),
+    fsExtra = require('fs-extra'),
     Config = require('../../../lib/config'),
     TaskBase = require('../../../lib/tasks/base');
 
 describe('TaskBase', function () {
     beforeEach(function () {
-        mockFs({
-            '.builder': {
-                cache: {
-                    file1: 'foo1',
-                    file2: 'foo2'
-                }
-            }
-        });
+        fsExtra.ensureDirSync('./.builder/cache');
+        fs.writeFileSync('./.builder/cache/file1', 'foo1', { encoding: 'utf-8' });
+        fs.writeFileSync('./.builder/cache/file2', 'foo2', { encoding: 'utf-8' });
     });
 
     afterEach(function () {
-        mockFs.restore();
+        fsExtra.deleteSync('./.builder');
     });
 
     it('should return valid task name', function () {
