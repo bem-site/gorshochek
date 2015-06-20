@@ -1,6 +1,7 @@
 import path from 'path';
 import mkdirp from 'mkdirp';
 import Base from './base';
+import MergeModels from './merge-models';
 
 export default class MakePagesCache extends Base {
 
@@ -10,6 +11,10 @@ export default class MakePagesCache extends Base {
 
     static getName() {
         return 'make pages cache folders';
+    }
+
+    static getDependencies () {
+        return [MergeModels];
     }
 
     /**

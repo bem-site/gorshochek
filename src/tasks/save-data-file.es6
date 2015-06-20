@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import Base from './base';
+import MergeModels from './merge-models';
 
 export default class SaveModelFile extends Base {
 
@@ -10,6 +11,10 @@ export default class SaveModelFile extends Base {
 
     static getName() {
         return 'save data file';
+    }
+
+    static getDependencies () {
+        return [MergeModels];
     }
 
     /**

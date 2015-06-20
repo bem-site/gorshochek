@@ -1,6 +1,8 @@
 var should = require('should'),
     Config = require('../../lib/config'),
-    Builder = require('../../lib/index');
+    Builder = require('../../lib/index'),
+    MakeDirectory = require('../../lib/tasks/make-directory'),
+    MergeModels = require('../../lib/tasks/merge-models');
 
 describe('Builder', function () {
     it('constructor', function () {
@@ -98,10 +100,18 @@ describe('Builder', function () {
 
         describe('addTask', function () {
             it('should return builder', function () {
-                var Task = function (baseConfig) {
-                    baseConfig;
-                };
-                builder.addTask(Task, {}).should.be.instanceOf(Builder);
+                builder.addTask(MakeDirectory, { path: './path1' }).should.be.instanceOf(Builder);
+            });
+
+            it('should add task to the execution queue', function () {
+                builder.addTask(MakeDirectory, { path: './path1' });
+                builder.getTasks().should.be.instanceOf(Array).and.have.length(1);
+            });
+
+            it('should throw error if dependency task was not added before', function () {
+                (function () {
+                    return builder.addTask(MergeModels);
+                }).should.throw('Task "MergeModels" requires "LoadModelFiles" to be executed before it!');
             });
         });
     });
