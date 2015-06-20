@@ -1,18 +1,16 @@
 var fs = require('fs'),
-    mockFs = require('mock-fs'),
+    fsExtra = require('fs-extra'),
     Config = require('../../../lib/config'),
     Model = require('../../../lib/model/model'),
     MakePagesCache = require('../../../lib/tasks/make-pages-cache');
 
 describe('MakePagesCache', function () {
     beforeEach(function () {
-        mockFs({
-            cache: {}
-        });
+        fsExtra.ensureDirSync('./cache');
     });
 
     afterEach(function () {
-        mockFs.restore();
+        fsExtra.deleteSync('./cache');
     });
 
     it('should return valid task name', function () {

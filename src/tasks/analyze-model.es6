@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import Base from './base';
 
 export default class AnalyzeModel extends Base {

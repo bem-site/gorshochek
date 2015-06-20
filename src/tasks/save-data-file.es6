@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import _ from 'lodash';
 import Base from './base';
 
 export default class SaveModelFile extends Base {

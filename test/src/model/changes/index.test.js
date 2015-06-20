@@ -3,7 +3,7 @@ var ChangesType = require('../../../../lib/model/changes/type'),
 
 describe('model/changes', function () {
     it('should be initialized successfully', function () {
-        new Changes();
+        return new Changes();
     });
 
     it('should have pages changes model', function () {

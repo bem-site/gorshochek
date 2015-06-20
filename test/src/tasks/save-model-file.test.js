@@ -1,22 +1,21 @@
 var fs = require('fs'),
-    mockFs = require('mock-fs'),
+    fsExtra = require('fs-extra'),
     Config = require('../../../lib/config'),
     SaveModelFile = require('../../../lib/tasks/save-model-file');
 
 describe('SaveModelFile', function () {
     before(function () {
-        var modelFile = fs.readFileSync('./test/stub/model/model.json', { encoding: 'utf-8' });
-        mockFs({
-            model: {
-                'model.json': modelFile
-            },
-            cache: {},
-            data: {}
-        });
+        fsExtra.ensureDirSync('./model');
+        fsExtra.ensureDirSync('./cache');
+        fsExtra.ensureDirSync('./data');
+
+        fsExtra.copySync('./test/stub/model/model.json', './model/model.json');
     });
 
     after(function () {
-        mockFs.restore();
+        fsExtra.deleteSync('./model');
+        fsExtra.deleteSync('./cache');
+        fsExtra.deleteSync('./data');
     });
 
     it('should return valid task name', function () {
