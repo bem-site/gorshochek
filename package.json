@@ -35,10 +35,10 @@
     "babel": "^5.2.x",
     "istanbul": "^0.3.13",
     "jscs": "^1.11.x",
-    "jshint": "~2.7.x",
+    "jshint": "~2.8.x",
     "mocha": "~2.2.x",
     "mocha-lcov-reporter": "0.0.x",
-    "should": "~6.x"
+    "should": "~7.x"
   },
   "scripts": {
     "jshint": "node_modules/.bin/jshint --extra-ext .es6  .",
