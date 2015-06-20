@@ -25,8 +25,8 @@ describe('SaveDataFile', function () {
             task;
 
         before(function () {
-            config = new Config('debug'),
-            task = new SaveDataFile(config, {}),
+            config = new Config('debug');
+            task = new SaveDataFile(config, {});
             model = new Model();
 
             model.setPages([

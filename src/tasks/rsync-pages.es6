@@ -91,6 +91,7 @@ export default class RsyncPages extends Base {
     run(model) {
         this.beforeRun(this.name);
 
+        // более подробно про rsync можно прочитать здесь http://linux.about.com/library/cmd/blcmdl1_rsync.htm
         var sync = Rsync.build(this._getOptions());
 
         sync.set('delete'); // удалять файлы в целевой папке если их уже нет в исходной
