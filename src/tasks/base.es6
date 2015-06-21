@@ -14,12 +14,30 @@ export default class Base {
         this.afterInitialization();
     }
 
+    /**
+     * Returns module for log purposes. Should be override in inherited classes
+     * @returns {Object|module}
+     * @protected
+     */
     static getLoggerName() {
         return module;
     }
 
+    /**
+     * Returns name of task. Should be override in inherited classes
+     * @returns {String}
+     * @protected
+     */
     static getName() {
         return 'base';
+    }
+
+    /**
+     * Returns array of task dependencies
+     * @returns {Array}
+     */
+    static getDependencies() {
+        return [];
     }
 
     /**

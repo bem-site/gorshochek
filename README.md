@@ -206,6 +206,7 @@ builder = Builder.init('debug')
 ### - [MergeModels](./src/tasks/merge-models.es6)
 
 * Описание: Позволяет находить различия между текущей моделью и моделью предыдущего запуска.
+* Зависимости: [LoadModelFiles](./src/tasks/load-model-files.es6)
 * Параметры: - нет
 * Обязательное использование: - да.
 
@@ -218,6 +219,7 @@ builder = Builder.init('debug')
 ### - [AnalyzeModel](./src/tasks/analyze-model.es6)
 
 * Описание: Производит первичный анализ и нормализацию файла модели.
+* Зависимости: [MergeModels](./src/tasks/merge-models.es6)
 * Параметры: - нет
 * Обязательное использование: - да.
 
@@ -225,6 +227,7 @@ builder = Builder.init('debug')
 
 * Описание: Для каждой страницы в модели создает директории в папке кеша пути к которым 
 совпадают с url-ами страниц.
+* Зависимости: [MergeModels](./src/tasks/merge-models.es6)
 * Параметры: - нет
 * Обязательное использование: - нет.
 
@@ -241,6 +244,7 @@ builder = Builder.init('debug')
 ### - [SaveDataFile](./src/tasks/save-data-file.es6)
 
 * Описание: Сохраняет результат в файл `data.json` в целевой директории сборки.
+* Зависимости: [MergeModels](./src/tasks/merge-models.es6)
 * Параметры: - нет
 * Обязательное использование: - да.
 

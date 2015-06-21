@@ -2,6 +2,7 @@ import _ from 'lodash';
 import deepDiff from 'deep-diff';
 import deepExtend from 'deep-extend';
 import Base from './base';
+import LoadModelFiles from './load-model-files';
 
 export default class MergeModels extends Base {
 
@@ -11,6 +12,10 @@ export default class MergeModels extends Base {
 
     static getName() {
         return 'merge models';
+    }
+
+    static getDependencies () {
+        return [LoadModelFiles];
     }
 
     static _generateUrlPageMap(arr) {

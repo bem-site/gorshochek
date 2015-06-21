@@ -84,6 +84,18 @@ export default class Builder {
      * @returns {Builder}
      */
     addTask(Task, taskOptions = {}) {
+        var dependencies = Task.getDependencies(),
+            taskNames = this.getTasks().map((task) => {
+                return task.constructor.name;
+            });
+        if (dependencies.length) {
+            dependencies.forEach((dependency) => {
+                if(taskNames.indexOf(dependency.name) === -1) {
+                    throw new Error(`Task "${Task['name']}" requires "${dependency.name}" to be executed before it!`);
+                }
+            });
+        }
+
         this.getTasks().push(new Task(this.getConfig(), taskOptions));
         return this;
     }

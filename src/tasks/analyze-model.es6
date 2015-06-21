@@ -1,4 +1,5 @@
 import Base from './base';
+import MergeModels from './merge-models';
 
 export default class AnalyzeModel extends Base {
 
@@ -8,6 +9,10 @@ export default class AnalyzeModel extends Base {
 
     static getName() {
         return 'analyze model';
+    }
+
+    static getDependencies () {
+        return [MergeModels];
     }
 
     /**
