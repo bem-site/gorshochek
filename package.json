@@ -20,10 +20,12 @@
   "main": "index.js",
   "dependencies": {
     "babel-runtime": "^5.2.x",
+    "bem-md-renderer": "^0.2.0",
     "bem-site-logger": "^0.0.x",
     "deep-diff": "^0.3.x",
     "deep-extend": "^0.4.x",
     "fs-extra": "^0.x",
+    "github": "^0.2.4",
     "lodash": "^3.x",
     "moment": "^2.x",
     "rsync": "^0.4.0",
