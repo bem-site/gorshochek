@@ -1,6 +1,7 @@
 import os from 'os';
 import fs from 'fs';
 import path from 'path';
+import fsExtra from 'fs-extra';
 import Logger from 'bem-site-logger';
 
 export default class Base {
@@ -38,6 +39,11 @@ export default class Base {
      */
     static getDependencies() {
         return [];
+    }
+
+
+    get fsExtra() {
+        return fsExtra;
     }
 
     /**

@@ -11,7 +11,7 @@ describe('TaskBase', function () {
     });
 
     afterEach(function () {
-        fsExtra.deleteSync('./.builder');
+        fsExtra.removeSync('./.builder');
     });
 
     it('should return valid task name', function () {

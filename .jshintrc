@@ -22,6 +22,5 @@
     "expr"          : true,
     "sub"           : true,
     "node"          : true,
-    "mocha"         : true,
     "esnext"        : true
 }

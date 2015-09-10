@@ -3,9 +3,9 @@ var fs = require('fs'),
     fsExtra = require('fs-extra'),
     Config = require('../../../lib/config'),
     Model = require('../../../lib/model/model'),
-    RsyncPages = require('../../../lib/tasks/rsync-pages');
+    Finalize = require('../../../lib/tasks/finalize');
 
-describe('RsyncPages', function () {
+describe('Finalize', function () {
     beforeEach(function () {
         fsExtra.ensureDirSync('./.builder/cache/url1');
         fsExtra.ensureDirSync('./data');
@@ -16,12 +16,12 @@ describe('RsyncPages', function () {
     });
 
     afterEach(function () {
-        fsExtra.deleteSync('./.builder');
-        fsExtra.deleteSync('./data');
+        fsExtra.removeSync('./.builder');
+        fsExtra.removeSync('./data');
     });
 
     it('should return valid task name', function () {
-        RsyncPages.getName().should.equal('synchronize pages with data folder');
+        Finalize.getName().should.equal('finalize');
     });
 
     describe('instance methods', function () {
@@ -31,59 +31,55 @@ describe('RsyncPages', function () {
 
         beforeEach(function () {
             config = new Config('debug');
-            task = new RsyncPages(config, {});
+            task = new Finalize(config, {});
             model = new Model();
+            model.setPages([
+                {
+                    url: '/url1',
+                    en: {}
+                }
+            ]);
         });
 
         describe('sync cache and data folders', function () {
-            it('should create folder in target path', function (done) {
-                task.run(model).then(function () {
+            it('should create folder in target path', function () {
+                return task.run(model).then(function () {
                     fs.existsSync(path.resolve('./data/url1')).should.equal(true);
-                    done();
                 });
             });
 
-            it('should create files in target path', function (done) {
-                task.run(model).then(function () {
+            it('should create files in target path', function () {
+                return task.run(model).then(function () {
                     fs.existsSync(path.resolve('./data/url1/en.md')).should.equal(true);
                     fs.existsSync(path.resolve('./data/url1/en.meta.json')).should.equal(true);
                     fs.existsSync(path.resolve('./data/url1/en.html')).should.equal(true);
-                    done();
                 });
             });
 
-            it('should create valid files in target path', function (done) {
-                task.run(model).then(function () {
+            it('should create valid files in target path', function () {
+                return task.run(model).then(function () {
                     fs.readFileSync(path.resolve('./data/url1/en.md'), 'utf-8').should.equal('en md');
                     fs.readFileSync(path.resolve('./data/url1/en.meta.json'), 'utf-8').should.equal('en meta json');
                     fs.readFileSync(path.resolve('./data/url1/en.html'), 'utf-8').should.equal('en html');
-                    done();
                 });
             });
         });
 
         describe('task parameters', function () {
-            it('should accept and use exclude parameters', function (done) {
-                task = new RsyncPages(config, { exclude: ['*.md'] });
-                task.run(model).then(function () {
+            it('should accept and use exclude parameters', function () {
+                task = new Finalize(config, { exclude: ['*.md'] });
+                return task.run(model).then(function () {
                     fs.existsSync(path.resolve('./data/url1/en.md')).should.equal(false);
                     fs.existsSync(path.resolve('./data/url1/en.meta.json')).should.equal(true);
                     fs.existsSync(path.resolve('./data/url1/en.html')).should.equal(true);
-                    done();
                 });
             });
+        });
 
-            /*
-            it('should accept and use include parameters', function (done) {
-                task = new RsyncPages(config, { exclude: ['*.md', '*.json'], include: ['*.meta.json'] });
-                task.run(model).then(function () {
-                    fs.existsSync(path.resolve('./data/url1/en.md')).should.equal(false);
-                    fs.existsSync(path.resolve('./data/url1/en.meta.json')).should.equal(true);
-                    fs.existsSync(path.resolve('./data/url1/en.html')).should.equal(true);
-                    done();
-                });
+        it('should successfully being saved to data.json file', function () {
+            return task.run(model).then(function () {
+                fs.existsSync('./data/data.json').should.equal(true);
             });
-            */
         });
     });
 });
