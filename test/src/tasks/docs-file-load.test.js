@@ -27,8 +27,8 @@ describe('DocsLoadFile', function () {
         });
 
         afterEach(function () {
-            fsExtra.deleteSync('./.builder');
-            fsExtra.deleteSync('./foo');
+            fsExtra.removeSync('./.builder');
+            fsExtra.removeSync('./foo');
         });
 
         describe('getCriteria', function () {

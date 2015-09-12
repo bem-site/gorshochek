@@ -26,7 +26,7 @@ describe('DocsMdHtml', function () {
         });
 
         afterEach(function () {
-            fsExtra.deleteSync('./.builder');
+            fsExtra.removeSync('./.builder');
         });
 
         describe('getCriteria', function () {

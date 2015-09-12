@@ -231,7 +231,7 @@ describe('DocsLoadGh', function () {
             });
 
             after(function () {
-                fsExtra.deleteSync('./.builder');
+                fsExtra.removeSync('./.builder');
             });
 
             it('should load file from gh and place it to cache at first time', function (done) {
@@ -316,7 +316,7 @@ describe('DocsLoadGh', function () {
             });
 
             after(function () {
-                fsExtra.deleteSync('./.builder');
+                fsExtra.removeSync('./.builder');
             });
 
             it('should load file from gh and place it to cache at first time', function (done) {

@@ -3,7 +3,7 @@ var fs = require('fs'),
     Config = require('../../../lib/config'),
     TaskBase = require('../../../lib/tasks/base');
 
-describe('TaskBase', function () {
+describe('Base', function () {
     beforeEach(function () {
         fsExtra.ensureDirSync('./.builder/cache');
         fs.writeFileSync('./.builder/cache/file1', 'foo1', { encoding: 'utf-8' });
