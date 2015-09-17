@@ -21,10 +21,10 @@ export default class PageHeaderMeta extends PageBase {
      * @private
      */
     _addMetaToPage(page, language) {
-        var p = page[language],
-            getKeywords = _p => {
-                return _p.tags ? _p.tags.join(', ') : '';
-            };
+        const p = page[language];
+        const getKeywords = _p => {
+            return _p.tags ? _p.tags.join(', ') : '';
+        };
 
         if(!p) {
             return;
@@ -47,7 +47,7 @@ export default class PageHeaderMeta extends PageBase {
     run(model) {
         this.beforeRun();
 
-        var languages = this.getBaseConfig().getLanguages();
+        const languages = this.getBaseConfig().getLanguages();
 
         /*
          Для каждой языковой версии каждой страницы создаем

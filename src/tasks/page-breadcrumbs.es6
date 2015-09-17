@@ -21,8 +21,8 @@ export default class PageBreadcrumbs extends PageBase {
     run(model) {
         this.beforeRun();
 
-        var languages = this.getBaseConfig().getLanguages(),
-            pagesMap = this.getPagesMap(model.getPages(), languages);
+        const languages = this.getBaseConfig().getLanguages();
+        const pagesMap = this.getPagesMap(model.getPages(), languages);
 
         /*
          Для каждой языковой версии каждой страницы создаем
@@ -34,12 +34,12 @@ export default class PageBreadcrumbs extends PageBase {
          ]
          */
         model.getPages().forEach(page => {
-            var urlSet = this.getParentUrls(page);
+            const urlSet = this.getParentUrls(page);
             languages.forEach(language => {
                 if(page[language]) {
                     page[language].breadcrumbs = urlSet.map(url => {
                         return {
-                            url: url,
+                            url,
                             title: pagesMap.get(url).get(language)
                         };
                     });

@@ -42,8 +42,8 @@ export default class Init extends Base {
                 ._makeFolder(this.getBaseConfig().getCacheFolder())
                 ._makeFolder(this.getBaseConfig().getDataFolder());
 
-            let newModelFilePath = this.getBaseConfig().getModelFilePath(),
-                oldModelFilePath = path.join(this.getBaseConfig().getCacheFolder(), 'model.json');
+            const newModelFilePath = this.getBaseConfig().getModelFilePath();
+            const oldModelFilePath = path.join(this.getBaseConfig().getCacheFolder(), 'model.json');
 
             /**
              * Есть 2 файла моделей:
@@ -58,7 +58,7 @@ export default class Init extends Base {
             try {
                 model.setNewModel(this.fsExtra.readJSONSync(newModelFilePath));
             } catch (error) {
-                let errorMessage = `Can\'t read or parse model file "${newModelFilePath}"`;
+                const errorMessage = `Can\'t read or parse model file "${newModelFilePath}"`;
                 this.logger.error(errorMessage);
                 throw(new Error(errorMessage));
             }

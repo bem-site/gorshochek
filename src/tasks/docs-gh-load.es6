@@ -177,7 +177,7 @@ export default class DocsLoadGithub extends DocsBaseGithub {
      */
     processPage(model, page, languages) {
         return vow.allResolved(languages.map((language) => {
-            var repoInfo = this.getCriteria(page, language);
+            const repoInfo = this.getCriteria(page, language);
 
             // Проверяем на наличие правильного поля contentFile
             // это сделано потому, что предварительный фильтр мог сработать
@@ -224,10 +224,10 @@ export default class DocsLoadGithub extends DocsBaseGithub {
                             cache.etag = result.meta.etag;
                             cache.sha = result.sha;
 
-                            var content = new Buffer(result.content, 'base64').toString(),
-                                ext = result.name.split('.').pop(),
-                                fileName = language + '.' + ext,
-                                filePath = path.join(page.url, fileName);
+                            const content = new Buffer(result.content, 'base64').toString();
+                            const ext = result.name.split('.').pop();
+                            const fileName = language + '.' + ext;
+                            const filePath = path.join(page.url, fileName);
 
                             cache.fileName = fileName;
 

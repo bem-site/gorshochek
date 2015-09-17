@@ -34,8 +34,6 @@ export default class DocsFileLoad extends DocsBase {
      * @private
      */
     getCriteria(page, language) {
-        var sourceUrl;
-
         // проверяем существование языковой версии страницы
         if (!page[language]) {
             return false;
@@ -43,7 +41,7 @@ export default class DocsFileLoad extends DocsBase {
 
         // проверяем поле sourceUrl. Оно должно существовать и значением
         // этого поля должен быть относительный путь на UNIX файловой системе
-        sourceUrl = page[language].sourceUrl;
+        const sourceUrl = page[language].sourceUrl;
         return !!sourceUrl && !!sourceUrl.match(/^(\/)?([^\/\0]+(\/)?)+$/);
     }
 
@@ -80,12 +78,12 @@ export default class DocsFileLoad extends DocsBase {
      */
     processPage(model, page, languages) {
         return vow.allResolved(languages.map((language) => {
-            var isLocalFile = this.getCriteria(page, language),
-                filePath,
-                fileName,
-                fileExt,
-                cacheFilePath,
-                localFilePath;
+            const isLocalFile = this.getCriteria(page, language);
+            let filePath;
+            let fileName;
+            let fileExt;
+            let cacheFilePath;
+            let localFilePath;
 
             if(!isLocalFile) {
                 return Promise.resolve(page);

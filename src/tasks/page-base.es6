@@ -41,8 +41,8 @@ export default class PageBase extends Base {
      */
     getParentUrls(page) {
         const DELIMETER = '/';
-        var chunks = page.url.split(DELIMETER),
-            result = [DELIMETER];
+        const chunks = page.url.split(DELIMETER);
+        const result = [DELIMETER];
 
         for(let i = 1; i < chunks.length; i++) {
             let url = '';

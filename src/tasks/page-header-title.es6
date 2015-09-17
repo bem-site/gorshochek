@@ -21,8 +21,8 @@ export default class PageHeaderTitle extends PageBase {
     run(model) {
         this.beforeRun();
 
-        var languages = this.getBaseConfig().getLanguages(),
-            pagesMap = this.getPagesMap(model.getPages(), languages);
+        const languages = this.getBaseConfig().getLanguages();
+        const pagesMap = this.getPagesMap(model.getPages(), languages);
 
         /*
            Для каждой языковой версии каждой страницы создаем
@@ -31,7 +31,7 @@ export default class PageHeaderTitle extends PageBase {
            и заканчивая текущей страницей. title-ы страниц разделены символом "/".
         */
         model.getPages().forEach(page => {
-            var urlSet = this.getParentUrls(page).reverse();
+            const urlSet = this.getParentUrls(page).reverse();
             languages.forEach(language => {
                 if(page[language]) {
                     page[language].header = page[language].header || {};

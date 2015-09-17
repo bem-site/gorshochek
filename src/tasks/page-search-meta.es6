@@ -21,16 +21,16 @@ export default class PageSearchMeta extends PageBase {
     run(model) {
         this.beforeRun();
 
-        var languages = this.getBaseConfig().getLanguages(),
-            pagesMap = this.getPagesMap(model.getPages(), languages);
+        const languages = this.getBaseConfig().getLanguages();
+        const pagesMap = this.getPagesMap(model.getPages(), languages);
 
         model.getPages().forEach(page => {
-            var urlSet = this.getParentUrls(page);
+            const urlSet = this.getParentUrls(page);
             languages.forEach(language => {
                 page[language].meta = {
                     breadcrumbs: urlSet.map(url => {
                         return {
-                            url: url,
+                            url,
                             title: pagesMap.get(url).get(language)
                         };
                     }),

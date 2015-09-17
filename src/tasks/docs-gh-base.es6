@@ -9,7 +9,7 @@ export default class DocsBaseGithub extends DocsBase {
     constructor(baseConfig, taskConfig) {
         super(baseConfig, taskConfig);
 
-        var ghOptions = _.extend({ token: taskConfig.token }, baseConfig.getLoggerSettings());
+        const ghOptions = _.extend({ token: taskConfig.token }, baseConfig.getLoggerSettings());
         this.api = new GitHub(ghOptions);
     }
 
@@ -52,8 +52,8 @@ export default class DocsBaseGithub extends DocsBase {
      * @private
      */
     getCriteria(page, lang) {
-        var sourceUrl,
-            repoInfo;
+        let sourceUrl;
+        let repoInfo;
 
         //1. page должен иметь поле {lang}
         //2. page[lang] должен иметь поле 'sourceUrl'
@@ -99,12 +99,12 @@ export default class DocsBaseGithub extends DocsBase {
      * @returns {Promise}
      */
     readFileFromCache(filePath){
-        var o = { encoding: 'utf-8' },
-            basePath = this.getBaseConfig().getCacheFolder();
+        const o = { encoding: 'utf-8' };
+        const basePath = this.getBaseConfig().getCacheFolder();
 
         return new Promise((resolve) => {
             fs.readFile(path.join(basePath, filePath), o, (error, content) => {
-                resolve(content || "{}");
+                resolve(content || '{}');
             });
         });
     }

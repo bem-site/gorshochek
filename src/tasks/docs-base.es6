@@ -71,8 +71,8 @@ export default class DocsBase extends Base {
     }
 
     processPages(model) {
-        var portionSize = this.constructor.getPortionSize(),
-            languages = this.getBaseConfig().getLanguages(), //массив языков
+        const portionSize = this.constructor.getPortionSize();
+        const languages = this.getBaseConfig().getLanguages(), //массив языков
 
             // фильтруем страницы удовлетворяющие критерию
             pagesWithGHSources = this.getPagesByCriteria(model.getPages(), languages),

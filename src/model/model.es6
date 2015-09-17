@@ -79,14 +79,14 @@ export default class Model {
      * Merges models and find differences
      */
     merge() {
-        var newModel,
-            oldModel,
-            newPages,
-            oldPages,
-            addedPages,
-            modifiedPages = [],
-            nonModifiedPages = [],
-            removedPages;
+        let newModel;
+        let oldModel;
+        let newPages;
+        let oldPages;
+        let addedPages;
+        const modifiedPages = [];
+        const nonModifiedPages = [];
+        let removedPages;
 
         /*
          Для массивов объектов из нового и старого файлов моделей
@@ -107,7 +107,7 @@ export default class Model {
         removedPages = _.difference(oldPages, newPages);
 
         removedPages.forEach(url => {
-            this.getChanges().pages.addRemoved({ type: 'page', url: url });
+            this.getChanges().pages.addRemoved({ type: 'page', url });
         });
 
         // отбрасываем удаленные страницы
@@ -131,7 +131,7 @@ export default class Model {
         // add new pages
         this.setPages(
             this.getPages().concat(addedPages.map(url => {
-                this.getChanges().pages.addAdded({ type: 'page', url: url });
+                this.getChanges().pages.addAdded({ type: 'page', url });
                 return newModel[url];
             }))
         );
@@ -150,7 +150,7 @@ export default class Model {
         // add modified pages
         this.setPages(
             this.getPages().concat(modifiedPages.map(url => {
-                this.getChanges().pages.addModified({ type: 'page', url: url });
+                this.getChanges().pages.addModified({ type: 'page', url });
                 return deepExtend(oldModel[url], newModel[url]);
             }, this))
         );
@@ -163,7 +163,7 @@ export default class Model {
          * @param {String[]} languages - array of configured languages
          * @returns {Object} page
          */
-        let normalizePage = (page, languages) => {
+        const normalizePage = (page, languages) => {
             /**
              * В каждом объекте модели есть одно обязательное поле url
              * Для остальных полей нужно провести проверку и выставить значения по умолчанию

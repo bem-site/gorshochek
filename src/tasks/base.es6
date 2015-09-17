@@ -88,8 +88,8 @@ export default class Base {
      * @returns {Promise}
      */
     readFileFromCache(filePath){
-        var o = { encoding: 'utf-8' },
-            basePath = this.getBaseConfig().getCacheFolder();
+        const o = { encoding: 'utf-8' };
+        const basePath = this.getBaseConfig().getCacheFolder();
 
         return new Promise((resolve, reject) => {
             fs.readFile(path.join(basePath, filePath), o, (error, content) => {
@@ -111,8 +111,8 @@ export default class Base {
      * @returns {Promise}
      */
     writeFileToCache(filePath, content){
-        var o = { encoding: 'utf-8' },
-            basePath = this.getBaseConfig().getCacheFolder();
+        const o = { encoding: 'utf-8' };
+        const basePath = this.getBaseConfig().getCacheFolder();
 
         return new Promise((resolve, reject) => {
             fs.writeFile(path.join(basePath, filePath), content, o, (error) => {

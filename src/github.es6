@@ -20,9 +20,9 @@ class Base {
             .verbose(' - path: %s', options.path || 'N/A');
 
         const ATTEMPTS = 5; // максимальное число допустимых повторных обращений к github в случае возникновения ошибки
-        var requestFunc = (count) => {
+        const requestFunc = (count) => {
             this.logger.verbose(`attempt #${count}`);
-            return this.api['repos'][method](_.extend(headers ? { headers: headers } : {}, options),
+            return this.api['repos'][method](_.extend(headers ? { headers } : {}, options),
                 (error, result) => {
                     if (!error) {
                         return callback(null, result);
@@ -218,8 +218,8 @@ export default class Github extends Custom {
     }
 
     _getApiByHost(options) {
-        var host = options.host,
-            type = host.indexOf('github.com') > -1 ? Public.getType() : Private.getType();
+        const host = options.host;
+        const type = host.indexOf('github.com') > -1 ? Public.getType() : Private.getType();
         return this.apis.get(type);
     }
 
@@ -234,7 +234,7 @@ export default class Github extends Custom {
      * @param {Function} callback function
      * @returns {*|Object}
      */
-    /* jshint ignore:start */
+    /* eslint-disable */
     getContent(options, headers, callback) {
         return super.getContent.apply(this._getApiByHost(options), arguments);
     }
@@ -319,5 +319,5 @@ export default class Github extends Custom {
     isBranchExists(options, headers, callback) {
         return super.isBranchExists.apply(this._getApiByHost(options), arguments);
     }
-    /* jshint ignore:end */
+    /* eslint-enable */
 }

@@ -34,8 +34,6 @@ export default class DocsMdToHtml extends DocsBase {
      * @private
      */
     getCriteria(page, language) {
-        var contentFile;
-
         // проверяем существование языковой версии страницы
         if (!page[language]) {
             return false;
@@ -43,7 +41,7 @@ export default class DocsMdToHtml extends DocsBase {
 
         // проверяем поле contentFile. Оно должно существовать и значением
         // этого поля должен быть относительный путь оканчивающийся на .md
-        contentFile = page[language].contentFile;
+        const contentFile = page[language].contentFile;
         return !!contentFile && !!contentFile.match(/\.md$/);
     }
 
@@ -82,10 +80,10 @@ export default class DocsMdToHtml extends DocsBase {
      */
     processPage(model, page, languages) {
         return vow.allResolved(languages.map((language) => {
-            var hasMdFile = this.getCriteria(page, language),
-                mdFilePath,
-                mdFileDirectory,
-                htmlFilePath;
+            const hasMdFile = this.getCriteria(page, language);
+            let mdFilePath;
+            let mdFileDirectory;
+            let htmlFilePath;
 
             // Проверяем на наличие правильного поля contentFile
             // это сделано потому, что предварительный фильтр мог сработать

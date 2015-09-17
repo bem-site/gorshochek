@@ -1,8 +1,8 @@
-var Logger = require('bem-site-logger');
+const Logger = require('bem-site-logger');
 
 export default class Config {
     constructor(logLevel) {
-        var loggerSettings = { level: logLevel };
+        const loggerSettings = { level: logLevel };
 
         this.logger = Logger.setOptions(loggerSettings).createLogger(module);
 

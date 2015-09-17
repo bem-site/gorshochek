@@ -57,18 +57,18 @@ export default class Finalize extends Base {
 
     _syncPageFiles(model) {
         // более подробно про rsync можно прочитать здесь http://linux.about.com/library/cmd/blcmdl1_rsync.htm
-        let sync = Rsync.build(this._getOptions()),
-            onDebug = (data) => {
-                this.logger.debug(data.toString());
-            },
-            onWarn = (data) => {
-                this.logger.warn(data.toString());
-            },
-            onError = (error, code) => {
-                this.logger
-                    .error(`Error occur while make rsync operation: ${error.message}`)
-                    .error(`Rsync exit with code: ${code}`);
-            };
+        const sync = Rsync.build(this._getOptions());
+        const onDebug = (data) => {
+            this.logger.debug(data.toString());
+        };
+        const onWarn = (data) => {
+            this.logger.warn(data.toString());
+        };
+        const onError = (error, code) => {
+            this.logger
+                .error(`Error occur while make rsync operation: ${error.message}`)
+                .error(`Rsync exit with code: ${code}`);
+        };
 
         sync.set('delete'); // удалять файлы в целевой папке если их уже нет в исходной
         sync.set('delete-excluded'); // удалять файлы в целевой папке если их добавили в exclude
@@ -91,7 +91,7 @@ export default class Finalize extends Base {
     }
 
     _saveDataFile(model) {
-        var dataFilePath = path.join(this.getBaseConfig().getDataFolder(), 'data.json');
+        const dataFilePath = path.join(this.getBaseConfig().getDataFolder(), 'data.json');
 
         this.logger.debug('Save data file:').debug(`==> to ${dataFilePath}`);
 

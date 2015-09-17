@@ -1,4 +1,4 @@
-var Logger = require('bem-site-logger');
+const Logger = require('bem-site-logger');
 
 import Config from './config';
 import Model from './model/model';
@@ -84,10 +84,11 @@ export default class Builder {
      * @returns {Builder}
      */
     addTask(Task, taskOptions = {}) {
-        var dependencies = Task.getDependencies(),
-            taskNames = this.getTasks().map((task) => {
-                return task.constructor.name;
-            });
+        const dependencies = Task.getDependencies();
+        const taskNames = this.getTasks().map((task) => {
+            return task.constructor.name;
+        });
+
         if (dependencies.length) {
             dependencies.forEach((dependency) => {
                 if(taskNames.indexOf(dependency.name) === -1) {
