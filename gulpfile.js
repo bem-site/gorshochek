@@ -3,9 +3,11 @@ var fs = require('fs'),
     clean = require('gulp-clean'),
     babel = require('gulp-babel'),
     jscs = require('gulp-jscs'),
-    jshint = require('gulp-jshint'),
+    eslint = require('gulp-eslint'),
     esdoc = require('gulp-esdoc'),
     ghPages = require('gulp-gh-pages');
+
+const SRC_PATH = './src/**/*.es6';
 
 gulp.task('clean-jsdoc', function () {
     return gulp.src('./jsdoc', { read: false })
@@ -17,23 +19,22 @@ gulp.task('clean-lib', function () {
         .pipe(clean());
 });
 
-gulp.task('jshint', function () {
-    return gulp.src('./src/**/*.es6')
-        .pipe(jshint({ lookup: true, esnext: true }))
-        .pipe(jshint.reporter('jshint-stylish'))
-        .pipe(jshint.reporter('fail'));
+gulp.task('eslint', function() {
+    return gulp.src(SRC_PATH)
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failOnError());
 });
 
-gulp.task('jscs', function () {
-    return gulp.src('./src/**/*.es6')
-        .pipe(jscs({ esnext: true }))
-        .pipe(gulp.dest('src'));
+gulp.task('jscs', function() {
+    return gulp.src(SRC_PATH)
+        .pipe(jscs({configPath: './.jscs.js', esnext: true}));
 });
 
-gulp.task('codestyle', ['jshint', 'jscs']);
+gulp.task('lint', ['jshint', 'jscs']);
 
 gulp.task('compile', ['clean-lib'], function () {
-    return gulp.src('./src/**/*.es6')
+    return gulp.src(SRC_PATH)
         .pipe(babel({ optional: 'runtime' }))
         .pipe(gulp.dest('lib'));
 });
@@ -58,3 +59,7 @@ gulp.task('ghPages', ['esdoc', 'copy-logo'], function () {
 });
 
 gulp.task('publish-doc', ['esdoc', 'copy-logo', 'ghPages']);
+
+gulp.task('watch', function() {
+    gulp.watch(SRC_PATH, ['compile']);
+});
