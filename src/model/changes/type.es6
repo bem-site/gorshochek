@@ -1,6 +1,15 @@
 'use strict';
 
+/**
+* @exports
+* @class ChangeType
+* @desc change type model
+*/
 export default class ChangeType {
+    /**
+     * @constructor
+     * @param {String} type - type of change
+     */
     constructor(type) {
         this._type = type;
         this._added = [];
@@ -13,13 +22,13 @@ export default class ChangeType {
      * @returns {Boolean}
      */
     areModified() {
-        return this.added.length || this.modified.length || this.removed.length;
+        return !!(this.added.length || this.modified.length || this.removed.length);
     }
 
     /**
      * Add new items to added group
      * @param {Object} item
-     * @returns {*}
+     * @returns {ChangeType}
      */
     addAdded(item) {
         this._added.push(item);
@@ -29,7 +38,7 @@ export default class ChangeType {
     /**
      * Add new items to modified group
      * @param {Object} item
-     * @returns {*}
+     * @returns {ChangeType}
      */
     addModified(item) {
         this._modified.push(item);
@@ -39,7 +48,7 @@ export default class ChangeType {
     /**
      * Add new items to removed group
      * @param {Object} item
-     * @returns {*}
+     * @returns {ChangeType}
      */
     addRemoved(item) {
         this._removed.push(item);
@@ -48,7 +57,7 @@ export default class ChangeType {
 
     /**
      * Returns items of added group
-     * @returns {*}
+     * @returns {Object[]}
      */
     get added() {
         return this._added;
@@ -56,7 +65,7 @@ export default class ChangeType {
 
     /**
      * Returns items of modified group
-     * @returns {*}
+     * @returns {Object[]}
      */
     get modified() {
         return this._modified;
@@ -64,7 +73,7 @@ export default class ChangeType {
 
     /**
      * Returns items of removed group
-     * @returns {*}
+     * @returns {Object[]}
      */
     get removed() {
         return this._removed;
