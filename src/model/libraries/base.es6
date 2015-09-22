@@ -54,7 +54,7 @@ export default class Base {
      * @public
      */
     saveFile(filePath, content, isJSON) {
-        var method = isJSON ? 'outputJSON' : 'outputFile';
+        const method = isJSON ? 'outputJSON' : 'outputFile';
         return new vow.Promise((resolve, reject) => {
             fsExtra[method](filePath, content, (error) => {
                 if (error) {

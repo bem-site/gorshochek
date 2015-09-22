@@ -77,21 +77,21 @@ export default class Document extends Base {
      * @private
      */
     _setSource(data) {
-        var version = this.version,
-            basePath = path.join(version.basePath, version.lib, version.version, this.document),
-            promises = version.languages.map(lang => {
-                var filePath = path.join(basePath, `${lang}.html`),
-                    content = data.content ? data.content[lang] : null;
+        const version = this.version;
+        const basePath = path.join(version.basePath, version.lib, version.version, this.document);
+        const promises = version.languages.map(lang => {
+            const filePath = path.join(basePath, `${lang}.html`);
+            const content = data.content ? data.content[lang] : null;
 
-                if (!content) {
-                    this.setValue('published', false, lang);
-                }
+            if (!content) {
+                this.setValue('published', false, lang);
+            }
 
-                return this.saveFile(filePath, content, false).then(() => {
-                    return this.setValue('contentFile', path.sep + [version.baseUrl,
-                        version.lib, version.version, this.document, lang].join(path.sep) + '.html', lang);
-                });
+            return this.saveFile(filePath, content, false).then(() => {
+                return this.setValue('contentFile', path.sep + [version.baseUrl,
+                    version.lib, version.version, this.document, lang].join(path.sep) + '.html', lang);
             });
+        });
 
         return vow.all(promises);
     }
@@ -102,7 +102,7 @@ export default class Document extends Base {
      * @returns {Promise}
      */
     processData(data) {
-        var version = this.version;
+        const version = this.version;
 
         this.setValue('url', [ version.baseUrl, version.lib, version.version, this.document ].join('/'))
             .setValue('aliases', []) // алиасы или редиректы
@@ -116,7 +116,7 @@ export default class Document extends Base {
                 .setValue('published', true, lang) // флаг о том что страница опубликована
                 .setValue('updateDate', +(new Date()), lang); // дата обновления
 
-            let sourceUrl = this._getSourceUrl(data, lang);
+            const sourceUrl = this._getSourceUrl(data, lang);
             sourceUrl && this.setValue('sourceUrl', sourceUrl, lang);
         });
 

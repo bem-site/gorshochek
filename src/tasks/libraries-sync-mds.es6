@@ -22,8 +22,7 @@ export default class LibrariesSyncMDS extends LibrariesBase {
     constructor(baseConfig, taskConfig) {
         super(baseConfig, taskConfig);
 
-        var mdsOptions = taskConfig['mds'],
-            mdsConfig;
+        const mdsOptions = taskConfig['mds'];
 
         // настройки для подключения к MDS - обязательный параметр!
         if (!mdsOptions) {
@@ -47,7 +46,7 @@ export default class LibrariesSyncMDS extends LibrariesBase {
             mdsOptions['port'] = 80;
         }
 
-        mdsConfig = {
+        const mdsConfig = {
             debug: mdsOptions['debug'] || false,
             namespace: mdsOptions['namespace'],
             get: {
@@ -142,7 +141,7 @@ export default class LibrariesSyncMDS extends LibrariesBase {
         // а в качестве значений - объекты в которых хранятся поля по которым можно проверить
         // изменились ли данные для версии библиотеки или нет (sha-сумма и дата сборки в миллисекундах)
         return Object.keys(registry).reduce((prev, lib) => {
-            var versions = registry[lib].versions;
+            const versions = registry[lib].versions;
             if (versions) {
                 Object.keys(versions).forEach(version => {
                     prev.set(`${lib}||${version}`, versions[version]);
@@ -162,19 +161,19 @@ export default class LibrariesSyncMDS extends LibrariesBase {
      * @private
      */
     _compareRegistryFiles(model, local, remote) {
-        var localCM = this._createComparatorMap(local),
-            remoteCM = this._createComparatorMap(remote),
-            added = [],
-            modified = [],
-            removed = [],
-            processItem = (key, collection, type) => {
-                let k = key.split('||'),
-                    item = { lib: k[0], version: k[1] };
+        const localCM = this._createComparatorMap(local);
+        const remoteCM = this._createComparatorMap(remote);
+        const added = [];
+        const modified = [];
+        const removed = [];
+        const processItem = (key, collection, type) => {
+            const k = key.split('||');
+            const item = { lib: k[0], version: k[1] };
 
-                this.logger.debug(`${type} lib: => ${item.lib} version: => ${item.version}`);
-                model.getChanges().pages['add' + type](item);
-                collection.push(item);
-            };
+            this.logger.debug(`${type} lib: => ${item.lib} version: => ${item.version}`);
+            model.getChanges().pages['add' + type](item);
+            collection.push(item);
+        };
 
         // происходит итерация по ключам Map построенного для реестра загруженного с MDS хоста
         // если локальный Map не содержит сочетания {lib}||{version}, то версия {version} библиотеки
@@ -188,8 +187,8 @@ export default class LibrariesSyncMDS extends LibrariesBase {
         // {lib} считается модифицированной (измененной)
         [...remoteCM.keys()].forEach(key => {
             if (localCM.has(key)) {
-                let vLocal = localCM.get(key),
-                    vRemote = remoteCM.get(key);
+                const vLocal = localCM.get(key);
+                const vRemote = remoteCM.get(key);
                 if (vLocal['sha'] !== vRemote['sha'] || vLocal['date'] !== vRemote['date']) {
                     processItem(key, modified, 'Modified');
                 }
@@ -203,7 +202,7 @@ export default class LibrariesSyncMDS extends LibrariesBase {
             !remoteCM.has(key) && processItem(key, removed, 'Removed');
         });
 
-        return { added: added, modified: modified, removed: removed };
+        return { added, modified, removed };
     }
 
     /**
@@ -215,14 +214,14 @@ export default class LibrariesSyncMDS extends LibrariesBase {
      * @private
      */
     _saveLibraryVersionFile(item) {
-        var lib = item.lib,
-            version = item.version,
-            onError = (error, lib, version) => {
-                this.logger
-                    .error(error.message)
-                    .error(`Error occur while loading "data.json" file from MDS ` +
-                    `for library: ${lib} and version: ${version}`);
-            };
+        const lib = item.lib;
+        const version = item.version;
+        const onError = (error, lib, version) => {
+            this.logger
+                .error(error.message)
+                .error(`Error occur while loading "data.json" file from MDS ` +
+                `for library: ${lib} and version: ${version}`);
+        };
 
         this.logger.debug(`Load file for library: ${lib} and version: ${version}`);
 
@@ -262,8 +261,8 @@ export default class LibrariesSyncMDS extends LibrariesBase {
      * @private
      */
     _removeLibraryVersionFolder(item) {
-        var lib = item.lib,
-            version = item.version;
+        const lib = item.lib;
+        const version = item.version;
 
         this.logger.debug(`Remove "data.json" file for library: ${lib} and version: ${version}`);
 
@@ -291,7 +290,7 @@ export default class LibrariesSyncMDS extends LibrariesBase {
 
         fsExtra.ensureDirSync(this.getLibrariesCachePath());
 
-        var _remote;
+        let _remote;
 
         return vow
             .all([
@@ -321,7 +320,7 @@ export default class LibrariesSyncMDS extends LibrariesBase {
             .then((downloadQueue) => {
                 // порциями по 10 штук загружаем обновленные data.json файлы
                 // и складываем их на файловую систему
-                var portions = _.chunk(downloadQueue, 5);
+                const portions = _.chunk(downloadQueue, 5);
                 return portions.reduce((prev, portion) => {
                     return prev.then(() => {
                         return vow.all(portion.map(this._saveLibraryVersionFile.bind(this)));

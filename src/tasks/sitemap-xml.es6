@@ -42,7 +42,7 @@ export default class SitemapXML extends Base {
      */
     _getHosts() {
         // Достаем конфигурацию хостов из конфигурационнго объекта данной задачи
-        var hosts = this.getTaskConfig().hosts
+        let hosts = this.getTaskConfig().hosts;
 
         // Хосты - это обязательный параметр.
         // Если они отсутствуют, то бросается соответствующее исключение
@@ -94,8 +94,8 @@ export default class SitemapXML extends Base {
         * где: host[lang] + url - полный адрес страницы включая протокол, хост и.т.д.
         */
         return model.getPages().reduce((siteMap, page) => {
-            var urls = [page.url].concat(page.oldUrls || []),
-                search = page.search || this.constructor._getDefaultSearchParams();
+            const urls = [page.url].concat(page.oldUrls || []);
+            const search = page.search || this.constructor._getDefaultSearchParams();
 
             languages.forEach((lang) => {
                 if (page[lang] && page[lang].published) {
@@ -118,9 +118,9 @@ export default class SitemapXML extends Base {
 
         // построенная в _buildSiteMapModel js модель sitemap.xml файла
         // преобразуется в xml формат с помощью модуля js2xml
-        var hosts = this._getHosts(),
-            languages = this.getBaseConfig().getLanguages(),
-            siteMap = js2xml('urlset', { url: this._buildSiteMapModel(model, hosts, languages) });
+        const hosts = this._getHosts();
+        const languages = this.getBaseConfig().getLanguages();
+        const siteMap = js2xml('urlset', { url: this._buildSiteMapModel(model, hosts, languages) });
 
         this.logger.debug('Save sitemap.xml file:');
         this.logger.debug(`==> to ${this._getSiteMapXmlFilePath()}`);

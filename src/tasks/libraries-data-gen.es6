@@ -61,8 +61,8 @@ export default class LibrariesDataGen extends LibrariesBase {
      * @private
      */
     _spreadByProcesses(libVersions, numOfProcesses) {
-        var result = [],
-            processNum = 0;
+        const result = [];
+        let processNum = 0;
 
         for(let i = 0; i < numOfProcesses; i++) {
             result[i] = [];
@@ -83,31 +83,33 @@ export default class LibrariesDataGen extends LibrariesBase {
     run (model) {
         this.beforeRun();
 
-        var numberOfProcesses = os.cpus().length,
-            processesQueues = this._spreadByProcesses([]
+        const numberOfProcesses = os.cpus().length;
+        const processesQueues = this._spreadByProcesses([]
                 .concat(this._findLibraryChanges(model, 'added'))
-                .concat(this._findLibraryChanges(model, 'modified')), numberOfProcesses),
-            count = 0;
+                .concat(this._findLibraryChanges(model, 'modified')), numberOfProcesses);
+        let count = 0;
 
         return new Promise(resolve => {
+            const callback = (error, output) => {
+                if (error) {
+                    this.logger
+                        .error('Error occur while processing library versions for process %s', output)
+                        .error('Error: %s', error.message);
+                }
+
+                if (++count === numberOfProcesses) {
+                    workerFarm.end(this.workers);
+                    resolve(model);
+                }
+            };
+
             for(let i = 0; i < numberOfProcesses; i++) {
                 this.workers({
                     baseUrl: this.getTaskConfig().baseUrl,
                     basePath: this.getLibrariesCachePath(),
                     data: processesQueues[i],
                     languages: this.getBaseConfig().getLanguages()
-                }, (error, output) => {
-                    if (error) {
-                        this.logger
-                            .error('Error occur while processing library versions for process %s', output)
-                            .error('Error: %s', error.message);
-                    }
-
-                    if (++count === numberOfProcesses) {
-                        workerFarm.end(this.workers);
-                        resolve(model);
-                    }
-                });
+                }, callback);
             }
         });
     }

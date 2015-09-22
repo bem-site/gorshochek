@@ -11,8 +11,8 @@ import Version from './model/libraries/version';
  * @param {String} version — name of library version
  * @returns {Promise}
  */
-var readFile = (basePath, lib, version) => {
-    var filePath = path.join(basePath, lib, version, 'storage.data.json');
+const readFile = (basePath, lib, version) => {
+    const filePath = path.join(basePath, lib, version, 'storage.data.json');
     return new Promise((resolve, reject) => {
         fsExtra.readJSON(filePath, (error, content) => {
             error ? reject(error) : resolve(content);
@@ -32,10 +32,10 @@ var readFile = (basePath, lib, version) => {
  */
 module.exports = function (data, callback) {
     const PORTION_SIZE = 3;
-    var baseUrl = data.baseUrl, // базовый url для библиотек
-        basePath = data.basePath, // базовый путь для сохранения файлов внутри директории кэша
-        languages = data.languages, // массив с языками
-        queue = data.data;
+    const baseUrl = data.baseUrl; // базовый url для библиотек
+    const basePath = data.basePath; // базовый путь для сохранения файлов внутри директории кэша
+    const languages = data.languages; // массив с языками
+    let queue = data.data;
 
     // делим очередь версий библиотек на порции размером PORTION_SIZE
     queue = _.chunk(queue, PORTION_SIZE);
@@ -47,8 +47,8 @@ module.exports = function (data, callback) {
         .reduce((prev, portion) => {
             return prev.then(() => {
                 return vow.all(portion.map(item => {
-                    var lib = item.lib,
-                        version = item.version;
+                    const lib = item.lib;
+                    const version = item.version;
 
                     return readFile(basePath, lib, version)
                         .then((new Version(baseUrl, basePath, lib, version, languages)).processData);

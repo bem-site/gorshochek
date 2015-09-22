@@ -1,4 +1,4 @@
-var fsExtra = require('fs-extra');
+const fsExtra = require('fs-extra');
 
 export default class People {
     constructor(people) {
@@ -31,7 +31,7 @@ export default class People {
      * @returns {String}
      */
     getFullNameByIdAndLang(id, lang) {
-        var p = this.getByIdAndLang(id, lang);
+        const p = this.getByIdAndLang(id, lang);
         return `${p.firstName} ${p.lastName}`
     }
 

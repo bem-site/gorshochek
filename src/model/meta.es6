@@ -1,5 +1,5 @@
-var _ = require('lodash'),
-    fsExtra = require('fs-extra');
+const _ = require('lodash');
+const fsExtra = require('fs-extra');
 
 export default class Meta {
     constructor(data) {
@@ -37,7 +37,7 @@ export default class Meta {
     }
 
     static save(file, authors, translators, tags) {
-        var transform = (o) => {
+        const transform = (o) => {
             return _.mapValues(o, (item) => {
                 return Array.from(item);
             });

@@ -41,7 +41,7 @@ export default class Level extends Base {
      * @returns {Promise}
      */
     processData(data) {
-        var version = this.version;
+        const version = this.version;
 
         this.setValue('url', [version.baseUrl, version.lib, version.version, this.level].join('/'))
             .setValue('aliases', []) // алиасы или редиректы

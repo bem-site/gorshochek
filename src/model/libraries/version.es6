@@ -61,8 +61,8 @@ export default class Version extends Base {
      * @private
      */
     _getSourceUrls(data, languages) {
-        var defaultLanguage = languages[0],
-            result = languages.reduce((prev, item) => {
+        const defaultLanguage = languages[0];
+        let result = languages.reduce((prev, item) => {
                 prev[item] = null;
                 return prev;
             }, {});
@@ -82,17 +82,17 @@ export default class Version extends Base {
     }
 
     _setSource(data) {
-        var readme = data.docs ? data.docs['readme'] : data['readme'],
-            basePath = path.join(this.basePath, this.lib, this.version),
-            promises = this.languages.map((lang) => {
-                var filePath = path.join(basePath, `${lang}.html`),
-                    content = (readme && readme.content) ? readme.content[lang] : null;
+        const readme = data.docs ? data.docs['readme'] : data['readme'];
+        const basePath = path.join(this.basePath, this.lib, this.version);
+        const promises = this.languages.map((lang) => {
+            const filePath = path.join(basePath, `${lang}.html`);
+            const content = (readme && readme.content) ? readme.content[lang] : null;
 
-                return this.saveFile(filePath, content, false).then(() => {
-                    return this.setValue('contentFile',
-                        ['', this.baseUrl, this.lib, this.version, lang].join(path.sep) + '.html', lang);
-                });
+            return this.saveFile(filePath, content, false).then(() => {
+                return this.setValue('contentFile',
+                    ['', this.baseUrl, this.lib, this.version, lang].join(path.sep) + '.html', lang);
             });
+        });
 
         return vow.all(promises);
     }
@@ -104,8 +104,8 @@ export default class Version extends Base {
      * @private
      */
     _processDocuments(data) {
-        var documents = data['docs'],
-            promises = [];
+        const documents = data['docs'];
+        let promises = [];
 
         if (!documents) {
             return Promise.resolve(promises);
@@ -129,7 +129,7 @@ export default class Version extends Base {
      * @private
      */
     _processLevels(data) {
-        var levels = data['levels'];
+        const levels = data['levels'];
 
         if (!levels || !levels.length) {
             return Promise.resolve([]);
@@ -156,7 +156,7 @@ export default class Version extends Base {
      * @returns {Promise}
      */
     processData(data) {
-        var sourceUrls = this._getSourceUrls(data, this.languages);
+        const sourceUrls = this._getSourceUrls(data, this.languages);
 
         this.setValue('url', `${this.baseUrl}/${this.lib}/${this.version}`)
             .setValue('aliases', []) // алиасы или редиректы

@@ -67,24 +67,24 @@ export default class Block extends Base {
      * @private
      */
     _setSource(data) {
-        var version = this.level.version,
-            basePath = path.join(version.basePath, version.lib, version.version, this.level.level, this.block),
-            blockDoc = data.data || null,
-            blockJSDoc = data.jsdoc || null,
-            promises = version.languages.map(lang => {
-                var filePath = path.join(basePath, `${lang}.json`),
-                    content = {
-                        data: this._rectifyBlockDocumentation(blockDoc, lang),
-                        jsdoc: this._rectifyBlockJSDocumentation(blockJSDoc, lang)
-                    };
+        const version = this.level.version;
+        const basePath = path.join(version.basePath, version.lib, version.version, this.level.level, this.block);
+        const blockDoc = data.data || null;
+        const blockJSDoc = data.jsdoc || null;
+        const promises = version.languages.map(lang => {
+            const filePath = path.join(basePath, `${lang}.json`);
+            const content = {
+                data: this._rectifyBlockDocumentation(blockDoc, lang),
+                jsdoc: this._rectifyBlockJSDocumentation(blockJSDoc, lang)
+            };
 
-                return this.saveFile(filePath, content, true)
-                    .then(() => {
-                        return this.setValue('contentFile',
-                            path.sep + [version.baseUrl, version.lib, version.version,
-                                this.level.level, this.block, lang].join(path.sep) + '.json', lang);
-                    });
-            });
+            return this.saveFile(filePath, content, true)
+                .then(() => {
+                    return this.setValue('contentFile',
+                        path.sep + [version.baseUrl, version.lib, version.version,
+                            this.level.level, this.block, lang].join(path.sep) + '.json', lang);
+                });
+        });
 
         return vow.all(promises);
     }
@@ -95,7 +95,7 @@ export default class Block extends Base {
      * @returns {Promise}
      */
     processData(data) {
-        var v = this.level.version;
+        const v = this.level.version;
 
         this.setValue('url', [v.baseUrl, v.lib, v.version, this.level.level, this.block].join('/'))
             .setValue('aliases', []) // алиасы или редиректы
