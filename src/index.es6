@@ -13,6 +13,10 @@ export default class Builder {
         return new Builder(logLevel);
     }
 
+    /**
+     * Constructor function
+     * @param {String} logLevel - log verbosity level
+     */
     constructor(logLevel) {
         this._config = new Config(logLevel);
         this.logger = Logger

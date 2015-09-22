@@ -26,6 +26,7 @@
     "deep-extend": "^0.4.x",
     "fs-extra": "^0.x",
     "github": "^0.2.4",
+    "js2xmlparser": "^1.0.0",
     "lodash": "^3.x",
     "moment": "^2.x",
     "rsync": "^0.4.0",

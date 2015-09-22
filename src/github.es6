@@ -4,12 +4,28 @@ import _ from 'lodash';
 import Api from 'github';
 import Logger from 'bem-site-logger';
 
+/**
+ * @exports
+ * @class Base
+ * @desc Base class for github API methods
+ */
 class Base {
+    /**
+     * Constructor
+     * @param {Object} options object
+     */
     constructor(options) {
         this.options = options;
         this.logger = Logger.setOptions(options.logger).createLogger(module);
     }
 
+    /**
+     * Executes given github API method with given options and headers
+     * @param {String} method - name of github method
+     * @param {Object} options
+     * @param {Object} headers - github request headers
+     * @param {Function} callback function
+     */
     executeAPIMethod(method, options, headers, callback) {
         this.logger
             .verbose('github API call with options:')
@@ -98,7 +114,12 @@ class Base {
         return this.executeAPIMethod('get', options, headers, callback);
     }
 
-    getBaseConfig() {
+    /**
+     * Returns base github configuration
+     * @returns {{version: string, protocol: string, timeout: number, debug: boolean}}
+     * @static
+     */
+    static getBaseConfig() {
         return {
             version: '3.0.0',
             protocol: 'https',
@@ -110,6 +131,10 @@ class Base {
 
 class Custom extends Base {
 
+    /**
+     * Constructor
+     * @param {Object} options object
+     */
     constructor(options){
         super(options);
     }
@@ -173,9 +198,13 @@ class Custom extends Base {
  * @type {*|exports}
  */
 class Public extends Custom {
+    /**
+     * Constructor
+     * @param {Object} options object
+     */
     constructor(options) {
         super(options);
-        this.api = new Api(_.extend({ host: 'api.github.com' }, super.getBaseConfig()));
+        this.api = new Api(_.extend({ host: 'api.github.com' }, Base.getBaseConfig()));
 
         if (!this.options.token) {
             this.logger.warn('No github authorization token were set. ' +
@@ -186,6 +215,11 @@ class Public extends Custom {
         this.api['authenticate']({ type: 'oauth', token: this.options.token });
     }
 
+    /**
+     * Returns type of API class
+     * @static
+     * @returns {String}
+     */
     static getType() {
         return 'public';
     }
@@ -196,20 +230,33 @@ class Public extends Custom {
  * @type {*|exports}
  */
 class Private extends Custom {
+    /**
+     * Constructor
+     * @param {Object} options object
+     */
     constructor(options) {
         super(options);
         this.api = new Api(_.extend({
             host: 'github.yandex-team.ru',
             pathPrefix: '/api/v3'
-        }, super.getBaseConfig()));
+        }, Base.getBaseConfig()));
     }
 
+    /**
+     * Returns type of API class
+     * @static
+     * @returns {String}
+     */
     static getType() {
         return 'private';
     }
 }
 
 export default class Github extends Custom {
+    /**
+     * Constructor
+     * @param {Object} options object
+     */
     constructor(options) {
         super(options);
         this.apis = new Map();
@@ -217,6 +264,12 @@ export default class Github extends Custom {
         this.apis.set(Private.getType(), new Private(options));
     }
 
+    /**
+     * Selects API by given options by host criteria
+     * @param {Object} options object
+     * @returns {Public|Private}
+     * @private
+     */
     _getApiByHost(options) {
         const host = options.host;
         const type = host.indexOf('github.com') > -1 ? Public.getType() : Private.getType();
