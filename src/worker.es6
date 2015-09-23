@@ -30,7 +30,7 @@ const readFile = (basePath, lib, version) => {
  * @param {Function} callback function
  * @returns {Promise}
  */
-module.exports = function (data, callback) {
+module.exports = function(data, callback) {
     const PORTION_SIZE = 3;
     const baseUrl = data.baseUrl; // базовый url для библиотек
     const basePath = data.basePath; // базовый путь для сохранения файлов внутри директории кэша

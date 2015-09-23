@@ -107,7 +107,7 @@ export default class Model {
         removedPages = _.difference(oldPages, newPages);
 
         removedPages.forEach(url => {
-            this.getChanges().pages.addRemoved({ type: 'page', url });
+            this.getChanges().pages.addRemoved({type: 'page', url});
         });
 
         // отбрасываем удаленные страницы
@@ -131,7 +131,7 @@ export default class Model {
         // add new pages
         this.setPages(
             this.getPages().concat(addedPages.map(url => {
-                this.getChanges().pages.addAdded({ type: 'page', url });
+                this.getChanges().pages.addAdded({type: 'page', url});
                 return newModel[url];
             }))
         );
@@ -150,7 +150,7 @@ export default class Model {
         // add modified pages
         this.setPages(
             this.getPages().concat(modifiedPages.map(url => {
-                this.getChanges().pages.addModified({ type: 'page', url });
+                this.getChanges().pages.addModified({type: 'page', url});
                 return deepExtend(oldModel[url], newModel[url]);
             }, this))
         );
@@ -178,7 +178,7 @@ export default class Model {
 
                 // каждый языковой вариант страницы должен иметь обязательное поле "title"
                 // в противном случае, скрываем страницу из показа
-                if (!page[language].title) {
+                if(!page[language].title) {
                     page[language].published = false;
                 }
             }, this);

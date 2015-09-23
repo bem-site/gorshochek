@@ -8,7 +8,7 @@ export default class PageSearchMeta extends PageBase {
 
     /**
      * Return task human readable description
-     * @returns {string}
+     * @returns {String}
      */
     static getName() {
         return 'create page search meta-information';
@@ -39,7 +39,7 @@ export default class PageSearchMeta extends PageBase {
                         keywords: page[language].tags || []
                     }
                 };
-                //TODO add cases for library entities
+                // TODO add cases for library entities
             });
         });
 
@@ -47,8 +47,3 @@ export default class PageSearchMeta extends PageBase {
         return Promise.resolve(model);
     }
 }
-
-
-
-
-

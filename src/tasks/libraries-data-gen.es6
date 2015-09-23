@@ -15,7 +15,7 @@ import LibrariesBase from './libraries-base';
  */
 export default class LibrariesDataGen extends LibrariesBase {
 
-    constructor (baseConfig, taskConfig) {
+    constructor(baseConfig, taskConfig) {
         super(baseConfig, taskConfig);
 
         this.getTaskConfig().baseUrl = this.getTaskConfig().baseUrl || '/libs';
@@ -27,7 +27,7 @@ export default class LibrariesDataGen extends LibrariesBase {
      * @static
      * @returns {Module}
      */
-    static getLoggerName () {
+    static getLoggerName() {
         return module;
     }
 
@@ -36,7 +36,7 @@ export default class LibrariesDataGen extends LibrariesBase {
      * @static
      * @returns {String} path
      */
-    static getName () {
+    static getName() {
         return 'generate libraries files';
     }
 
@@ -80,7 +80,7 @@ export default class LibrariesDataGen extends LibrariesBase {
      * @public
      * @returns {Promise}
      */
-    run (model) {
+    run(model) {
         this.beforeRun();
 
         const numberOfProcesses = os.cpus().length;
@@ -91,13 +91,13 @@ export default class LibrariesDataGen extends LibrariesBase {
 
         return new Promise(resolve => {
             const callback = (error, output) => {
-                if (error) {
+                if(error) {
                     this.logger
                         .error('Error occur while processing library versions for process %s', output)
                         .error('Error: %s', error.message);
                 }
 
-                if (++count === numberOfProcesses) {
+                if(++count === numberOfProcesses) {
                     workerFarm.end(this.workers);
                     resolve(model);
                 }

@@ -8,7 +8,7 @@ export default class PageMenu extends builderCore.tasks.Base {
 
     /**
      * Return task human readable description
-     * @returns {string}
+     * @returns {String}
      */
     static getName() {
         return 'create page menu';
@@ -25,8 +25,3 @@ export default class PageMenu extends builderCore.tasks.Base {
         return Promise.resolve(model);
     }
 }
-
-
-
-
-

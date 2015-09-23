@@ -18,7 +18,7 @@ export default class LibrariesBase extends Base {
      * @static
      * @returns {Module}
      */
-    static getLoggerName () {
+    static getLoggerName() {
         return module;
     }
 
@@ -27,7 +27,7 @@ export default class LibrariesBase extends Base {
      * @static
      * @returns {String} path
      */
-    static getName () {
+    static getName() {
         return 'base libraries class';
     }
 

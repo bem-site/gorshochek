@@ -11,7 +11,7 @@ export default class DocsMdToHtml extends DocsBase {
 
     /**
      * Return task human readable description
-     * @returns {string}
+     * @returns {String}
      */
     static getName() {
         return 'docs markdown to html';
@@ -19,7 +19,7 @@ export default class DocsMdToHtml extends DocsBase {
 
     /**
      * Returns number of page per portion for processing
-     * @returns {number}
+     * @returns {Number}
      */
     static getPortionSize() {
         return 20;
@@ -35,7 +35,7 @@ export default class DocsMdToHtml extends DocsBase {
      */
     getCriteria(page, language) {
         // проверяем существование языковой версии страницы
-        if (!page[language]) {
+        if(!page[language]) {
             return false;
         }
 
@@ -58,7 +58,7 @@ export default class DocsMdToHtml extends DocsBase {
         // переводим содежимое *.md файла в html синтаксис с помощью bem-md-renderer
         return new Promise((resolve, reject) => {
             mdToHtml.render(md, (error, html) => {
-                if (error) {
+                if(error) {
                     this.logger.error(
                         `Error occur while transform md -> html for page: ${page.url} and language ${language}`);
                     this.logger.error(error.message);
@@ -88,7 +88,7 @@ export default class DocsMdToHtml extends DocsBase {
             // Проверяем на наличие правильного поля contentFile
             // это сделано потому, что предварительный фильтр мог сработать
             // для страниц у которых только часть из языковых версий удовлетворяла критерию
-            if (!hasMdFile) {
+            if(!hasMdFile) {
                 return Promise.resolve(page);
             }
 

@@ -7,7 +7,7 @@ export default class Builder {
 
     /**
      * Initialize core builder module
-     * @returns {exports}
+     * @returns {Builder}
      */
     static init(logLevel) {
         return new Builder(logLevel);
@@ -93,7 +93,7 @@ export default class Builder {
             return task.constructor.name;
         });
 
-        if (dependencies.length) {
+        if(dependencies.length) {
             dependencies.forEach((dependency) => {
                 if(taskNames.indexOf(dependency.name) === -1) {
                     throw new Error(`Task "${Task['name']}" requires "${dependency.name}" to be executed before it!`);

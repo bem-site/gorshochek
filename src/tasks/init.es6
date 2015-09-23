@@ -9,7 +9,7 @@ export default class Init extends Base {
 
     /**
      * Returns name of task
-     * @returns {string}
+     * @returns {String}
      */
     static getName() {
         return 'init';

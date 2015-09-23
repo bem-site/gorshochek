@@ -2,15 +2,15 @@ import Base from './base';
 
 export default class PageBase extends Base {
 
-    static getLoggerName () {
+    static getLoggerName() {
         return module;
     }
 
     /**
      * Return task human readable description
-     * @returns {string}
+     * @returns {String}
      */
-    static getName () {
+    static getName() {
         return 'page base operations';
     }
 
@@ -24,7 +24,7 @@ export default class PageBase extends Base {
     getPagesMap(pages, languages) {
         return pages.reduce((pagesMap, page) => {
             pagesMap.set(page.url, languages.reduce((pageMap, language) => {
-                if (page[language]) {
+                if(page[language]) {
                     pageMap.set(language, page[language].title);
                 }
                 return pageMap;

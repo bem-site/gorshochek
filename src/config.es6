@@ -7,7 +7,7 @@ export default class Config {
      * @param {String} logLevel - log verbosity level
      */
     constructor(logLevel) {
-        const loggerSettings = { level: logLevel };
+        const loggerSettings = {level: logLevel};
 
         this.logger = Logger.setOptions(loggerSettings).createLogger(module);
 
@@ -23,7 +23,7 @@ export default class Config {
 
     /**
      * Returns default configuration object
-     * @returns {{languages: string[], modelFilePath: string, dataFolder: string, cacheFolder: string}}
+     * @returns {{languages: String[], modelFilePath: String, dataFolder: String, cacheFolder: String}}
      */
     static get defaults() {
         return {
@@ -51,7 +51,7 @@ export default class Config {
      * @returns {Config}
      */
     setLogLevel(logLevel = 'debug') {
-        this._loggerSettings = { level: logLevel };
+        this._loggerSettings = {level: logLevel};
         this.logger.debug(`config: logLevel = ${this._loggerSettings.level}`);
         return this;
     }

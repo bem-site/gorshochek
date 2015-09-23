@@ -11,7 +11,7 @@ export default class DocsFileLoad extends DocsBase {
 
     /**
      * Returns task human readable description
-     * @returns {string}
+     * @returns {String}
      */
     static getName() {
         return 'docs load from file';
@@ -19,7 +19,7 @@ export default class DocsFileLoad extends DocsBase {
 
     /**
      * Returns number of page per portion for processing
-     * @returns {number}
+     * @returns {Number}
      */
     static getPortionSize() {
         return 20;
@@ -35,7 +35,7 @@ export default class DocsFileLoad extends DocsBase {
      */
     getCriteria(page, language) {
         // проверяем существование языковой версии страницы
-        if (!page[language]) {
+        if(!page[language]) {
             return false;
         }
 
@@ -50,13 +50,13 @@ export default class DocsFileLoad extends DocsBase {
      * @param {Object} page - page model object
      * @param {String} language version
      * @param {String} filePath - path to file on local filesystem
-     * @returns {Promise}
+     * @returns {*}
      * @private
      */
     _readFile(page, language, filePath) {
         return new vow.Promise((resolve, reject) => {
-            fs.readFile(filePath, { encoding: 'utf-8' }, (error, content) => {
-                if (error || !content) {
+            fs.readFile(filePath, {encoding: 'utf-8'}, (error, content) => {
+                if(error || !content) {
                     this.logger.error(
                         `Error occur while loading file for page: ${page.url} and language ${language}`);
                     this.logger.error(error.message);
@@ -91,9 +91,9 @@ export default class DocsFileLoad extends DocsBase {
 
             this.logger.debug(`load local file for language: => ${language} and page with url: => ${page.url}`);
 
-            filePath = page[language].sourceUrl; //относительный путь к файлу
-            fileName = path.basename(filePath); //имя файла (с расширением)
-            fileExt = path.extname(fileName); //расширение файла
+            filePath = page[language].sourceUrl; // относительный путь к файлу
+            fileName = path.basename(filePath); // имя файла (с расширением)
+            fileExt = path.extname(fileName); // расширение файла
 
             localFilePath = path.resolve(filePath);
             cacheFilePath = path.join(page.url, (language + fileExt));
@@ -106,27 +106,27 @@ export default class DocsFileLoad extends DocsBase {
                 this.readFileFromCache(cacheFilePath),
                 this._readFile(page, language, localFilePath)
             ]).spread((cache, local) => {
-                //если при чтении целевого файла произошла ошибка то возвращаем отмененный промис с ошибкой
+                // если при чтении целевого файла произошла ошибка то возвращаем отмененный промис с ошибкой
                 if(local.isRejected()) {
                     return Promise.reject(local.valueOf());
 
-                //если произошла ошибка при чтении файла из кеша, что в подавляющем большинстве
-                //происходит если файла еще нет в кеше, то добавляем в модель изменений запись
-                //о добавленном документе и записываем файл в кеш
+                // если произошла ошибка при чтении файла из кеша, что в подавляющем большинстве
+                // происходит если файла еще нет в кеше, то добавляем в модель изменений запись
+                // о добавленном документе и записываем файл в кеш
                 }else if(cache.isRejected()) {
                     this.logger.debug('Doc added: %s %s %s', page.url, language, page[language].title);
-                    model.getChanges().pages.addAdded({ type: 'doc', url: page.url, title: page[language].title });
+                    model.getChanges().pages.addAdded({type: 'doc', url: page.url, title: page[language].title});
                     return this.writeFileToCache(cacheFilePath, local.valueOf());
 
-                //если содержимое файлов не совпадает, то это значит что файл был изменен
-                //добавляем в модель изменений запись об измененном документе
-                //и записываем файл в кеш
+                // если содержимое файлов не совпадает, то это значит что файл был изменен
+                // добавляем в модель изменений запись об измененном документе
+                // и записываем файл в кеш
                 }else if(cache.valueOf() !== local.valueOf()) {
                     this.logger.debug('Doc modified: %s %s %s', page.url, language, page[language].title);
-                    model.getChanges().pages.addModified({ type: 'doc', url: page.url, title: page[language].title });
+                    model.getChanges().pages.addModified({type: 'doc', url: page.url, title: page[language].title});
                     return this.writeFileToCache(cacheFilePath, local.valueOf());
 
-                //файл не поменялся на файловой системе с момента предыдущей проверки
+                // файл не поменялся на файловой системе с момента предыдущей проверки
                 }else {
                     return Promise.resolve(page);
                 }

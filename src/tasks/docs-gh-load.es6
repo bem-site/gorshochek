@@ -10,7 +10,7 @@ export default class DocsLoadGithub extends DocsBaseGithub {
 
     /**
      * Return task human readable description
-     * @returns {string}
+     * @returns {String}
      */
     static getName() {
         return 'docs load from gh';
@@ -26,7 +26,7 @@ export default class DocsLoadGithub extends DocsBaseGithub {
     _getContentFromGh(repoInfo, headers) {
         return new Promise((resolve, reject) => {
             this.getAPI().getContent(repoInfo, headers, (error, result) => {
-                if (error) {
+                if(error) {
                     this.logger
                         .error(`GH: ${error.message}`)
                         .error(`Error occur while loading content from:`)
@@ -46,7 +46,7 @@ export default class DocsLoadGithub extends DocsBaseGithub {
      * Returns date of last commit for given url
      * @param {Object} repoInfo - gh file object path settings
      * @param {Object} headers - gh api headers
-     * @returns {Promise}
+     * @returns {*}
      * @private
      */
     _getUpdateDateInfo(repoInfo, headers) {
@@ -54,7 +54,7 @@ export default class DocsLoadGithub extends DocsBaseGithub {
         проверка на то что соответствующая опция задачи сборки включена
         в противном случае возвращаем промис с null
         */
-        if (!this.getTaskConfig().updateDate) {
+        if(!this.getTaskConfig().updateDate) {
             return vow.resolve(null);
         }
 
@@ -66,7 +66,7 @@ export default class DocsLoadGithub extends DocsBaseGithub {
          */
         return new vow.Promise((resolve, reject) => {
             this.api.getCommits(repoInfo, headers, (error, result) => {
-                if (error || !result || !result[0]) {
+                if(error || !result || !result[0]) {
                     this.logger
                         .error('GH: %s', error ? error.message : 'unknown error')
                         .error(`Error occur while get commits from:`)
@@ -86,7 +86,7 @@ export default class DocsLoadGithub extends DocsBaseGithub {
      * Returns true if current repository has issues section. Otherwise returns false
      * @param {Object} repoInfo - gh file object path settings
      * @param {Object} headers - gh api headers
-     * @returns {Promise}
+     * @returns {*}
      * @private
      */
     _getIssuesInfo(repoInfo, headers) {
@@ -94,14 +94,14 @@ export default class DocsLoadGithub extends DocsBaseGithub {
          проверка на то что соответствующая опция задачи сборки включена
          в противном случае возвращаем промис с null
          */
-        if (!this.getTaskConfig().hasIssues) {
+        if(!this.getTaskConfig().hasIssues) {
             return vow.resolve(null);
         }
 
         /*Здесь разрезолвленный промис содержит логическое значение true|false*/
         return new vow.Promise((resolve, reject) => {
             this.api.hasIssues(repoInfo, headers, (error, result) => {
-                if (error) {
+                if(error) {
                     this.logger
                         .error(`GH: ${error.message}`)
                         .error(`Error occur while get issues repo information:`)
@@ -120,7 +120,7 @@ export default class DocsLoadGithub extends DocsBaseGithub {
      * (if source ref is tag - not branch)
      * @param {Object} repoInfo - gh file object path settings
      * @param {Object} headers - gh api headers
-     * @returns {Promise}
+     * @returns {*}
      * @private
      */
     _getBranch(repoInfo, headers) {
@@ -128,7 +128,7 @@ export default class DocsLoadGithub extends DocsBaseGithub {
          проверка на то что соответствующая опция задачи сборки включена
          в противном случае возвращаем промис с null
          */
-        if (!this.getTaskConfig().getBranch) {
+        if(!this.getTaskConfig().getBranch) {
             return vow.resolve(null);
         }
 
@@ -138,7 +138,7 @@ export default class DocsLoadGithub extends DocsBaseGithub {
          */
         return new vow.Promise((resolve, reject) => {
             this.api.isBranchExists(repoInfo, headers, (error1, result1) => {
-                if (error1) {
+                if(error1) {
                     this.logger
                         .error(`GH: ${error1.message}`)
                         .error(`Error occur while get branch information:`)
@@ -147,11 +147,11 @@ export default class DocsLoadGithub extends DocsBaseGithub {
                         .error(`repo: => ${repoInfo.repo}`);
                     return reject(error1);
                 }
-                if (result1) {
+                if(result1) {
                     return resolve(repoInfo.ref);
                 } else {
                     this.api.getDefaultBranch(repoInfo, headers, (error2, result2) => {
-                        if (error2) {
+                        if(error2) {
                             this.logger
                                 .error(`GH: ${error2.message}`)
                                 .error(`Error occur while get default branch name:`)
@@ -182,7 +182,7 @@ export default class DocsLoadGithub extends DocsBaseGithub {
             // Проверяем на наличие правильного поля contentFile
             // это сделано потому, что предварительный фильтр мог сработать
             // для страниц у которых только часть из языковых версий удовлетворяла критерию
-            if (!repoInfo) {
+            if(!repoInfo) {
                 return vow.resolve();
             }
 
@@ -202,7 +202,7 @@ export default class DocsLoadGithub extends DocsBaseGithub {
                             // если запрос был послан с header содержащим meta etag
                             // и данные не менялись то возвращается 304 статус
                             // берем данные из кеша
-                            if (result.meta.status === '304 Not Modified') {
+                            if(result.meta.status === '304 Not Modified') {
                                 this.logger.verbose('Document was not changed: %s', page.url);
                                 return Promise.resolve(path.join(page.url, cache.fileName));
                             }
@@ -214,10 +214,10 @@ export default class DocsLoadGithub extends DocsBaseGithub {
 
                             if(!cache.sha) {
                                 this.logger.debug('Doc added: %s %s %s', page.url, language, page[language].title);
-                                model.getChanges().pages.addAdded({ type: 'doc', url: page.url, title: page[language].title });
+                                model.getChanges().pages.addAdded({type: 'doc', url: page.url, title: page[language].title});
                             }else {
                                 this.logger.debug('Doc modified: %s %s %s', page.url, language, page[language].title);
-                                model.getChanges().pages.addModified({ type: 'doc', url: page.url, title: page[language].title });
+                                model.getChanges().pages.addModified({type: 'doc', url: page.url, title: page[language].title});
                             }
 
                             // меняем/добавляем данные в кеш
@@ -247,15 +247,15 @@ export default class DocsLoadGithub extends DocsBaseGithub {
                                 hasIssues = hasIssues.isResolved() ? hasIssues.valueOf() : null;
                                 branch = branch.isResolved() ? branch.valueOf() : null;
 
-                                if (updateDate) {
+                                if(updateDate) {
                                     page[language].updateDate = updateDate;
                                 }
 
-                                if (hasIssues) {
+                                if(hasIssues) {
                                     page[language].hasIssues = hasIssues;
                                 }
 
-                                if (branch) {
+                                if(branch) {
                                     page[language].branch = branch;
                                 }
 

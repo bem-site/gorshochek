@@ -48,7 +48,7 @@ export default class Version extends Base {
 
         /**
          * Name of library version
-         * @type {string}
+         * @type {String}
          */
         this.version = version.replace(/\//g, '-');
     }
@@ -73,7 +73,7 @@ export default class Version extends Base {
 
         result = languages.reduce((prev, item) => {
             prev[item] = `${data.url}/tree/${data.ref}`;
-            if (item !== defaultLanguage) {
+            if(item !== defaultLanguage) {
                 prev[item] += `/README.${item}.md`;
             }
             return prev;
@@ -107,7 +107,7 @@ export default class Version extends Base {
         const documents = data['docs'];
         let promises = [];
 
-        if (!documents) {
+        if(!documents) {
             return Promise.resolve(promises);
         }
 
@@ -131,7 +131,7 @@ export default class Version extends Base {
     _processLevels(data) {
         const levels = data['levels'];
 
-        if (!levels || !levels.length) {
+        if(!levels || !levels.length) {
             return Promise.resolve([]);
         }
 

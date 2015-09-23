@@ -33,14 +33,14 @@ export default class Finalize extends Base {
             .thru(sources => {
                 return {
                     source: sources, // все папки откуда нужно совершить rsync
-                    destination: this.getBaseConfig().getDataFolder(), //целевая папака
-                    flags: 'rd' //рекурсивно и с учетом директорий
+                    destination: this.getBaseConfig().getDataFolder(), // целевая папака
+                    flags: 'rd' // рекурсивно и с учетом директорий
                 };
             })
             .tap(options => {
                 // добавление в exclude из переданных опций
                 // exclude - это паттерны файлов которые должны быть исключены из процесса синхронизации
-                if (this.getTaskConfig().exclude) {
+                if(this.getTaskConfig().exclude) {
                     options.exclude = [].concat(this.getTaskConfig().exclude);
                 }
             })
@@ -48,7 +48,7 @@ export default class Finalize extends Base {
                 // добавление в include из переданных опций
                 // include - это паттерны файлов которые должны быть включены в процесс синхронизации
                 // даже если они находятся в списке exclude.
-                if (this.getTaskConfig().include) {
+                if(this.getTaskConfig().include) {
                     options.include = [].concat(this.getTaskConfig().include);
                 }
             })
@@ -72,14 +72,14 @@ export default class Finalize extends Base {
 
         sync.set('delete'); // удалять файлы в целевой папке если их уже нет в исходной
         sync.set('delete-excluded'); // удалять файлы в целевой папке если их добавили в exclude
-        sync.set('force'); //удалять директории даже если они содержат файлы
+        sync.set('force'); // удалять директории даже если они содержат файлы
 
         // выводим полный текст комманды в консоль
         this.logger.debug(`rsync command: => ${sync.command()}`);
 
         return new Promise((resolve, reject) => {
             sync.execute((error, code) => {
-                if (error || code !== 0) {
+                if(error || code !== 0) {
                     onError(error, code);
                     reject(error);
                 } else {
@@ -97,7 +97,7 @@ export default class Finalize extends Base {
 
         return new Promise((resolve, reject) => {
             fs.writeFile(dataFilePath, JSON.stringify(model.getPages()), (error) => {
-                if (error) {
+                if(error) {
                     this.logger
                         .error('Error occur while saving data.json file').error(error.message);
                     return reject(error);

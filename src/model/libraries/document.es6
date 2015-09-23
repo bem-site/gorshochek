@@ -44,12 +44,12 @@ export default class Document extends Base {
      */
     _getTitle(data, lang) {
         const TITLES = {
-            changelog: { en: 'Changelog', ru: 'История изменений' },
-            migration: { en: 'Migration', ru: 'Миграция' },
-            notes: { en: 'Release Notes', ru: 'Примечания к релизу' }
+            changelog: {en: 'Changelog', ru: 'История изменений'},
+            migration: {en: 'Migration', ru: 'Миграция'},
+            notes: {en: 'Release Notes', ru: 'Примечания к релизу'}
         };
 
-        if (!data.title || !data.title[lang]) {
+        if(!data.title || !data.title[lang]) {
             return TITLES[this.document][lang];
         }
 
@@ -60,11 +60,11 @@ export default class Document extends Base {
      * Returns source url for document on github
      * @param {Object} data - document data object
      * @param {String} lang - language
-     * @returns {String}
+     * @returns {String|Null}
      * @private
      */
     _getSourceUrl(data, lang) {
-        if (!data.url || !data.url[lang]) {
+        if(!data.url || !data.url[lang]) {
             return null;
         }
         return data.url[lang];
@@ -83,7 +83,7 @@ export default class Document extends Base {
             const filePath = path.join(basePath, `${lang}.html`);
             const content = data.content ? data.content[lang] : null;
 
-            if (!content) {
+            if(!content) {
                 this.setValue('published', false, lang);
             }
 
@@ -104,7 +104,7 @@ export default class Document extends Base {
     processData(data) {
         const version = this.version;
 
-        this.setValue('url', [ version.baseUrl, version.lib, version.version, this.document ].join('/'))
+        this.setValue('url', [version.baseUrl, version.lib, version.version, this.document].join('/'))
             .setValue('aliases', []) // алиасы или редиректы
             .setValue('view', 'post') // представление
             .setValue('lib', version.lib) // название библиотеки

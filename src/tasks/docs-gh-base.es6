@@ -9,7 +9,7 @@ export default class DocsBaseGithub extends DocsBase {
     constructor(baseConfig, taskConfig) {
         super(baseConfig, taskConfig);
 
-        const ghOptions = _.extend({ token: taskConfig.token }, baseConfig.getLoggerSettings());
+        const ghOptions = _.extend({token: taskConfig.token}, baseConfig.getLoggerSettings());
         this.api = new GitHub(ghOptions);
     }
 
@@ -19,7 +19,7 @@ export default class DocsBaseGithub extends DocsBase {
 
     /**
      * Return task human readable description
-     * @returns {string}
+     * @returns {String}
      */
     static getName() {
         return 'docs base github operations';
@@ -48,29 +48,29 @@ export default class DocsBaseGithub extends DocsBase {
      * Returns parsed repository info for language version of page. Otherwise returns false
      * @param {Object} page - page model object
      * @param {String} lang - language
-     * @returns {Object|false}
+     * @returns {Object|Boolean}
      * @private
      */
     getCriteria(page, lang) {
         let sourceUrl;
         let repoInfo;
 
-        //1. page должен иметь поле {lang}
-        //2. page[lang] должен иметь поле 'sourceUrl'
-        //3. page[lang].sourceUrl должен матчится на регулярное выражение из _getGhUrlPattern()
-        //4. если хотя бы одно из условий не выполняется, то вернется false
+        // 1. page должен иметь поле {lang}
+        // 2. page[lang] должен иметь поле 'sourceUrl'
+        // 3. page[lang].sourceUrl должен матчится на регулярное выражение из _getGhUrlPattern()
+        // 4. если хотя бы одно из условий не выполняется, то вернется false
 
-        if (!page[lang]) {
+        if(!page[lang]) {
             return false;
         }
 
         sourceUrl = page[lang].sourceUrl;
-        if (!sourceUrl) {
+        if(!sourceUrl) {
             return false;
         }
 
         repoInfo = sourceUrl.match(this.constructor.getGhUrlPattern());
-        if (!repoInfo) {
+        if(!repoInfo) {
             return false;
         }
 
@@ -86,11 +86,11 @@ export default class DocsBaseGithub extends DocsBase {
     /**
      * Creates header object from cached etag
      * @param {Object} cache object
-     * @returns {{If-None-Match: *}}
+     * @returns {Object|Null}
      * @private
      */
     getHeadersByCache(cache) {
-        return (cache && cache.etag) ? { 'If-None-Match': cache.etag } : null;
+        return (cache && cache.etag) ? {'If-None-Match': cache.etag} : null;
     }
 
     /**
@@ -98,8 +98,8 @@ export default class DocsBaseGithub extends DocsBase {
      * @param {String} filePath - path to file (relative to cache folder)
      * @returns {Promise}
      */
-    readFileFromCache(filePath){
-        const o = { encoding: 'utf-8' };
+    readFileFromCache(filePath) {
+        const o = {encoding: 'utf-8'};
         const basePath = this.getBaseConfig().getCacheFolder();
 
         return new Promise((resolve) => {
@@ -109,5 +109,3 @@ export default class DocsBaseGithub extends DocsBase {
         });
     }
 }
-
-

@@ -19,7 +19,7 @@ export default class Level extends Base {
      * @param {String} level - name of block level
      * @constructor
      */
-    constructor (version, level) {
+    constructor(version, level) {
         super();
 
         /**

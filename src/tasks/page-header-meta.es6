@@ -8,7 +8,7 @@ export default class PageHeaderMeta extends PageBase {
 
     /**
      * Return task human readable description
-     * @returns {string}
+     * @returns {String}
      */
     static getName() {
         return 'create page header meta-information';
@@ -69,8 +69,3 @@ export default class PageHeaderMeta extends PageBase {
         return Promise.resolve(model);
     }
 }
-
-
-
-
-

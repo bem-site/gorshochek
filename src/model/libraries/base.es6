@@ -50,14 +50,14 @@ export default class Base {
      * @param {String|Object} content content string or js object (JSON stringify will be used before saving)
      * @param {Boolean} [isJSON] - if true then given content object will be saved as string
      * inside fsExtra.outputJSON method. Otherwise fsExtra.outputFile method will be used
-     * @returns {Promise}
+     * @returns {*}
      * @public
      */
     saveFile(filePath, content, isJSON) {
         const method = isJSON ? 'outputJSON' : 'outputFile';
         return new vow.Promise((resolve, reject) => {
             fsExtra[method](filePath, content, (error) => {
-                if (error) {
+                if(error) {
                     this.logger
                         .error(`Error occur while saving file: ${filePath}`)
                         .error(`Error: ${error.message}`);

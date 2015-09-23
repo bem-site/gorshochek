@@ -25,12 +25,12 @@ export default class SitemapXML extends Base {
 
     /**
      * Returns object with default search params
-     * @returns {{changefreq: string, priority: number}}
+     * @returns {{changefreq: String, priority: Number}}
      * @private
      */
     static _getDefaultSearchParams() {
         // параметры поисковой индексации по умолчанию
-        return { changefreq: 'weekly', priority: 0.5 };
+        return {changefreq: 'weekly', priority: 0.5};
     }
 
     /**
@@ -46,14 +46,14 @@ export default class SitemapXML extends Base {
 
         // Хосты - это обязательный параметр.
         // Если они отсутствуют, то бросается соответствующее исключение
-        if (!hosts) {
+        if(!hosts) {
             throw new Error('Hosts undefined');
         }
 
         // Параметр хостов может быть как обхектом так и строкой
         // В случае стоки, превращаем ее в объект где данная строка
         // является значением к ключам которыми являются языки
-        if (_.isString(hosts)) {
+        if(_.isString(hosts)) {
             hosts = this.getBaseConfig().getLanguages().reduce((prev, lang) => {
                 prev[lang] = hosts;
                 return prev;
@@ -65,7 +65,7 @@ export default class SitemapXML extends Base {
 
     /**
      * Returns path where sitemap.xml file should be placed in
-     * @returns {string|*}
+     * @returns {String|*}
      * @private
      */
     _getSiteMapXmlFilePath() {
@@ -98,10 +98,10 @@ export default class SitemapXML extends Base {
             const search = page.search || this.constructor._getDefaultSearchParams();
 
             languages.forEach((lang) => {
-                if (page[lang] && page[lang].published) {
+                if(page[lang] && page[lang].published) {
                     urls.forEach((url) => {
                         this.logger.verbose(`page: ${hosts[lang] + url} ${search.changefreq} ${search.priority}`)
-                        siteMap.push(_.extend({ loc: hosts[lang] + url }, search));
+                        siteMap.push(_.extend({loc: hosts[lang] + url}, search));
                     });
                 }
             });
@@ -120,7 +120,7 @@ export default class SitemapXML extends Base {
         // преобразуется в xml формат с помощью модуля js2xml
         const hosts = this._getHosts();
         const languages = this.getBaseConfig().getLanguages();
-        const siteMap = js2xml('urlset', { url: this._buildSiteMapModel(model, hosts, languages) });
+        const siteMap = js2xml('urlset', {url: this._buildSiteMapModel(model, hosts, languages)});
 
         this.logger.debug('Save sitemap.xml file:');
         this.logger.debug(`==> to ${this._getSiteMapXmlFilePath()}`);
@@ -128,7 +128,7 @@ export default class SitemapXML extends Base {
         // содержимое sitemap.xml сохраняется в соответствующий файл
         return new Promise((resolve, reject) => {
             fs.writeFile(this._getSiteMapXmlFilePath(), siteMap, (error) => {
-                if (error) {
+                if(error) {
                     this.logger.error('Error occur while saving sitemap.xml file');
                     this.logger.error(error.message);
                     return reject(error);

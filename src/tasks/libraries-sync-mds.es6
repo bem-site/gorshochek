@@ -25,23 +25,23 @@ export default class LibrariesSyncMDS extends LibrariesBase {
         const mdsOptions = taskConfig['mds'];
 
         // настройки для подключения к MDS - обязательный параметр!
-        if (!mdsOptions) {
+        if(!mdsOptions) {
             throw new Error('MDS options were not set in task configuration');
         }
 
         // пространство имен для подключения к MDS - обязательный параметр
-        if (!mdsOptions['namespace']) {
+        if(!mdsOptions['namespace']) {
             throw new Error('MDS "namespace" property was not set in task configuration');
         }
 
         // хост MDS - 127.0.0.1 по умолчанию
-        if (!mdsOptions['host']) {
+        if(!mdsOptions['host']) {
             this.logger.warn('MDS host was not set. Default value "127.0.0.1" will be used instead');
             mdsOptions['host'] = '127.0.0.1';
         }
 
         // порт MDS - 80 по умолчанию
-        if (!mdsOptions['port']) {
+        if(!mdsOptions['port']) {
             this.logger.warn('MDS port was not set. Default value "80" will be used instead');
             mdsOptions['port'] = 80;
         }
@@ -66,7 +66,7 @@ export default class LibrariesSyncMDS extends LibrariesBase {
      * @static
      * @returns {Module}
      */
-    static getLoggerName () {
+    static getLoggerName() {
         return module;
     }
 
@@ -75,10 +75,9 @@ export default class LibrariesSyncMDS extends LibrariesBase {
      * @static
      * @returns {String} path
      */
-    static getName () {
+    static getName() {
         return 'synchronize libraries data with remote mds storage';
     }
-
 
     /**
      * Returns path to cached "registry.json" file on local filesystem
@@ -142,7 +141,7 @@ export default class LibrariesSyncMDS extends LibrariesBase {
         // изменились ли данные для версии библиотеки или нет (sha-сумма и дата сборки в миллисекундах)
         return Object.keys(registry).reduce((prev, lib) => {
             const versions = registry[lib].versions;
-            if (versions) {
+            if(versions) {
                 Object.keys(versions).forEach(version => {
                     prev.set(`${lib}||${version}`, versions[version]);
                 });
@@ -168,7 +167,7 @@ export default class LibrariesSyncMDS extends LibrariesBase {
         const removed = [];
         const processItem = (key, collection, type) => {
             const k = key.split('||');
-            const item = { lib: k[0], version: k[1] };
+            const item = {lib: k[0], version: k[1]};
 
             this.logger.debug(`${type} lib: => ${item.lib} version: => ${item.version}`);
             model.getChanges().pages['add' + type](item);
@@ -186,10 +185,10 @@ export default class LibrariesSyncMDS extends LibrariesBase {
         // для этих ключей. Если sha-суммы или даты сборки не совпадают, то версия {version} библиотеки
         // {lib} считается модифицированной (измененной)
         [...remoteCM.keys()].forEach(key => {
-            if (localCM.has(key)) {
+            if(localCM.has(key)) {
                 const vLocal = localCM.get(key);
                 const vRemote = remoteCM.get(key);
-                if (vLocal['sha'] !== vRemote['sha'] || vLocal['date'] !== vRemote['date']) {
+                if(vLocal['sha'] !== vRemote['sha'] || vLocal['date'] !== vRemote['date']) {
                     processItem(key, modified, 'Modified');
                 }
             }
@@ -202,7 +201,7 @@ export default class LibrariesSyncMDS extends LibrariesBase {
             !remoteCM.has(key) && processItem(key, removed, 'Removed');
         });
 
-        return { added, modified, removed };
+        return {added, modified, removed};
     }
 
     /**
@@ -232,7 +231,7 @@ export default class LibrariesSyncMDS extends LibrariesBase {
         return new Promise((resolve, reject) => {
             fsExtra.ensureDir(this.getLibVersionPath(lib, version), () => {
                 this.api.read(`${lib}/${version}/data.json`, (error, content) => {
-                    if (!error) {
+                    if(!error) {
                         fs.writeFile(
                             path.join(this.getLibVersionPath(lib, version), LibrariesBase.getLibVersionDataFilename()),
                             content, {encoding: 'utf-8'}, (error) => {
@@ -330,7 +329,7 @@ export default class LibrariesSyncMDS extends LibrariesBase {
             .then(() => {
                 return new Promise((resolve) => {
                     fsExtra.writeJSON(this._getMDSRegistryFilePath(), _remote, (error) => {
-                        if (error) {
+                        if(error) {
                             this.logger
                                 .error('Error occur on saving MDS registry file')
                                 .error(`Error: ${error.message}`);

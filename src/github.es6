@@ -38,14 +38,14 @@ class Base {
         const ATTEMPTS = 5; // максимальное число допустимых повторных обращений к github в случае возникновения ошибки
         const requestFunc = (count) => {
             this.logger.verbose(`attempt #${count}`);
-            return this.api['repos'][method](_.extend(headers ? { headers } : {}, options),
+            return this.api['repos'][method](_.extend(headers ? {headers} : {}, options),
                 (error, result) => {
-                    if (!error) {
+                    if(!error) {
                         return callback(null, result);
                     }
 
                     // если число попыток не превысило максимально возможное, то повторно запрашиваем данные
-                    if (count < ATTEMPTS) {
+                    if(count < ATTEMPTS) {
                         return requestFunc(++count);
                     }
 
@@ -116,7 +116,7 @@ class Base {
 
     /**
      * Returns base github configuration
-     * @returns {{version: string, protocol: string, timeout: number, debug: boolean}}
+     * @returns {{version: String, protocol: String, timeout: Number, debug: Boolean}}
      * @static
      */
     static getBaseConfig() {
@@ -135,7 +135,7 @@ class Custom extends Base {
      * Constructor
      * @param {Object} options object
      */
-    constructor(options){
+    constructor(options) {
         super(options);
     }
 
@@ -181,9 +181,9 @@ class Custom extends Base {
      */
     isBranchExists(options, headers, callback) {
         return this.getBranch(options, headers, (error) => {
-            if (!error) {
+            if(!error) {
                 callback(null, true);
-            } else if (error.code === 404) {
+            } else if(error.code === 404) {
                 callback(null, false);
             } else {
                 callback(error);
@@ -191,7 +191,6 @@ class Custom extends Base {
         });
     }
 }
-
 
 /**
  * API for calls to public repositories
@@ -204,15 +203,15 @@ class Public extends Custom {
      */
     constructor(options) {
         super(options);
-        this.api = new Api(_.extend({ host: 'api.github.com' }, Base.getBaseConfig()));
+        this.api = new Api(_.extend({host: 'api.github.com'}, Base.getBaseConfig()));
 
-        if (!this.options.token) {
+        if(!this.options.token) {
             this.logger.warn('No github authorization token were set. ' +
             'Number of requests will be limited by 60 requests per hour according to API rules');
             return;
         }
 
-        this.api['authenticate']({ type: 'oauth', token: this.options.token });
+        this.api['authenticate']({type: 'oauth', token: this.options.token});
     }
 
     /**

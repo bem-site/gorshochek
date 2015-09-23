@@ -41,7 +41,6 @@ export default class Base {
         return [];
     }
 
-
     get fsExtra() {
         return fsExtra;
     }
@@ -72,10 +71,9 @@ export default class Base {
 
     /**
      * Prints log message. Also you can override it in your own task module
-     * @param {String} name - task name
      */
     beforeRun() {
-        if (process.env.NODE_ENV !== 'testing') {
+        if(process.env.NODE_ENV !== 'testing') {
             console.log(os.EOL);
         }
         this.logger.info(`${this.constructor.getName().toUpperCase()}`);
@@ -87,13 +85,13 @@ export default class Base {
      * @param {String} filePath - path to file (relative to cache folder)
      * @returns {Promise}
      */
-    readFileFromCache(filePath){
-        const o = { encoding: 'utf-8' };
+    readFileFromCache(filePath) {
+        const o = {encoding: 'utf-8'};
         const basePath = this.getBaseConfig().getCacheFolder();
 
         return new Promise((resolve, reject) => {
             fs.readFile(path.join(basePath, filePath), o, (error, content) => {
-                if (error) {
+                if(error) {
                     this.logger.error(`Error occur while loading file ${filePath} from cache`);
                     this.logger.error(error.message);
                     reject(error);
@@ -110,8 +108,8 @@ export default class Base {
      * @param {String} content of file
      * @returns {Promise}
      */
-    writeFileToCache(filePath, content){
-        const o = { encoding: 'utf-8' };
+    writeFileToCache(filePath, content) {
+        const o = {encoding: 'utf-8'};
         const basePath = this.getBaseConfig().getCacheFolder();
 
         return new Promise((resolve, reject) => {
@@ -129,7 +127,7 @@ export default class Base {
 
     /**
      * Performs task logic
-     * @returns {*|Promise.<boolean>}
+     * @returns {*|Promise.<Boolean>}
      */
     run() {
         // TODO implement in inheritances

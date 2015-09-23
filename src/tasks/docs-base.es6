@@ -10,7 +10,7 @@ export default class DocsBase extends Base {
 
     /**
      * Return task human readable description
-     * @returns {string}
+     * @returns {String}
      */
     static getName() {
         return 'docs base operations';
@@ -18,7 +18,7 @@ export default class DocsBase extends Base {
 
     /**
      * Returns number of page per portion for processing
-     * @returns {number}
+     * @returns {Number}
      */
     static getPortionSize() {
         return 5;
@@ -30,7 +30,7 @@ export default class DocsBase extends Base {
      * It should be override in child classes of DocsBase class
      * @param {Object} page - page model object
      * @param {String} lang - language
-     * @returns {Object|false}
+     * @returns {Object|Boolean}
      * @private
      */
     getCriteria(page, lang) {
@@ -72,18 +72,18 @@ export default class DocsBase extends Base {
 
     processPages(model) {
         const portionSize = this.constructor.getPortionSize();
-        const languages = this.getBaseConfig().getLanguages(), //массив языков
+        const languages = this.getBaseConfig().getLanguages(), // ассив языков
 
             // фильтруем страницы удовлетворяющие критерию
             pagesWithGHSources = this.getPagesByCriteria(model.getPages(), languages),
 
-            //делим полученный массив на порции. Это необходимо для того, чтобы не
-            //посылать кучу запросов за 1 раз (что ведет к ошибкам соединения)
-            //или не превышать лимит открытых файлов на файловой системе
+            // елим полученный массив на порции. Это необходимо для того, чтобы не
+            // посылать кучу запросов за 1 раз (что ведет к ошибкам соединения)
+            // или не превышать лимит открытых файлов на файловой системе
             portions = _.chunk(pagesWithGHSources, portionSize);
 
-        //для каждой порции выполняем processPage для всех страниц в порции
-        //после обработки переходим к следующей порции
+        // для каждой порции выполняем processPage для всех страниц в порции
+        // после обработки переходим к следующей порции
         return portions.reduce((prev, portion, index) => {
             prev = prev.then(() => {
                 this.logger.debug('process portion of pages in range %s - %s',
@@ -103,12 +103,9 @@ export default class DocsBase extends Base {
     run(model) {
         this.beforeRun();
 
-        //обрабатываем страницы в модели
+        // обрабатываем страницы в модели
         return this.processPages(model).then(() => {
             return Promise.resolve(model);
         });
     }
 }
-
-
-

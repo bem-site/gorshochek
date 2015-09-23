@@ -8,7 +8,7 @@ export default class PageBreadcrumbs extends PageBase {
 
     /**
      * Return task human readable description
-     * @returns {string}
+     * @returns {String}
      */
     static getName() {
         return 'create page breadcrumbs';
@@ -51,8 +51,3 @@ export default class PageBreadcrumbs extends PageBase {
         return Promise.resolve(model);
     }
 }
-
-
-
-
-

@@ -8,7 +8,7 @@ export default class PageHeaderTitle extends PageBase {
 
     /**
      * Return task human readable description
-     * @returns {string}
+     * @returns {String}
      */
     static getName() {
         return 'create page titles';
@@ -49,7 +49,3 @@ export default class PageHeaderTitle extends PageBase {
         return Promise.resolve(model);
     }
 }
-
-
-
-
