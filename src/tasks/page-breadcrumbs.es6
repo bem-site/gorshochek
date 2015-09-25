@@ -2,6 +2,11 @@ import PageBase from './page-base';
 
 export default class PageBreadcrumbs extends PageBase {
 
+    /**
+     * Returns logger module
+     * @returns {module|Object|*}
+     * @static
+     */
     static getLoggerName() {
         return module;
     }
@@ -9,6 +14,7 @@ export default class PageBreadcrumbs extends PageBase {
     /**
      * Return task human readable description
      * @returns {String}
+     * @static
      */
     static getName() {
         return 'create page breadcrumbs';
@@ -17,6 +23,7 @@ export default class PageBreadcrumbs extends PageBase {
     /**
      * Performs task
      * @returns {Promise}
+     * @public
      */
     run(model) {
         this.beforeRun();

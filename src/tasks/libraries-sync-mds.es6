@@ -20,6 +20,11 @@ import LibrariesBase from './libraries-base';
  */
 export default class LibrariesSyncMDS extends LibrariesBase {
 
+    /**
+     * Constructor
+     * @param {Config} baseConfig common configuration instance
+     * @param {Object} taskConfig special task configuration object
+     */
     constructor(baseConfig, taskConfig) {
         super(baseConfig, taskConfig);
 
@@ -58,8 +63,8 @@ export default class LibrariesSyncMDS extends LibrariesBase {
 
     /**
      * Returns module instance for log purposes
-     * @static
      * @returns {Module}
+     * @static
      */
     static getLoggerName() {
         return module;
@@ -67,8 +72,8 @@ export default class LibrariesSyncMDS extends LibrariesBase {
 
     /**
      * Return task human readable description
-     * @static
      * @returns {String} path
+     * @static
      */
     static getName() {
         return 'synchronize libraries data with remote mds storage';
@@ -226,6 +231,7 @@ export default class LibrariesSyncMDS extends LibrariesBase {
      * Performs task
      * @public
      * @returns {Promise}
+     * @public
      */
     run(model) {
         this.beforeRun();

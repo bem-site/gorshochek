@@ -1,7 +1,18 @@
 import Base from './base';
 
+/**
+ * @exports
+ * @class PageBase
+ * @extends Base
+ * @desc Base class for page meta class modules
+ */
 export default class PageBase extends Base {
 
+    /**
+     * Returns logger module
+     * @returns {module|Object|*}
+     * @static
+     */
     static getLoggerName() {
         return module;
     }
@@ -9,6 +20,7 @@ export default class PageBase extends Base {
     /**
      * Return task human readable description
      * @returns {String}
+     * @static
      */
     static getName() {
         return 'page base operations';
@@ -19,7 +31,7 @@ export default class PageBase extends Base {
      * @param {Array} pages - array of model pages
      * @param {Array} languages - array of configured languages
      * @returns {Object}
-     * @private
+     * @protected
      */
     getPagesMap(pages, languages) {
         return pages.reduce((pagesMap, page) => {
@@ -37,7 +49,7 @@ export default class PageBase extends Base {
      * Retrieves array with url of given page and all parent urls
      * @param {Object} page - page model object
      * @returns {Array<String>}
-     * @private
+     * @protected
      */
     getParentUrls(page) {
         const DELIMETER = '/';

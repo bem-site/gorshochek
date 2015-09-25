@@ -2,6 +2,11 @@ import PageBase from './page-base';
 
 export default class PageHeaderMeta extends PageBase {
 
+    /**
+     * Returns logger module
+     * @returns {module|Object|*}
+     * @static
+     */
     static getLoggerName() {
         return module;
     }
@@ -9,6 +14,7 @@ export default class PageHeaderMeta extends PageBase {
     /**
      * Return task human readable description
      * @returns {String}
+     * @static
      */
     static getName() {
         return 'create page header meta-information';
@@ -43,6 +49,7 @@ export default class PageHeaderMeta extends PageBase {
     /**
      * Performs task
      * @returns {Promise}
+     * @public
      */
     run(model) {
         this.beforeRun();

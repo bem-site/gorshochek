@@ -2,6 +2,10 @@ import builderCore from 'bs-builder-core';
 
 export default class PageMenu extends builderCore.tasks.Base {
 
+    /**
+     * Returns logger module
+     * @returns {module|Object|*}
+     */
     static getLoggerName() {
         return module;
     }
@@ -17,6 +21,7 @@ export default class PageMenu extends builderCore.tasks.Base {
     /**
      * Performs task
      * @returns {Promise}
+     * @public
      */
     run(model) {
         this.beforeRun();

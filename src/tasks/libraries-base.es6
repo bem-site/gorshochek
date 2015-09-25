@@ -10,13 +10,14 @@ import Base from './base';
 /**
  * @exports
  * @class LibrariesBase
- * @desc Sync libraries MDS libraries data with local system
+ * @extends Base
+ * @desc Base class for library tasks
  */
 export default class LibrariesBase extends Base {
     /**
      * Returns module instance for log purposes
-     * @static
      * @returns {Module}
+     * @static
      */
     static getLoggerName() {
         return module;
@@ -24,8 +25,8 @@ export default class LibrariesBase extends Base {
 
     /**
      * Return task human readable description
-     * @static
      * @returns {String} path
+     * @static
      */
     static getName() {
         return 'base libraries class';
@@ -33,8 +34,8 @@ export default class LibrariesBase extends Base {
 
     /**
      * Returns name of file which should be used for library version data files loaded from remote sources
-     * @static
      * @returns {String}
+     * @static
      */
     static getLibVersionDataFilename() {
         return 'storage.data.json';

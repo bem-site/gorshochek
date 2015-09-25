@@ -15,6 +15,11 @@ import LibrariesBase from './libraries-base';
  */
 export default class LibrariesDataGen extends LibrariesBase {
 
+    /**
+     * Constructor
+     * @param {Config} baseConfig common configuration instance
+     * @param {Object} taskConfig special task configuration object
+     */
     constructor(baseConfig, taskConfig) {
         super(baseConfig, taskConfig);
 
@@ -24,8 +29,8 @@ export default class LibrariesDataGen extends LibrariesBase {
 
     /**
      * Returns module instance for log purposes
-     * @static
      * @returns {Module}
+     * @static
      */
     static getLoggerName() {
         return module;
@@ -33,8 +38,8 @@ export default class LibrariesDataGen extends LibrariesBase {
 
     /**
      * Return task human readable description
-     * @static
      * @returns {String} path
+     * @static
      */
     static getName() {
         return 'generate libraries files';
@@ -79,6 +84,7 @@ export default class LibrariesDataGen extends LibrariesBase {
      * Performs task
      * @public
      * @returns {Promise}
+     * @public
      */
     run(model) {
         this.beforeRun();

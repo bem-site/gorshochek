@@ -1,8 +1,19 @@
 import path from 'path';
 import Base from './base';
 
+/**
+ * @exports
+ * @class LibrariesBase
+ * @extends Base
+ * @desc Initialization task
+ */
 export default class Init extends Base {
 
+    /**
+     * Returns logger module
+     * @returns {module|Object|*}
+     * @static
+     */
     static getLoggerName() {
         return module;
     }
@@ -10,6 +21,7 @@ export default class Init extends Base {
     /**
      * Returns name of task
      * @returns {String}
+     * @static
      */
     static getName() {
         return 'init';
@@ -18,17 +30,16 @@ export default class Init extends Base {
     /**
      * Performs task
      * @returns {Promise}
+     * @public
      */
     run(model) {
         this.beforeRun();
 
-        [
-            this.getBaseConfig().getCacheFolder(),
-            this.getBaseConfig().getDataFolder()
-        ].forEach(item => {
-            this.logger.debug(`Ensure that directory "${item}" exists. Otherwise it will be created`);
-            this.fsExtra.ensureDirSync(item);
-        });
+        [this.getBaseConfig().getCacheFolder(), this.getBaseConfig().getDataFolder()]
+            .forEach(item => {
+                this.logger.debug(`Ensure that directory "${item}" exists. Otherwise it will be created`);
+                this.fsExtra.ensureDirSync(item);
+            });
 
         const newModelFilePath = this.getBaseConfig().getModelFilePath();
         const oldModelFilePath = path.join(this.getBaseConfig().getCacheFolder(), 'model.json');

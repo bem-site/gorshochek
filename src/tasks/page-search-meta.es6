@@ -2,6 +2,11 @@ import PageBase from './page-base';
 
 export default class PageSearchMeta extends PageBase {
 
+    /**
+     * Returns logger module
+     * @returns {module|Object|*}
+     * @static
+     */
     static getLoggerName() {
         return module;
     }
@@ -9,6 +14,7 @@ export default class PageSearchMeta extends PageBase {
     /**
      * Return task human readable description
      * @returns {String}
+     * @static
      */
     static getName() {
         return 'create page search meta-information';
@@ -17,6 +23,7 @@ export default class PageSearchMeta extends PageBase {
     /**
      * Performs task
      * @returns {Promise}
+     * @public
      */
     run(model) {
         this.beforeRun();

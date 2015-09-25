@@ -2,6 +2,10 @@ import PageBase from './page-base';
 
 export default class PageHeaderTitle extends PageBase {
 
+    /**
+     * Returns logger module
+     * @returns {module|Object|*}
+     */
     static getLoggerName() {
         return module;
     }
@@ -17,6 +21,7 @@ export default class PageHeaderTitle extends PageBase {
     /**
      * Performs task
      * @returns {Promise}
+     * @public
      */
     run(model) {
         this.beforeRun();

@@ -6,6 +6,11 @@ import Base from './base';
 
 export default class DocsBaseGithub extends Base {
 
+    /**
+     * Constructor
+     * @param {Config} baseConfig common configuration instance
+     * @param {Object} taskConfig special task configuration object
+     */
     constructor(baseConfig, taskConfig) {
         super(baseConfig, taskConfig);
 

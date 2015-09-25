@@ -6,6 +6,12 @@ import vowNode from 'vow-node';
 import Logger from 'bem-site-logger';
 
 export default class Base {
+
+    /**
+     * Constructor
+     * @param {Config} baseConfig common configuration instance
+     * @param {Object} taskConfig special task configuration object
+     */
     constructor(baseConfig, taskConfig) {
         this._baseConfig = baseConfig;
         this._taskConfig = taskConfig || {};
@@ -29,6 +35,7 @@ export default class Base {
      * Returns name of task. Should be override in inherited classes
      * @returns {String}
      * @protected
+     * @static
      */
     static getName() {
         return 'base';
@@ -37,11 +44,16 @@ export default class Base {
     /**
      * Returns array of task dependencies
      * @returns {Array}
+     * @static
      */
     static getDependencies() {
         return [];
     }
 
+    /**
+     * Provides fsExtra module
+     * @returns {*}
+     */
     get fsExtra() {
         return fsExtra;
     }
@@ -49,6 +61,7 @@ export default class Base {
     /**
      * Returns general configuration object
      * @returns {Config}
+     * @protected
      */
     getBaseConfig() {
         return this._baseConfig;
@@ -57,6 +70,7 @@ export default class Base {
     /**
      * Returns special task configuration module
      * @returns {Object}
+     * @protected
      */
     getTaskConfig() {
         return this._taskConfig;
@@ -86,6 +100,7 @@ export default class Base {
      * Reads file from cache folder
      * @param {String} filePath - path to file (relative to cache folder)
      * @returns {Promise}
+     * @protected
      */
     readFileFromCache(filePath, isJSON = false) {
         const basePath = this.getBaseConfig().getCacheFolder();
@@ -106,6 +121,7 @@ export default class Base {
      * @param {String} filePath - path to file (relative to cache folder)
      * @param {String} content of file
      * @returns {Promise}
+     * @protected
      */
     writeFileToCache(filePath, content) {
         const basePath = this.getBaseConfig().getCacheFolder();
@@ -146,7 +162,7 @@ export default class Base {
      * @param {Object} page - page model object
      * @param {Array} languages - array of languages
      * @returns {*|Promise.<T>}
-     * @private
+     * @protected
      */
     processPage(model, page, languages) {
         return Promise.resolve(page);

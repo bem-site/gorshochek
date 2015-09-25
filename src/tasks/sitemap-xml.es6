@@ -10,6 +10,7 @@ export default class SitemapXML extends Base {
     /**
      * Returns logger module
      * @returns {module|Object|*}
+     * @static
      */
     static getLoggerName() {
         return module;
