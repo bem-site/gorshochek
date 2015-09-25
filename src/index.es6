@@ -107,8 +107,8 @@ export default class Builder {
 
     /**
      * Success callback function
-     * @param {Object} result - build data result object
-     * @returns {Promise}
+     * @param {Model} result - build data result object
+     * @returns {Model}
      * @private
      */
     _onSuccess(result) {
@@ -122,8 +122,9 @@ export default class Builder {
      * @private
      */
     _onError(error) {
-        this.logger.error(error.message);
-        this.logger.error('-- BUILD HAS BEEN FAILED --');
+        this.logger
+            .error(error.message)
+            .error('-- BUILD HAS BEEN FAILED --');
         throw error;
     }
 

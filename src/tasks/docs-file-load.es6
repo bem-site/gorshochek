@@ -1,9 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import vow from 'vow';
-import DocsBase from './docs-base';
+import vowNode from 'vow-node';
+import Base from './base';
 
-export default class DocsFileLoad extends DocsBase {
+export default class DocsFileLoad extends Base {
 
     static getLoggerName() {
         return module;
@@ -15,14 +16,6 @@ export default class DocsFileLoad extends DocsBase {
      */
     static getName() {
         return 'docs load from file';
-    }
-
-    /**
-     * Returns number of page per portion for processing
-     * @returns {Number}
-     */
-    static getPortionSize() {
-        return 20;
     }
 
     /**
@@ -54,17 +47,72 @@ export default class DocsFileLoad extends DocsBase {
      * @private
      */
     _readFile(page, language, filePath) {
-        return new vow.Promise((resolve, reject) => {
-            fs.readFile(filePath, {encoding: 'utf-8'}, (error, content) => {
-                if(error || !content) {
-                    this.logger.error(
-                        `Error occur while loading file for page: ${page.url} and language ${language}`);
-                    this.logger.error(error.message);
-                    reject(error);
-                } else {
-                    resolve(content);
-                }
+        return vowNode.invoke(fs.readFile, filePath, {encoding: 'utf-8'})
+            .catch(error => {
+                this.logger
+                    .error(`Error occur while loading file for page: ${page.url} and language ${language}`)
+                    .error(error.message);
+                throw error;
             });
+    }
+
+    /**
+     * Processes given language version of model page
+     * @param {Model} model - data model
+     * @param {Object} page - page object
+     * @param {String} language - language identifier
+     * @returns {Promise}
+     * @private
+     */
+    _processPageForLang(model, page, language) {
+        if(!this.getCriteria(page, language)) {
+            return Promise.resolve(page);
+        }
+
+        this.logger.debug(`load local file for language: => ${language} and page with url: => ${page.url}`);
+
+        const filePath = page[language].sourceUrl; // относительный путь к файлу
+        const fileName = path.basename(filePath); // имя файла (с расширением)
+        const fileExt = path.extname(fileName); // расширение файла
+
+        const localFilePath = path.resolve(filePath);
+        const cacheFilePath = path.join(page.url, (language + fileExt));
+
+        const onReadFileError = (promise) => {
+            return Promise.reject(promise.valueOf());
+        };
+        const onAddedDocument = (promise) => {
+            this.logger.debug('Doc added: %s %s %s', page.url, language, page[language].title);
+            model.getChanges().pages.addAdded({type: 'doc', url: page.url, title: page[language].title});
+            return this.writeFileToCache(cacheFilePath, promise.valueOf());
+        };
+        const onModifiedDocument = (promise) => {
+            this.logger.debug('Doc modified: %s %s %s', page.url, language, page[language].title);
+            model.getChanges().pages.addModified({type: 'doc', url: page.url, title: page[language].title});
+            return this.writeFileToCache(cacheFilePath, promise.valueOf());
+        };
+
+        this.logger
+            .verbose(`filePath: ${filePath}`)
+            .verbose(`fileName: ${fileName}`)
+            .verbose(`fileExt: ${fileExt}`);
+
+        return vow.allResolved([
+            this.readFileFromCache(cacheFilePath),
+            this._readFile(page, language, localFilePath)
+        ]).spread((cache, local) => {
+            if(local.isRejected()) {
+                return onReadFileError(local);
+            }else if(cache.isRejected()) {
+                return onAddedDocument(local)
+            }else if(cache.valueOf() !== local.valueOf()) {
+                return onModifiedDocument(local);
+            }else {
+                return Promise.resolve(page);
+            }
+        }).then(() => {
+            page[language].contentFile = cacheFilePath;
+            return cacheFilePath;
         });
     }
 
@@ -74,79 +122,25 @@ export default class DocsFileLoad extends DocsBase {
      * @param {Object} page - page object
      * @param {Array} languages - configured languages array
      * @returns {Promise}
-     * @private
+     * @protected
      */
     processPage(model, page, languages) {
         return vow.allResolved(languages.map((language) => {
-            const isLocalFile = this.getCriteria(page, language);
-            let filePath;
-            let fileName;
-            let fileExt;
-            let cacheFilePath;
-            let localFilePath;
-
-            if(!isLocalFile) {
-                return Promise.resolve(page);
-            }
-
-            this.logger.debug(`load local file for language: => ${language} and page with url: => ${page.url}`);
-
-            filePath = page[language].sourceUrl; // относительный путь к файлу
-            fileName = path.basename(filePath); // имя файла (с расширением)
-            fileExt = path.extname(fileName); // расширение файла
-
-            localFilePath = path.resolve(filePath);
-            cacheFilePath = path.join(page.url, (language + fileExt));
-
-            this.logger.verbose(`filePath: ${filePath}`);
-            this.logger.verbose(`fileName: ${fileName}`);
-            this.logger.verbose(`fileExt: ${fileExt}`);
-
-            return vow.allResolved([
-                this.readFileFromCache(cacheFilePath),
-                this._readFile(page, language, localFilePath)
-            ]).spread((cache, local) => {
-                // если при чтении целевого файла произошла ошибка то возвращаем отмененный промис с ошибкой
-                if(local.isRejected()) {
-                    return Promise.reject(local.valueOf());
-
-                // если произошла ошибка при чтении файла из кеша, что в подавляющем большинстве
-                // происходит если файла еще нет в кеше, то добавляем в модель изменений запись
-                // о добавленном документе и записываем файл в кеш
-                }else if(cache.isRejected()) {
-                    this.logger.debug('Doc added: %s %s %s', page.url, language, page[language].title);
-                    model.getChanges().pages.addAdded({type: 'doc', url: page.url, title: page[language].title});
-                    return this.writeFileToCache(cacheFilePath, local.valueOf());
-
-                // если содержимое файлов не совпадает, то это значит что файл был изменен
-                // добавляем в модель изменений запись об измененном документе
-                // и записываем файл в кеш
-                }else if(cache.valueOf() !== local.valueOf()) {
-                    this.logger.debug('Doc modified: %s %s %s', page.url, language, page[language].title);
-                    model.getChanges().pages.addModified({type: 'doc', url: page.url, title: page[language].title});
-                    return this.writeFileToCache(cacheFilePath, local.valueOf());
-
-                // файл не поменялся на файловой системе с момента предыдущей проверки
-                }else {
-                    return Promise.resolve(page);
-                }
-            }).then(() => {
-                // добавляем соответствующее поле в модель
-                page[language].contentFile = cacheFilePath;
-                return cacheFilePath;
-            });
+            return this._processPageForLang(model, page, language);
         })).then(() => {
             return page;
         });
     }
 
     /**
-     * Reads file from cache folder
-     * @param {String} filePath - path to file (relative to cache folder)
+     * Performs task
      * @returns {Promise}
      */
-    readFileFromCache(filePath) {
-        return vow.cast(super.readFileFromCache(filePath));
+    run(model) {
+        this.beforeRun();
+        return this.processPages(model, 20).then(() => {
+            return Promise.resolve(model);
+        });
     }
 }
 

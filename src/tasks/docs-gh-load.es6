@@ -278,5 +278,18 @@ export default class DocsLoadGithub extends DocsBaseGithub {
             return page;
         });
     }
+
+    /**
+     * Performs task
+     * @returns {Promise}
+     */
+    run(model) {
+        this.beforeRun();
+
+        // обрабатываем страницы в модели
+        return this.processPages(model).then(() => {
+            return Promise.resolve(model);
+        });
+    }
 }
 

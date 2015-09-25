@@ -2,6 +2,7 @@ import os from 'os';
 import fs from 'fs';
 import path from 'path';
 import fsExtra from 'fs-extra';
+import vowNode from 'vow-node';
 import Logger from 'bem-site-logger';
 
 export default class Base {
@@ -47,7 +48,7 @@ export default class Base {
 
     /**
      * Returns general configuration object
-     * @returns {Object}
+     * @returns {Config}
      */
     getBaseConfig() {
         return this._baseConfig;
@@ -76,8 +77,9 @@ export default class Base {
         if(process.env.NODE_ENV !== 'testing') {
             console.log(os.EOL);
         }
-        this.logger.info(`${this.constructor.getName().toUpperCase()}`);
-        this.logger.info(`Start to execute "${this.constructor.getName()}" task`);
+        this.logger
+            .info(`${this.constructor.getName().toUpperCase()}`)
+            .info(`Start to execute "${this.constructor.getName()}" task`);
     }
 
     /**
@@ -85,21 +87,18 @@ export default class Base {
      * @param {String} filePath - path to file (relative to cache folder)
      * @returns {Promise}
      */
-    readFileFromCache(filePath) {
-        const o = {encoding: 'utf-8'};
+    readFileFromCache(filePath, isJSON = false) {
         const basePath = this.getBaseConfig().getCacheFolder();
+        const func = isJSON ? fsExtra.readJSON : fs.readFile;
+        filePath = path.join(basePath, filePath);
 
-        return new Promise((resolve, reject) => {
-            fs.readFile(path.join(basePath, filePath), o, (error, content) => {
-                if(error) {
-                    this.logger.error(`Error occur while loading file ${filePath} from cache`);
-                    this.logger.error(error.message);
-                    reject(error);
-                } else {
-                    resolve(content);
-                }
+        return vowNode.invoke(func, filePath, {encoding: 'utf-8'})
+            .catch(error => {
+                this.logger
+                    .error(`Error occur while loading file ${filePath} from cache`)
+                    .error(error.message);
+                throw error;
             });
-        });
     }
 
     /**
@@ -109,20 +108,65 @@ export default class Base {
      * @returns {Promise}
      */
     writeFileToCache(filePath, content) {
-        const o = {encoding: 'utf-8'};
         const basePath = this.getBaseConfig().getCacheFolder();
 
-        return new Promise((resolve, reject) => {
-            fs.writeFile(path.join(basePath, filePath), content, o, (error) => {
-                if(error) {
-                    this.logger.error(`Error occur while saving file ${filePath} to cache`);
-                    this.logger.error(error.message);
-                    reject(error);
-                } else {
-                    resolve();
-                }
+        filePath = path.join(basePath, filePath);
+        const dirPath = path.dirname(filePath);
+
+        return vowNode.invoke(fsExtra.ensureDir, dirPath)
+            .then(() => {
+                return vowNode.invoke(fs.writeFile, filePath, content, {encoding: 'utf-8'});
+            })
+            .catch(error => {
+                this.logger
+                    .error(`Error occur while saving file ${filePath} to cache`)
+                    .error(error.message);
+                throw error;
             });
-        });
+    }
+
+    /**
+     * Returns criteria function base on page object and language
+     * This method shouldn't be called directly
+     * It should be override in child classes of DocsBase class
+     * @param {Object} page - page model object
+     * @param {String} lang - language
+     * @returns {Object|Boolean}
+     * @protected
+     */
+    getCriteria(page, lang) {
+        return false;
+    }
+
+    /**
+     * Process single page for all page language version
+     * This method shouldn't be called directly
+     * It should be override in child classes of Base class
+     * @param {Model} model - data model
+     * @param {Object} page - page model object
+     * @param {Array} languages - array of languages
+     * @returns {*|Promise.<T>}
+     * @private
+     */
+    processPage(model, page, languages) {
+        return Promise.resolve(page);
+    }
+
+    processPages(model, portionSize = 5) {
+        const languages = this.getBaseConfig().getLanguages();
+        const filteredPages = model.getPagesByCriteria(this.getCriteria, languages);
+        const portions = _.chunk(filteredPages, portionSize);
+
+        return portions.reduce((prev, portion, index) => {
+            prev = prev.then(() => {
+                this.logger.debug('process portion of pages in range %s - %s',
+                    index * portionSize, (index + 1) * portionSize);
+                return vow.allResolved(portion.map((page) => {
+                    return this.processPage(model, page, languages);
+                }));
+            });
+            return prev;
+        }, vow.resolve());
     }
 
     /**

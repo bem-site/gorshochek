@@ -79,32 +79,26 @@ export default class Model {
      * Merges models and find differences
      */
     merge() {
-        let newModel;
-        let oldModel;
-        let newPages;
-        let oldPages;
-        let addedPages;
         const modifiedPages = [];
         const nonModifiedPages = [];
-        let removedPages;
 
         /*
          Для массивов объектов из нового и старого файлов моделей
          вызываем метод _generateUrlPageMap, который строит из данных массивов
          объекты в которых ключами являются url страниц, а значениями сами объекты
          */
-        newModel = this.constructor._generateUrlPageMap(this.getNewModel());
-        oldModel = this.constructor._generateUrlPageMap(this.getOldModel());
+        const newModel = this.constructor._generateUrlPageMap(this.getNewModel());
+        const oldModel = this.constructor._generateUrlPageMap(this.getOldModel());
 
-        newPages = _.keys(newModel); // получить все url из новой модели
-        oldPages = _.keys(oldModel); // получить все url из старой модели
+        const newPages = _.keys(newModel); // получить все url из новой модели
+        let oldPages = _.keys(oldModel); // получить все url из старой модели
 
         /*
          Добавленные страницы можно получить вычислив разницу между массивом url из новой и старой моделей
          Для удаленных страницы наоборот надо вычислить разницу между массивом url из старой и новой моделей
          */
-        addedPages = _.difference(newPages, oldPages);
-        removedPages = _.difference(oldPages, newPages);
+        const addedPages = _.difference(newPages, oldPages);
+        const removedPages = _.difference(oldPages, newPages);
 
         removedPages.forEach(url => {
             this.getChanges().pages.addRemoved({type: 'page', url});
@@ -189,5 +183,22 @@ export default class Model {
         this.setPages(this.getPages().map(item => {
             return normalizePage(item, languages);
         }));
+    }
+
+    /**
+     * Returns pages with anyone language version satisfy getCriteria function criteria
+     * @param {Function} criteria function
+     * @param {Array} languages - configured languages array
+     * @returns {Array} filtered array of pages
+     * @private
+     */
+    getPagesByCriteria(criteria, languages) {
+        // здесь происходит поиск страниц в модели у которых
+        // хотя бы одна из языковых версий удовлетворяет критерию из функции criteria
+        return this.getPages().filter(page => {
+            return languages.some(lang => {
+                return criteria(page, lang);
+            });
+        });
     }
 }

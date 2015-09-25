@@ -28,6 +28,7 @@
     "github": "^0.2.4",
     "js2xmlparser": "^1.0.0",
     "lodash": "^3.x",
+    "mds-wrapper": "^1.4.0",
     "moment": "^2.x",
     "rsync": "^0.4.0",
     "vow": "~0.4.x",
@@ -62,7 +63,7 @@
     "jsdoc": "gulp esdoc",
     "publish-doc": "gulp publish-doc",
     "compile": "gulp compile",
-    "pretest": "gulp codestyle && npm run compile",
+    "pretest": "npm run compile",
     "prepublish": "gulp compile",
     "deps": "npm install && gulp compile",
     "test": "NODE_ENV=testing ./node_modules/.bin/istanbul cover _mocha"

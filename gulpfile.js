@@ -31,7 +31,7 @@ gulp.task('jscs', function() {
         .pipe(jscs({configPath: './.jscs.js', esnext: true}));
 });
 
-gulp.task('lint', ['jshint', 'jscs']);
+gulp.task('lint', ['eslint', 'jscs']);
 
 gulp.task('compile', ['clean-lib'], function () {
     return gulp.src(SRC_PATH)

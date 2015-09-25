@@ -1,9 +1,10 @@
 import path from 'path';
 import vow from 'vow';
+import vowNode from 'vow-node';
 import mdToHtml from 'bem-md-renderer';
-import DocsBase from './docs-base';
+import Base from './base';
 
-export default class DocsMdToHtml extends DocsBase {
+export default class DocsMdToHtml extends Base {
 
     static getLoggerName() {
         return module;
@@ -15,14 +16,6 @@ export default class DocsMdToHtml extends DocsBase {
      */
     static getName() {
         return 'docs markdown to html';
-    }
-
-    /**
-     * Returns number of page per portion for processing
-     * @returns {Number}
-     */
-    static getPortionSize() {
-        return 20;
     }
 
     /**
@@ -55,19 +48,13 @@ export default class DocsMdToHtml extends DocsBase {
      * @private
      */
     _mdToHtml(page, language, md) {
-        // переводим содежимое *.md файла в html синтаксис с помощью bem-md-renderer
-        return new Promise((resolve, reject) => {
-            mdToHtml.render(md, (error, html) => {
-                if(error) {
-                    this.logger.error(
-                        `Error occur while transform md -> html for page: ${page.url} and language ${language}`);
-                    this.logger.error(error.message);
-                    reject(error);
-                }else {
-                    resolve(html);
-                }
+        return vowNode.invoke(mdToHtml.render, md)
+            .catch(error => {
+                this.logger
+                    .error(`Error occur while transform md -> html for page: ${page.url} and language ${language}`)
+                    .error(error.message);
+                throw error;
             });
-        });
     }
 
     /**
@@ -80,48 +67,36 @@ export default class DocsMdToHtml extends DocsBase {
      */
     processPage(model, page, languages) {
         return vow.allResolved(languages.map((language) => {
-            const hasMdFile = this.getCriteria(page, language);
-            let mdFilePath;
-            let mdFileDirectory;
-            let htmlFilePath;
-
-            // Проверяем на наличие правильного поля contentFile
-            // это сделано потому, что предварительный фильтр мог сработать
-            // для страниц у которых только часть из языковых версий удовлетворяла критерию
-            if(!hasMdFile) {
+            if(!this.getCriteria(page, language)) {
                 return Promise.resolve(page);
             }
 
             this.logger.debug(`md -> html for language: => ${language} and page with url: => ${page.url}`);
 
-            // допустим был файл /foo/bar/en.md
-            // будет /foo/bar/en.html
+            const mdFilePath = page[language].contentFile;
+            const mdFileDirectory = path.dirname(mdFilePath);
+            const htmlFilePath = path.join(mdFileDirectory, language + '.html');
 
-            mdFilePath = page[language].contentFile;
-            mdFileDirectory = path.dirname(mdFilePath);
-            htmlFilePath = path.join(mdFileDirectory, language + '.html');
-
-            // последовательно:
-            // 1. считываем файл
-            // 2. конвертируем его в html синтаксис
-            // 3. сохраняем обратно под другим именем с учетом нового формата
-            // 4. меняем соответствующее поле в модели страницы
             return this.readFileFromCache(mdFilePath)
-                .then((md) => {
-                    this.logger.verbose(`success read ${mdFilePath} from cache`);
-                    return this._mdToHtml(page, language, md);
-                })
-                .then((html) => {
-                    this.logger.verbose(`success transform content of ${mdFilePath} into html`);
-                    return this.writeFileToCache(htmlFilePath, html);
-                })
+                .then(md => { return this._mdToHtml(page, language, md); })
+                .then(html => { return this.writeFileToCache(htmlFilePath, html); })
                 .then(() => {
-                    this.logger.verbose(`success write ${htmlFilePath} to cache`);
                     page[language].contentFile = htmlFilePath;
                     return page;
                 });
         })).then(() => {
             return page;
+        });
+    }
+
+    /**
+     * Performs task
+     * @returns {Promise}
+     */
+    run(model) {
+        this.beforeRun();
+        return this.processPages(model, 20).then(() => {
+            return Promise.resolve(model);
         });
     }
 }

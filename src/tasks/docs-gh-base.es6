@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import _ from 'lodash';
 import GitHub from '../github';
-import DocsBase from './docs-base';
+import Base from './base';
 
-export default class DocsBaseGithub extends DocsBase {
+export default class DocsBaseGithub extends Base {
 
     constructor(baseConfig, taskConfig) {
         super(baseConfig, taskConfig);
@@ -91,21 +91,5 @@ export default class DocsBaseGithub extends DocsBase {
      */
     getHeadersByCache(cache) {
         return (cache && cache.etag) ? {'If-None-Match': cache.etag} : null;
-    }
-
-    /**
-     * Reads file from cache folder
-     * @param {String} filePath - path to file (relative to cache folder)
-     * @returns {Promise}
-     */
-    readFileFromCache(filePath) {
-        const o = {encoding: 'utf-8'};
-        const basePath = this.getBaseConfig().getCacheFolder();
-
-        return new Promise((resolve) => {
-            fs.readFile(path.join(basePath, filePath), o, (error, content) => {
-                resolve(content || '{}');
-            });
-        });
     }
 }
