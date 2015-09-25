@@ -2,7 +2,7 @@ var fs = require('fs'),
     path = require('path'),
     should = require('should'),
     fsExtra = require('fs-extra'),
-    Version = require('../../lib/model/libraries/version');
+    Version = require('../../../../lib/model/libraries/version');
 
 describe('version', function () {
     var baseUrl = '/libraries',

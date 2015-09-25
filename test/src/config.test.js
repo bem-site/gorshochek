@@ -37,8 +37,7 @@ describe('Config', function () {
     });
 
     it('should return valid default settings', function () {
-        var config = new Config('debug');
-        should.deepEqual(config.defaults, {
+        should.deepEqual(Config.defaults, {
             languages: ['en'],
             modelFilePath: './model/model.json',
             dataFolder: './data',

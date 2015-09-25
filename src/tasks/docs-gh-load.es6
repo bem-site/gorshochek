@@ -1,8 +1,23 @@
+import fs from 'fs';
 import path from 'path';
 import vow from 'vow';
-import DocsBaseGithub from './docs-gh-base';
+import _ from 'lodash';
+import GitHub from '../github';
+import Base from './base';
 
-export default class DocsLoadGithub extends DocsBaseGithub {
+export default class DocsLoadGithub extends Base {
+
+    /**
+     * Constructor
+     * @param {Config} baseConfig common configuration instance
+     * @param {Object} taskConfig special task configuration object
+     */
+    constructor(baseConfig, taskConfig) {
+        super(baseConfig, taskConfig);
+
+        const ghOptions = _.extend({token: taskConfig.token}, baseConfig.getLoggerSettings());
+        this._api = new GitHub(ghOptions);
+    }
 
     static getLoggerName() {
         return module;
@@ -17,154 +32,71 @@ export default class DocsLoadGithub extends DocsBaseGithub {
     }
 
     /**
-     * Loads content from github via github API
-     * @param {Object} repoInfo - gh file object path settings
-     * @param {Object} headers - gh api headers
-     * @returns {Promise}
+     * Returns url pattern for http urls of gh sources
+     * @returns {RegExp}
      * @private
      */
-    _getContentFromGh(repoInfo, headers) {
-        return new Promise((resolve, reject) => {
-            this.getAPI().getContent(repoInfo, headers, (error, result) => {
-                if(error) {
-                    this.logger
-                        .error(`GH: ${error.message}`)
-                        .error(`Error occur while loading content from:`)
-                        .error(`host: => ${repoInfo.host}`)
-                        .error(`user: => ${repoInfo.user}`)
-                        .error(`repo: => ${repoInfo.repo}`)
-                        .error(`ref:  => ${repoInfo.ref}`)
-                        .error(`path: => ${repoInfo.path}`);
-                    return reject(error);
-                }
-                resolve(result);
-            });
-        });
+    static getGhUrlPattern() {
+        // Например: https://github.com/bem/bem-method/tree/bem-info-data/method/index/index.en.md
+        return /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/;
     }
 
     /**
-     * Returns date of last commit for given url
-     * @param {Object} repoInfo - gh file object path settings
-     * @param {Object} headers - gh api headers
-     * @returns {*}
+     * Returns github API class instance
+     * @returns {Github}
      * @private
      */
-    _getUpdateDateInfo(repoInfo, headers) {
-        /*
-        проверка на то что соответствующая опция задачи сборки включена
-        в противном случае возвращаем промис с null
-        */
-        if(!this.getTaskConfig().updateDate) {
-            return vow.resolve(null);
-        }
-
-        /*
-        Необходимо получить список коммитов для данного файла
-        эти коммиты отсортированы в обратном порядке по выполнению
-        следовательно 0-й элемент будет последним коммитом
-        в соответствующем поле находится дата этого коммита
-         */
-        return new vow.Promise((resolve, reject) => {
-            this.api.getCommits(repoInfo, headers, (error, result) => {
-                if(error || !result || !result[0]) {
-                    this.logger
-                        .error('GH: %s', error ? error.message : 'unknown error')
-                        .error(`Error occur while get commits from:`)
-                        .error(`host: => ${repoInfo.host}`)
-                        .error(`user: => ${repoInfo.user}`)
-                        .error(`repo: => ${repoInfo.repo}`)
-                        .error(`ref:  => ${repoInfo.ref}`)
-                        .error(`path: => ${repoInfo.path}`);
-                    return reject(error || new Error('Error'));
-                }
-                resolve((new Date(result[0].commit.committer.date)).getTime());
-            });
-        });
+    getAPI() {
+        return this._api;
     }
 
     /**
-     * Returns true if current repository has issues section. Otherwise returns false
-     * @param {Object} repoInfo - gh file object path settings
-     * @param {Object} headers - gh api headers
-     * @returns {*}
-     * @private
+     * Returns parsed repository info for language version of page. Otherwise returns false
+     * @param {Object} page - page model object
+     * @param {String} lang - language
+     * @returns {Object|Boolean}
+     * @protected
      */
-    _getIssuesInfo(repoInfo, headers) {
-        /*
-         проверка на то что соответствующая опция задачи сборки включена
-         в противном случае возвращаем промис с null
-         */
-        if(!this.getTaskConfig().hasIssues) {
-            return vow.resolve(null);
+    getCriteria(page, lang) {
+        let sourceUrl;
+        let repoInfo;
+
+        // 1. page должен иметь поле {lang}
+        // 2. page[lang] должен иметь поле 'sourceUrl'
+        // 3. page[lang].sourceUrl должен матчится на регулярное выражение из _getGhUrlPattern()
+        // 4. если хотя бы одно из условий не выполняется, то вернется false
+
+        if(!page[lang]) {
+            return false;
         }
 
-        /*Здесь разрезолвленный промис содержит логическое значение true|false*/
-        return new vow.Promise((resolve, reject) => {
-            this.api.hasIssues(repoInfo, headers, (error, result) => {
-                if(error) {
-                    this.logger
-                        .error(`GH: ${error.message}`)
-                        .error(`Error occur while get issues repo information:`)
-                        .error(`host: => ${repoInfo.host}`)
-                        .error(`user: => ${repoInfo.user}`)
-                        .error(`repo: => ${repoInfo.repo}`);
-                    return reject(error);
-                }
-                resolve(result);
-            });
-        });
+        sourceUrl = page[lang].sourceUrl;
+        if(!sourceUrl) {
+            return false;
+        }
+
+        repoInfo = sourceUrl.match(this.constructor.getGhUrlPattern());
+        if(!repoInfo) {
+            return false;
+        }
+
+        return {
+            host: repoInfo[1],
+            user: repoInfo[2],
+            repo: repoInfo[3],
+            ref: repoInfo[5],
+            path: repoInfo[6]
+        };
     }
 
     /**
-     * Returns name of branch file loaded from or default repository branch
-     * (if source ref is tag - not branch)
-     * @param {Object} repoInfo - gh file object path settings
-     * @param {Object} headers - gh api headers
-     * @returns {*}
+     * Creates header object from cached etag
+     * @param {Object} cache object
+     * @returns {Object|Null}
      * @private
      */
-    _getBranch(repoInfo, headers) {
-        /*
-         проверка на то что соответствующая опция задачи сборки включена
-         в противном случае возвращаем промис с null
-         */
-        if(!this.getTaskConfig().getBranch) {
-            return vow.resolve(null);
-        }
-
-        /*
-        Сначала происходит попытка найти ветку по ее имени. Если такая ветка не
-        найдена, то возвращается название основной ветки репозитория
-         */
-        return new vow.Promise((resolve, reject) => {
-            this.api.isBranchExists(repoInfo, headers, (error1, result1) => {
-                if(error1) {
-                    this.logger
-                        .error(`GH: ${error1.message}`)
-                        .error(`Error occur while get branch information:`)
-                        .error(`host: => ${repoInfo.host}`)
-                        .error(`user: => ${repoInfo.user}`)
-                        .error(`repo: => ${repoInfo.repo}`);
-                    return reject(error1);
-                }
-                if(result1) {
-                    return resolve(repoInfo.ref);
-                } else {
-                    this.api.getDefaultBranch(repoInfo, headers, (error2, result2) => {
-                        if(error2) {
-                            this.logger
-                                .error(`GH: ${error2.message}`)
-                                .error(`Error occur while get default branch name:`)
-                                .error(`host: => ${repoInfo.host}`)
-                                .error(`user: => ${repoInfo.user}`)
-                                .error(`repo: => ${repoInfo.repo}`);
-                            return reject(error2);
-                        }
-                        resolve(result2);
-                    });
-                }
-            });
-        });
+    _getHeadersByCache(cache) {
+        return (cache && cache.etag) ? {'If-None-Match': cache.etag} : null;
     }
 
     /**
@@ -196,7 +128,7 @@ export default class DocsLoadGithub extends DocsBaseGithub {
                 .then(cache => {
                     cache = cache || {};
                     // выполняется запрос на gh
-                    return this._getContentFromGh(repoInfo, this.getHeadersByCache(cache))
+                    return this._getContentFromGh(repoInfo, this._getHeadersByCache(cache))
                         .then((result) => {
 
                             // если запрос был послан с header содержащим meta etag
@@ -239,9 +171,9 @@ export default class DocsLoadGithub extends DocsBaseGithub {
                             произведена из тега - то ссылку на основную ветку репозитория
                             */
                             return vow.allResolved([
-                                this._getUpdateDateInfo(repoInfo, this.getHeadersByCache(cache)),
-                                this._getIssuesInfo(repoInfo, this.getHeadersByCache(cache)),
-                                this._getBranch(repoInfo, this.getHeadersByCache(cache))
+                                this._getUpdateDateInfo(repoInfo, this._getHeadersByCache(cache)),
+                                this._getIssuesInfo(repoInfo, this._getHeadersByCache(cache)),
+                                this._getBranch(repoInfo, this._getHeadersByCache(cache))
                             ]).spread((updateDate, hasIssues, branch) => {
                                 updateDate = updateDate.isResolved() ? updateDate.valueOf() : null;
                                 hasIssues = hasIssues.isResolved() ? hasIssues.valueOf() : null;

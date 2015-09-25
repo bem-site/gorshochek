@@ -2,7 +2,7 @@ var fs = require('fs'),
     path = require('path'),
     should = require('should'),
     fsExtra = require('fs-extra'),
-    Level = require('../../lib/model/libraries/level');
+    Level = require('../../../../lib/model/libraries/level');
 
 describe('level', function () {
     describe('constructor', function () {

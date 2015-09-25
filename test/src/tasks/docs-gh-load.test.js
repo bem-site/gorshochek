@@ -35,178 +35,62 @@ describe('DocsLoadGh', function () {
             });
         });
 
-        describe('_getContentFromGh', function () {
-            it('should get valid content of file from gh', function (done) {
-                task._getContentFromGh({
+        it('_getAPI', function () {
+            task.getAPI().should.be.instanceOf(Github);
+        });
+
+        describe('getCriteria', function () {
+            it('should return false for missed lang version of page', function () {
+                var page = {
+                    url: '/url1'
+                };
+                task.getCriteria(page, 'en').should.equal(false);
+            });
+
+            it('should return false for missed sourceUrl field', function () {
+                var page = {
+                    url: '/url1',
+                    en: {}
+                };
+                task.getCriteria(page, 'en').should.equal(false);
+            });
+
+            it('should return false if sourceUrl field does not match criteria', function () {
+                var page = {
+                    url: '/url1',
+                    en: {
+                        sourceUrl: '/foo/bar'
+                    }
+                };
+                task.getCriteria(page, 'en').should.equal(false);
+            });
+
+            it('should return valid repository info object', function () {
+                var page = {
+                    url: '/url1',
+                    en: {
+                        sourceUrl: 'https://github.com/bem/bem-method/tree/bem-info-data/method/index/index.en.md'
+                    }
+                };
+                should.deepEqual(task.getCriteria(page, 'en'), {
                     host: 'github.com',
                     user: 'bem',
                     repo: 'bem-method',
                     ref:  'bem-info-data',
                     path: 'method/index/index.en.md'
-                }, null).then(function (result) {
-                    result.should.be.instanceOf(Object);
-                    done();
-                });
-            });
-
-            it('should return rejected promise in case of invalid repo info', function (done) {
-                task._getContentFromGh({
-                    host: 'github.com',
-                    user: 'bem',
-                    repo: 'bem-method',
-                    ref:  'bem-info-data',
-                    path: 'method/index/invalid-path'
-                }, null).catch(function (error) {
-                    error.should.be.ok;
-                    done();
                 });
             });
         });
 
-        describe('_getUpdateDateInfo', function () {
-            it ('should return resolved promise with null value for disable option', function (done) {
-                var task1 = new DocsLoadGh(config, {
-                    token: token,
-                    updateDate: false,
-                    hasIssues: true,
-                    getBranch: true
-                });
-
-                task1._getUpdateDateInfo({
-                    host: 'github.com',
-                    user: 'bem',
-                    repo: 'bem-method',
-                    ref:  'bem-info-data',
-                    path: 'method/index/index.en.md'
-                }, null).then(function (result) {
-                    should(result).equal(null);
-                    done();
-                });
+        describe('getHeadersByCache', function () {
+            it('should return header object', function () {
+                should.deepEqual(task.getHeadersByCache({ etag: '123456789abcdef' }),
+                    { 'If-None-Match': '123456789abcdef' });
             });
 
-            it('should get valid date of last file commit', function (done) {
-                task._getUpdateDateInfo({
-                    host: 'github.com',
-                    user: 'bem',
-                    repo: 'bem-method',
-                    ref:  'bem-info-data',
-                    path: 'method/index/index.en.md'
-                }, null).then(function (result) {
-                    result.should.be.instanceOf(Number);
-                    result.should.be.lessThan(+(new Date()));
-                    done();
-                });
-            });
-
-            it('should return rejected promise in case of invalid repo info', function (done) {
-                task._getUpdateDateInfo({
-                    host: 'github.com',
-                    user: 'bem',
-                    repo: 'bem-method',
-                    ref:  'bem-info-data',
-                    path: 'method/index/invalid-path'
-                }, null).catch(function (error) {
-                    error.should.be.ok;
-                    done();
-                });
-            });
-        });
-
-        describe('_getIssuesInfo', function () {
-            it ('should return resolved promise with null value for disable option', function (done) {
-                var task1 = new DocsLoadGh(config, {
-                    token: token,
-                    updateDate: true,
-                    hasIssues: false,
-                    getBranch: true
-                });
-
-                task1._getIssuesInfo({
-                    host: 'github.com',
-                    user: 'bem',
-                    repo: 'bem-method'
-                }, null).then(function (result) {
-                    should(result).equal(null);
-                    done();
-                });
-            });
-
-            it('should get valid has_issues repo option value', function (done) {
-                task._getIssuesInfo({
-                    host: 'github.com',
-                    user: 'bem',
-                    repo: 'bem-method'
-                }, null).then(function (result) {
-                    result.should.equal(true);
-                    done();
-                });
-            });
-
-            it('should return rejected promise in case of invalid repo info', function (done) {
-                task._getIssuesInfo({
-                    host: 'github.com',
-                    user: 'bem',
-                    repo: 'bem-method-invalid-path'
-                }, null).catch(function (error) {
-                    error.should.be.ok;
-                    done();
-                });
-            });
-        });
-
-        describe('_getBranch', function () {
-            it ('should return resolved promise with null value for disable option', function (done) {
-                var task1 = new DocsLoadGh(config, {
-                    token: token,
-                    updateDate: true,
-                    hasIssues: true,
-                    getBranch: false
-                });
-
-                task1._getBranch({
-                    host: 'github.com',
-                    user: 'bem',
-                    repo: 'bem-method'
-                }, null).then(function (result) {
-                    should(result).equal(null);
-                    done();
-                });
-            });
-
-            it('should valid branch name', function (done) {
-                task._getBranch({
-                    host: 'github.com',
-                    user: 'bem',
-                    repo: 'bem-method',
-                    ref:  'bem-info-data',
-                    path: 'method/index/index.en.md'
-                }, null).then(function (result) {
-                    result.should.equal('bem-info-data');
-                    done();
-                });
-            });
-
-            it('should return rejected error in case of invalid repository info', function () {
-                return task._getBranch({
-                    host: 'github.com',
-                    user: 'bem',
-                    repo: 'bem-method'
-                }, null).catch(function (error) {
-                    error.code.should.equal('400');
-                    error.message.should.equal('Empty value for parameter \'branch\': undefined');
-                });
-            });
-
-            it('should return default branch name', function (done) {
-                task._getBranch({
-                    host: 'github.com',
-                    user: 'bem',
-                    repo: 'bem-method',
-                    ref:  'invalid-ref'
-                }, null).then(function (result) {
-                    result.should.equal('bem-info-data');
-                    done();
-                });
+            it('should return null in case of missing etag', function () {
+                should(task.getHeadersByCache({})).equal(null);
+                should(task.getHeadersByCache()).equal(null);
             });
         });
 

@@ -1,7 +1,7 @@
 var path = require('path'),
     should = require('should'),
     Logger = require('bem-site-logger'),
-    Base = require('../../lib/model/libraries/base');
+    Base = require('../../../../lib/model/libraries/base');
 
 describe('base', function () {
     describe('constructor', function () {

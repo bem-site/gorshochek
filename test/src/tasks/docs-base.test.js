@@ -1,3 +1,4 @@
+/*
 var vow = require('vow'),
     should = require('should'),
     Config = require('../../../lib/config'),
@@ -78,3 +79,4 @@ describe('DocsBase', function () {
         });
     });
 });
+*/

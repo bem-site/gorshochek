@@ -5,8 +5,8 @@ var should = require('should'),
 describe('Model', function () {
     it('initialization', function () {
         var model = new Model();
-        model._pages.should.be.instanceOf(Array).and.have.length(0);
-        model._changes.should.be.instanceOf(Changes);
+        model.getPages().should.be.instanceOf(Array).and.have.length(0);
+        model.getChanges().should.be.instanceOf(Changes);
     });
 
     describe('instance methods', function () {
@@ -17,35 +17,35 @@ describe('Model', function () {
             model = new Model();
         });
 
-        it('get new model', function () {
+        it('it should have getter of new model', function () {
             model._newModel = testObj;
             should.deepEqual(model.getNewModel(), testObj);
         });
 
-        it('set new model', function () {
+        it('it should have setter of new model', function () {
             model.setNewModel(testObj);
             should.deepEqual(model.getNewModel(), testObj);
         });
 
-        it('get old model', function () {
+        it('should have getter of old model', function () {
             model._oldModel = testObj;
             should.deepEqual(model.getOldModel(), testObj);
         });
 
-        it('set old model', function () {
+        it('should have setter of old model', function () {
             model.setOldModel(testObj);
             should.deepEqual(model.getOldModel(), testObj);
         });
 
-        it('getChanges', function () {
+        it('getChanges should return instance of Changes class', function () {
             model.getChanges().should.be.instanceOf(Changes);
         });
 
-        it ('getPages', function () {
+        it ('getPages should return empty array of pages', function () {
             model.getPages().should.be.instanceOf(Array).and.have.length(0);
         });
 
-        it ('setPages', function () {
+        it ('setPages should set pages model', function () {
             model.setPages([1, 2]).should.be.instanceOf(Model);
             model.getPages().should.be.instanceOf(Array).and.have.length(2);
         });
@@ -203,5 +203,36 @@ describe('Model', function () {
                 });
             });
         });
+
+        /*
+        describe('getPagesByCriteria', function () {
+            it('should return valid set of filtered pages', function () {
+                var pages = [
+                        { url: '/url1' },
+                        { url: '/url2', en: {} },
+                        {
+                            url: '/url3',
+                            ru: {
+                                sourceUrl: 'https://github.com/bem/bem-method/' +
+                                'tree/bem-info-data/method/index/index.en.md'
+                            },
+                            en: { sourceUrl: '/foo/bar' }
+                        },
+                        {
+                            url: '/url4',
+                            en: {
+                                sourceUrl: 'https://github.com/bem/bem-method/' +
+                                'tree/bem-info-data/method/index/index.en.md'
+                            },
+                            ru: {}
+                        }
+                    ],
+                    result = task.getPagesByCriteria(pages, ['en', 'ru']);
+
+                result.should.be.instanceOf(Array).and.have.length(2);
+                should.deepEqual(result, [pages[2], pages[3]]);
+            });
+        });
+        */
     });
 });

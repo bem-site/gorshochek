@@ -93,35 +93,6 @@ describe('LibrariesSynMDS', function () {
             fsExtra.removeSync(task.getBaseConfig().getCacheFolder());
         });
 
-        describe('_getMDSRegistryFilePath', function () {
-            it('should return valid path to MDS registry file in cache', function () {
-                task._getMDSRegistryFilePath()
-                    .should.equal(path.join(task.getBaseConfig().getCacheFolder(), 'libraries/registry.json'));
-            });
-        });
-
-        describe('_getRegistryFromCache', function () {
-            it('should read registry from cache', function () {
-                var p1 = path.join(task.getBaseConfig().getCacheFolder(), './libraries'),
-                    p2 = path.join(process.cwd(), './test/fixtures/registry.json');
-                fsExtra.ensureDirSync(p1);
-                fsExtra.copySync(p2, path.join(p1, 'registry.json'));
-
-                return task._getRegistryFromCache().then(function (result) {
-                    should.deepEqual(result, fsExtra.readJSONSync(p2));
-                });
-            });
-
-            it('should return empty registry if file does not exist in cache', function () {
-                var p1 = path.join(task.getBaseConfig().getCacheFolder(), './libraries');
-                fsExtra.ensureDirSync(p1);
-
-                return task._getRegistryFromCache().then(function (result) {
-                    should.deepEqual(result, {});
-                });
-            });
-        });
-
         describe('_getRegistryFromMDS', function () {
             before(function (done) {
                 emulator.start(3000, 3001);
@@ -135,7 +106,7 @@ describe('LibrariesSynMDS', function () {
             });
 
             it('should return registry file from mds', function () {
-                var registryFilePath = path.join(process.cwd(), './test/fixtures/registry.json'),
+                var registryFilePath = path.join(process.cwd(), './test/stub/registry.json'),
                     registry = fsExtra.readJSONSync(registryFilePath);
 
                 return testAPI.writeP('root', JSON.stringify(registry)).then(function () {
@@ -153,7 +124,7 @@ describe('LibrariesSynMDS', function () {
 
         describe('_createComparatorMap', function () {
             it('should create comparator map', function () {
-                var registryFilePath = path.join(process.cwd(), './test/fixtures/registry.json'),
+                var registryFilePath = path.join(process.cwd(), './test/stub/registry.json'),
                     registry = fsExtra.readJSONSync(registryFilePath),
                     comparatorMap = task._createComparatorMap(registry);
 
@@ -176,7 +147,7 @@ describe('LibrariesSynMDS', function () {
                 remote;
 
             beforeEach(function () {
-                var registryFilePath = path.join(process.cwd(), './test/fixtures/registry.json');
+                var registryFilePath = path.join(process.cwd(), './test/stub/registry.json');
                 remote = fsExtra.readJSONSync(registryFilePath);
                 model = new Model();
             });
@@ -531,7 +502,7 @@ describe('LibrariesSynMDS', function () {
             });
 
             it('should successfully load all library versions on first launch', function () {
-                var registryFilePath = path.join(process.cwd(), './test/fixtures/registry.json'),
+                var registryFilePath = path.join(process.cwd(), './test/stub/registry.json'),
                     registry = fsExtra.readJSONSync(registryFilePath),
                     libVersions = [],
                     promises;

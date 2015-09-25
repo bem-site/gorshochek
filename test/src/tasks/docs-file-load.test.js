@@ -10,8 +10,9 @@ describe('DocsLoadFile', function () {
         DocsLoadFile.getName().should.equal('docs load from file');
     });
 
-    it('should return valid portion size', function () {
-        DocsLoadFile.getPortionSize().should.equal(20);
+    it('should return valid gh url pattern', function () {
+        should.deepEqual(DocsBaseGh.getGhUrlPattern(),
+            /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/);
     });
 
     describe('instance methods', function () {
@@ -62,28 +63,6 @@ describe('DocsLoadFile', function () {
                 task.getCriteria(page2, 'en').should.equal(true);
                 task.getCriteria(page3, 'en').should.equal(true);
                 task.getCriteria(page4, 'en').should.equal(true);
-            });
-        });
-
-        describe('_readFile', function () {
-            it('should return rejected promise on read file error', function (done) {
-                var page = { url: '/url1' },
-                    language = 'en';
-
-                task._readFile(page, language, './foo/bar/invalid').catch(function (error) {
-                    error.code.should.equal('ENOENT');
-                    done();
-                });
-            });
-
-            it('should return resolved promise on success file read', function (done) {
-                var page = { url: '/url1' },
-                    language = 'en';
-
-                task._readFile(page, language, './foo/bar/test-file.md').then(function (result) {
-                    result.should.equal('Hello World');
-                    done();
-                });
             });
         });
 

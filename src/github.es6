@@ -2,6 +2,7 @@
 
 import _ from 'lodash';
 import Api from 'github';
+import vowNode from 'vow-node';
 import Logger from 'bem-site-logger';
 
 /**
@@ -372,4 +373,107 @@ export default class Github extends Custom {
         return super.isBranchExists.apply(this._getApiByHost(options), arguments);
     }
     /* eslint-enable */
+
+    /**
+     * Loads content of file from github via github API
+     * @param {Object} options for api request. Fields:
+     *    - user {String} name of user or organization which this repository is belong to
+     *    - repo {String} name of repository
+     *    - ref {String} name of branch
+     *    - path {String} relative path from the root of repository
+     * @param {Object} headers - optional header params
+     * @returns {Promise}
+     */
+    getContentP(options, headers) {
+        return vowNode.invoke(this.getContent, options, headers)
+            .catch(error => {
+                this.logger
+                    .error(`GH: ${error.message}`)
+                    .error(`Error occur while loading content from:`)
+                    .error(`host: => ${options.host}`)
+                    .error(`user: => ${options.user}`)
+                    .error(`repo: => ${options.repo}`)
+                    .error(`ref:  => ${options.ref}`)
+                    .error(`path: => ${options.path}`);
+                throw error;
+            });
+    }
+
+    /**
+     * Returns date of last commit for given file path
+     * @param {Object} options for api request. Fields:
+     *    - user {String} name of user or organization which this repository is belong to
+     *    - repo {String} name of repository
+     *    - path {String} relative path from the root of repository
+     * @param {Object} headers - optional header params
+     * @returns {Promise}
+     */
+    getLastCommitDateP(options, headers) {
+        return vowNode.invoke(this.getCommits, options, headers)
+            .catch(error => {
+                this.logger
+                    .error('GH: %s', error.message)
+                    .error(`Error occur while get commits from:`)
+                    .error(`host: => ${options.host}`)
+                    .error(`user: => ${options.user}`)
+                    .error(`repo: => ${options.repo}`)
+                    .error(`ref:  => ${options.ref}`)
+                    .error(`path: => ${options.path}`);
+                throw error;
+            })
+            .then(result => {
+                if(!result || !result[0]) {
+                    throw new Error('Can not read commits');
+                }
+                return (new Date(result[0].commit.committer.date)).getTime();
+            });
+    }
+
+    /**
+     * Checks if given repository has issues section or not
+     * @param {Object} options for api request. Fields:
+     *    - user {String} name of user or organization which this repository is belong to
+     *    - repo {String} name of repository
+     * @param {Object} headers - optional header params
+     * @returns {Promise}
+     */
+    hasIssuesP(options, headers) {
+        return vowNode.invoke(this.hasIssues, options, headers)
+            .catch(error => {
+                this.logger
+                    .error(`GH: ${error.message}`)
+                    .error(`Error occur while get issues repo information:`)
+                    .error(`host: => ${options.host}`)
+                    .error(`user: => ${options.user}`)
+                    .error(`repo: => ${options.repo}`);
+                throw error;
+            });
+    }
+
+    /**
+     * Returns name of branch by path or repository default branch if given path is tag
+     * @param {Object} options for api request. Fields:
+     *    - user {String} name of user or organization which this repository is belong to
+     *    - repo {String} name of repository
+     *    - ref {String} name of branch
+     * @param {Object} headers - optional header params
+     * @returns {Promise}
+     */
+    getBranchOrDefaultP(options, headers) {
+        return vowNode.invoke(this.isBranchExists, options, headers)
+            .then(result => {
+                return result
+                    ? options.ref
+                    : vowNode.invoke(this.getDefaultBranch, options, headers);
+            })
+            .catch(error => {
+                this.logger
+                    .error(`GH: ${error.message}`)
+                    .error(`Error occur while get branch information:`)
+                    .error(`host: => ${options.host}`)
+                    .error(`user: => ${options.user}`)
+                    .error(`repo: => ${options.repo}`);
+                throw error;
+            });
+    }
 }

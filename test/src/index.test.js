@@ -43,62 +43,62 @@ describe('Builder', function () {
             builder = new Builder('debug');
         });
 
-        it('getConfig', function () {
+        it('getConfig should return instance of Config class', function () {
             builder.getConfig().should.be.ok;
             builder.getConfig().should.be.instanceOf(Config);
         });
 
-        it('getTasks', function () {
+        it('getTasks should return empty array of tasks', function () {
             builder.getTasks().should.be.instanceOf(Array);
             builder.getTasks().should.have.length(0);
         });
 
         describe('setLanguages', function () {
-            it('should return builder', function () {
+            it('should return instance of Builder class', function () {
                 builder.setLanguages(['en', 'ru']).should.be.instanceOf(Builder);
             });
 
-            it('should override languages configuration', function () {
+            it('should override default languages configuration', function () {
                 builder.setLanguages(['en', 'ru']);
                 should.deepEqual(builder.getConfig().getLanguages(), ['en', 'ru']);
             });
         });
 
         describe('setCacheFolder', function () {
-            it('should return builder', function () {
+            it('should return instance of Builder class', function () {
                 builder.setCacheFolder('./cache').should.be.instanceOf(Builder);
             });
 
-            it('should override cache folder', function () {
+            it('should override default path to cache folder', function () {
                 builder.setCacheFolder('./foo');
                 builder.getConfig().getCacheFolder().should.equal('./foo');
             });
         });
 
         describe('setDataFolder', function () {
-            it('should return builder', function () {
+            it('should return instance of Builder class', function () {
                 builder.setDataFolder('./foo').should.be.instanceOf(Builder);
             });
 
-            it('should override data folder', function () {
+            it('should override default path to data folder', function () {
                 builder.setDataFolder('./foo');
                 builder.getConfig().getDataFolder().should.equal('./foo');
             });
         });
 
         describe('setModelFilePath', function () {
-            it('should return builder', function () {
+            it('should return instance of Builder class', function () {
                 builder.setModelFilePath('./foo/bar.json').should.be.instanceOf(Builder);
             });
 
-            it('should override model file path', function () {
+            it('should override default model file path', function () {
                 builder.setModelFilePath('./foo/bar.json');
                 builder.getConfig().getModelFilePath().should.equal('./foo/bar.json');
             });
         });
 
         describe('addTask', function () {
-            it('should return builder', function () {
+            it('should return instance of Builder class', function () {
                 builder.addTask(Init, { path: './path1' }).should.be.instanceOf(Builder);
             });
 

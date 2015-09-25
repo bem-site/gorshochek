@@ -9,10 +9,6 @@ describe('DocsMdHtml', function () {
         DocsMdHtml.getName().should.equal('docs markdown to html');
     });
 
-    it('should return valid portion size', function () {
-        DocsMdHtml.getPortionSize().should.equal(20);
-    });
-
     describe('instance methods', function () {
         var config,
             task;

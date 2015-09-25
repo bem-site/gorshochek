@@ -1,0 +1,87 @@
+{
+  "bem-bl": {
+    "name": "bem-bl",
+    "versions": {
+      "dev": {
+        "sha": "3b7998cc3be75d7ef3235e5fce2f61c4637921bd",
+        "date": 1423135691152
+      }
+    }
+  },
+  "bem-core": {
+    "name": "bem-core",
+    "versions": {
+      "v2": {
+        "sha": "a25b147f254ee8e46c26031886f243221dc3d35f",
+        "date": 1432047899246
+      },
+      "v2.3.0": {
+        "sha": "4e221a88133340adb5cf253b07d4e41c7ee8b835",
+        "date": 1423135717580
+      },
+      "v2.5.0": {
+        "sha": "21b4dfe6cfdab924180934501b8d1e25ed010eb1",
+        "date": 1423135722842
+      },
+      "v2.5.1": {
+        "sha": "5828878c8464049b4a9e706915132ee2725a25c7",
+        "date": 1423135728311
+      },
+      "v2.6.0": {
+        "sha": "afd60bb028c58e4c766fd4b1bf9e5b45eddcb613",
+        "date": 1432044935916
+      }
+    }
+  },
+  "bem-history": {
+    "name": "bem-history",
+    "versions": {
+      "v3": {
+        "sha": "3f0db9f867d9f5463fc521264e6c12868ac7caa8",
+        "date": 1431969603751
+      },
+      "v3.0.0": {
+        "sha": "46397e199361d8046f1f212c20c50f9fd61560fe",
+        "date": 1431969398366
+      }
+    }
+  },
+  "bem-mvc": {
+    "name": "bem-mvc",
+    "versions": {
+      "v2": {
+        "sha": "068b738366f773a827b0c132a378a9a76ec2b25b",
+        "date": 1423135745510
+      }
+    }
+  },
+  "bem-components": {
+    "name": "bem-components",
+    "versions": {
+      "v2": {
+        "sha": "0fd242aa10d351405eda67ea3ae15074ad973bdb",
+        "date": 1431971065140
+      },
+      "v2.0.0": {
+        "sha": "81aac2c0861451853f2ed151b316936bd447fdfc",
+        "date": 1427281334209
+      },
+      "v2.1.0": {
+        "sha": "c16f81c2570b728017e4b804273f3ea5fa4db48b",
+        "date": 1429086074131
+      },
+      "v2.1.1": {
+        "sha": "cdf4ad05d60d339d3f5a51aa9dfef54f7a51147c",
+        "date": 1432031291514
+      },
+      "v2.2.0": {
+        "sha": "9ab7d02fec09c21d6659aaa19ef56a3892d4bc6f",
+        "date": 1433418648359
+      },
+      "v2.2.1": {
+        "sha": "01c73b78a8e60fef4b1b34ad0177c5a96fb4ae0a",
+        "date": 1433936764171
+      }
+    }
+  }
+}

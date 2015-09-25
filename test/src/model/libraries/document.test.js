@@ -2,7 +2,7 @@ var fs = require('fs'),
     path = require('path'),
     should = require('should'),
     fsExtra = require('fs-extra'),
-    Document = require('../../lib/model/libraries/document');
+    Document = require('../../../../lib/model/libraries/document');
 
 describe('document', function () {
     describe('constructor', function () {

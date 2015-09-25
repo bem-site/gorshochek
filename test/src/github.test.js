@@ -45,190 +45,317 @@ describe('Github', function () {
             nock.cleanAll();
         });
 
-        it('should get content of given file', function (done) {
-            var o = {
-                    host: 'https://github.com',
-                    user: 'bem-site',
-                    repo: 'test',
-                    ref: 'master',
-                    path: 'README.md'
-                };
+        describe('getContent', function () {
+            it('should get content of given file', function (done) {
+                nock('https://api.github.com', { reqheaders: getHeaders() })
+                    .get('/repos/bem-site/test/contents/README.md')
+                    .query({
+                        ref: 'master',
+                        'access_token': token
+                    })
+                    .reply(200,  {
+                        content: 'test content',
+                        name: 'README.md',
+                        type: 'file',
+                        html_url: 'https://github.com/bem-site/test/blob/master/README.md'
+                    });
 
-            nock('https://api.github.com', { reqheaders: getHeaders() })
-                .get('/repos/bem-site/test/contents/README.md')
-                .query({
-                    ref: 'master',
-                    'access_token': token
-                })
-                .reply(200,  {
-                    content: 'test content',
-                    name: 'README.md',
-                    type: 'file',
-                    html_url: 'https://github.com/bem-site/test/blob/master/README.md'
+                gh.getContent(_.extend({ref: 'master', path: 'README.md'}, getOptions()), null, function (error, result) {
+                    result.name.should.equal('README.md');
+                    result.type.should.equal('file');
+                    result['html_url' ].should.equal('https://github.com/bem-site/test/blob/master/README.md');
+                    done();
                 });
-
-            gh.getContent(o, null, function (error, result) {
-                result.name.should.equal('README.md');
-                result.type.should.equal('file');
-                result['html_url' ].should.equal('https://github.com/bem-site/test/blob/master/README.md');
-                done();
             });
         });
 
-        it('should get commits for given file', function (done) {
-            var o = {
-                    host: 'https://github.com',
-                    user: 'bem-site',
-                    repo: 'test',
-                    path: 'README.md'
-                },
-                expected = [
-                    {
-                        url: 'https://api.github.com/repos/octocat/Hello-World/commits/1',
-                        sha: 1
-                    },
-                    {
-                        url: 'https://api.github.com/repos/octocat/Hello-World/commits/2',
-                        sha: 2
-                    }
-                ];
+        describe('getCommits', function () {
+            it('should get commits for given file', function (done) {
+                nock('https://api.github.com', { reqheaders: getHeaders() })
+                    .get('/repos/bem-site/test/commits')
+                    .query({
+                        path: 'README.md',
+                        'access_token': token
+                    })
+                    .reply(200, [
+                        {
+                            url: 'https://api.github.com/repos/octocat/Hello-World/commits/1',
+                            sha: 1
+                        },
+                        {
+                            url: 'https://api.github.com/repos/octocat/Hello-World/commits/2',
+                            sha: 2
+                        }
+                    ]);
 
-            nock('https://api.github.com', { reqheaders: getHeaders() })
-                .get('/repos/bem-site/test/commits')
-                .query({
-                    path: 'README.md',
-                    'access_token': token
-                })
-                .reply(200, expected);
-
-            gh.getCommits(o, null, function (error, result) {
-                result.should.be.instanceof(Array).and.have.length(2);
-                should.deepEqual(result[0], expected[0]);
-                should.deepEqual(result[1], expected[1]);
-                done();
-            });
-        });
-
-        it('should get branch information for given branch name', function (done) {
-            var o = {
-                host: 'https://github.com',
-                user: 'bem-site',
-                repo: 'test',
-                branch: 'master'
-            };
-
-            nock('https://api.github.com', { reqheaders: getHeaders() })
-                .get('/repos/bem-site/test/branches/master')
-                .query({
-                    'access_token': token
-                })
-                .reply(200, {
-                    name: 'master',
-                    commit: {}
+                gh.getCommits(_.extend({path: 'README.md'}, getOptions()), null, function (error, result) {
+                    result.should.be.instanceof(Array).and.have.length(2);
+                    should.deepEqual(result[0], expected[0]);
+                    should.deepEqual(result[1], expected[1]);
+                    done();
                 });
-
-            gh.getBranch(o, null, function (error, result) {
-                result.name.should.equal('master');
-                result.commit.should.be.instanceof(Object);
-                done();
             });
         });
 
-        it('should get repository information', function (done) {
-            var o = {
-                host: 'https://github.com',
-                user: 'bem-site',
-                repo: 'test'
-            };
+        describe('getBranch', function () {
+            it('should get branch information for given branch name', function (done) {
+                nock('https://api.github.com', { reqheaders: getHeaders() })
+                    .get('/repos/bem-site/test/branches/master')
+                    .query({
+                        'access_token': token
+                    })
+                    .reply(200, {
+                        name: 'master',
+                        commit: {}
+                    });
 
-            nock('https://api.github.com', { reqheaders: getHeaders() })
-                .get('/repos/bem-site/test')
-                .query({
-                    'access_token': token
-                })
-                .reply(200, {
-                    url: 'https://api.github.com/repos/bem-site/test',
-                    name: 'test',
-                    'html_url': 'https://github.com/bem-site/test'
+                gh.getBranch(_.extend({branch: 'master'}, getOptions()), null, function (error, result) {
+                    result.name.should.equal('master');
+                    result.commit.should.be.instanceof(Object);
+                    done();
                 });
-
-            gh.getRepo(o, null, function (error, result) {
-                result.name.should.equal('test');
-                result.url.should.equal('https://api.github.com/repos/bem-site/test');
-                result['html_url'].should.equal('https://github.com/bem-site/test');
-                done();
             });
         });
 
-        it('should return default branch name', function (done) {
-            var o = {
-                host: 'https://github.com',
-                user: 'bem-site',
-                repo: 'test'
-            };
+        describe('getRepo', function () {
+            it('should get repository information', function (done) {
+                nock('https://api.github.com', { reqheaders: getHeaders() })
+                    .get('/repos/bem-site/test')
+                    .query({
+                        'access_token': token
+                    })
+                    .reply(200, {
+                        url: 'https://api.github.com/repos/bem-site/test',
+                        name: 'test',
+                        'html_url': 'https://github.com/bem-site/test'
+                    });
 
-            nock('https://api.github.com', { reqheaders: getHeaders() })
-                .get('/repos/bem-site/test')
-                .query({
-                    'access_token': token
-                })
-                .reply(200, {
-                    url: 'https://api.github.com/repos/bem-site/test',
-                    name: 'test',
-                    'html_url': 'https://github.com/bem-site/test',
-                    'default_branch': 'master'
+                gh.getRepo(getOptions(), null, function (error, result) {
+                    result.name.should.equal('test');
+                    result.url.should.equal('https://api.github.com/repos/bem-site/test');
+                    result['html_url'].should.equal('https://github.com/bem-site/test');
+                    done();
                 });
-
-            gh.getDefaultBranch(o, null, function (error, result) {
-                result.should.equal('master');
-                done();
             });
         });
 
-        it('should return true for existed branch', function (done) {
-            var o = {
-                host: 'https://github.com',
-                user: 'bem-site',
-                repo: 'test',
-                branch: 'master'
-            };
+        describe('getDefaultBranch', function () {
+            it('should return default branch name', function (done) {
+                nock('https://api.github.com', { reqheaders: getHeaders() })
+                    .get('/repos/bem-site/test')
+                    .query({
+                        'access_token': token
+                    })
+                    .reply(200, {
+                        url: 'https://api.github.com/repos/bem-site/test',
+                        name: 'test',
+                        'html_url': 'https://github.com/bem-site/test',
+                        'default_branch': 'master'
+                    });
 
-            nock('https://api.github.com', { reqheaders: getHeaders() })
-                .get('/repos/bem-site/test/branches/master')
-                .query({
-                    'access_token': token
-                })
-                .reply(200);
-
-            gh.isBranchExists(o, null, function (error, result) {
-                result.should.be.true;
-                done();
+                gh.getDefaultBranch(getOptions(), null, function (error, result) {
+                    result.should.equal('master');
+                    done();
+                });
             });
         });
 
-        it('should return false for non-existed branch', function (done) {
-            var o = {
-                host: 'https://github.com',
-                user: 'bem-site',
-                repo: 'test',
-                branch: 'invalid'
-            };
+        describe('hasIssues', function () {
+            it('should detect if repo has issues', function (done) {
+                nock('https://api.github.com', { reqheaders: getHeaders() })
+                    .get('/repos/bem-site/test')
+                    .query({
+                        'access_token': token
+                    })
+                    .reply(200, {
+                        url: 'https://api.github.com/repos/bem-site/test',
+                        name: 'test',
+                        'html_url': 'https://github.com/bem-site/test',
+                        'has_issues': true
+                    });
 
-            nock('https://api.github.com', { reqheaders: getHeaders() })
-                .get('/repos/bem-site/test/branches/invalid')
-                .query({
-                    'access_token': token
-                })
-                .times(6)
-                .reply(404);
-
-            gh.isBranchExists(o, null, function (error, result) {
-                result.should.be.false;
-                done();
+                gh.hasIssues(getOptions(), null, function (error, result) {
+                    result.should.equal(true);
+                    done();
+                });
             });
+        });
+
+        describe('isBranchExists', function () {
+            it('should return true for existed branch', function (done) {
+                nock('https://api.github.com', { reqheaders: getHeaders() })
+                    .get('/repos/bem-site/test/branches/master')
+                    .query({
+                        'access_token': token
+                    })
+                    .reply(200);
+
+                gh.isBranchExists(_.extend({branch: 'master'}, getOptions()), null, function (error, result) {
+                    result.should.be.true;
+                    done();
+                });
+            });
+
+            it('should return false for non-existed branch', function (done) {
+                nock('https://api.github.com', { reqheaders: getHeaders() })
+                    .get('/repos/bem-site/test/branches/invalid')
+                    .query({
+                        'access_token': token
+                    })
+                    .times(6)
+                    .reply(404);
+
+                gh.isBranchExists(_.extend({branch: 'invalid'}, getOptions()), null, function (error, result) {
+                    result.should.be.false;
+                    done();
+                });
+            });
+        });
+
+        describe('getContentP', function () {
+            it('return resolved promise with content and meta info', function () {
+                nock('https://api.github.com', { reqheaders: getHeaders() })
+                    .get('/repos/bem-site/test/contents/README.md')
+                    .query({
+                        ref: 'master',
+                        'access_token': token
+                    })
+                    .reply(200,  {
+                        content: 'test content',
+                        name: 'README.md',
+                        type: 'file',
+                        html_url: 'https://github.com/bem-site/test/blob/master/README.md'
+                    });
+
+                return gh.getContentP(_.extend({ref: 'master', path: 'README.md'}, getOptions()), null)
+                    .then(function (error, result) {
+                        result.name.should.equal('README.md');
+                        result.type.should.equal('file');
+                        result['html_url' ].should.equal('https://github.com/bem-site/test/blob/master/README.md');
+                    });
+            });
+
+            it('return rejected promise with error in case of missed file', function () {
+                nock('https://api.github.com', { reqheaders: getHeaders() })
+                    .get('/repos/bem-site/test/contents/README.md')
+                    .query({
+                        ref: 'master',
+                        'access_token': token
+                    })
+                    .replyWithError({'message': 'file not found', 'code': 'NOT-FOUND'});
+
+                return gh.getContentP(_.extend({ref: 'master', path: 'README.md'}, getOptions()), null)
+                    .catch(function (error) {
+                        error.message.should.be.equal('file not found');
+                    });
+            });
+        });
+
+        describe('getLastCommitDateP', function () {
+            it('should return resolved promise with date of last commit', function (done) {
+                nock('https://api.github.com', { reqheaders: getHeaders() })
+                    .get('/repos/bem-site/test/commits')
+                    .query({
+                        path: 'README.md',
+                        'access_token': token
+                    })
+                    .reply(200, [
+                        {
+                            url: 'https://api.github.com/repos/octocat/Hello-World/commits/1',
+                            sha: 1,
+                            committer: {
+                                name: 'Monalisa Octocat',
+                                email: 'support@github.com',
+                                date: '2011-04-14T16:00:49Z'
+                            }
+                        }
+                    ]);
+
+                gh.getLastCommitDateP(_.extend({path: 'README.md'}, getOptions()), null)
+                    .then(function (result) {
+                        result.should.be.equal((new Date('2011-04-14T16:00:49Z')).getTime())
+                    });
+            });
+
+            it('should return rejected promise in case of missed file', function () {
+                nock('https://api.github.com', { reqheaders: getHeaders() })
+                    .get('/repos/bem-site/test/commits')
+                    .query({
+                        path: 'README.md',
+                        'access_token': token
+                    })
+                    .replyWithError({'message': 'file not found', 'code': 'NOT-FOUND'});
+
+                gh.getLastCommitDateP(_.extend({path: 'README.md'}, getOptions()), null)
+                    .catch(function (error) {
+                        error.message.should.be.equal('file not found');
+                    });
+            });
+
+            it('should return rejected promise in case of empty commits array', function () {
+                nock('https://api.github.com', { reqheaders: getHeaders() })
+                    .get('/repos/bem-site/test/commits')
+                    .query({
+                        path: 'README.md',
+                        'access_token': token
+                    })
+                    .reply(200, []);
+
+                gh.getLastCommitDateP(_.extend({path: 'README.md'}, getOptions()), null)
+                    .catch(function (error) {
+                        error.message.should.be.equal('Can not read commits');
+                    });
+            });
+        });
+
+        describe('hasIssuesP', function () {
+            it('should return resolved promise with true value if repo has issues', function () {
+                nock('https://api.github.com', { reqheaders: getHeaders() })
+                    .get('/repos/bem-site/test')
+                    .query({
+                        'access_token': token
+                    })
+                    .reply(200, {
+                        url: 'https://api.github.com/repos/bem-site/test',
+                        name: 'test',
+                        'html_url': 'https://github.com/bem-site/test',
+                        'has_issues': true
+                    });
+
+                return gh.hasIssuesP(getOptions(), null)
+                    .then(function (result) {
+                        result.should.be.equal(true);
+                    });
+            });
+
+            it('should return rejected promise in case of missed file', function () {
+                nock('https://api.github.com', { reqheaders: getHeaders() })
+                    .get('/repos/bem-site/test')
+                    .query({
+                        'access_token': token
+                    })
+                    .replyWithError({'message': 'file not found', 'code': 'NOT-FOUND'});
+
+                return gh.hasIssuesP(getOptions(), null)
+                    .catch(function (error) {
+                        error.message.should.be.equal('file not found');
+                    });
+            });
+        });
+
+        describe('getBranchOrDefaultP', function () {
+
         });
     });
 });
+
+function getOptions() {
+    return {
+        host: 'https://github.com',
+        user: 'bem-site',
+        repo: 'test'
+    };
+}
 
 function getHeaders() {
     return {
