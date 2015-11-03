@@ -1,238 +1,209 @@
-var should = require('should'),
+var _ = require('lodash'),
+    should = require('should'),
+    sinon = require('sinon'),
     Changes = require('../../../lib/model/changes'),
     Model = require('../../../lib/model/model');
 
-describe('Model', function () {
-    it('initialization', function () {
-        var model = new Model();
+describe('Model', function() {
+    var sandbox = sinon.sandbox.create(),
+        model;
+
+    beforeEach(function() {
+        model = new Model();
+    });
+
+    afterEach(function() {
+        sandbox.restore();
+    });
+
+    it('should have empty array of pages after initialization', function() {
         model.getPages().should.be.instanceOf(Array).and.have.length(0);
+    });
+
+    it('should have model of changes', function() {
         model.getChanges().should.be.instanceOf(Changes);
     });
 
-    describe('instance methods', function () {
-        var model,
-            testObj = { foo: 'bar' };
-
-        beforeEach(function () {
-            model = new Model();
+    describe('newModel property', function() {
+        it('should have getter', function() {
+            model.getNewModel.should.be.instanceOf(Function);
         });
 
-        it('it should have getter of new model', function () {
-            model._newModel = testObj;
-            should.deepEqual(model.getNewModel(), testObj);
+        it('should have setter', function() {
+            model.setNewModel.should.be.instanceOf(Function);
         });
 
-        it('it should have setter of new model', function () {
-            model.setNewModel(testObj);
-            should.deepEqual(model.getNewModel(), testObj);
+        it('should can set and get newModel', function() {
+            should(model.getNewModel()).not.be.ok;
+            model.setNewModel({foo: 'bar'});
+            model.getNewModel().should.be.eql({foo: 'bar'});
+        });
+    });
+
+    describe('oldModel property', function() {
+        it('should have getter', function() {
+            model.getOldModel.should.be.instanceOf(Function);
         });
 
-        it('should have getter of old model', function () {
-            model._oldModel = testObj;
-            should.deepEqual(model.getOldModel(), testObj);
+        it('should have setter', function() {
+            model.setOldModel.should.be.instanceOf(Function);
         });
 
-        it('should have setter of old model', function () {
-            model.setOldModel(testObj);
-            should.deepEqual(model.getOldModel(), testObj);
+        it('should can set and get oldModel', function() {
+            should(model.getOldModel()).not.be.ok;
+            model.setOldModel({foo: 'bar'});
+            model.getOldModel().should.be.eql({foo: 'bar'});
+        });
+    });
+
+    describe('pages property', function() {
+        it('should have getter', function() {
+            model.getPages.should.be.instanceOf(Function);
         });
 
-        it('getChanges should return instance of Changes class', function () {
-            model.getChanges().should.be.instanceOf(Changes);
+        it('should have setter', function() {
+            model.setPages.should.be.instanceOf(Function);
         });
 
-        it ('getPages should return empty array of pages', function () {
-            model.getPages().should.be.instanceOf(Array).and.have.length(0);
+        it('should can set and get pages', function() {
+            model.getPages().should.have.length(0);
+            model.setPages([{url: '/url1'}]);
+            model.getPages().should.be.eql([{url: '/url1'}]);
+        });
+    });
+
+    describe('merge models', function() {
+        describe('merge empty models', function() {
+            beforeEach(function() {
+                model.setOldModel([]);
+                model.setNewModel([]);
+                model.merge();
+            });
+
+            it('should not find any changes for empty models', function() {
+                model.getChanges().pages.added.should.be.empty;
+                model.getChanges().pages.modified.should.be.empty;
+                model.getChanges().pages.removed.should.be.empty;
+            });
+
+            it('should have empty result model', function() {
+                model.getPages().should.be.empty;
+            });
         });
 
-        it ('setPages should set pages model', function () {
-            model.setPages([1, 2]).should.be.instanceOf(Model);
-            model.getPages().should.be.instanceOf(Array).and.have.length(2);
+        describe('merge newModel with empty oldModel', function() {
+            beforeEach(function() {
+                model.setOldModel([]);
+                model.setNewModel([{url: '/url1'}]);
+            });
+
+            it('should have valid result model', function() {
+                model.merge();
+                model.getPages().should.be.eql([{url: '/url1'}])
+            });
+
+            it('should have valid added changes model', function() {
+                model.merge();
+                model.getChanges().pages.added.should.eql([{type: 'page', url: '/url1'}])
+            });
+
+            it('should have empty modified changes model', function() {
+                model.merge();
+                model.getChanges().pages.modified.should.be.empty;
+            });
+
+            it('should have empty removed changes model', function() {
+                model.merge();
+                model.getChanges().pages.removed.should.be.empty;
+            });
         });
 
-        describe('merge', function () {
-            beforeEach(function () {
+        describe('merge no-empty models', function() {
+            beforeEach(function() {
                 var oldModel = [
-                        { url: '/url1', a: 'a1', b: 1, c: { c1: 'c11', c2: 'c21' } },
-                        { url: '/url2', a: 'a2', b: 2, c: { c1: 'c12', c2: 'c22' } },
-                        { url: '/url3', a: 'a3', b: 3, c: { c1: 'c13', c2: 'c23' } },
-                        { url: '/url4', a: 'a4', b: 4, c: { c1: 'c14', c2: 'c24' } },
-                        { url: '/url5', a: 'a5', b: 5, c: { c1: 'c15', c2: 'c25' } }
+                        {url: '/url1', a: 'a1', b: 1, c: {c1: 'c11', c2: 'c21'}},
+                        {url: '/url2', a: 'a2', b: 2, c: {c1: 'c12', c2: 'c22'}},
+                        {url: '/url3', a: 'a3', b: 3, c: {c1: 'c13', c2: 'c23'}}
                     ],
                     newModel = [
-                        { url: '/url1', a: 'a1', b: 1, c: { c1: 'c11', c2: 'c21' } },
-                        { url: '/url4', a: 'b4', b: 4, c: { c1: 'c14', c2: 'd24' } },
-                        { url: '/url5', a: 'b5', b: 5, c: { c1: 'c15', c2: 'd25' } },
-                        { url: '/url6', a: 'a6', b: 6, c: { c1: 'c16', c2: 'c26' } },
-                        { url: '/url7', a: 'a7', b: 7, c: { c1: 'c17', c2: 'c27' } }
+                        {url: '/url1', a: 'a1', b: 1, c: {c1: 'c11', c2: 'c21'}},
+                        {url: '/url3', a: 'b3', b: 3, c: {c1: 'c13', c2: 'd23'}},
+                        {url: '/url4', a: 'b4', b: 4, c: {c1: 'c14', c2: 'd24'}}
                     ];
                 model.setOldModel(oldModel);
                 model.setNewModel(newModel);
             });
 
-            it('should have valid number of pages after merge', function () {
+            it('should have valid number of pages after merge', function() {
                 model.merge();
-                model.getPages().should.be.instanceOf(Array).and.have.length(5);
+                model.getPages().should.be.instanceOf(Array).and.have.length(3);
             });
 
-            it ('should have valid added changes after merge', function () {
+            it ('should have valid added changes after merge', function() {
                 model.merge();
-                should.deepEqual(model.getChanges().pages.added, [
-                    { type: 'page', url: '/url6' },
-                    { type: 'page', url: '/url7' }
-                ]);
+                model.getChanges().pages.added.should.eql([{type: 'page', url: '/url4'}]);
             });
 
-            it ('should have valid modified changes after merge', function () {
+            it ('should have valid modified changes after merge', function() {
                 model.merge();
-                should.deepEqual(model.getChanges().pages.modified, [
-                    { type: 'page', url: '/url4' },
-                    { type: 'page', url: '/url5' }
-                ]);
+                model.getChanges().pages.modified.should.eql([{type: 'page', url: '/url3'}]);
             });
 
-            it ('should have valid removed changes after merge', function () {
+            it ('should have valid removed changes after merge', function() {
                 model.merge();
-                should.deepEqual(model.getChanges().pages.removed, [
-                    { type: 'page', url: '/url2' },
-                    { type: 'page', url: '/url3' }
-                ]);
+                model.getChanges().pages.removed.should.eql([{type: 'page', url: '/url2'}]);
             });
         });
+    });
 
-        describe('normalize', function () {
-            var languages = ['en', 'ru'];
+    describe('normalize', function() {
+        var languages = ['en', 'ru'],
+            commonPageProperties = {url: '/url1', en: {}, ru: {}};
 
-            describe('oldUrls', function () {
-                it('should set given oldUrls', function () {
-                    var page = {
-                        url: '/url1',
-                        oldUrls: ['/url11', '/url22'],
-                        en: {},
-                        ru: {}
-                    };
-                    model.setPages([page]);
-                    model.normalize(languages);
+        function prepareModelPages(pageProperty) {
+            model.setPages([_.merge(pageProperty, commonPageProperties)]);
+        }
 
-                    should.deepEqual(model.getPages()[0].oldUrls, page.oldUrls);
-                });
-
-                it('should set default oldUrls as empty array', function () {
-                    var page = {
-                        url: '/url1',
-                        en: {},
-                        ru: {}
-                    };
-                    model.setPages([page]);
-                    model.normalize(languages);
-
-                    should.deepEqual(model.getPages()[0].oldUrls, []);
-                });
-            });
-
-            describe('view', function () {
-                it('should set given view', function () {
-                    var page = {
-                        url: '/url1',
-                        oldUrls: ['/url11', '/url22'],
-                        view: 'index',
-                        en: {},
-                        ru: {}
-                    };
-                    model.setPages([page]);
-                    model.normalize(languages);
-
-                    model.getPages()[0].view.should.equal(page.view);
-                });
-
-                it('should set default view as "post"', function () {
-                    var page = {
-                        url: '/url1',
-                        oldUrls: ['/url11', '/url22'],
-                        en: {},
-                        ru: {}
-                    };
-                    model.setPages([page]);
-                    model.normalize(languages);
-
-                    model.getPages()[0].view.should.equal('post');
-                });
-            });
-
-            describe('published', function () {
-                it('should set given and default values of published field', function () {
-                    var page = {
-                        url: '/url1',
-                        oldUrls: ['/url11', '/url22'],
-                        view: 'index',
-                        en: {},
-                        ru: {
-                            published: true,
-                            title: 'Hello World'
-                        }
-                    };
-
-                    model.setPages([page]);
-                    model.normalize(languages);
-
-                    model.getPages()[0].en.published.should.equal(false);
-                    model.getPages()[0].ru.published.should.equal(true);
-                });
-            });
-
-            describe('missed title', function () {
-                it('should set published false when title as missed', function () {
-                    var page = {
-                        url: '/url1',
-                        oldUrls: ['/url11', '/url22'],
-                        view: 'index',
-                        en: {
-                            published: true
-                        },
-                        ru: {
-                            published: true,
-                            title: 'Hello World'
-                        }
-                    };
-
-                    model.setPages([page]);
-                    model.normalize(languages);
-
-                    model.getPages()[0].en.published.should.equal(false);
-                    model.getPages()[0].ru.published.should.equal(true);
-                });
-            });
+        it('should set given "oldUrls" property value as is if it was set', function() {
+            prepareModelPages({oldUrls: ['/url11', '/url22']});
+            model.normalize(languages);
+            model.getPages().shift().oldUrls.should.eql(['/url11', '/url22']);
         });
 
-        /*
-        describe('getPagesByCriteria', function () {
-            it('should return valid set of filtered pages', function () {
-                var pages = [
-                        { url: '/url1' },
-                        { url: '/url2', en: {} },
-                        {
-                            url: '/url3',
-                            ru: {
-                                sourceUrl: 'https://github.com/bem/bem-method/' +
-                                'tree/bem-info-data/method/index/index.en.md'
-                            },
-                            en: { sourceUrl: '/foo/bar' }
-                        },
-                        {
-                            url: '/url4',
-                            en: {
-                                sourceUrl: 'https://github.com/bem/bem-method/' +
-                                'tree/bem-info-data/method/index/index.en.md'
-                            },
-                            ru: {}
-                        }
-                    ],
-                    result = task.getPagesByCriteria(pages, ['en', 'ru']);
-
-                result.should.be.instanceOf(Array).and.have.length(2);
-                should.deepEqual(result, [pages[2], pages[3]]);
-            });
+        it('should set default "oldUrls" property value as empty array', function() {
+            prepareModelPages({});
+            model.normalize(languages);
+            model.getPages().shift().oldUrls.should.eql([]);
         });
-        */
+
+        it('should set given "view" property value as is if it was given', function() {
+            prepareModelPages({view: 'index'});
+            model.normalize(languages);
+            model.getPages().shift().view.should.equal('index');
+        });
+
+        it('should set default "view" property value as "post"', function() {
+            prepareModelPages({});
+            model.normalize(languages);
+            model.getPages().shift().view.should.equal('post');
+        });
+
+        it('should set given "published" property value as is', function() {
+            prepareModelPages({ru: {published: true, title: 'Hello World'}});
+            model.normalize(languages);
+            model.getPages().shift().ru.published.should.equal(true);
+        });
+
+        it('should set default "published" property value as false', function() {
+            prepareModelPages({});
+            model.normalize(languages);
+            model.getPages().shift().ru.published.should.equal(false);
+        });
+
+        it('should set published false when title as missed', function() {
+            prepareModelPages({en: {published: true}});
+            model.normalize(languages);
+            model.getPages().shift().en.published.should.equal(false);
+        });
     });
 });

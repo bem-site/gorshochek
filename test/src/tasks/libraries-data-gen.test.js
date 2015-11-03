@@ -4,21 +4,21 @@ var path = require('path'),
     Model = require('../../../lib/model/model'),
     LibrariesDataGen = require('../../../lib/tasks/libraries-data-gen');
 
-describe('LibrariesDataGen', function () {
-    it('should return valid task name', function () {
+describe('LibrariesDataGen', function() {
+    it('should return valid task name', function() {
         LibrariesDataGen.getName().should.equal('generate libraries files');
     });
 
-    describe('instance methods', function () {
+    describe('instance methods', function() {
         var config, task;
 
-        beforeEach(function () {
+        beforeEach(function() {
             config = new Config('debug');
             task = new LibrariesDataGen(config, { baseUrl: '/libraries' });
         });
 
-        describe('_findLibraryChanges', function () {
-            it('should filter changes model and return only library changes (added)', function () {
+        describe('_findLibraryChanges', function() {
+            it('should filter changes model and return only library changes (added)', function() {
                 var model = new Model();
                 model.getChanges().pages.addAdded({ url: '/url1', title: '/title1' });
                 model.getChanges().pages.addAdded({ lib: 'lib1', version: 'version1' });
@@ -31,7 +31,7 @@ describe('LibrariesDataGen', function () {
                 ]);
             });
 
-            it('should filter changes model and return only library changes (modified)', function () {
+            it('should filter changes model and return only library changes (modified)', function() {
                 var model = new Model();
                 model.getChanges().pages.addModified({ url: '/url1', title: '/title1' });
                 model.getChanges().pages.addModified({ lib: 'lib1', version: 'version1' });
@@ -45,10 +45,10 @@ describe('LibrariesDataGen', function () {
             });
         });
 
-        describe('_spreadByProcesses', function () {
+        describe('_spreadByProcesses', function() {
             var libVersions;
 
-            beforeEach(function () {
+            beforeEach(function() {
                 libVersions = [
                     { lib: 'lib1', version: 'version1' },
                     { lib: 'lib1', version: 'version2' },
@@ -60,7 +60,7 @@ describe('LibrariesDataGen', function () {
                 ];
             });
 
-            it('should spread items (numOfProcesses = 2)', function () {
+            it('should spread items (numOfProcesses = 2)', function() {
                 var numOfProcesses = 2;
                 should.deepEqual(task._spreadByProcesses(libVersions, numOfProcesses), [
                     [
@@ -77,7 +77,7 @@ describe('LibrariesDataGen', function () {
                 ]);
             });
 
-            it('should spread items (numOfProcesses = 3)', function () {
+            it('should spread items (numOfProcesses = 3)', function() {
                 var numOfProcesses = 3;
                 should.deepEqual(task._spreadByProcesses(libVersions, numOfProcesses), [
                     [

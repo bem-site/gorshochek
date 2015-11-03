@@ -3,8 +3,8 @@ var fs = require('fs'),
     mockFs = require('mock-fs'),
     Meta = require('../../../lib/model/meta');
 
-describe('Meta', function () {
-    before(function () {
+describe('Meta', function() {
+    before(function() {
         var metaData = fs.readFileSync('./test/stub/meta.json', { encoding: 'utf-8' });
         mockFs({
             cache: {
@@ -14,22 +14,22 @@ describe('Meta', function () {
         })
     });
 
-    after(function () {
+    after(function() {
         mockFs.restore();
     });
 
-    it('should return valid name of file', function () {
+    it('should return valid name of file', function() {
         Meta.getFileName().should.equal('meta.json');
     });
 
-    it('static initialization', function () {
+    it('static initialization', function() {
         var meta = Meta.init('./cache/meta.json');
         meta._authors.should.be.instanceOf(Object);
         meta._translators.should.be.instanceOf(Object);
         meta._tags.should.be.instanceOf(Object);
     });
 
-    it('static save', function () {
+    it('static save', function() {
         var file = './cache/meta.json',
             authors = { en: [], ru: [] },
             translators = { en: [], ru: [] },
@@ -42,10 +42,10 @@ describe('Meta', function () {
         should.deepEqual(Meta.init(file)._tags, { en: [], ru: [] });
     });
 
-    describe('instance methods', function () {
+    describe('instance methods', function() {
         var meta;
 
-        before(function () {
+        before(function() {
             meta = new Meta({
                 authors: {},
                 translators: {},
@@ -53,15 +53,15 @@ describe('Meta', function () {
             });
         });
 
-        it('getAuthors', function () {
+        it('getAuthors', function() {
             should.deepEqual(meta.getAuthors(), meta._authors);
         });
 
-        it('getTranslators', function () {
+        it('getTranslators', function() {
             should.deepEqual(meta.getTranslators(), meta._translators);
         });
 
-        it('getTags', function () {
+        it('getTags', function() {
             should.deepEqual(meta.getTags(), meta._tags);
         });
     });

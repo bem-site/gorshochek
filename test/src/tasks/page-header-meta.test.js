@@ -3,29 +3,29 @@ var should = require('should'),
     Model = require('../../../lib/model/model'),
     PageHeaderMeta = require('../../../lib/tasks/page-header-meta');
 
-describe('PageHeaderMeta', function () {
-    it('should return valid task name', function () {
+describe('PageHeaderMeta', function() {
+    it('should return valid task name', function() {
         PageHeaderMeta.getName().should.equal('create page header meta-information');
     });
 
-    describe('instance methods', function () {
+    describe('instance methods', function() {
         var config,
             task;
 
-        before(function () {
+        before(function() {
             config = new Config('debug');
             config.setLanguages(['en', 'ru']);
             task = new PageHeaderMeta(config, {});
         });
 
-        describe('_addMetaToPage', function () {
-            it('should skip if language version of page does not exists', function () {
+        describe('_addMetaToPage', function() {
+            it('should skip if language version of page does not exists', function() {
                 var page = { url: '/url1' };
                 task._addMetaToPage(page, 'en');
                 should(page.header).equal(undefined);
             });
 
-            it('should add header meta-information', function () {
+            it('should add header meta-information', function() {
                 var page = {
                     url: '/url1',
                     en: {
@@ -44,7 +44,7 @@ describe('PageHeaderMeta', function () {
                 });
             });
 
-            it('should add header meta-information (with tags)', function () {
+            it('should add header meta-information (with tags)', function() {
                 var page = {
                     url: '/url1',
                     en: {
@@ -65,8 +65,8 @@ describe('PageHeaderMeta', function () {
             });
         });
 
-        describe('run', function () {
-           it('should add header.meta to pages', function (done) {
+        describe('run', function() {
+           it('should add header.meta to pages', function(done) {
                var pages = [
                        {
                            url: '/',
@@ -81,7 +81,7 @@ describe('PageHeaderMeta', function () {
                    model = new Model();
                model.setPages(pages);
 
-               task.run(model).then(function (m) {
+               task.run(model).then(function(m) {
                    should.deepEqual(m.getPages()[0]['en'].header.meta, {
                        ogUrl: '/',
                        ogType: 'article',

@@ -3,23 +3,23 @@ var should = require('should'),
     Model = require('../../../lib/model/model'),
     PageBreadcrumbs = require('../../../lib/tasks/page-breadcrumbs');
 
-describe('PageBreadcrumbs', function () {
-    it('should return valid task name', function () {
+describe('PageBreadcrumbs', function() {
+    it('should return valid task name', function() {
         PageBreadcrumbs.getName().should.equal('create page breadcrumbs');
     });
 
-    describe('instance methods', function () {
+    describe('instance methods', function() {
         var config,
             task;
 
-        before(function () {
+        before(function() {
             config = new Config('debug');
             config.setLanguages(['en', 'ru']);
             task = new PageBreadcrumbs(config, {});
         });
 
-        describe('run', function () {
-            it('should add breadcrumbs to pages', function (done) {
+        describe('run', function() {
+            it('should add breadcrumbs to pages', function(done) {
                 var pages = [
                         {
                             url: '/',
@@ -37,7 +37,7 @@ describe('PageBreadcrumbs', function () {
                     ],
                     model = new Model();
                 model.setPages(pages);
-                task.run(model).then(function (m) {
+                task.run(model).then(function(m) {
                     should.deepEqual(m.getPages()[0]['en'].breadcrumbs, [
                         { url: '/', title: 'index en title' }
                     ]);

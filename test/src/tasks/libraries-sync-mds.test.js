@@ -9,36 +9,36 @@ var fs = require('fs'),
     Model = require('../../../lib/model/model'),
     LibrariesSynMDS = require('../../../lib/tasks/libraries-sync-mds');
 
-describe('LibrariesSynMDS', function () {
-    it('should return valid task name', function () {
+describe('LibrariesSynMDS', function() {
+    it('should return valid task name', function() {
         LibrariesSynMDS.getName().should.equal('synchronize libraries data with remote mds storage');
     });
 
-    describe('constructor', function () {
+    describe('constructor', function() {
         var config;
 
-        beforeEach(function () {
+        beforeEach(function() {
             config = new Config('debug');
         });
 
-        it('should throw error if mds options were not set', function () {
-            (function () {
+        it('should throw error if mds options were not set', function() {
+            (function() {
                 return new LibrariesSynMDS(config, {})
             }).should.throw('MDS options were not set in task configuration');
         });
 
-        it('should throw error if mds namespace option was not set', function () {
-            (function () {
+        it('should throw error if mds namespace option was not set', function() {
+            (function() {
                 return new LibrariesSynMDS(config, { mds: {} })
             }).should.throw('MDS "namespace" property was not set in task configuration');
         });
 
-        it('should set default mds host parameter if it was not set in configuration', function () {
+        it('should set default mds host parameter if it was not set in configuration', function() {
             var task = new LibrariesSynMDS(config, { mds: { namespace: 'mysite' } });
             task.getTaskConfig().mds.host.should.equal('127.0.0.1');
         });
 
-        it('should set default mds port parameter if it was not set in configuration', function () {
+        it('should set default mds port parameter if it was not set in configuration', function() {
             var task = new LibrariesSynMDS(config, {
                 mds: {
                     namespace: 'mysite',
@@ -48,7 +48,7 @@ describe('LibrariesSynMDS', function () {
             task.getTaskConfig().mds.port.should.equal(80);
         });
 
-        it('should set valid mds configuration after task initialization', function () {
+        it('should set valid mds configuration after task initialization', function() {
             var mdsOptions = {
                     namespace: 'mysite',
                     host: 'storage.mds.net',
@@ -60,10 +60,10 @@ describe('LibrariesSynMDS', function () {
         });
     });
 
-    describe('instance methods', function () {
+    describe('instance methods', function() {
         var config, task, testAPI;
 
-        beforeEach(function () {
+        beforeEach(function() {
             config = new Config('debug');
             task = new LibrariesSynMDS(config, {
                 mds: {
@@ -89,41 +89,41 @@ describe('LibrariesSynMDS', function () {
             fsExtra.mkdirsSync(task.getBaseConfig().getCacheFolder());
         });
 
-        afterEach(function () {
+        afterEach(function() {
             fsExtra.removeSync(task.getBaseConfig().getCacheFolder());
         });
 
-        describe('_getRegistryFromMDS', function () {
-            before(function (done) {
+        describe('_getRegistryFromMDS', function() {
+            before(function(done) {
                 emulator.start(3000, 3001);
                 setTimeout(done, 300);
             });
 
-            it('should return empty object if registry was not loaded from MDS', function () {
-                return task._getRegistryFromMDS().then(function (result) {
+            it('should return empty object if registry was not loaded from MDS', function() {
+                return task._getRegistryFromMDS().then(function(result) {
                     should.deepEqual(result, {});
                 });
             });
 
-            it('should return registry file from mds', function () {
+            it('should return registry file from mds', function() {
                 var registryFilePath = path.join(process.cwd(), './test/stub/registry.json'),
                     registry = fsExtra.readJSONSync(registryFilePath);
 
-                return testAPI.writeP('root', JSON.stringify(registry)).then(function () {
-                    return task._getRegistryFromMDS().then(function (result) {
+                return testAPI.writeP('root', JSON.stringify(registry)).then(function() {
+                    return task._getRegistryFromMDS().then(function(result) {
                         should.deepEqual(result, registry);
                     });
                 })
             });
 
-            after(function (done) {
+            after(function(done) {
                 emulator.stop();
                 setTimeout(done, 300);
             });
         });
 
-        describe('_createComparatorMap', function () {
-            it('should create comparator map', function () {
+        describe('_createComparatorMap', function() {
+            it('should create comparator map', function() {
                 var registryFilePath = path.join(process.cwd(), './test/stub/registry.json'),
                     registry = fsExtra.readJSONSync(registryFilePath),
                     comparatorMap = task._createComparatorMap(registry);
@@ -142,17 +142,17 @@ describe('LibrariesSynMDS', function () {
             });
         });
 
-        describe('_compareRegistryFiles', function () {
+        describe('_compareRegistryFiles', function() {
             var model,
                 remote;
 
-            beforeEach(function () {
+            beforeEach(function() {
                 var registryFilePath = path.join(process.cwd(), './test/stub/registry.json');
                 remote = fsExtra.readJSONSync(registryFilePath);
                 model = new Model();
             });
 
-            it('should return valid result structure', function () {
+            it('should return valid result structure', function() {
                 var local = JSON.parse(JSON.stringify(remote)),
                     result = task._compareRegistryFiles(model, local, remote);
 
@@ -167,7 +167,7 @@ describe('LibrariesSynMDS', function () {
                 result.removed.should.be.instanceOf(Array);
             });
 
-            it('nothing changed. registry files are equal', function () {
+            it('nothing changed. registry files are equal', function() {
                 var local = JSON.parse(JSON.stringify(remote)),
                     result = task._compareRegistryFiles(model, local, remote);
 
@@ -180,7 +180,7 @@ describe('LibrariesSynMDS', function () {
                 model.getChanges().pages.removed.should.have.length(0);
             });
 
-            it('library was added', function () {
+            it('library was added', function() {
                 var local = JSON.parse(JSON.stringify(remote));
                 delete  local['bem-bl'];
 
@@ -195,7 +195,7 @@ describe('LibrariesSynMDS', function () {
                 should.deepEqual(model.getChanges().pages.added, [{ lib: 'bem-bl', version: 'dev' }]);
             });
 
-            it('library version was added', function () {
+            it('library version was added', function() {
                 var local = JSON.parse(JSON.stringify(remote));
                 delete  local['bem-core' ].versions['v2'];
 
@@ -210,7 +210,7 @@ describe('LibrariesSynMDS', function () {
                 should.deepEqual(model.getChanges().pages.added, [{ lib: 'bem-core', version: 'v2' }]);
             });
 
-            it('library versions were added (several versions for one library)', function () {
+            it('library versions were added (several versions for one library)', function() {
                 var local = JSON.parse(JSON.stringify(remote));
                 delete  local['bem-core' ].versions['v2'];
                 delete  local['bem-core' ].versions['v2.5.1'];
@@ -235,7 +235,7 @@ describe('LibrariesSynMDS', function () {
                 ]);
             });
 
-            it('libraries versions were added (for different libraries)', function () {
+            it('libraries versions were added (for different libraries)', function() {
                 var local = JSON.parse(JSON.stringify(remote));
                 delete  local['bem-core' ].versions['v2'];
                 delete  local['bem-components' ].versions['v2'];
@@ -257,7 +257,7 @@ describe('LibrariesSynMDS', function () {
                 ]);
             });
 
-            it('library was removed', function () {
+            it('library was removed', function() {
                 var local = JSON.parse(JSON.stringify(remote));
                 delete  remote['bem-bl'];
 
@@ -272,7 +272,7 @@ describe('LibrariesSynMDS', function () {
                 should.deepEqual(model.getChanges().pages.removed, [{ lib: 'bem-bl', version: 'dev' }]);
             });
 
-            it('library version was removed', function () {
+            it('library version was removed', function() {
                 var local = JSON.parse(JSON.stringify(remote));
                 delete remote['bem-core' ].versions['v2'];
 
@@ -287,7 +287,7 @@ describe('LibrariesSynMDS', function () {
                 should.deepEqual(model.getChanges().pages.removed, [{ lib: 'bem-core', version: 'v2' }]);
             });
 
-            it('library versions were removed (several versions for one library)', function () {
+            it('library versions were removed (several versions for one library)', function() {
                 var local = JSON.parse(JSON.stringify(remote));
                 delete remote['bem-core' ].versions['v2'];
                 delete remote['bem-core' ].versions['v2.5.1'];
@@ -312,7 +312,7 @@ describe('LibrariesSynMDS', function () {
                 ]);
             });
 
-            it('libraries versions were removed (for different libraries)', function () {
+            it('libraries versions were removed (for different libraries)', function() {
                 var local = JSON.parse(JSON.stringify(remote));
                 delete remote['bem-core'].versions['v2'];
                 delete remote['bem-components'].versions['v2'];
@@ -334,7 +334,7 @@ describe('LibrariesSynMDS', function () {
                 ]);
             });
 
-            it('library version was modified (by sha sum)', function () {
+            it('library version was modified (by sha sum)', function() {
                 var local = JSON.parse(JSON.stringify(remote));
                 remote['bem-core'].versions['v2'].sha = 'a25b147f254ee8e46c26031886f243221dc3d35e';
 
@@ -349,7 +349,7 @@ describe('LibrariesSynMDS', function () {
                 should.deepEqual(model.getChanges().pages.modified, [{ lib: 'bem-core', version: 'v2' }]);
             });
 
-            it('library version was modified (by date)', function () {
+            it('library version was modified (by date)', function() {
                 var local = JSON.parse(JSON.stringify(remote));
                 remote['bem-core'].versions['v2'].date = 1432047899247;
 
@@ -364,7 +364,7 @@ describe('LibrariesSynMDS', function () {
                 should.deepEqual(model.getChanges().pages.modified, [{ lib: 'bem-core', version: 'v2' }]);
             });
 
-            it('library versions were modified (several versions for one library)', function () {
+            it('library versions were modified (several versions for one library)', function() {
                 var local = JSON.parse(JSON.stringify(remote));
                 remote['bem-core'].versions['v2'].sha = 'a25b147f254ee8e46c26031886f243221dc3d35e';
                 remote['bem-core'].versions['v2.5.1'].date = 1423135728312;
@@ -389,7 +389,7 @@ describe('LibrariesSynMDS', function () {
                 ]);
             });
 
-            it('libraries versions were modified (for different libraries)', function () {
+            it('libraries versions were modified (for different libraries)', function() {
                 var local = JSON.parse(JSON.stringify(remote));
                 remote['bem-core'].versions['v2'].sha = 'a25b147f254ee8e46c26031886f243221dc3d35e';
                 remote['bem-components'].versions['v2'].sha = '0fd242aa10d351405eda67ea3ae15074ad973bdc';
@@ -411,7 +411,7 @@ describe('LibrariesSynMDS', function () {
                 ]);
             });
 
-            it('complex case (added, removed and modified)', function () {
+            it('complex case (added, removed and modified)', function() {
                 var local = JSON.parse(JSON.stringify(remote));
                 delete local['bem-bl'];
                 delete remote['bem-core'].versions['v2'];
@@ -449,82 +449,82 @@ describe('LibrariesSynMDS', function () {
             });
         });
 
-        describe('_saveLibraryVersionFile', function () {
-            before(function (done) {
+        describe('_saveLibraryVersionFile', function() {
+            before(function(done) {
                 emulator.start(3000, 3001);
                 setTimeout(done, 300);
             });
 
-            it('should rejected with error if library version data file does not exists in MDS', function () {
+            it('should rejected with error if library version data file does not exists in MDS', function() {
                 return task._saveLibraryVersionFile({ lib: 'bem-core', version: 'v2' })
-                    .catch(function (error) {
+                    .catch(function(error) {
                         error.message.should.equal('Bla');
                     });
             });
 
-            it('should successfully download library version file from MDS to filesystem', function () {
+            it('should successfully download library version file from MDS to filesystem', function() {
                 var testData = JSON.stringify({ lib: 'bem-core', version: 'v2' });
                 return testAPI.writeP('bem-core/v2/data.json', testData)
-                    .then(function () {
+                    .then(function() {
                         return task._saveLibraryVersionFile({ lib: 'bem-core', version: 'v2' });
                     })
-                    .then(function () {
+                    .then(function() {
                         var result = fsExtra.readJSONSync(
                             path.join(task.getLibVersionPath('bem-core', 'v2'), 'storage.data.json'));
                         should.deepEqual(result, JSON.parse(testData));
                     });
             });
 
-            after(function (done) {
+            after(function(done) {
                 emulator.stop();
                 setTimeout(done, 300);
             });
         });
 
-        describe('_removeLibraryVersionFolder', function () {
-            before(function () {
+        describe('_removeLibraryVersionFolder', function() {
+            before(function() {
                 var p = task.getLibVersionPath('bem-core', 'v2');
                 fsExtra.ensureDirSync(p);
                 fsExtra.outputFileSync(path.join(p, 'storage.data.json'), 'Foo Bar', 'utf-8');
             });
 
-            it('should successfully remove library version folder in local cache', function () {
-                return task._removeLibraryVersionFolder({ lib: 'bem-core', version: 'v2' }).then(function () {
+            it('should successfully remove library version folder in local cache', function() {
+                return task._removeLibraryVersionFolder({ lib: 'bem-core', version: 'v2' }).then(function() {
                     fs.existsSync(task.getLibVersionPath('bem-core', 'v2')).should.equal(false);
                 });
             });
         });
 
-        describe('run', function () {
-            before(function (done) {
+        describe('run', function() {
+            before(function(done) {
                 emulator.start(3000, 3001);
                 setTimeout(done, 300);
             });
 
-            it('should successfully load all library versions on first launch', function () {
+            it('should successfully load all library versions on first launch', function() {
                 var registryFilePath = path.join(process.cwd(), './test/stub/registry.json'),
                     registry = fsExtra.readJSONSync(registryFilePath),
                     libVersions = [],
                     promises;
 
-                Object.keys(registry).forEach(function (lib) {
-                    Object.keys(registry[lib ].versions).forEach(function (version) {
+                Object.keys(registry).forEach(function(lib) {
+                    Object.keys(registry[lib ].versions).forEach(function(version) {
                         libVersions.push({ lib: lib, version: version });
                     });
                 });
 
                 promises = []
                     .concat(testAPI.writeP('root', JSON.stringify(registry)))
-                    .concat(libVersions.map(function (item) {
+                    .concat(libVersions.map(function(item) {
                         return testAPI.writeP(item.lib + '/' + item.version + '/data.json', JSON.stringify(item));
                     }));
 
                 return vow.all(promises)
-                    .then(function () {
+                    .then(function() {
                         var model = new Model();
                         return task.run(model);
                     })
-                    .then(function (model) {
+                    .then(function(model) {
                         var changes = model.getChanges().pages;
                         changes.added.should.have.length(15);
                         changes.modified.should.have.length(0);
@@ -534,7 +534,7 @@ describe('LibrariesSynMDS', function () {
 
             // TODO add more tests for run method for different cases
 
-            after(function (done) {
+            after(function(done) {
                 emulator.stop();
                 setTimeout(done, 300);
             });

@@ -385,7 +385,7 @@ export default class Github extends Custom {
      * @returns {Promise}
      */
     getContentP(options, headers) {
-        return vowNode.invoke(this.getContent, options, headers)
+        return vowNode.invoke.call(this, this.getContent, options, headers)
             .catch(error => {
                 this.logger
                     .error(`GH: ${error.message}`)
@@ -409,7 +409,7 @@ export default class Github extends Custom {
      * @returns {Promise}
      */
     getLastCommitDateP(options, headers) {
-        return vowNode.invoke(this.getCommits, options, headers)
+        return vowNode.invoke.call(this, this.getCommits, options, headers)
             .catch(error => {
                 this.logger
                     .error('GH: %s', error.message)
@@ -438,7 +438,7 @@ export default class Github extends Custom {
      * @returns {Promise}
      */
     hasIssuesP(options, headers) {
-        return vowNode.invoke(this.hasIssues, options, headers)
+        return vowNode.invoke.call(this, this.hasIssues, options, headers)
             .catch(error => {
                 this.logger
                     .error(`GH: ${error.message}`)
@@ -460,7 +460,7 @@ export default class Github extends Custom {
      * @returns {Promise}
      */
     getBranchOrDefaultP(options, headers) {
-        return vowNode.invoke(this.isBranchExists, options, headers)
+        return vowNode.invoke.call(this, this.isBranchExists, options, headers)
             .then(result => {
                 return result
                     ? options.ref

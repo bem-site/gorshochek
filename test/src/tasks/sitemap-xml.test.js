@@ -5,10 +5,10 @@ var fs = require('fs'),
     Model = require('../../../lib/model/model'),
     BuildSiteMapXML = require('../../../lib/tasks/sitemap-xml');
 
-describe('SiteMapXML', function () {
+describe('SiteMapXML', function() {
     var config, task;
 
-    beforeEach(function () {
+    beforeEach(function() {
         fsExtra.ensureDirSync('./data');
         fsExtra.ensureDirSync('./model');
 
@@ -16,23 +16,23 @@ describe('SiteMapXML', function () {
         config.setLanguages(['en', 'ru']);
     });
 
-    afterEach(function () {
+    afterEach(function() {
         fsExtra.removeSync('./data');
         fsExtra.removeSync('./model');
     });
 
-    it('should return valid task name', function () {
+    it('should return valid task name', function() {
         BuildSiteMapXML.getName().should.equal('build sitemap xml');
     });
 
-    describe('_getHosts', function () {
+    describe('_getHosts', function() {
         var hosts = { en: 'https://my.site.com', ru: 'https://my.site.ru' };
-        it('should throw error if hosts were not set', function () {
+        it('should throw error if hosts were not set', function() {
             task = new BuildSiteMapXML(config, {});
-            (function () {return task['_getHosts'](); }).should.throw('Hosts undefined');
+            (function() {return task['_getHosts'](); }).should.throw('Hosts undefined');
         });
 
-        it('should make host object in case of string param', function () {
+        it('should make host object in case of string param', function() {
             task = new BuildSiteMapXML(config, { hosts: 'https://my.site.com' });
             should.deepEqual(task['_getHosts'](), {
                 en: 'https://my.site.com',
@@ -41,23 +41,23 @@ describe('SiteMapXML', function () {
         });
     });
 
-    describe('_getDefaultSearchParams', function () {
-        it('should return valid default search parameters', function () {
+    describe('_getDefaultSearchParams', function() {
+        it('should return valid default search parameters', function() {
             task = new BuildSiteMapXML(config, {});
             should.deepEqual(BuildSiteMapXML._getDefaultSearchParams(), { changefreq: 'weekly', priority: 0.5 });
         });
     });
 
-    describe('_buildSiteMapModel', function () {
+    describe('_buildSiteMapModel', function() {
         var hosts = { en: 'https://my.site.com', ru: 'https://my.site.ru' },
-            assert = function (input, expected) {
+            assert = function(input, expected) {
                 var model = new Model();
                 model.setPages(input);
                 var result = task._buildSiteMapModel(model, hosts, config.getLanguages());
                 should.deepEqual(result, expected);
             };
 
-        it('should omit page lang item if lang version does not exists', function () {
+        it('should omit page lang item if lang version does not exists', function() {
             assert([
                     {
                         url: '/url1',
@@ -73,7 +73,7 @@ describe('SiteMapXML', function () {
                 ]);
         });
 
-        it('should omit page lang item if lang version does not published', function () {
+        it('should omit page lang item if lang version does not published', function() {
             assert([
                     {
                         url: '/url1',
@@ -90,7 +90,7 @@ describe('SiteMapXML', function () {
                 ]);
         });
 
-        it('override search params', function () {
+        it('override search params', function() {
             assert([
                     {
                         url: '/url1',
@@ -117,10 +117,10 @@ describe('SiteMapXML', function () {
         });
     });
 
-    describe('run', function () {
+    describe('run', function() {
         var model;
 
-        before(function () {
+        before(function() {
             model = new Model();
             model.setPages([
                 {
@@ -136,8 +136,8 @@ describe('SiteMapXML', function () {
             } });
         });
 
-        it('should successfully create and save sitemap.xml file to filesystem', function (done) {
-            task.run(model).then(function () {
+        it('should successfully create and save sitemap.xml file to filesystem', function(done) {
+            task.run(model).then(function() {
                 fs.existsSync('./data/sitemap.xml').should.equal(true);
                 var sitemap = fs.readFileSync('./data/sitemap.xml', { encoding: 'utf-8' }),
                     expected = [
@@ -162,9 +162,9 @@ describe('SiteMapXML', function () {
             });
         });
 
-        it('should rejected with error if data directory does not exists', function (done) {
+        it('should rejected with error if data directory does not exists', function(done) {
             fs.rmdirSync('./data');
-            task.run(model).catch(function (error) {
+            task.run(model).catch(function(error) {
                 fs.existsSync('./data/sitemap.xml').should.equal(false);
                 error.code.should.equal('ENOENT');
                 done();

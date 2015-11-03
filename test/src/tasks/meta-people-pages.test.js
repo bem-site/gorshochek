@@ -3,7 +3,7 @@ var path = require('path'),
     Config = require('../../../lib/config'),
     CreatePersonPages = require('../../../lib/tasks/create-person-pages');
 
-describe('CreatePersonPages', function () {
+describe('CreatePersonPages', function() {
 
 });
 

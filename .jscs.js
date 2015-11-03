@@ -28,7 +28,6 @@ module.exports = {
     'disallowKeywordsOnNewLine': ['else'],
     'requireCapitalizedConstructors': true,
     'requireLineFeedAtFileEnd': true,
-    'disallowTrailingWhitespace': true,
     'disallowTrailingComma': true,
     'requireSpacesInConditionalExpression': {
         'afterTest': true,
@@ -61,5 +60,6 @@ module.exports = {
         checkTypes: 'capitalizedNativeCase',
         leadingUnderscoreAccess: true
     },
+    maxErrors: 1000,
     esnext: true
 };

@@ -7,10 +7,10 @@ var path = require('path'),
     AnalyzeModel = require('../../../lib/tasks/analyze-model'),
     CollectMeta = require('../../../lib/tasks/collect-meta');
 
-describe('CollectMeta', function () {
+describe('CollectMeta', function() {
     var languages, config, task;
 
-    before(function () {
+    before(function() {
         languages = ['en', 'ru'];
         config = new Config('./test/stub/');
         task = new CollectMeta(config, {});
@@ -20,14 +20,14 @@ describe('CollectMeta', function () {
         });
     });
 
-    after(function () {
+    after(function() {
         mockFs.restore();
     });
 
-    describe('instance methods', function () {
+    describe('instance methods', function() {
         var model;
 
-        before(function () {
+        before(function() {
             model = new Model();
             model.setPages([
                 {
@@ -59,9 +59,9 @@ describe('CollectMeta', function () {
             ]);
         });
 
-        it('run', function (done) {
+        it('run', function(done) {
             return task.run(model)
-                .then(function () {
+                .then(function() {
                     var collected = fsExtra.readJSONSync('./cache/meta.json');
                     collected.authors.en.should.be.instanceOf(Array).and.have.length(3);
                     collected.authors.ru.should.be.instanceOf(Array).and.have.length(3);

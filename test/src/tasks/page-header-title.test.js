@@ -2,23 +2,23 @@ var Config = require('../../../lib/config'),
     Model = require('../../../lib/model/model'),
     PageHeaderTitle = require('../../../lib/tasks/page-header-title');
 
-describe('PageHeaderTitle', function () {
-    it('should return valid task name', function () {
+describe('PageHeaderTitle', function() {
+    it('should return valid task name', function() {
         PageHeaderTitle.getName().should.equal('create page titles');
     });
 
-    describe('instance methods', function () {
+    describe('instance methods', function() {
         var config,
             task;
 
-        before(function () {
+        before(function() {
             config = new Config('debug');
             config.setLanguages(['en', 'ru']);
             task = new PageHeaderTitle(config, {});
         });
 
-        describe('run', function () {
-            it('should add header.title to pages', function (done) {
+        describe('run', function() {
+            it('should add header.title to pages', function(done) {
                 var pages = [
                         {
                             url: '/',
@@ -36,7 +36,7 @@ describe('PageHeaderTitle', function () {
                     ],
                     model = new Model();
                 model.setPages(pages);
-                task.run(model).then(function (m) {
+                task.run(model).then(function(m) {
                     m.getPages()[0]['en'].header.title
                         .should.equal('index en title');
                     m.getPages()[0]['ru'].header.title

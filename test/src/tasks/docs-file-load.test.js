@@ -5,21 +5,16 @@ var fs = require('fs'),
     Model = require('../../../lib/model/model'),
     DocsLoadFile = require('../../../lib/tasks/docs-file-load');
 
-describe('DocsLoadFile', function () {
-    it('should return valid task name', function () {
+describe('DocsLoadFile', function() {
+    it('should return valid task name', function() {
         DocsLoadFile.getName().should.equal('docs load from file');
     });
 
-    it('should return valid gh url pattern', function () {
-        should.deepEqual(DocsBaseGh.getGhUrlPattern(),
-            /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/);
-    });
-
-    describe('instance methods', function () {
+    describe('instance methods', function() {
         var config,
             task;
 
-        beforeEach(function () {
+        beforeEach(function() {
             config = new Config('debug');
             task = new DocsLoadFile(config, {});
             fsExtra.ensureDirSync('./.builder/cache/url1');
@@ -27,23 +22,23 @@ describe('DocsLoadFile', function () {
             fs.writeFileSync('./foo/bar/test-file.md', 'Hello World', { encoding: 'utf-8' });
         });
 
-        afterEach(function () {
+        afterEach(function() {
             fsExtra.removeSync('./.builder');
             fsExtra.removeSync('./foo');
         });
 
-        describe('getCriteria', function () {
-            it('should return false on missed language version of page', function () {
+        describe('getCriteria', function() {
+            it('should return false on missed language version of page', function() {
                 var page = { url: '/url1' };
                 task.getCriteria(page, 'en').should.equal(false);
             });
 
-            it('should return false on missed contentFile field for lang version of page', function () {
+            it('should return false on missed contentFile field for lang version of page', function() {
                 var page = { url: '/url1', en: {} };
                 task.getCriteria(page, 'en').should.equal(false);
             });
 
-            it('should return false if contentFile value does not match regular expression', function () {
+            it('should return false if contentFile value does not match regular expression', function() {
                 var page = {
                     url: '/url1',
                     en: {
@@ -53,7 +48,7 @@ describe('DocsLoadFile', function () {
                 task.getCriteria(page, 'en').should.equal(false);
             });
 
-            it('should return true if contentFile value matches regular expression', function () {
+            it('should return true if contentFile value matches regular expression', function() {
                 var page1 = { url: '/url1', en: { sourceUrl: '/foo/bar.md' } },
                     page2 = { url: '/url2', en: { sourceUrl: './foo/bar.md' } },
                     page3 = { url: '/url3', en: { sourceUrl: '../foo/bar.md' } },
@@ -66,17 +61,17 @@ describe('DocsLoadFile', function () {
             });
         });
 
-        describe('processPage', function () {
+        describe('processPage', function() {
             var languages = ['en'];
 
-            it('for non-matched local file path', function (done) {
+            it('for non-matched local file path', function(done) {
                 var page = {
                         url: '/url1',
                         en: { sourceUrl: 'https://github.com/foo/bar.md' }
                     },
                     model = new Model();
 
-                task.processPage(model, page, languages).then(function (page) {
+                task.processPage(model, page, languages).then(function(page) {
                     model.getChanges().pages.added.should.be.instanceOf(Array).and.have.length(0);
                     model.getChanges().pages.modified.should.be.instanceOf(Array).and.have.length(0);
                     should(page['en']['contentFile']).equal(undefined);
@@ -84,14 +79,14 @@ describe('DocsLoadFile', function () {
                 });
             });
 
-            it('for missed local file', function (done) {
+            it('for missed local file', function(done) {
                 var page = {
                         url: '/url1',
                         en: { sourceUrl: './foo/bar/invalid' }
                     },
                     model = new Model();
 
-                task.processPage(model, page, languages).then(function (page) {
+                task.processPage(model, page, languages).then(function(page) {
                     model.getChanges().pages.added.should.be.instanceOf(Array).and.have.length(0);
                     model.getChanges().pages.modified.should.be.instanceOf(Array).and.have.length(0);
                     should(page['en']['contentFile']).equal(undefined);
@@ -99,14 +94,14 @@ describe('DocsLoadFile', function () {
                 });
             });
 
-            it('for new local file', function (done) {
+            it('for new local file', function(done) {
                 var page = {
                         url: '/url1',
                         en: { sourceUrl: './foo/bar/test-file.md' }
                     },
                     model = new Model();
 
-                task.processPage(model, page, languages).then(function (page) {
+                task.processPage(model, page, languages).then(function(page) {
                     model.getChanges().pages.added.should.be.instanceOf(Array).and.have.length(1);
                     model.getChanges().pages.modified.should.be.instanceOf(Array).and.have.length(0);
                     should(page['en']['contentFile']).equal('/url1/en.md');
@@ -115,16 +110,16 @@ describe('DocsLoadFile', function () {
                 });
             });
 
-            it('for modified local file', function (done) {
+            it('for modified local file', function(done) {
                 var page = {
                         url: '/url1',
                         en: { sourceUrl: './foo/bar/test-file.md' }
                     },
                     model = new Model();
 
-                task.processPage(model, page, languages).then(function (page) {
+                task.processPage(model, page, languages).then(function(page) {
                     fs.writeFileSync('./foo/bar/test-file.md', 'Hello World 2', { encoding: 'utf-8' });
-                    return task.processPage(model, page, languages).then(function (page) {
+                    return task.processPage(model, page, languages).then(function(page) {
                         model.getChanges().pages.added.should.be.instanceOf(Array).and.have.length(1);
                         model.getChanges().pages.modified.should.be.instanceOf(Array).and.have.length(1);
                         should(page['en']['contentFile']).equal('/url1/en.md');
@@ -136,15 +131,15 @@ describe('DocsLoadFile', function () {
                 });
             });
 
-            it('for non-modified local file', function (done) {
+            it('for non-modified local file', function(done) {
                 var page = {
                         url: '/url1',
                         en: { sourceUrl: './foo/bar/test-file.md' }
                     },
                     model = new Model();
 
-                task.processPage(model, page, languages).then(function (page) {
-                    return task.processPage(model, page, languages).then(function (page) {
+                task.processPage(model, page, languages).then(function(page) {
+                    return task.processPage(model, page, languages).then(function(page) {
                         model.getChanges().pages.added.should.be.instanceOf(Array).and.have.length(1);
                         model.getChanges().pages.modified.should.be.instanceOf(Array).and.have.length(0);
                         should(page['en']['contentFile']).equal('/url1/en.md');

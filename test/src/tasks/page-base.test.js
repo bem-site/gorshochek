@@ -2,23 +2,23 @@ var should = require('should'),
     Config = require('../../../lib/config'),
     PageBase = require('../../../lib/tasks/page-base');
 
-describe('PageBase', function () {
-    it('should return valid task name', function () {
+describe('PageBase', function() {
+    it('should return valid task name', function() {
         PageBase.getName().should.equal('page base operations');
     });
 
-    describe('instance methods', function () {
+    describe('instance methods', function() {
         var config,
             task;
 
-        before(function () {
+        before(function() {
             config = new Config('debug');
             config.setLanguages(['en', 'ru']);
             task = new PageBase(config, {});
         });
 
-        describe('getPagesMap', function () {
-            it ('should build valid pages map', function () {
+        describe('getPagesMap', function() {
+            it ('should build valid pages map', function() {
                 var pages = [
                         {
                             url: '/',
@@ -48,20 +48,20 @@ describe('PageBase', function () {
             });
         });
 
-        describe('getParentUrls', function () {
-            it('should get parent urls for index page', function () {
+        describe('getParentUrls', function() {
+            it('should get parent urls for index page', function() {
                 should.deepEqual(task.getParentUrls({ url: '/' }), ['/']);
             });
 
-            it('should get parent urls for first level', function () {
+            it('should get parent urls for first level', function() {
                 should.deepEqual(task.getParentUrls({ url: '/url1' }), ['/', '/url1']);
             });
 
-            it('should get parent urls for second level', function () {
+            it('should get parent urls for second level', function() {
                 should.deepEqual(task.getParentUrls({ url: '/url1/url2' }), ['/', '/url1', '/url1/url2']);
             });
 
-            it('should get parent urls for third level', function () {
+            it('should get parent urls for third level', function() {
                 should.deepEqual(task.getParentUrls({ url: '/url1/url2/url3' }),
                     ['/', '/url1', '/url1/url2', '/url1/url2/url3']);
             });
