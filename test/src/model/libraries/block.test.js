@@ -1,187 +1,133 @@
-var fs = require('fs'),
-    path = require('path'),
+var vow = require('vow'),
+    sinon = require('sinon'),
     should = require('should'),
-    fsExtra = require('fs-extra'),
     Block = require('../../../../lib/model/libraries/block');
 
 describe('block', function() {
-    describe('constructor', function() {
-        var block;
+    var sandbox = sinon.sandbox.create(),
+        block;
 
-        beforeEach(function() {
-            block = new Block({ level: 'desktop' }, 'button');
-        });
-
-        it('should be successfully initialized', function() {
-            block.should.be.instanceOf(Block);
-        });
-
-        it('should have valid level property after initialization', function() {
-            should.deepEqual(block.level, { level: 'desktop' });
-        });
-
-        it('should have valid block property after initialization', function() {
-            block.block.should.equal('button');
-        });
+    beforeEach(function() {
+        block = new Block({level: 'desktop'}, 'button');
     });
 
-    describe('instance methods', function() {
-        describe('_rectifyBlockDocumentation', function() {
-            var block;
+    afterEach(function() {
+        sandbox.restore();
+    });
 
-            before(function() {
-                block = new Block({ level: 'desktop' }, 'button');
-            });
+    it('should have valid level property after initialization', function() {
+        block.level.should.eql({level: 'desktop'});
+    });
 
-            it('should return valid block documentation', function() {
-                should.deepEqual(block._rectifyBlockDocumentation({}, 'en'), {});
-            });
+    it('should have valid block property after initialization', function() {
+        block.block.should.be.equal('button');
+    });
 
-            // TODO написать тесты для выпрямления данных документации блока здесь
+    it('should return valid block documentation', function() {
+        block._rectifyBlockDocumentation({}, 'en').should.be.eql({});
+    });
+
+    it('should set block documentation to null if it is missed', function() {
+        should(block._rectifyBlockDocumentation(undefined, 'en')).equal(null);
+    });
+
+    it('should return valid block jsdoc', function() {
+        block._rectifyBlockJSDocumentation({}, 'en').should.be.eql({});
+    });
+
+    it('should set block jsdoc to null if it is missed', function() {
+        should(block._rectifyBlockJSDocumentation(undefined, 'en')).equal(null);
+    });
+
+    describe('processData', function() {
+        var level = {
+            version: {
+                baseUrl: '/libraries',
+                basePath: '/some-path',
+                lib: 'some-lib',
+                version: 'v1',
+                languages: ['en']
+            },
+            level: 'desktop'
+        };
+
+        beforeEach(function() {
+            block = new Block(level, 'button');
+            sandbox.stub(block, 'saveFile').returns(vow.resolve());
         });
 
-        describe('_rectifyBlockJSDocumentation', function() {
-            var block;
-
-            before(function() {
-                block = new Block({ level: 'desktop' }, 'button');
-            });
-
-            it('should return valid block jsdoc', function() {
-                should.deepEqual(block._rectifyBlockJSDocumentation({}, 'en'), {});
-            });
-
-            // TODO написать тесты для выпрямления данных jsdoc блока здесь
-        });
-
-        describe('_setSource', function() {
-            var basePath = path.join(process.cwd(), './build/cache'),
-                version,
-                level,
-                block;
-
-            beforeEach(function() {
-                version = { baseUrl: '/libraries', basePath: basePath, lib: 'bem-core',
-                    version: 'v2', languages: ['en']
-                };
-                level = { version: version, level: 'desktop' };
-                block = new Block(level, 'button');
-            });
-
-            it('should set source and create data file', function() {
-                block._setSource({
-                    data: { name: 'd-button' },
-                    jsdoc: { name: 'js-button' }
-                }).then(function() {
-                    var p = path.join(basePath, './bem-core/v2/desktop/button/en.json');
-                    fs.existsSync(p).should.equal(true);
-                    should.deepEqual(fsExtra.readJSONSync(p), {
-                        data: { name: 'd-button' },
-                        jsdoc: { name: 'js-button' }
-                    });
-                });
-            });
-
-            it('should set source and set valid contentFile field value', function() {
-                block._setSource({
-                    data: { name: 'd-button' },
-                    jsdoc: { name: 'js-button' }
-                }).then(function() {
-                    block.getData()['contentFile'].should
-                        .equal('/libraries/bem-core/v2/desktop/button/en.json');
-                });
-            });
-
-            it('should set source and create data files for block with missed docs', function() {
-                block._setSource({
-                    jsdoc: { name: 'js-button' }
-                }).then(function() {
-                    var p = path.join(basePath, './bem-core/v2/desktop/button/en.json');
-                    fs.existsSync(p).should.equal(true);
-                    should.deepEqual(fsExtra.readJSONSync(p), {
-                        data: null,
-                        jsdoc: { name: 'js-button' }
-                    });
-                });
-            });
-
-            it('should set source and create data files for block with missed jsdoc', function() {
-                block._setSource({
-                    data: { name: 'd-button' }
-                }).then(function() {
-                    var p = path.join(basePath, './bem-core/v2/desktop/button/en.json');
-                    fs.existsSync(p).should.equal(true);
-                    should.deepEqual(fsExtra.readJSONSync(p), {
-                        data: { name: 'd-button' },
-                        jsdoc: null
-                    });
-                });
-            });
-
-            afterEach(function() {
-                fsExtra.removeSync(basePath);
+        it('should set valid block url', function() {
+            return block.processData({}).then(function() {
+                block.getData().url.should.be.equal('/libraries/some-lib/v1/desktop/button');
             });
         });
 
-        describe('processData', function() {
-            var basePath = path.join(process.cwd(), './build/cache'),
-                block
-
-            beforeEach(function() {
-                var version = { baseUrl: '/libraries', basePath: basePath,
-                        lib: 'bem-core', version: 'v2', languages: ['en'] },
-                    level = { version: version,  level: 'desktop' };
-
-                block = new Block(level, 'button');
-
-                return block.processData({
-                    data: { name: 'd-button' },
-                    jsdoc: { name: 'js-button' }
-                });
+        it('should have valid url aliases', function() {
+            return block.processData({}).then(function() {
+                block.getData().aliases.should.be.instanceOf(Array).and.be.empty;
             });
+        });
 
-            it('should have valid url', function() {
-                block.getData()['url'].should.equal('/libraries/bem-core/v2/desktop/button');
+        it('should have valid value for "view" field', function() {
+            return block.processData({}).then(function() {
+                block.getData().view.should.be.equal('block');
             });
+        });
 
-            it('should have valid aliases', function() {
-                block.getData()['aliases'].should.be.instanceOf(Array).and.have.length(0);
+        it('should have valid value for "lib" field', function() {
+            return block.processData({}).then(function() {
+                block.getData().lib.should.be.equal('some-lib');
             });
+        });
 
-            it('should have valid view', function() {
-                block.getData()['view'].should.equal('block');
+        it('should have valid value for "version" field', function() {
+            return block.processData({}).then(function() {
+                block.getData().version.should.be.equal('v1');
             });
+        });
 
-            it('should have valid lib', function() {
-                block.getData()['lib'].should.equal('bem-core');
+        it('should have valid value for "level" field', function() {
+            return block.processData({}).then(function() {
+                block.getData().level.should.be.equal('desktop');
             });
+        });
 
-            it('should have valid version', function() {
-                block.getData()['version'].should.equal('v2');
+        it('should have valid value for "block" field', function() {
+            return block.processData({}).then(function() {
+                block.getData().block.should.be.equal('button');
             });
+        });
 
-            it('should have valid level', function() {
-                block.getData()['level'].should.equal('desktop');
+        it('should have valid value for "title" field', function() {
+            return block.processData({}).then(function() {
+                block.getData().en.title.should.be.equal('button');
             });
+        });
 
-            it('should have valid block', function() {
-                block.getData()['block'].should.equal('button');
+        it('should have valid value for "published" field', function() {
+            return block.processData({}).then(function() {
+                block.getData().en.published.should.be.equal(true);
             });
+        });
 
-            it('should have valid title', function() {
-                block.getData()['en']['title'].should.equal('button');
+        it('should have valid value for "updateDate" field', function() {
+            return block.processData({}).then(function() {
+                block.getData().en.updateDate.should.above(+(new Date()) - 100);
             });
+        });
 
-            it('should have valid published', function() {
-                block.getData()['en']['published'].should.equal(true);
+        it('should save source file content to valid path', function() {
+            return block.processData({}).then(function() {
+                var expectedPath = '/some-path/some-lib/v1/desktop/button/en.json';
+                block.saveFile.calledWith(expectedPath, {data: null, jsdoc: null}, true)
+                    .should.be.equal(true);
             });
+        });
 
-            it('should have valid updateDate', function() {
-                block.getData()['en']['updateDate'].should.above(+(new Date()) - 100);
-            });
-
-            afterEach(function() {
-                fsExtra.removeSync(basePath);
+        it('should set valid value for "contentFile" field after saving source content', function() {
+            return block.processData({}).then(function() {
+                var expectedPath = '/libraries/some-lib/v1/desktop/button/en.json';
+                block.getData().contentFile.should.be.equal(expectedPath);
             });
         });
     });

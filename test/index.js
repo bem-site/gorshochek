@@ -6,8 +6,8 @@ require('./src/model/changes/type.test.js');
 require('./src/model/people.test.js');
 require('./src/model/meta.test.js');
 
-//require('./src/model/libraries/base.test.js');
-//require('./src/model/libraries/block.test.js');
+require('./src/model/libraries/base.test.js');
+require('./src/model/libraries/block.test.js');
 //require('./src/model/libraries/document.test.js');
 //require('./src/model/libraries/level.test.js');
 //require('./src/model/libraries/version.test.js');

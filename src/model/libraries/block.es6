@@ -40,6 +40,7 @@ export default class Block extends Base {
      * @private
      */
     _rectifyBlockDocumentation(blockDocumentation, lang) {
+        blockDocumentation = blockDocumentation || null;
         // TODO реализовать выпрямление данных документации здесь
         // TODO оставить только данные для языка lang
         lang;
@@ -54,6 +55,7 @@ export default class Block extends Base {
      * @private
      */
     _rectifyBlockJSDocumentation(blockJSDocumentation, lang) {
+        blockJSDocumentation = blockJSDocumentation || null;
         // TODO реализовать выпрямление данных jsdoc здесь
         // TODO оставить только данные для языка lang
         lang;
@@ -67,23 +69,19 @@ export default class Block extends Base {
      * @private
      */
     _setSource(data) {
-        const version = this.level.version;
-        const basePath = path.join(version.basePath, version.lib, version.version, this.level.level, this.block);
-        const blockDoc = data.data || null;
-        const blockJSDoc = data.jsdoc || null;
-        const promises = version.languages.map(lang => {
-            const filePath = path.join(basePath, `${lang}.json`);
-            const content = {
-                data: this._rectifyBlockDocumentation(blockDoc, lang),
-                jsdoc: this._rectifyBlockJSDocumentation(blockJSDoc, lang)
-            };
-
-            return this.saveFile(filePath, content, true)
-                .then(() => {
-                    return this.setValue('contentFile',
-                        path.sep + [version.baseUrl, version.lib, version.version,
-                            this.level.level, this.block, lang].join(path.sep) + '.json', lang);
-                });
+        const {basePath, baseUrl, lib, version, languages} = this.level.version;
+        const sourcePath = path.join(basePath, lib, version, this.level.level, this.block);
+        const promises = languages.map(lang => {
+            const filePath = path.join(sourcePath, `${lang}.json`);
+            const contentFilePath = [baseUrl, lib, version,
+                    this.level.level, this.block, lang].join(path.sep) + '.json';
+            return vow
+                .when({
+                    data: this._rectifyBlockDocumentation(data.data, lang),
+                    jsdoc: this._rectifyBlockJSDocumentation(data.jsdoc, lang)
+                })
+                .then(content => this.saveFile(filePath, content, true))
+                .then(() => this.setValue('contentFile', contentFilePath, lang));
         });
 
         return vow.all(promises);
@@ -95,17 +93,17 @@ export default class Block extends Base {
      * @returns {Promise}
      */
     processData(data) {
-        const v = this.level.version;
+        const {baseUrl, lib, version, languages} = this.level.version;
 
-        this.setValue('url', [v.baseUrl, v.lib, v.version, this.level.level, this.block].join('/'))
+        this.setValue('url', [baseUrl, lib, version, this.level.level, this.block].join('/'))
             .setValue('aliases', []) // алиасы или редиректы
             .setValue('view', 'block') // представление
-            .setValue('lib', v.lib) // название библотеки
-            .setValue('version', v.version) // название версии (ветки, тега, pr)
-            .setValue('level', this.level.level) // навзание уровня переопредления
+            .setValue('lib', lib) // название библотеки
+            .setValue('version', version) // название версии (ветки, тега, pr)
+            .setValue('level', this.level.level) // название уровня переопредления
             .setValue('block', this.block); // имя блока
 
-        v.languages.forEach(lang => {
+        languages.forEach(lang => {
             this.setValue('title', this.block, lang) // имя блока
                 .setValue('published', true, lang) // флаг о том что страница опубликована
                 .setValue('updateDate', +(new Date()), lang); // дата обновления

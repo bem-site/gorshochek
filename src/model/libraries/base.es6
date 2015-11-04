@@ -1,4 +1,4 @@
-import vow from 'vow';
+import vowNode from 'vow-node';
 import fsExtra from 'fs-extra';
 import Logger from 'bem-site-logger';
 
@@ -55,17 +55,17 @@ export default class Base {
      */
     saveFile(filePath, content, isJSON) {
         const method = isJSON ? 'outputJSON' : 'outputFile';
-        return new vow.Promise((resolve, reject) => {
-            fsExtra[method](filePath, content, (error) => {
-                if(error) {
-                    this.logger
-                        .error(`Error occur while saving file: ${filePath}`)
-                        .error(`Error: ${error.message}`);
-                    reject(error);
-                }
-                resolve(filePath);
+        return vowNode
+            .invoke(fsExtra[method], filePath, content)
+            .then(() => {
+                return filePath;
+            })
+            .catch(error => {
+                this.logger
+                    .error(`Error occur while saving file: ${filePath}`)
+                    .error(`Error: ${error.stack}`);
+                throw error;
             });
-        });
     }
 
     /**
