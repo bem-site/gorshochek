@@ -1,180 +1,177 @@
-var fs = require('fs'),
-    path = require('path'),
+var _ = require('lodash'),
+    vow = require('vow'),
+    sinon = require('sinon'),
     should = require('should'),
-    fsExtra = require('fs-extra'),
     Document = require('../../../../lib/model/libraries/document');
 
 describe('document', function() {
-    describe('constructor', function() {
-        var document;
+    var sandbox = sinon.sandbox.create(),
+        versionData = {
+            baseUrl: '/libraries',
+            basePath: '/base-parh',
+            lib: 'some-lib',
+            version: 'v1',
+            languages: ['en']
+        },
+        document;
 
-        it('should be successfully initialized', function() {
-            document = new Document({ lib: 'bem-core', version: 'v2' }, 'changelog');
-            document.should.be.instanceOf(Document);
-        });
-
-        it('should have valid version property after initialization', function() {
-            document = new Document({ lib: 'bem-core', version: 'v2' }, 'changelog');
-            should.deepEqual(document.version, { lib: 'bem-core', version: 'v2' });
-        });
-
-        it('should have valid document property after initialization', function() {
-            document = new Document({ lib: 'bem-core', version: 'v2' }, 'changelog');
-            document.document.should.equal('changelog');
-        });
+    afterEach(function() {
+        sandbox.restore();
     });
 
-    describe('_getTitle', function() {
-        var document;
-
-        it('should return valid changelog en title if data title was not set', function() {
-            document = new Document({ lib: 'bem-core', version: 'v2' }, 'changelog');
-            document._getTitle({}, 'en').should.equal('Changelog');
-            document._getTitle({ title: {} }, 'en').should.equal('Changelog');
-        });
-
-        it('should return valid changelog ru title if data title was not set', function() {
-            document = new Document({ lib: 'bem-core', version: 'v2' }, 'changelog');
-            document._getTitle({}, 'ru').should.equal('История изменений');
-            document._getTitle({ title: {} }, 'ru').should.equal('История изменений');
-        });
-
-        it('should return valid migration en title if data title was not set', function() {
-            document = new Document({ lib: 'bem-core', version: 'v2' }, 'migration');
-            document._getTitle({}, 'en').should.equal('Migration');
-            document._getTitle({ title: {} }, 'en').should.equal('Migration');
-        });
-
-        it('should return valid migration ru title if data title was not set', function() {
-            document = new Document({ lib: 'bem-core', version: 'v2' }, 'migration');
-            document._getTitle({}, 'ru').should.equal('Миграция');
-            document._getTitle({ title: {} }, 'ru').should.equal('Миграция');
-        });
-
-        it('should return valid notes en title if data title was not set', function() {
-            document = new Document({ lib: 'bem-core', version: 'v2' }, 'notes');
-            document._getTitle({}, 'en').should.equal('Release Notes');
-            document._getTitle({ title: {} }, 'en').should.equal('Release Notes');
-        });
-
-        it('should return valid notes ru title if data title was not set', function() {
-            document = new Document({ lib: 'bem-core', version: 'v2' }, 'notes');
-            document._getTitle({}, 'ru').should.equal('Примечания к релизу');
-            document._getTitle({ title: {} }, 'ru').should.equal('Примечания к релизу');
-        });
+    it('should have valid version property after initialization', function() {
+        document = new Document(versionData, 'changelog');
+        document.version.should.eql(versionData);
     });
 
-    describe('_getSourceUrl', function() {
-        var document;
-
-        beforeEach(function() {
-            document = new Document({ lib: 'bem-core', version: 'v2' }, 'changelog');
-        });
-
-        it('should return null if url was not set', function() {
-            should(document._getSourceUrl({}, 'en')).equal(null);
-        });
-
-        it('should return null if url for given lang was not set', function() {
-            should(document._getSourceUrl({ url: {} }, 'en')).equal(null);
-        });
-
-        it('should return valid url value for given lang', function() {
-            document._getSourceUrl({ url: { en: 'http://url1' } }, 'en').should.equal('http://url1');
-        });
+    it('should have valid document property after initialization', function() {
+        document = new Document(versionData, 'changelog');
+        document.document.should.be.equal('changelog');
     });
 
-    describe('_setSource', function() {
-        var basePath = path.join(process.cwd(), './build/cache'),
-            version,
-            document;
+    it('should set valid changelog en title if data title was not set', function() {
+        document = new Document(versionData, 'changelog');
+        document.getTitle({}, 'en').should.be.equal('Changelog');
+        document.getTitle({title: {}}, 'en').should.be.equal('Changelog');
+    });
 
-        beforeEach(function() {
-            version = { baseUrl: '/libraries', basePath: basePath, lib: 'bem-core', version: 'v2', languages: ['en'] };
-            document = new Document(version, 'changelog');
-        });
+    it('should set valid changelog ru title if data title was not set', function() {
+        document = new Document(versionData, 'changelog');
+        document.getTitle({}, 'ru').should.be.equal('История изменений');
+        document.getTitle({title: {}}, 'ru').should.be.equal('История изменений');
+    });
 
-        it('should set source and create data file', function() {
-            document._setSource({
-                content: { en: 'Hello World' }
-            }).then(function() {
-                var p = path.join(basePath, './bem-core/v2/changelog/en.html');
-                fs.existsSync(p).should.equal(true);
-                should.deepEqual(fs.readFileSync(p, 'utf-8'), 'Hello World');
-            });
-        });
+    it('should set valid migration en title if data title was not set', function() {
+        document = new Document(versionData, 'migration');
+        document.getTitle({}, 'en').should.be.equal('Migration');
+        document.getTitle({title: {}}, 'en').should.be.equal('Migration');
+    });
 
-        it('should set source and set valid contentFile field value', function() {
-            document._setSource({
-                content: { en: 'Hello World' }
-            }).then(function() {
-                document.getData()['contentFile'].should
-                    .equal('/libraries/bem-core/v2/changelog/en.html');
-            });
-        });
+    it('should set valid migration ru title if data title was not set', function() {
+        document = new Document(versionData, 'migration');
+        document.getTitle({}, 'ru').should.be.equal('Миграция');
+        document.getTitle({title: {}}, 'ru').should.be.equal('Миграция');
+    });
 
-        afterEach(function() {
-            fsExtra.removeSync(basePath);
-        });
+    it('should set valid notes en title if data title was not set', function() {
+        document = new Document(versionData, 'notes');
+        document.getTitle({}, 'en').should.be.equal('Release Notes');
+        document.getTitle({title: {}}, 'en').should.be.equal('Release Notes');
+    });
+
+    it('should set valid notes ru title if data title was not set', function() {
+        document = new Document(versionData, 'notes');
+        document.getTitle({}, 'ru').should.be.equal('Примечания к релизу');
+        document.getTitle({title: {}}, 'ru').should.be.equal('Примечания к релизу');
     });
 
     describe('processData', function() {
-        var basePath = path.join(process.cwd(), './build/cache'),
-            document;
-
+        var docData = {
+            title: {en: 'Changelog'},
+            content: {en: 'Hello World'},
+            url: {en: 'http://url1'}
+        };
         beforeEach(function() {
-            var version = {
-                baseUrl: '/libraries', basePath: basePath,
-                lib: 'bem-core', version: 'v2', languages: ['en']
-            };
+            document = new Document(versionData, 'changelog');
+            sandbox.stub(document, 'saveFile').returns(vow.resolve());
+        });
 
-            document = new Document(version, 'changelog');
-
-            return document.processData({
-                title: { en: 'Changelog'},
-                content: { en: 'Hello World' },
-                url: { en: 'http://url1' }
+        it('should set valid value for "url" property', function() {
+            return document.processData(docData).then(function() {
+                document.getData().url.should.be.equal('/libraries/some-lib/v1/changelog');
             });
         });
 
-        it('should have valid url', function() {
-            document.getData()['url'].should.equal('/libraries/bem-core/v2/changelog');
+        it('should set valid value for "aliases" property', function() {
+            return document.processData(docData).then(function() {
+                document.getData().aliases.should.be.instanceOf(Array).and.be.empty;
+            });
         });
 
-        it('should have valid aliases', function() {
-            document.getData()['aliases'].should.be.instanceOf(Array).and.have.length(0);
+        it('should set valid value for "view" property', function() {
+            return document.processData(docData).then(function() {
+                document.getData().view.should.be.equal('post');
+            });
         });
 
-        it('should have valid view', function() {
-            document.getData()['view'].should.equal('post');
+        it('should set valid value for "lib" property', function() {
+            return document.processData(docData).then(function() {
+                document.getData().lib.should.be.equal('some-lib');
+            });
         });
 
-        it('should have valid lib', function() {
-            document.getData()['lib'].should.equal('bem-core');
+        it('should set valid value for "version" property', function() {
+            return document.processData(docData).then(function() {
+                document.getData().version.should.be.equal('v1');
+            });
         });
 
-        it('should have valid version', function() {
-            document.getData()['version'].should.equal('v2');
+        it('should set valid value for "document" property', function() {
+            return document.processData(docData).then(function() {
+                document.getData().document.should.be.equal('changelog');
+            });
         });
 
-        it('should have valid document', function() {
-            document.getData()['document'].should.equal('changelog');
+        it('should set valid value for "title" property', function() {
+            return document.processData(docData).then(function() {
+                document.getData().en.title.should.be.equal('Changelog');
+            });
         });
 
-        it('should have valid title', function() {
-            document.getData()['en']['title'].should.equal('Changelog');
+        it('should set valid value for "published" property', function() {
+            return document.processData(docData).then(function() {
+                document.getData().en.published.should.be.equal(true);
+            });
         });
 
-        it('should have valid published', function() {
-            document.getData()['en']['published'].should.equal(true);
+        it('should set valid value for "updateDate" property', function() {
+            return document.processData(docData).then(function() {
+                document.getData().en.updateDate.should.above(+(new Date()) - 100);
+            });
         });
 
-        it('should have valid updateDate', function() {
-            document.getData()['en']['updateDate'].should.above(+(new Date()) - 100);
+        it('should set null "sourceUrl" if it was not set', function() {
+            return document.processData(_.merge({}, docData, {url: null})).then(function() {
+                should(document.getData().en.sourceUrl).equal(null);
+            });
         });
 
-        afterEach(function() {
-            fsExtra.removeSync(basePath);
+        it('should set null "sourceUrl" if it was not set for given language', function() {
+            return document.processData(_.merge({}, docData, {url: {en: null}})).then(function() {
+                should(document.getData().en.sourceUrl).equal(null);
+            });
+        });
+
+        it('should return valid "sourceUrl" value for given lang', function() {
+            return document.processData(_.merge({url: {en: 'http://url1'}}, docData)).then(function() {
+                should(document.getData().en.sourceUrl).equal('http://url1');
+            });
+        });
+
+        it('should save source file content to valid path', function() {
+            return document.processData(docData).then(function() {
+                var expectedPath = '/base-parh/some-lib/v1/changelog/en.html';
+                document.saveFile.calledWith(expectedPath, 'Hello World', false).should.equal(true);
+            });
+        });
+
+        it('should set valid value for "contentFile" field after saving source content', function() {
+            return document.processData(docData).then(function() {
+                document.getData().en.contentFile
+                    .should.equal('/libraries/some-lib/v1/changelog/en.html');
+            });
+        });
+
+        it('should set value of "published" property to false if document content does not exist', function() {
+            return document.processData(_.merge({}, docData, {content: null})).then(function() {
+                document.getData().en.published.should.equal(false);
+            });
+        });
+
+        it('should set value of "published" property to false if document content does not exist for lang', function() {
+            return document.processData(_.merge({}, docData, {content: {en: null}})).then(function() {
+                document.getData().en.published.should.equal(false);
+            });
         });
     });
 });

@@ -40,9 +40,8 @@ export default class Document extends Base {
      * @param {Object} data - document data object
      * @param {String} lang - language
      * @returns {String}
-     * @private
      */
-    _getTitle(data, lang) {
+    getTitle(data, lang) {
         const TITLES = {
             changelog: {en: 'Changelog', ru: 'История изменений'},
             migration: {en: 'Migration', ru: 'Миграция'},
@@ -77,10 +76,11 @@ export default class Document extends Base {
      * @private
      */
     _setSource(data) {
-        const version = this.version;
-        const basePath = path.join(version.basePath, version.lib, version.version, this.document);
-        const promises = version.languages.map(lang => {
-            const filePath = path.join(basePath, `${lang}.html`);
+        const {basePath, baseUrl, lib, version, languages} = this.version;
+        const sourcePath = path.join(basePath, lib, version, this.document);
+        const promises = languages.map(lang => {
+            const filePath = path.join(sourcePath, `${lang}.html`);
+            const contentFilePath = [baseUrl, lib, version, this.document, lang].join(path.sep) + '.html';
             const content = data.content ? data.content[lang] : null;
 
             if(!content) {
@@ -88,8 +88,7 @@ export default class Document extends Base {
             }
 
             return this.saveFile(filePath, content, false).then(() => {
-                return this.setValue('contentFile', path.sep + [version.baseUrl,
-                    version.lib, version.version, this.document, lang].join(path.sep) + '.html', lang);
+                return this.setValue('contentFile', contentFilePath, lang);
             });
         });
 
@@ -109,15 +108,14 @@ export default class Document extends Base {
             .setValue('view', 'post') // представление
             .setValue('lib', version.lib) // название библиотеки
             .setValue('version', version.version) // название версии библиотеки
-            .setValue('document', this.document); // имя уровня переопредления
+            .setValue('document', this.document); // имя уровня переопредления WTF?
 
         version.languages.forEach(lang => {
-            this.setValue('title', this._getTitle(data, lang), lang) // имя уровня переопределения
+            this.setValue('title', this.getTitle(data, lang), lang) // имя уровня переопределения
                 .setValue('published', true, lang) // флаг о том что страница опубликована
                 .setValue('updateDate', +(new Date()), lang); // дата обновления
-
-            const sourceUrl = this._getSourceUrl(data, lang);
-            sourceUrl && this.setValue('sourceUrl', sourceUrl, lang);
+            
+            this.setValue('sourceUrl', this._getSourceUrl(data, lang), lang);
         });
 
         return this._setSource(data).then(this.getData.bind(this));

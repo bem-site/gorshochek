@@ -37,16 +37,10 @@ export default class Meta {
     }
 
     static save(file, authors, translators, tags) {
-        const transform = (o) => {
-            return _.mapValues(o, (item) => {
-                return Array.from(item);
-            });
-        };
-
         return fsExtra.writeJSONSync(file, {
-            authors: transform(authors),
-            translators: transform(translators),
-            tags: transform(tags)
+            authors: _.mapValues(authors, Array.from),
+            translators: _.mapValues(translators, Array.from),
+            tags: _.mapValues(tags, Array.from)
         });
     }
 
