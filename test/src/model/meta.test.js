@@ -1,68 +1,65 @@
-var fs = require('fs'),
-    should = require('should'),
-    mockFs = require('mock-fs'),
+var sinon = require('sinon'),
+    should = require('should-sinon'),
+    fsExtra = require('fs-extra'),
     Meta = require('../../../lib/model/meta');
 
 describe('Meta', function() {
-    before(function() {
-        var metaData = fs.readFileSync('./test/stub/meta.json', { encoding: 'utf-8' });
-        mockFs({
-            cache: {
-                'meta.json': metaData
-            },
-            data: {}
-        })
+    var sandbox = sinon.sandbox.create();
+
+    beforeEach(function() {
+        sandbox.stub(fsExtra, 'readJSONSync');
+        sandbox.stub(fsExtra, 'writeJSONSync');
     });
 
-    after(function() {
-        mockFs.restore();
+    afterEach(function() {
+        sandbox.restore();
     });
 
-    it('should return valid name of file', function() {
-        Meta.getFileName().should.equal('meta.json');
+    it('should return valid name of "meta" file', function() {
+        Meta.getFileName().should.be.equal('meta.json');
     });
 
-    it('static initialization', function() {
-        var meta = Meta.init('./cache/meta.json');
-        meta._authors.should.be.instanceOf(Object);
-        meta._translators.should.be.instanceOf(Object);
-        meta._tags.should.be.instanceOf(Object);
+    it('should have getter for "authors" property', function() {
+        var meta = new Meta({});
+        meta.getAuthors.should.be.instanceOf(Function);
     });
 
-    it('static save', function() {
-        var file = './cache/meta.json',
-            authors = { en: [], ru: [] },
-            translators = { en: [], ru: [] },
-            tags = { en: [], ru: [] };
-
-        Meta.save(file, authors, translators, tags);
-        fs.existsSync(file).should.equal(true);
-        should.deepEqual(Meta.init(file)._authors, { en: [], ru: [] });
-        should.deepEqual(Meta.init(file)._translators, { en: [], ru: [] });
-        should.deepEqual(Meta.init(file)._tags, { en: [], ru: [] });
+    it('should return valid "authors" property value', function() {
+        var meta = new Meta({authors: ['john-smith']});
+        meta.getAuthors().should.be.eql(['john-smith']);
     });
 
-    describe('instance methods', function() {
-        var meta;
+    it('should have getter for "translators" property', function() {
+        var meta = new Meta({});
+        meta.getTranslators.should.be.instanceOf(Function);
+    });
 
-        before(function() {
-            meta = new Meta({
-                authors: {},
-                translators: {},
-                tags: {}
-            });
-        });
+    it('should return valid "translators" property value', function() {
+        var meta = new Meta({translators: ['john-smith']});
+        meta.getTranslators().should.be.eql(['john-smith']);
+    });
 
-        it('getAuthors', function() {
-            should.deepEqual(meta.getAuthors(), meta._authors);
-        });
+    it('should have getter for "tags" property', function() {
+        var meta = new Meta({});
+        meta.getTags.should.be.instanceOf(Function);
+    });
 
-        it('getTranslators', function() {
-            should.deepEqual(meta.getTranslators(), meta._translators);
-        });
+    it('should return valid "tags" property value', function() {
+        var meta = new Meta({tags: ['some-tag']});
+        meta.getTags().should.be.eql(['some-tag']);
+    });
 
-        it('getTags', function() {
-            should.deepEqual(meta.getTags(), meta._tags);
-        });
+    it('should save meta information to given file', function() {
+        var authors = {},
+            translators = {},
+            tags = {};
+
+        Meta.save('some.json', authors, translators, tags);
+        console.log(JSON.stringify(fsExtra.writeJSONSync.args));
+        fsExtra.writeJSONSync.calledWith('some.json', {
+            authors: {},
+            translators: {},
+            tags: {}
+        }).should.be.equal(true);
     });
 });

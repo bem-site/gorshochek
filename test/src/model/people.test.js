@@ -1,70 +1,37 @@
 var fsExtra = require('fs-extra'),
-    should = require('should'),
+    sinon = require('sinon'),
     People = require('../../../lib/model/people');
 
 describe('People', function() {
+    var sandbox = sinon.sandbox.create(),
+        enPersonData = {firstName: 'John', lastName: 'Smith'},
+        ruPersonData = {firstName: 'Джон', lastName: 'Смит'},
+        people;
+
     beforeEach(function() {
-        fsExtra.ensureDirSync('./data');
-        fsExtra.ensureDirSync('./.build/cache');
-        fsExtra.copySync('./test/stub/people.json', './.build/cache/people.json');
+        sandbox.stub(fsExtra, 'readJSONSync').returns({
+            'smith-john': {en: enPersonData, ru: ruPersonData}
+        });
+        people = People.init('some.json');
     });
 
     afterEach(function() {
-        fsExtra.removeSync('./data');
-        fsExtra.removeSync('./.build/cache');
+        sandbox.restore();
     });
 
     it('should return valid name of file', function() {
-       People.getFileName().should.equal('people.json');
+        People.getFileName().should.equal('people.json');
     });
 
-    it('static initialization', function() {
-        var people = People.init('./.build/cache/people.json');
-        people._people.should.be.instanceOf(Object);
-        Object.keys(people._people).should.have.length(2);
+    it('should return person data by it unique id', function() {
+        people.getById('smith-john').should.be.eql({en: enPersonData, ru: ruPersonData});
     });
 
-    describe('instance methods', function() {
-        var people;
+    it('should return localized data by unique id and language', function() {
+        people.getByIdAndLang('smith-john', 'en').should.be.eql(enPersonData);
+    });
 
-        beforeEach(function() {
-            people = People.init('./.build/cache/people.json');
-        });
-
-        it('getById should return valid result', function() {
-            people.getById('alaev-vladimir').should.be.instanceOf(Object);
-            should.deepEqual(people.getById('alaev-vladimir'), {
-                en: {
-                    firstName: 'Vladimir', lastName: 'Alaev',
-                    avatar: 'https://raw.github.com/bem/bem-method/bem-info-data/people/avatars/alaev-vladimir.png',
-                    github: 'scf2k', email: [], twitter: 'scf2k', skype: '', info: ''
-                },
-                ru: {
-                    firstName: 'Владимир', lastName: 'Алаев',
-                    avatar: 'https://raw.github.com/bem/bem-method/bem-info-data/people/avatars/alaev-vladimir.png',
-                    github: 'scf2k', email: [], twitter: 'scf2k', skype: '', info: ''
-                }
-            });
-        });
-
-        it('getByIdAndLang should return valid result', function() {
-            people.getByIdAndLang('alaev-vladimir', 'en').should.be.instanceOf(Object);
-            should.deepEqual(people.getByIdAndLang('alaev-vladimir', 'en'), {
-                firstName: 'Vladimir', lastName: 'Alaev',
-                avatar: 'https://raw.github.com/bem/bem-method/bem-info-data/people/avatars/alaev-vladimir.png',
-                github: 'scf2k', email: [], twitter: 'scf2k', skype: '', info: ''
-            });
-        });
-
-        it('getFullNameByIdAndLang should return valid full name string', function() {
-            var expected = {
-                firstName: 'Vladimir', lastName: 'Alaev',
-                avatar: 'https://raw.github.com/bem/bem-method/bem-info-data/people/avatars/alaev-vladimir.png',
-                github: 'scf2k', email: [], twitter: 'scf2k', skype: '', info: ''
-            };
-            people.getFullNameByIdAndLang('alaev-vladimir', 'en').should.be.instanceOf(String);
-            people.getFullNameByIdAndLang('alaev-vladimir', 'en')
-                .should.equal(expected.firstName + ' ' + expected.lastName);
-        });
+    it('should return valid full name of person by it unique id and language', function() {
+        people.getFullNameByIdAndLang('smith-john', 'en').should.be.equal('John Smith');
     });
 });

@@ -32,7 +32,7 @@ export default class People {
      */
     getFullNameByIdAndLang(id, lang) {
         const p = this.getByIdAndLang(id, lang);
-        return `${p.firstName} ${p.lastName}`
+        return `${p.firstName} ${p.lastName}`;
     }
 
     /**

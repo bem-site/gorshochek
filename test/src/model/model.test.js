@@ -1,19 +1,13 @@
 var _ = require('lodash'),
     should = require('should'),
-    sinon = require('sinon'),
     Changes = require('../../../lib/model/changes'),
     Model = require('../../../lib/model/model');
 
 describe('Model', function() {
-    var sandbox = sinon.sandbox.create(),
-        model;
+    var model;
 
     beforeEach(function() {
         model = new Model();
-    });
-
-    afterEach(function() {
-        sandbox.restore();
     });
 
     it('should have empty array of pages after initialization', function() {
@@ -200,7 +194,7 @@ describe('Model', function() {
             model.getPages().shift().ru.published.should.equal(false);
         });
 
-        it('should set published false when title as missed', function() {
+        it('should set "published" false when title as missed', function() {
             prepareModelPages({en: {published: true}});
             model.normalize(languages);
             model.getPages().shift().en.published.should.equal(false);
