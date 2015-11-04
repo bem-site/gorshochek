@@ -1,8 +1,7 @@
 require('./src/model/model.test.js');
 
-
-//require('./src/model/changes/index.test.js');
-//require('./src/model/changes/type.test.js');
+require('./src/model/changes/index.test.js');
+require('./src/model/changes/type.test.js');
 
 require('./src/model/people.test.js');
 require('./src/model/meta.test.js');
