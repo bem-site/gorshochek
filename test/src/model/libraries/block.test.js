@@ -3,7 +3,7 @@ var vow = require('vow'),
     should = require('should'),
     Block = require('../../../../lib/model/libraries/block');
 
-describe('block', function() {
+describe('Block', function() {
     var sandbox = sinon.sandbox.create(),
         block;
 

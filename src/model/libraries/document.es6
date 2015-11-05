@@ -114,7 +114,7 @@ export default class Document extends Base {
             this.setValue('title', this.getTitle(data, lang), lang) // имя уровня переопределения
                 .setValue('published', true, lang) // флаг о том что страница опубликована
                 .setValue('updateDate', +(new Date()), lang); // дата обновления
-            
+
             this.setValue('sourceUrl', this._getSourceUrl(data, lang), lang);
         });
 

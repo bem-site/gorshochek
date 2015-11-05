@@ -4,7 +4,7 @@ var _ = require('lodash'),
     should = require('should'),
     Document = require('../../../../lib/model/libraries/document');
 
-describe('document', function() {
+describe('Document', function() {
     var sandbox = sinon.sandbox.create(),
         versionData = {
             baseUrl: '/libraries',

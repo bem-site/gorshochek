@@ -4,7 +4,7 @@ var fsExtra = require('fs-extra'),
     Logger = require('bem-site-logger'),
     Base = require('../../../../lib/model/libraries/base');
 
-describe('base', function() {
+describe('Base', function() {
     var sandbox = sinon.sandbox.create(),
         base;
 
