@@ -1,120 +1,117 @@
-var fs = require('fs'),
-    path = require('path'),
+var _ = require('lodash'),
+    vow = require('vow'),
+    sinon = require('sinon'),
     should = require('should'),
-    fsExtra = require('fs-extra'),
+    Block = require('../../../../lib/model/libraries/block'),
     Level = require('../../../../lib/model/libraries/level');
 
-describe('level', function() {
-    describe('constructor', function() {
-        var level;
+describe('Level', function() {
+    var sandbox = sinon.sandbox.create(),
+        versionData = {
+            baseUrl: '/libraries',
+            basePath: '/base-path',
+            lib: 'some-lib',
+            version: 'v1',
+            languages: ['en']
+        },
+        level;
 
-        it('should be successfully initialized', function() {
-            level = new Level({ lib: 'bem-core', version: 'v2' }, 'desktop');
-            level.should.be.instanceOf(Level);
-        });
-
-        it('should have valid version property after initialization', function() {
-            level = new Level({ lib: 'bem-core', version: 'v2' }, 'desktop');
-            should.deepEqual(level.version, { lib: 'bem-core', version: 'v2' });
-        });
-
-        it('should have valid level property after initialization', function() {
-            level = new Level({ lib: 'bem-core', version: 'v2' }, 'desktop');
-            level.level.should.equal('desktop');
-        });
-
-        it('should remove ".docs" suffix in level name after initialization', function() {
-            level = new Level({ lib: 'bem-core', version: 'v2' }, 'desktop.docs');
-            level.level.should.equal('desktop');
-        });
-
-        it('should remove ".sets" suffix in level name after initialization', function() {
-            level = new Level({ lib: 'bem-core', version: 'v2' }, 'desktop.sets');
-            level.level.should.equal('desktop');
-        });
+    afterEach(function() {
+        sandbox.restore();
     });
 
-    describe('instance methods', function() {
-        describe('processData', function() {
-            var basePath = path.join(process.cwd(), './build/cache'),
-                level;
+    it('should have valid version property after initialization', function() {
+        level = new Level(versionData, 'desktop');
+        level.version.should.eql(versionData);
+    });
 
-            beforeEach(function() {
-                var version = { baseUrl: '/libraries', basePath: basePath,
-                        lib: 'bem-core', version: 'v2', languages: ['en'] };
+    it('should have valid level property after initialization', function() {
+        level = new Level(versionData, 'desktop');
+        level.level.should.equal('desktop');
+    });
 
-                level = new Level(version, 'desktop.docs');
+    it('should remove ".docs" suffix in level name after initialization', function() {
+        level = new Level(versionData, 'desktop.docs');
+        level.level.should.equal('desktop');
+    });
 
-                return level.processData({
-                    name: 'desktop.blocks',
-                    blocks: [
-                        { name: 'button', data: { name: 'd-button' }, jsdoc: { name: 'js-button' } },
-                        { name: 'input', data: { name: 'd-input' }, jsdoc: { name: 'js-input' } }
-                    ]
-                });
+    it('should remove ".sets" suffix in level name after initialization', function() {
+        level = new Level(versionData, 'desktop.sets');
+        level.level.should.equal('desktop');
+    });
+
+    describe('processData', function() {
+        var levelData = {
+            name: 'desktop.blocks',
+            blocks: [
+                {name: 'block1', data: {name: 'd-block1'}, jsdoc: {name: 'js-block1'}}
+            ]
+        };
+
+        beforeEach(function() {
+            sandbox.stub(Block.prototype, 'processData').returns(vow.resolve({}));
+            level = new Level(versionData, 'desktop.docs');
+        });
+
+        it('should set valid value for "url" property', function() {
+            return level.processData(levelData).then(function() {
+                level.getData().url.should.equal('/libraries/some-lib/v1/desktop');
             });
+        });
 
-            it('should have valid url', function() {
-                level.getData()['url'].should.equal('/libraries/bem-core/v2/desktop');
+        it('should set valid value for "aliases" property', function() {
+            return level.processData(levelData).then(function() {
+                level.getData().aliases.should.be.instanceOf(Array).and.be.empty;
             });
+        });
 
-            it('should have valid aliases', function() {
-                level.getData()['aliases'].should.be.instanceOf(Array).and.have.length(0);
+        it('should set valid value for "view" property', function() {
+            return level.processData(levelData).then(function() {
+                level.getData().view.should.be.equal('level');
             });
+        });
 
-            it('should have valid view', function() {
-                level.getData()['view'].should.equal('level');
+        it('should set valid value for "lib" property', function() {
+            return level.processData(levelData).then(function() {
+                level.getData().lib.should.be.equal('some-lib');
             });
+        });
 
-            it('should have valid lib', function() {
-                level.getData()['lib'].should.equal('bem-core');
+        it('should set valid value for "version" property', function() {
+            return level.processData(levelData).then(function() {
+                level.getData().version.should.be.equal('v1');
             });
+        });
 
-            it('should have valid version', function() {
-                level.getData()['version'].should.equal('v2');
+        it('should set valid value for "level" property', function() {
+            return level.processData(levelData).then(function() {
+                level.getData().level.should.be.equal('desktop');
             });
+        });
 
-            it('should have valid level', function() {
-                level.getData()['level'].should.equal('desktop');
+        it('should set valid value for "title" property', function() {
+            return level.processData(levelData).then(function() {
+                level.getData().en.title.should.be.equal('desktop');
             });
+        });
 
-            it('should have valid title', function() {
-                level.getData()['en']['title'].should.equal('desktop');
+        it('should set valid value for "published" property', function() {
+            return level.processData(levelData).then(function() {
+                level.getData().en.published.should.equal(true);
             });
+        });
 
-            it('should have valid published', function() {
-                level.getData()['en']['published'].should.equal(true);
+        it('should set valid value for "updateDate" property', function() {
+            return level.processData(levelData).then(function() {
+                level.getData().en.updateDate.should.above(+(new Date()) - 100);
             });
+        });
 
-            it('should have valid updateDate', function() {
-                level.getData()['en']['updateDate'].should.above(+(new Date()) - 100);
-            });
-
-            it('should have valid structure of level folder', function() {
-                var blockDirs = fs.readdirSync(path.join(basePath, './bem-core/v2/desktop'));
-                blockDirs.should.be.instanceOf(Array).and.have.length(2);
-            });
-
-            it('should return valid data array', function() {
-                return level
-                    .processData({
-                        name: 'desktop.blocks',
-                        blocks: [
-                            { name: 'button', data: { name: 'd-button' }, jsdoc: { name: 'js-button' } },
-                            { name: 'input', data: { name: 'd-input' }, jsdoc: { name: 'js-input' } }
-                        ]
-                    })
-                    .then(function(data) {
-                        data.should.be.instanceOf(Array).and.have.length(3);
-                        should.deepEqual(data[0], level.getData());
-
-                        data[1].block.should.equal('button');
-                        data[2].block.should.equal('input');
-                    });
-            });
-
-            afterEach(function() {
-                fsExtra.removeSync(basePath);
+        it('should concat result with processed result of nested blocks', function() {
+            return level.processData(levelData).then(function(result) {
+                result.should.be.instanceOf(Array).and.have.length(2);
+                result[0].should.eql(level.getData());
+                result[1].should.be.empty;
             });
         });
     });

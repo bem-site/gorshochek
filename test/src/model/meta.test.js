@@ -55,7 +55,6 @@ describe('Meta', function() {
             tags = {};
 
         Meta.save('some.json', authors, translators, tags);
-        console.log(JSON.stringify(fsExtra.writeJSONSync.args));
         fsExtra.writeJSONSync.calledWith('some.json', {
             authors: {},
             translators: {},
