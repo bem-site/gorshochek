@@ -1,6 +1,8 @@
 import os from 'os';
 import fs from 'fs';
 import path from 'path';
+import vow from 'vow';
+import _ from 'lodash';
 import fsExtra from 'fs-extra';
 import vowNode from 'vow-node';
 import Logger from 'bem-site-logger';
@@ -151,6 +153,8 @@ export default class Base {
      * @protected
      */
     getCriteria(page, lang) {
+        page;
+        lang;
         return false;
     }
 
@@ -165,6 +169,8 @@ export default class Base {
      * @protected
      */
     processPage(model, page, languages) {
+        model;
+        languages;
         return Promise.resolve(page);
     }
 

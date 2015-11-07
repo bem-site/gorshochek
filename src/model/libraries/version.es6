@@ -90,7 +90,7 @@ export default class Version extends Base {
 
             return this.saveFile(filePath, content, false).then(() => {
                 return this.setValue('contentFile',
-                    ['', this.baseUrl, this.lib, this.version, lang].join(path.sep) + '.html', lang);
+                    [this.baseUrl, this.lib, this.version, lang].join(path.sep) + '.html', lang);
             });
         });
 
@@ -181,7 +181,9 @@ export default class Version extends Base {
                 ]);
             })
             .spread((documents, levels) => {
-                return this.getData().concat(documents).concat(levels);
+                return [this.getData()]
+                    .concat(documents)
+                    .concat(levels);
             })
             .then(this._saveToCache.bind(this));
     }
