@@ -4,52 +4,60 @@ var should = require('should'),
     PageSearchMeta = require('../../../lib/tasks/page-search-meta');
 
 describe('PageSearchMeta', function() {
+    var config = new Config('debug'),
+        model = new Model(),
+        task = new PageSearchMeta(config, {}),
+        pages = [
+            {
+                url: '/',
+                en: {
+                    title: '/ title'
+                }
+            },
+            {
+                url: '/url1',
+                en: {
+                    title: 'url1 title',
+                    tags: ['tag1', 'tag2']
+                }
+            }
+        ];
+
+    config.setLanguages(['en']);
+
+    beforeEach(function() {
+        model.setPages(pages);
+    });
+
     it('should return valid task name', function() {
         PageSearchMeta.getName().should.equal('create page search meta-information');
     });
 
-    describe('instance methods', function() {
-        var config,
-            task;
-
-        before(function() {
-            config = new Config('debug');
-            config.setLanguages(['en', 'ru']);
-            task = new PageSearchMeta(config, {});
+    it('should set valid search meta-information for page without tags', function() {
+        return task.run(model).then(function(result) {
+            result.getPages()[0].en.meta.should.eql({
+                breadcrumbs: [
+                    {url: '/', title: '/ title'}
+                ],
+                fields: {
+                    type: 'doc',
+                    keywords: []
+                }
+            });
         });
+    });
 
-        describe('run', function() {
-            it('should add page search meta information to pages', function(done) {
-                var pages = [
-                        {
-                            url: '/',
-                            en: {title: 'index en title'},
-                            ru: {title: 'index ru title', tags: ['tag1', 'tag2']}
-                        }
-                    ],
-                    model = new Model();
-                model.setPages(pages);
-                task.run(model).then(function(m) {
-                    should.deepEqual(m.getPages()[0]['en'].meta, {
-                        breadcrumbs: [
-                            {url: '/', title: 'index en title'}
-                        ],
-                        fields: {
-                            type: 'doc',
-                            keywords: []
-                        }
-                    });
-                    should.deepEqual(m.getPages()[0]['ru'].meta, {
-                        breadcrumbs: [
-                            {url: '/', title: 'index ru title'}
-                        ],
-                        fields: {
-                            type: 'doc',
-                            keywords: ['tag1', 'tag2']
-                        }
-                    });
-                    done();
-                });
+    it('should set valid search meta-information for tagged pages', function() {
+        return task.run(model).then(function(result) {
+            result.getPages()[1].en.meta.should.eql({
+                breadcrumbs: [
+                    {url: '/', title: '/ title'},
+                    {url: '/url1', title: 'url1 title'}
+                ],
+                fields: {
+                    type: 'doc',
+                    keywords: ['tag1', 'tag2']
+                }
             });
         });
     });
