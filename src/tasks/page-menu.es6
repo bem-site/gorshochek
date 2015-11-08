@@ -1,6 +1,6 @@
-import builderCore from 'bs-builder-core';
+import PageBase from './page-base';
 
-export default class PageMenu extends builderCore.tasks.Base {
+export default class PageMenu extends PageBase {
 
     /**
      * Returns logger module
@@ -25,6 +25,8 @@ export default class PageMenu extends builderCore.tasks.Base {
      */
     run(model) {
         this.beforeRun();
+
+        // TODO implement menu creation here
 
         this.logger.info(`Successfully finish task "${this.constructor.getName()}"`);
         return Promise.resolve(model);

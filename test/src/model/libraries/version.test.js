@@ -6,7 +6,7 @@ var _ = require('lodash'),
     Document = require('../../../../lib/model/libraries/document'),
     Level = require('../../../../lib/model/libraries/level');
 
-describe('version', function() {
+describe('Version', function() {
     var sandbox = sinon.sandbox.create(),
         version;
 

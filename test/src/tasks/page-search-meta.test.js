@@ -23,8 +23,8 @@ describe('PageSearchMeta', function() {
                 var pages = [
                         {
                             url: '/',
-                            en: { title: 'index en title' },
-                            ru: { title: 'index ru title', tags: ['tag1', 'tag2'] }
+                            en: {title: 'index en title'},
+                            ru: {title: 'index ru title', tags: ['tag1', 'tag2']}
                         }
                     ],
                     model = new Model();
@@ -32,7 +32,7 @@ describe('PageSearchMeta', function() {
                 task.run(model).then(function(m) {
                     should.deepEqual(m.getPages()[0]['en'].meta, {
                         breadcrumbs: [
-                            { url: '/', title: 'index en title' }
+                            {url: '/', title: 'index en title'}
                         ],
                         fields: {
                             type: 'doc',
@@ -41,7 +41,7 @@ describe('PageSearchMeta', function() {
                     });
                     should.deepEqual(m.getPages()[0]['ru'].meta, {
                         breadcrumbs: [
-                            { url: '/', title: 'index ru title' }
+                            {url: '/', title: 'index ru title'}
                         ],
                         fields: {
                             type: 'doc',

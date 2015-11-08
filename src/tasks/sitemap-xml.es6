@@ -51,7 +51,7 @@ export default class SitemapXML extends Base {
             hosts = this.getBaseConfig().getLanguages().reduce((prev, lang) => {
                 prev[lang] = hosts;
                 return prev;
-            }, {})
+            }, {});
         }
 
         return hosts;
@@ -59,15 +59,15 @@ export default class SitemapXML extends Base {
 
     /**
      * Builds sitemap json model which can be converted into xml format
-     * @param {Model} model - model object
      * @param {Object} hosts - hosts configuration object
      * @param {Array} languages - array of languages
+     * @param {Model} model - model object
      * @returns {Array}
      * @private
      */
-    _buildSiteMapModel(model, hosts, languages) {
+    _buildSiteMapModel(hosts, languages, model) {
         return model.getPages().reduce((siteMap, page) => {
-            const urls = [page.url].concat(page.oldUrls || []);
+            const urls = [page.url].concat(page.aliases || []);
             const search = page.search || this.constructor._getDefaultSearchParams();
 
             languages.forEach((lang) => {
@@ -83,21 +83,30 @@ export default class SitemapXML extends Base {
     }
 
     /**
+     * Saves sitemap into sitemap.xml file inside data folder
+     * @param {String} siteMap xml representation
+     * @returns {Promise}
+     * @private
+     */
+    _saveSiteMapXML(siteMap) {
+        const filePath = path.join(this.getBaseConfig().getDataFolder(), 'sitemap.xml');
+        this.logger.debug('Save sitemap.xml file:').debug(`==> to ${filePath}`);
+        return vowNode.invoke(fs.writeFile, filePath, siteMap);
+    }
+
+    /**
      * Performs task
      * @returns {Promise}
      */
     run(model) {
         this.beforeRun(this.name);
-        const hosts = this._getHosts();
-        const languages = this.getBaseConfig().getLanguages();
-        const filePath = path.join(this.getBaseConfig().getDataFolder(), 'sitemap.xml');
-        const siteMap = js2xml('urlset', {url: this._buildSiteMapModel(model, hosts, languages)});
 
-        this.logger
-            .debug('Save sitemap.xml file:')
-            .debug(`==> to ${filePath}`);
-
-        return vowNode.invoke(fs.writeFile, filePath, siteMap)
+        return _.chain(model)
+            .thru(this._buildSiteMapModel.bind(this, this._getHosts(), this.getBaseConfig().getLanguages()))
+            .thru(value => {return {url: value};})
+            .thru(js2xml.bind(this, 'urlset'))
+            .thru(this._saveSiteMapXML.bind(this))
+            .value()
             .then(() => {
                 this.logger.info('sitemap.xml file has been successfully saved to local filesystem');
                 return model;

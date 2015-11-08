@@ -4,113 +4,74 @@ var should = require('should'),
     PageHeaderMeta = require('../../../lib/tasks/page-header-meta');
 
 describe('PageHeaderMeta', function() {
+    var config = new Config('debug'),
+        task = new PageHeaderMeta(config, {}),
+        pages = [
+            {url: '/', en: {title: '/ title', tags: ['index1', 'index2']}},
+            {url: '/url1', en: {title: '/url1 title'}}
+        ],
+        model = new Model();
+
+    config.setLanguages(['en']);
+
+    function getMetaFieldValue(result, field, pageIndex) {
+        pageIndex = pageIndex || 0;
+        return result.getPages()[pageIndex].en.header.meta[field];
+    }
+
+    beforeEach(function() {
+        model.setPages(pages);
+    });
+
     it('should return valid task name', function() {
         PageHeaderMeta.getName().should.equal('create page header meta-information');
     });
 
-    describe('instance methods', function() {
-        var config,
-            task;
-
-        before(function() {
-            config = new Config('debug');
-            config.setLanguages(['en', 'ru']);
-            task = new PageHeaderMeta(config, {});
+    it('should set value for "ogUrl" meta field', function() {
+        return task.run(model).then(function(result) {
+            getMetaFieldValue(result, 'ogUrl').should.be.equal('/');
         });
+    });
 
-        describe('_addMetaToPage', function() {
-            it('should skip if language version of page does not exists', function() {
-                var page = { url: '/url1' };
-                task._addMetaToPage(page, 'en');
-                should(page.header).equal(undefined);
-            });
-
-            it('should add header meta-information', function() {
-                var page = {
-                    url: '/url1',
-                    en: {
-                        title: 'page title'
-                    }
-                };
-                task._addMetaToPage(page, 'en');
-
-                should.deepEqual(page['en'].header.meta, {
-                    ogUrl: '/url1',
-                    ogType: 'article',
-                    description: 'page title',
-                    ogDescription: 'page title',
-                    keywords: '',
-                    ogKeywords: ''
-                });
-            });
-
-            it('should add header meta-information (with tags)', function() {
-                var page = {
-                    url: '/url1',
-                    en: {
-                        title: 'page title',
-                        tags: ['tag1', 'tag2']
-                    }
-                };
-                task._addMetaToPage(page, 'en');
-
-                should.deepEqual(page['en'].header.meta, {
-                    ogUrl: '/url1',
-                    ogType: 'article',
-                    description: 'page title',
-                    ogDescription: 'page title',
-                    keywords: 'tag1, tag2',
-                    ogKeywords: 'tag1, tag2'
-                });
-            });
+    it('should set value for "ogType" meta field', function() {
+        return task.run(model).then(function(result) {
+            getMetaFieldValue(result, 'ogType').should.be.equal('article');
         });
+    });
 
-        describe('run', function() {
-           it('should add header.meta to pages', function(done) {
-               var pages = [
-                       {
-                           url: '/',
-                           en: { title: 'index en title', tags: ['index1', 'index2'] },
-                           ru: { title: 'index ru title' }
-                       },
-                       {
-                           url: '/url1',
-                           ru: { title: 'url1 ru title' }
-                       }
-                   ],
-                   model = new Model();
-               model.setPages(pages);
+    it('should set value for "description" meta field', function() {
+        return task.run(model).then(function(result) {
+            getMetaFieldValue(result, 'description').should.be.equal('/ title');
+        });
+    });
 
-               task.run(model).then(function(m) {
-                   should.deepEqual(m.getPages()[0]['en'].header.meta, {
-                       ogUrl: '/',
-                       ogType: 'article',
-                       description: 'index en title',
-                       ogDescription: 'index en title',
-                       keywords: 'index1, index2',
-                       ogKeywords: 'index1, index2'
-                   });
+    it('should set value for "ogDescription" meta field', function() {
+        return task.run(model).then(function(result) {
+            getMetaFieldValue(result, 'ogDescription').should.be.equal('/ title');
+        });
+    });
 
-                   should.deepEqual(m.getPages()[0]['ru'].header.meta, {
-                       ogUrl: '/',
-                       ogType: 'article',
-                       description: 'index ru title',
-                       ogDescription: 'index ru title',
-                       keywords: '',
-                       ogKeywords: ''
-                   });
+    it('should set valid value for "keywords" meta field for tagged page', function() {
+        return task.run(model).then(function(result) {
+            getMetaFieldValue(result, 'keywords').should.be.equal('index1, index2');
+        });
+    });
 
-                   should.deepEqual(m.getPages()[1]['ru'].header.meta, {
-                       ogUrl: '/url1',
-                       ogType: 'article',
-                       description: 'url1 ru title',
-                       ogDescription: 'url1 ru title',
-                       keywords: '',
-                       ogKeywords: ''
-                   });
-                  done();
-               });
-           });
+    it('should set valid value for "ogKeywords" meta field for tagged page', function() {
+        return task.run(model).then(function(result) {
+            getMetaFieldValue(result, 'ogKeywords').should.be.equal('index1, index2');
+        });
+    });
+
+    it('should set empty value for "keywords" meta field for non-tagged page', function() {
+        return task.run(model).then(function(result) {
+            getMetaFieldValue(result, 'keywords', 1).should.be.equal('');
+        });
+    });
+
+    it('should set empty value for "ogKeywords" meta field for non-tagged page', function() {
+        return task.run(model).then(function(result) {
+            getMetaFieldValue(result, 'ogKeywords', 1).should.be.equal('');
         });
     });
 });

@@ -33,12 +33,10 @@ export default class PageBase extends Base {
      * @returns {Object}
      * @protected
      */
-    getPagesMap(pages, languages) {
+    createPageTitlesMap(pages, languages) {
         return pages.reduce((pagesMap, page) => {
             pagesMap.set(page.url, languages.reduce((pageMap, language) => {
-                if(page[language]) {
-                    pageMap.set(language, page[language].title);
-                }
+                page[language] && pageMap.set(language, page[language].title);
                 return pageMap;
             }, new Map()));
             return pagesMap;
@@ -59,14 +57,27 @@ export default class PageBase extends Base {
         for(let i = 1; i < chunks.length; i++) {
             let url = '';
             for(let j = 0; j <= i; j++) {
-                if(chunks[j].length) {
-                    url += (DELIMETER + chunks[j]);
-                }
+                chunks[j].length && (url += (DELIMETER + chunks[j]));
             }
-            if(url.length) {
-                result.push(url);
-            }
+            url.length && result.push(url);
         }
         return result;
+    }
+
+    /**
+     * Executes task with optional process function which should be called for each of model pages
+     * @param {Model} model - application model instance
+     * @param {Function} processFunc - page processing function
+     * @returns {Promise.<*>|*}
+     * @protected
+     */
+    run(model, processFunc) {
+        const languages = this.getBaseConfig().getLanguages();
+        const pagesMap = this.createPageTitlesMap(model.getPages(), languages);
+
+        model.getPages().forEach(page => processFunc(page, languages, pagesMap));
+
+        this.logger.info(`Successfully finish task "${this.constructor.getName()}"`);
+        return Promise.resolve(model);
     }
 }

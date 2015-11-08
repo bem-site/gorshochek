@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import PageBase from './page-base';
 
 export default class PageSearchMeta extends PageBase {
@@ -28,29 +29,18 @@ export default class PageSearchMeta extends PageBase {
     run(model) {
         this.beforeRun();
 
-        const languages = this.getBaseConfig().getLanguages();
-        const pagesMap = this.getPagesMap(model.getPages(), languages);
-
-        model.getPages().forEach(page => {
+        return super.run(model, (page, languages, pageTitlesMap) => {
             const urlSet = this.getParentUrls(page);
             languages.forEach(language => {
-                page[language].meta = {
-                    breadcrumbs: urlSet.map(url => {
-                        return {
-                            url,
-                            title: pagesMap.get(url).get(language)
-                        };
-                    }),
-                    fields: {
-                        type: 'doc',
-                        keywords: page[language].tags || []
-                    }
-                };
                 // TODO add cases for library entities
+                page[language] && _.chain(page)
+                    .get(language)
+                    .set('meta.breadcrumbs', urlSet.map(url => {
+                        return {url, title: pageTitlesMap.get(url).get(language)};
+                    }))
+                    .set('meta.fields', {type: 'doc', keywords: page[language].tags || []})
+                    .value();
             });
         });
-
-        this.logger.info(`Successfully finish task "${this.constructor.getName()}"`);
-        return Promise.resolve(model);
     }
 }

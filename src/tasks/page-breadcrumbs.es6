@@ -27,10 +27,6 @@ export default class PageBreadcrumbs extends PageBase {
      */
     run(model) {
         this.beforeRun();
-
-        const languages = this.getBaseConfig().getLanguages();
-        const pagesMap = this.getPagesMap(model.getPages(), languages);
-
         /*
          Для каждой языковой версии каждой страницы создаем
          поле breadcrumbs (хлебные крошки). В это поле записывается массив объектов типа
@@ -40,21 +36,13 @@ export default class PageBreadcrumbs extends PageBase {
             { url: '/url1/url2', title: 'url2 title' }
          ]
          */
-        model.getPages().forEach(page => {
+        return super.run(model, (page, languages, pageTitlesMap) => {
             const urlSet = this.getParentUrls(page);
             languages.forEach(language => {
-                if(page[language]) {
-                    page[language].breadcrumbs = urlSet.map(url => {
-                        return {
-                            url,
-                            title: pagesMap.get(url).get(language)
-                        };
-                    });
-                }
+                page[language] && (page[language].breadcrumbs = urlSet.map(url => {
+                    return {url, title: pageTitlesMap.get(url).get(language)};
+                }));
             });
         });
-
-        this.logger.info(`Successfully finish task "${this.constructor.getName()}"`);
-        return Promise.resolve(model);
     }
 }

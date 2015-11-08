@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import PageBase from './page-base';
 
 export default class PageHeaderMeta extends PageBase {
@@ -21,40 +22,12 @@ export default class PageHeaderMeta extends PageBase {
     }
 
     /**
-     * Add header meta-information data to page
-     * @param {Object} page - page model object
-     * @param {String} language
-     * @private
-     */
-    _addMetaToPage(page, language) {
-        const p = page[language];
-        const getKeywords = _p => {
-            return _p.tags ? _p.tags.join(', ') : '';
-        };
-
-        if(!p) {
-            return;
-        }
-        p.header = p.header || {};
-        p.header.meta = {
-            ogUrl: page.url,
-            ogType: 'article',
-            description: p.title,
-            ogDescription: p.title,
-            keywords: getKeywords(p),
-            ogKeywords: getKeywords(p)
-        };
-    }
-
-    /**
      * Performs task
      * @returns {Promise}
      * @public
      */
     run(model) {
         this.beforeRun();
-
-        const languages = this.getBaseConfig().getLanguages();
 
         /*
          Для каждой языковой версии каждой страницы создаем
@@ -66,13 +39,21 @@ export default class PageHeaderMeta extends PageBase {
           - keywords
           - ogKeywords
          */
-        model.getPages().forEach(page => {
+        const getKeywords = p => {return p.tags ? p.tags.join(', ') : '';};
+        return super.run(model, (page, languages) => {
             languages.forEach(language => {
-                this._addMetaToPage(page, language);
+                page[language] && _.chain(page)
+                    .get(language)
+                    .set('header.meta', _({})
+                        .set('ogUrl', page.url)
+                        .set('ogType', 'article')
+                        .set('description', page[language].title)
+                        .set('ogDescription', page[language].title)
+                        .set('keywords', getKeywords(page[language]))
+                        .set('ogKeywords', getKeywords(page[language]))
+                        .value())
+                    .value();
             });
         });
-
-        this.logger.info(`Successfully finish task "${this.constructor.getName()}"`);
-        return Promise.resolve(model);
     }
 }
