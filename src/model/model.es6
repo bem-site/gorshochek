@@ -148,6 +148,7 @@ export default class Model {
                 return deepExtend(oldModel[url], newModel[url]);
             }, this))
         );
+        return this;
     }
 
     normalize(languages) {
@@ -183,6 +184,8 @@ export default class Model {
         this.setPages(this.getPages().map(item => {
             return normalizePage(item, languages);
         }));
+
+        return this;
     }
 
     /**

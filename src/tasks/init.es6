@@ -1,4 +1,8 @@
 import path from 'path';
+import _ from 'lodash';
+import vow from 'vow';
+import vowNode from 'vow-node';
+import fsExtra from 'fs-extra';
 import Base from './base';
 
 /**
@@ -28,44 +32,72 @@ export default class Init extends Base {
     }
 
     /**
-     * Performs task
-     * @returns {Promise}
-     * @public
+     * Creates folder for given path if it does not exists yet
+     * @param {String} folder path to folder which should be created
+     * @returns {Init}
+     * @private
      */
-    run(model) {
-        this.beforeRun();
+    _createFolder(folder) {
+        this.logger.debug(`Ensure that directory "${folder}" exists. Otherwise it will be created`);
+        this.fsExtra.ensureDirSync(folder);
+        return this;
+    }
 
-        [this.getBaseConfig().getCacheFolder(), this.getBaseConfig().getDataFolder()]
-            .forEach(item => {
-                this.logger.debug(`Ensure that directory "${item}" exists. Otherwise it will be created`);
-                this.fsExtra.ensureDirSync(item);
+    /**
+     * Loads new model from configured mode path
+     * @returns {*|Promise.<T>}
+     * @private
+     */
+    _loadNewModel() {
+        return _.chain(this.getBaseConfig().getModelFilePath())
+            .thru(vowNode.promisify(fsExtra.readJSON).bind(fsExtra))
+            .value()
+            .catch(error => {
+                this.logger.error(`Can\'t read or parse model file ${this.getBaseConfig().getModelFilePath()}`);
+                throw error;
             });
+    }
 
-        const newModelFilePath = this.getBaseConfig().getModelFilePath();
-        const oldModelFilePath = path.join(this.getBaseConfig().getCacheFolder(), 'model.json');
+    /**
+     * Loads old model from cache
+     * @returns {*|Promise.<T>}
+     * @private
+     */
+    _loadOldModel() {
+        return _.chain('model.json')
+            .thru(path.join.bind(this, this.getBaseConfig().getCacheFolder()))
+            .thru(filePath => this.readFileFromCache(filePath, true))
+            .value()
+            .catch(error => {
+                if(error.code !== 'ENOENT') {
+                    throw error;
+                }
+                this.logger.warn(`Can\'t read or parse model file. New model will be created instead`);
+                return [];
+            });
+    }
 
-        try {
-            model.setNewModel(this.fsExtra.readJSONSync(newModelFilePath));
-        } catch (error) {
-            const errorMessage = `Can\'t read or parse model file "${newModelFilePath}"`;
-            this.logger.error(errorMessage);
-            return Promise.reject(new Error(errorMessage));
-        }
-
-        try {
-            model.setOldModel(this.fsExtra.readJSONSync(oldModelFilePath));
-        } catch (error) {
-            this.logger.warn(`Can\'t read or parse model file "${newModelFilePath}". New model will be created instead`);
-            model.setOldModel([]);
-        }
-
-        model.merge();
-
+    /**
+     * Prints changes for all types to log
+     * @param {Model} model - application model
+     * @private
+     */
+    _logModelChanges(model) {
         ['added', 'modified', 'removed'].forEach(type => {
             model.getChanges().pages[type].forEach(item => {
                 this.logger.debug(`Page with url: ${item.url} was ${type}`);
             });
         });
+    }
+
+    /**
+     * Copies new model file into cache folder and replace old model file
+     * @returns {Promise}
+     * @private
+     */
+    _replaceModelFileInCache() {
+        const newModelFilePath = this.getBaseConfig().getModelFilePath();
+        const oldModelFilePath = path.join(this.getBaseConfig().getCacheFolder(), 'model.json');
 
         this.logger
             .info('Models were merged successfully')
@@ -73,9 +105,33 @@ export default class Init extends Base {
             .debug(`==> from ${newModelFilePath}`)
             .debug(`==> to ${oldModelFilePath}`);
 
-        this.fsExtra.copySync(newModelFilePath, oldModelFilePath);
+        return vowNode.promisify(fsExtra.copy).call(fsExtra, newModelFilePath, oldModelFilePath);
+    }
 
-        model.normalize(this.getBaseConfig().getLanguages());
-        return Promise.resolve(model);
+    /**
+     * Performs task
+     * @returns {Promise}
+     * @public
+     */
+    run(model) {
+        this.beforeRun();
+
+        this
+            ._createFolder(this.getBaseConfig().getCacheFolder())
+            ._createFolder(this.getBaseConfig().getDataFolder());
+
+        return vow
+            .all([
+                this._loadOldModel(),
+                this._loadNewModel()
+            ])
+            .spread((oldModel, newModel) => {
+                model.setOldModel(oldModel);
+                model.setNewModel(newModel);
+            })
+            .then(model.merge.bind(model))
+            .then(this._logModelChanges.bind(this))
+            .then(this._replaceModelFileInCache.bind(this))
+            .then(model.normalize.bind(model, this.getBaseConfig().getLanguages()));
     }
 }

@@ -18,7 +18,7 @@ require('./src/config.test.js');
 // require('./src/github.test.js');
 
 require('./src/tasks/base.test.js');
-// require('./src/tasks/init.test.js');
+require('./src/tasks/init.test.js');
 // require('./src/tasks/finalize.test.js');
 
 // require('./src/tasks/docs-gh-load.test.js');

@@ -2,4 +2,6 @@
 --ui bdd
 --growl
 --require should
+--require should-sinon
+--require should-promised
 --timeout 5000
