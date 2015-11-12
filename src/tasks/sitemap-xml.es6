@@ -8,6 +8,29 @@ import Base from './base';
 export default class SitemapXML extends Base {
 
     /**
+     * Constructor
+     * @param {Config} baseConfig common configuration instance
+     * @param {Object} taskConfig special task configuration object
+     */
+    constructor(baseConfig, taskConfig) {
+        super(baseConfig, taskConfig);
+
+        let hosts = this.getTaskConfig().hosts;
+        if(!hosts) {
+            throw new Error('Hosts undefined');
+        }
+
+        if(_.isString(hosts)) {
+            hosts = this.getBaseConfig().getLanguages().reduce((prev, lang) => {
+                prev[lang] = hosts;
+                return prev;
+            }, {});
+        }
+
+        this._hosts = hosts;
+    }
+
+    /**
      * Returns logger module
      * @returns {module|Object|*}
      * @static
@@ -32,29 +55,6 @@ export default class SitemapXML extends Base {
      */
     static _getDefaultSearchParams() {
         return {changefreq: 'weekly', priority: 0.5};
-    }
-
-    /**
-     * Returns hash with:
-     * - {String} keys: available languages from common configuration
-     * - {String} values: configured hosts per language
-     * @returns {Object}
-     * @private
-     */
-    _getHosts() {
-        let hosts = this.getTaskConfig().hosts;
-        if(!hosts) {
-            throw new Error('Hosts undefined');
-        }
-
-        if(_.isString(hosts)) {
-            hosts = this.getBaseConfig().getLanguages().reduce((prev, lang) => {
-                prev[lang] = hosts;
-                return prev;
-            }, {});
-        }
-
-        return hosts;
     }
 
     /**
@@ -102,7 +102,7 @@ export default class SitemapXML extends Base {
         this.beforeRun(this.name);
 
         return _.chain(model)
-            .thru(this._buildSiteMapModel.bind(this, this._getHosts(), this.getBaseConfig().getLanguages()))
+            .thru(this._buildSiteMapModel.bind(this, this._hosts, this.getBaseConfig().getLanguages()))
             .thru(value => {return {url: value};})
             .thru(js2xml.bind(this, 'urlset'))
             .thru(this._saveSiteMapXML.bind(this))

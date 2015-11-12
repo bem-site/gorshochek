@@ -1,174 +1,236 @@
-var fs = require('fs'),
+var EOL = require('os').EOL,
+    fs = require('fs'),
     should = require('should'),
-    fsExtra = require('fs-extra'),
+    sinon = require('sinon'),
     Config = require('../../../lib/config'),
     Model = require('../../../lib/model/model'),
     BuildSiteMapXML = require('../../../lib/tasks/sitemap-xml');
 
+function buildExpectedXML(items) {
+    var items = items.map(function(item) {
+        return [
+            '\t<url>',
+            '\t\t<loc>' + item.loc + '</loc>',
+            '\t\t<changefreq>' + item.changefreq + '</changefreq>',
+            '\t\t<priority>' + item.priority + '</priority>',
+            '\t</url>'
+        ].join(EOL);
+    });
+
+    items.unshift([
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset>'
+    ].join(EOL));
+    items.push('</urlset>');
+    return items.join(EOL);
+}
+
 describe('SiteMapXML', function() {
-    var config, task;
+    var config = new Config('debug'),
+        sandbox = sinon.sandbox.create(),
+        model,
+        task;
 
     beforeEach(function() {
-        fsExtra.ensureDirSync('./data');
-        fsExtra.ensureDirSync('./model');
-
-        config = new Config('debug');
-        config.setLanguages(['en', 'ru']);
+        sandbox.stub(fs, 'writeFile').yields(null);
+        model = new Model();
     });
 
     afterEach(function() {
-        fsExtra.removeSync('./data');
-        fsExtra.removeSync('./model');
+        sandbox.restore();
     });
 
     it('should return valid task name', function() {
         BuildSiteMapXML.getName().should.equal('build sitemap xml');
     });
 
-    describe('_getHosts', function() {
-        var hosts = { en: 'https://my.site.com', ru: 'https://my.site.ru' };
-        it('should throw error if hosts were not set', function() {
-            task = new BuildSiteMapXML(config, {});
-            (function() {return task['_getHosts'](); }).should.throw('Hosts undefined');
-        });
+    it('should throw error if hosts parameter was not set on initialization', function() {
+        (function() {new BuildSiteMapXML(config, {})}).should.throw('Hosts undefined')
+    });
 
-        it('should make host object in case of string param', function() {
-            task = new BuildSiteMapXML(config, { hosts: 'https://my.site.com' });
-            should.deepEqual(task['_getHosts'](), {
-                en: 'https://my.site.com',
-                ru: 'https://my.site.com'
-            });
+    it('should create valid content for sitemap.xml file (single language)', function() {
+        model.setPages([
+            {
+                url: '/url1',
+                en: {published: true}
+            }
+        ]);
+        config.setLanguages(['en']);
+
+        task = new BuildSiteMapXML(config, {hosts: {en: 'https://en.site.com'}});
+        return task.run(model).then(function() {
+            fs.writeFile.calledWithMatch('data/sitemap.xml', buildExpectedXML([
+                {loc: 'https://en.site.com/url1', changefreq: 'weekly', priority: 0.5}
+            ])).should.equal(true);
         });
     });
 
-    describe('_getDefaultSearchParams', function() {
-        it('should return valid default search parameters', function() {
-            task = new BuildSiteMapXML(config, {});
-            should.deepEqual(BuildSiteMapXML._getDefaultSearchParams(), { changefreq: 'weekly', priority: 0.5 });
+    it('should create valid content for sitemap.xml file (multiple languages)', function() {
+        model.setPages([
+            {
+                url: '/url1',
+                en: {published: true},
+                ru: {published: true}
+            }
+        ]);
+        config.setLanguages(['en', 'ru']);
+
+        task = new BuildSiteMapXML(config, {hosts: {en: 'https://en.site.com', ru: 'https://ru.site.com'}});
+        return task.run(model).then(function() {
+            fs.writeFile.calledWithMatch('data/sitemap.xml', buildExpectedXML([
+                {loc: 'https://en.site.com/url1', changefreq: 'weekly', priority: 0.5},
+                {loc: 'https://ru.site.com/url1', changefreq: 'weekly', priority: 0.5}
+            ])).should.equal(true);
         });
     });
 
-    describe('_buildSiteMapModel', function() {
-        var hosts = { en: 'https://my.site.com', ru: 'https://my.site.ru' },
-            assert = function(input, expected) {
-                var model = new Model();
-                model.setPages(input);
-                var result = task._buildSiteMapModel(model, hosts, config.getLanguages());
-                should.deepEqual(result, expected);
-            };
+    it('should set common host for each of given language in case of string host parameter', function() {
+        model.setPages([
+            {
+                url: '/url1',
+                en: {published: true},
+                ru: {published: true}
+            }
+        ]);
+        config.setLanguages(['en', 'ru']);
 
-        it('should omit page lang item if lang version does not exists', function() {
-            assert([
-                    {
-                        url: '/url1',
-                        en: { published: true }
-                    }
-                ],
-                [
-                    {
-                        loc: 'https://my.site.com/url1',
-                        changefreq: 'weekly',
-                        priority: 0.5
-                    }
-                ]);
-        });
-
-        it('should omit page lang item if lang version does not published', function() {
-            assert([
-                    {
-                        url: '/url1',
-                        en: { published: false },
-                        ru: { published: true }
-                    }
-                ],
-                [
-                    {
-                        loc: 'https://my.site.ru/url1',
-                        changefreq: 'weekly',
-                        priority: 0.5
-                    }
-                ]);
-        });
-
-        it('override search params', function() {
-            assert([
-                    {
-                        url: '/url1',
-                        search: {
-                            changefreq: 'daily',
-                            priority: 1.0
-                        },
-                        en: { published: true },
-                        ru: { published: true }
-                    }
-                ],
-                [
-                    {
-                        loc: 'https://my.site.com/url1',
-                        changefreq: 'daily',
-                        priority: 1.0
-                    },
-                    {
-                        loc: 'https://my.site.ru/url1',
-                        changefreq: 'daily',
-                        priority: 1.0
-                    }
-                ]);
+        task = new BuildSiteMapXML(config, {hosts: 'https://my.site.com'});
+        return task.run(model).then(function() {
+            fs.writeFile.calledWithMatch('data/sitemap.xml', buildExpectedXML([
+                {loc: 'https://my.site.com/url1', changefreq: 'weekly', priority: 0.5},
+                {loc: 'https://my.site.com/url1', changefreq: 'weekly', priority: 0.5}
+            ])).should.equal(true);
         });
     });
 
-    describe('run', function() {
-        var model;
-
-        before(function() {
-            model = new Model();
-            model.setPages([
-                {
-                    url: '/url1',
-                    en: { published: true },
-                    ru: { published: true }
+    it('should use custom value for "changefreq" property if it was given in page model', function() {
+        model.setPages([
+            {
+                url: '/url1',
+                search: {
+                    changefreq: 'daily',
+                    priority: 0.5
+                },
+                en: {
+                    published: true
                 }
-            ]);
+            }
+        ]);
+        config.setLanguages(['en']);
 
-            task = new BuildSiteMapXML(config, { hosts: {
-                en: 'https://my.site.com',
-                ru: 'https://my.site.ru'
-            } });
+        task = new BuildSiteMapXML(config, {hosts: {en: 'https://en.site.com'}});
+        return task.run(model).then(function() {
+            fs.writeFile.calledWithMatch('data/sitemap.xml', buildExpectedXML([
+                {loc: 'https://en.site.com/url1', changefreq: 'daily', priority: 0.5}
+            ])).should.equal(true);
         });
+    });
 
-        it('should successfully create and save sitemap.xml file to filesystem', function(done) {
-            task.run(model).then(function() {
-                fs.existsSync('./data/sitemap.xml').should.equal(true);
-                var sitemap = fs.readFileSync('./data/sitemap.xml', { encoding: 'utf-8' }),
-                    expected = [
-                        '<?xml version="1.0" encoding="UTF-8"?>',
-                        '<urlset>',
-                        '<url>',
-                        '<loc>https://my.site.com/url1</loc>',
-                        '<changefreq>weekly</changefreq>',
-                        '<priority>0.5</priority>',
-                        '</url>',
-                        '<url>',
-                        '<loc>https://my.site.ru/url1</loc>',
-                        '<changefreq>weekly</changefreq>',
-                        '<priority>0.5</priority>',
-                        '</url>',
-                        '</urlset>'
-                    ].join('\n');
+    it('should use custom value for "priority" property if it was given in page model', function() {
+        model.setPages([
+            {
+                url: '/url1',
+                search: {
+                    changefreq: 'weekly',
+                    priority: 1.0
+                },
+                en: {
+                    published: true
+                }
+            }
+        ]);
+        config.setLanguages(['en']);
 
-                sitemap = sitemap.replace(/\t/g, '');
-                sitemap.should.equal(expected);
-                done();
-            });
+        task = new BuildSiteMapXML(config, {hosts: {en: 'https://en.site.com'}});
+        return task.run(model).then(function() {
+            fs.writeFile.calledWithMatch('data/sitemap.xml', buildExpectedXML([
+                {loc: 'https://en.site.com/url1', changefreq: 'weekly', priority: 1.0}
+            ])).should.equal(true);
         });
+    });
 
-        it('should rejected with error if data directory does not exists', function(done) {
-            fs.rmdirSync('./data');
-            task.run(model).catch(function(error) {
-                fs.existsSync('./data/sitemap.xml').should.equal(false);
-                error.code.should.equal('ENOENT');
-                done();
-            });
+    it('should also append nodes for page aliases', function() {
+        model.setPages([
+            {
+                url: '/url1',
+                aliases: ['/url11'],
+                en: {published: true}
+            }
+        ]);
+        config.setLanguages(['en']);
+
+        task = new BuildSiteMapXML(config, {hosts: {en: 'https://en.site.com'}});
+        return task.run(model).then(function() {
+            fs.writeFile.calledWithMatch('data/sitemap.xml', buildExpectedXML([
+                {loc: 'https://en.site.com/url1', changefreq: 'weekly', priority: 0.5},
+                {loc: 'https://en.site.com/url11', changefreq: 'weekly', priority: 0.5}
+            ])).should.equal(true);
+        });
+    });
+
+    it('should return fulfilled promise with model instance', function() {
+        model.setPages([
+            {
+                url: '/url1',
+                en: {published: true}
+            }
+        ]);
+        config.setLanguages(['en']);
+
+        task = new BuildSiteMapXML(config, {hosts: {en: 'https://en.site.com'}});
+        return task.run(model).then(function(model) {
+            model.should.be.instanceOf(Model);
+        });
+    });
+
+    it('should return rejected promise with error if error occur on file saving', function() {
+        model.setPages([
+            {
+                url: '/url1',
+                en: {published: true}
+            }
+        ]);
+        config.setLanguages(['en']);
+        fs.writeFile.yields(new Error('error'));
+
+        task = new BuildSiteMapXML(config, {hosts: {en: 'https://en.site.com'}});
+        return task.run(model).catch(function(error) {
+            error.message.should.equal('error');
+        });
+    });
+
+    it('should not add sitemap nodes for missed page locale versions', function() {
+        model.setPages([
+            {
+                url: '/url1',
+                en: {published: true}
+            }
+        ]);
+        config.setLanguages(['en', 'ru']);
+
+        task = new BuildSiteMapXML(config, {hosts: {en: 'https://en.site.com'}});
+        return task.run(model).then(function() {
+            fs.writeFile.calledWithMatch('data/sitemap.xml', buildExpectedXML([
+                {loc: 'https://en.site.com/url1', changefreq: 'weekly', priority: 0.5}
+            ])).should.equal(true);
+        });
+    });
+
+    it('should not add sitemap nodes for unpublished page locale versions', function() {
+        model.setPages([
+            {
+                url: '/url1',
+                en: {published: true},
+                ru: {published: false}
+            }
+        ]);
+        config.setLanguages(['en', 'ru']);
+
+        task = new BuildSiteMapXML(config, {hosts: {en: 'https://en.site.com'}});
+        return task.run(model).then(function() {
+            fs.writeFile.calledWithMatch('data/sitemap.xml', buildExpectedXML([
+                {loc: 'https://en.site.com/url1', changefreq: 'weekly', priority: 0.5}
+            ])).should.equal(true);
         });
     });
 });
