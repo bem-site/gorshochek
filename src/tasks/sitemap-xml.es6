@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import _ from 'lodash';
-import vowNode from 'vow-node';
+import Q from 'q';
 import js2xml from 'js2xmlparser';
 import Base from './base';
 
@@ -91,7 +91,7 @@ export default class SitemapXML extends Base {
     _saveSiteMapXML(siteMap) {
         const filePath = path.join(this.getBaseConfig().getDataFolder(), 'sitemap.xml');
         this.logger.debug('Save sitemap.xml file:').debug(`==> to ${filePath}`);
-        return vowNode.invoke(fs.writeFile, filePath, siteMap);
+        return Q.nfcall(fs.writeFile, filePath, siteMap);
     }
 
     /**

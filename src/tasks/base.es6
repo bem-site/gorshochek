@@ -1,10 +1,9 @@
 import os from 'os';
 import fs from 'fs';
 import path from 'path';
-import vow from 'vow';
+import Q from 'q';
 import _ from 'lodash';
 import fsExtra from 'fs-extra';
-import vowNode from 'vow-node';
 import Logger from 'bem-site-logger';
 
 export default class Base {
@@ -109,7 +108,7 @@ export default class Base {
         const func = isJSON ? fsExtra.readJSON : fs.readFile;
         filePath = path.join(basePath, filePath);
 
-        return vowNode.invoke(func, filePath, {encoding: 'utf-8'})
+        return Q.nfcall(func, filePath, {encoding: 'utf-8'})
             .catch(error => {
                 this.logger
                     .error(`Error occur while loading file ${filePath} from cache`)
@@ -131,9 +130,9 @@ export default class Base {
         filePath = path.join(basePath, filePath);
         const dirPath = path.dirname(filePath);
 
-        return vowNode.invoke(fsExtra.ensureDir, dirPath)
+        return Q.nfcall(fsExtra.ensureDir, dirPath)
             .then(() => {
-                return vowNode.invoke(fs.writeFile, filePath, content, {encoding: 'utf-8'});
+                return Q.nfcall(fs.writeFile, filePath, content, {encoding: 'utf-8'});
             })
             .catch(error => {
                 this.logger
@@ -183,12 +182,12 @@ export default class Base {
             prev = prev.then(() => {
                 this.logger.debug('process portion of pages in range %s - %s',
                     index * portionSize, (index + 1) * portionSize);
-                return vow.allResolved(portion.map((page) => {
+                return Q.allSettled(portion.map((page) => {
                     return this.processPage(model, page, languages);
                 }));
             });
             return prev;
-        }, vow.resolve());
+        }, Q());
     }
 
     /**
@@ -197,6 +196,6 @@ export default class Base {
      */
     run() {
         // TODO implement in inheritances
-        return Promise.resolve(true);
+        return Q(true);
     }
 }

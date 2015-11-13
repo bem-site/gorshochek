@@ -1,6 +1,5 @@
 var fs = require('fs'),
     fsExtra = require('fs-extra'),
-    should = require('should'),
     Config = require('../../../lib/config'),
     Model = require('../../../lib/model/model'),
     DocsLoadGh = require('../../../lib/tasks/docs-gh-load');

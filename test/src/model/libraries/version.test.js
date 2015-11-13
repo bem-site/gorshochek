@@ -1,7 +1,5 @@
 var _ = require('lodash'),
-    vow = require('vow'),
-    sinon = require('sinon'),
-    should = require('should'),
+    Q = require('q'),
     Version = require('../../../../lib/model/libraries/version'),
     Document = require('../../../../lib/model/libraries/document'),
     Level = require('../../../../lib/model/libraries/level');
@@ -12,9 +10,9 @@ describe('Version', function() {
 
     beforeEach(function() {
         version = new Version('/libraries', '/base-path', 'some-lib', 'v1', ['en']);
-        sandbox.stub(version, 'saveFile').returns(vow.resolve());
-        sandbox.stub(Document.prototype, 'processData').returns(vow.resolve({name: 'readme'}));
-        sandbox.stub(Level.prototype, 'processData').returns(vow.resolve({name: 'desktop'}));
+        sandbox.stub(version, 'saveFile').returns(Q());
+        sandbox.stub(Document.prototype, 'processData').returns(Q({name: 'readme'}));
+        sandbox.stub(Level.prototype, 'processData').returns(Q({name: 'desktop'}));
     });
 
     afterEach(function() {
@@ -117,23 +115,23 @@ describe('Version', function() {
 
         it('should set null value for "sourceUrl" property if version data has not "url" property', function() {
             return version.processData(_.omit(versionData, 'url')).then(function() {
-                should(version.getData().en.sourceUrl).equal(null);
+                should.not.exist(version.getData().en.sourceUrl);
             });
         });
 
         it('should save file with content of library README documentation (old version data format)', function() {
             var data = _.extend({readme: {content: {en: 'Hello World'}}}, versionData);
             return version.processData(data).then(function() {
-                version.saveFile.should.be.calledOnce;
-                version.saveFile.calledWith('/base-path/some-lib/v1/en.html')
+                version.saveFile.should.be.calledTwice;
+                version.saveFile.firstCall.calledWith('/base-path/some-lib/v1/en.html')
             });
         });
 
         it('should save file with content of library README documentation (new version data format)', function() {
             var data = _.extend({docs: {readme: {content: {en: 'Hello World'}}}}, versionData);
             return version.processData(data).then(function() {
-                version.saveFile.should.be.calledOnce;
-                version.saveFile.calledWith('/base-path/some-lib/v1/en.html')
+                version.saveFile.should.be.calledTwice;
+                version.saveFile.firstCall.calledWith('/base-path/some-lib/v1/en.html')
             });
         });
 

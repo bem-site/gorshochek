@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import Api from 'github';
-import vowNode from 'vow-node';
+import Q from 'q';
 import Logger from 'bem-site-logger';
 
 /**
@@ -385,7 +385,7 @@ export default class Github extends Custom {
      * @returns {Promise}
      */
     getContentP(options, headers) {
-        return vowNode.invoke.call(this, this.getContent, options, headers)
+        return Q.nfbind(this.getContent, this)(options, headers)
             .catch(error => {
                 this.logger
                     .error(`GH: ${error.message}`)
@@ -409,7 +409,7 @@ export default class Github extends Custom {
      * @returns {Promise}
      */
     getLastCommitDateP(options, headers) {
-        return vowNode.invoke.call(this, this.getCommits, options, headers)
+        return Q.nfbind(this.getCommits, this)(options, headers)
             .catch(error => {
                 this.logger
                     .error('GH: %s', error.message)
@@ -438,7 +438,7 @@ export default class Github extends Custom {
      * @returns {Promise}
      */
     hasIssuesP(options, headers) {
-        return vowNode.invoke.call(this, this.hasIssues, options, headers)
+        return Q.nfbind(this.hasIssues, this)(options, headers)
             .catch(error => {
                 this.logger
                     .error(`GH: ${error.message}`)
@@ -460,11 +460,10 @@ export default class Github extends Custom {
      * @returns {Promise}
      */
     getBranchOrDefaultP(options, headers) {
-        return vowNode.invoke.call(this, this.isBranchExists, options, headers)
+        return Q.nfbind(this.isBranchExists, this)(options, headers)
             .then(result => {
-                return result
-                    ? options.ref
-                    : vowNode.invoke(this.getDefaultBranch, options, headers);
+                return result ? options.ref
+                    : Q.nfbind(this.getDefaultBranch, this)(options, headers);
             })
             .catch(error => {
                 this.logger

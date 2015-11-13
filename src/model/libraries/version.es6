@@ -1,5 +1,5 @@
 import path from 'path';
-import vow from 'vow';
+import Q from 'q';
 import Base from './base';
 import Document from './document';
 import Level from './level';
@@ -94,7 +94,7 @@ export default class Version extends Base {
             });
         });
 
-        return vow.all(promises);
+        return Q.all(promises);
     }
 
     /**
@@ -119,7 +119,7 @@ export default class Version extends Base {
                 return (new Document(this, item)).processData(documents[item]);
             });
 
-        return vow.all(promises);
+        return Q.all(promises);
     }
 
     /**
@@ -135,7 +135,7 @@ export default class Version extends Base {
             return Promise.resolve([]);
         }
 
-        return vow.all(levels.map(level => {
+        return Q.all(levels.map(level => {
             return (new Level(this, level.name).processData(level));
         }));
     }
@@ -175,7 +175,7 @@ export default class Version extends Base {
 
         return this._setSource(data)
             .then(() => {
-                return vow.all([
+                return Q.all([
                     this._processDocuments(data),
                     this._processLevels(data)
                 ]);

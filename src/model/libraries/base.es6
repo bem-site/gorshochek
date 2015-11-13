@@ -1,4 +1,4 @@
-import vowNode from 'vow-node';
+import Q from 'q';
 import fsExtra from 'fs-extra';
 import Logger from 'bem-site-logger';
 
@@ -55,11 +55,8 @@ export default class Base {
      */
     saveFile(filePath, content, isJSON) {
         const method = isJSON ? 'outputJSON' : 'outputFile';
-        return vowNode
-            .invoke(fsExtra[method], filePath, content)
-            .then(() => {
-                return filePath;
-            })
+        return Q.nfcall(fsExtra[method], filePath, content)
+            .thenResolve(filePath)
             .catch(error => {
                 this.logger
                     .error(`Error occur while saving file: ${filePath}`)

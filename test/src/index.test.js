@@ -1,5 +1,4 @@
-var should = require('should'),
-    Config = require('../../lib/config'),
+var Config = require('../../lib/config'),
     Builder = require('../../lib/index'),
     Init = require('../../lib/tasks/init');
 

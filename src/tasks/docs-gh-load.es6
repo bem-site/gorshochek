@@ -1,6 +1,5 @@
-import fs from 'fs';
 import path from 'path';
-import vow from 'vow';
+import Q from 'q';
 import _ from 'lodash';
 import GitHub from '../github';
 import Base from './base';
@@ -108,23 +107,21 @@ export default class DocsLoadGithub extends Base {
      * @private
      */
     processPage(model, page, languages) {
-        return vow.allResolved(languages.map((language) => {
+        return Q.allSettled(languages.map((language) => {
             const repoInfo = this.getCriteria(page, language);
 
             // Проверяем на наличие правильного поля contentFile
             // это сделано потому, что предварительный фильтр мог сработать
             // для страниц у которых только часть из языковых версий удовлетворяла критерию
             if(!repoInfo) {
-                return vow.resolve();
+                return Q();
             }
 
             // сначала нужно проверить информацию в кеше
             // там есть etag и sha загруженного файла
             this.logger.debug(`Load doc file for language: => ${language} and page with url: => ${page.url}`);
             return this.readFileFromCache(path.join(page.url, language + '.meta.json'))
-                .then(content => {
-                    return JSON.parse(content);
-                })
+                .then(JSON.parse)
                 .then(cache => {
                     cache = cache || {};
                     // выполняется запрос на gh
@@ -136,12 +133,12 @@ export default class DocsLoadGithub extends Base {
                             // берем данные из кеша
                             if(result.meta.status === '304 Not Modified') {
                                 this.logger.verbose('Document was not changed: %s', page.url);
-                                return Promise.resolve(path.join(page.url, cache.fileName));
+                                return Q(path.join(page.url, cache.fileName));
                             }
 
                             // дополнительная проверка изменения в файле путем сравнения sha сум
                             if(cache.sha === result.sha) {
-                                return Promise.resolve(path.join(page.url, cache.fileName));
+                                return Q(path.join(page.url, cache.fileName));
                             }
 
                             if(!cache.sha) {
@@ -170,7 +167,7 @@ export default class DocsLoadGithub extends Base {
                             3. Ветку из которой был загружен документ. Если загрузка была
                             произведена из тега - то ссылку на основную ветку репозитория
                             */
-                            return vow.allResolved([
+                            return Q.allSettled([
                                 this._getUpdateDateInfo(repoInfo, this._getHeadersByCache(cache)),
                                 this._getIssuesInfo(repoInfo, this._getHeadersByCache(cache)),
                                 this._getBranch(repoInfo, this._getHeadersByCache(cache))
@@ -192,7 +189,7 @@ export default class DocsLoadGithub extends Base {
                                 }
 
                                 // записываем файл мета-данных и файл с контентом в кеш
-                                return vow.all([
+                                return Q.all([
                                     this.writeFileToCache(path.join(page.url, language + '.meta.json'), JSON.stringify(cache, null, 4)),
                                     this.writeFileToCache(filePath, content)
                                 ]);
@@ -206,9 +203,7 @@ export default class DocsLoadGithub extends Base {
                             return filePath;
                         });
                 });
-        })).then(() => {
-            return page;
-        });
+        })).thenResolve(page);
     }
 
     /**
@@ -217,11 +212,7 @@ export default class DocsLoadGithub extends Base {
      */
     run(model) {
         this.beforeRun();
-
-        // обрабатываем страницы в модели
-        return this.processPages(model).then(() => {
-            return Promise.resolve(model);
-        });
+        return this.processPages(model).thenResolve(model);
     }
 }
 

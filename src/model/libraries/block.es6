@@ -1,5 +1,5 @@
 import path from 'path';
-import vow from 'vow';
+import Q from 'q';
 import Base from './base';
 
 /**
@@ -75,8 +75,7 @@ export default class Block extends Base {
             const filePath = path.join(sourcePath, `${lang}.json`);
             const contentFilePath = [baseUrl, lib, version,
                     this.level.level, this.block, lang].join(path.sep) + '.json';
-            return vow
-                .when({
+            return Q({
                     data: this._rectifyBlockDocumentation(data.data, lang),
                     jsdoc: this._rectifyBlockJSDocumentation(data.jsdoc, lang)
                 })
@@ -84,7 +83,7 @@ export default class Block extends Base {
                 .then(() => this.setValue('contentFile', contentFilePath, lang));
         });
 
-        return vow.all(promises);
+        return Q.all(promises);
     }
 
     /**

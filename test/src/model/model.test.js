@@ -1,5 +1,4 @@
 var _ = require('lodash'),
-    should = require('should'),
     Changes = require('../../../lib/model/changes'),
     Model = require('../../../lib/model/model');
 
@@ -28,7 +27,7 @@ describe('Model', function() {
         });
 
         it('should can set and get newModel', function() {
-            should(model.getNewModel()).not.be.ok;
+            should.not.exist(model.getNewModel());
             model.setNewModel({foo: 'bar'});
             model.getNewModel().should.be.eql({foo: 'bar'});
         });
@@ -44,7 +43,7 @@ describe('Model', function() {
         });
 
         it('should can set and get oldModel', function() {
-            should(model.getOldModel()).not.be.ok;
+            should.not.exist(model.getOldModel());
             model.setOldModel({foo: 'bar'});
             model.getOldModel().should.be.eql({foo: 'bar'});
         });

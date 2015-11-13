@@ -1,7 +1,5 @@
 var _ = require('lodash'),
-    vow = require('vow'),
-    sinon = require('sinon'),
-    should = require('should'),
+    Q = require('q'),
     Document = require('../../../../lib/model/libraries/document');
 
 describe('Document', function() {
@@ -73,7 +71,7 @@ describe('Document', function() {
         };
         beforeEach(function() {
             document = new Document(versionData, 'changelog');
-            sandbox.stub(document, 'saveFile').returns(vow.resolve());
+            sandbox.stub(document, 'saveFile').returns(Q());
         });
 
         it('should set valid value for "url" property', function() {
@@ -132,19 +130,19 @@ describe('Document', function() {
 
         it('should set null "sourceUrl" if it was not set', function() {
             return document.processData(_.merge({}, docData, {url: null})).then(function() {
-                should(document.getData().en.sourceUrl).equal(null);
+                should.not.exist(document.getData().en.sourceUrl);
             });
         });
 
         it('should set null "sourceUrl" if it was not set for given language', function() {
             return document.processData(_.merge({}, docData, {url: {en: null}})).then(function() {
-                should(document.getData().en.sourceUrl).equal(null);
+                should.not.exist(document.getData().en.sourceUrl);
             });
         });
 
         it('should return valid "sourceUrl" value for given lang', function() {
             return document.processData(_.merge({url: {en: 'http://url1'}}, docData)).then(function() {
-                should(document.getData().en.sourceUrl).equal('http://url1');
+                document.getData().en.sourceUrl.should.equal('http://url1');
             });
         });
 

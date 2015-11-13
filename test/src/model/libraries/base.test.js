@@ -1,6 +1,4 @@
 var fsExtra = require('fs-extra'),
-    sinon = require('sinon'),
-    should = require('should'),
     Logger = require('bem-site-logger'),
     Base = require('../../../../lib/model/libraries/base');
 

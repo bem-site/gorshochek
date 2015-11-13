@@ -1,5 +1,5 @@
 import path from 'path';
-import vow from 'vow';
+import Q from 'q';
 import Base from './base';
 
 /**
@@ -92,7 +92,7 @@ export default class Document extends Base {
             });
         });
 
-        return vow.all(promises);
+        return Q.all(promises);
     }
 
     /**

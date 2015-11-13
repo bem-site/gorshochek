@@ -1,4 +1,4 @@
-import vow from 'vow';
+import Q from 'q';
 import Base from './base';
 import Block from './block';
 
@@ -60,8 +60,7 @@ export default class Level extends Base {
         // сохранить файлы с документацией и jsdoc для каждого блока
         // и вернуть данные страниц блоков. После чего эти данные склеиваются друг с другом
         // и данными самого уровня переопределения в единый массив
-        return vow
-            .all(data.blocks.map(block => {
+        return Q.all(data.blocks.map(block => {
                 return (new Block(this, block.name)).processData(block);
             }))
             .then(blocks => {

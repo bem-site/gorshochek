@@ -1,7 +1,5 @@
 var path = require('path'),
-    should = require('should'),
     Config = require('../../../lib/config'),
-    Model = require('../../../lib/model/model'),
     LibrariesBase = require('../../../lib/tasks/libraries-base');
 
 describe('LibrariesBase', function() {
@@ -14,7 +12,7 @@ describe('LibrariesBase', function() {
 
         beforeEach(function() {
             config = new Config('debug');
-            task = new LibrariesBase(config, { baseUrl: '/libraries'});
+            task = new LibrariesBase(config, {baseUrl: '/libraries'});
         });
 
         describe('getLibrariesCachePath', function() {

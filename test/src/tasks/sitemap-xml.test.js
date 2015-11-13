@@ -1,7 +1,5 @@
 var EOL = require('os').EOL,
     fs = require('fs'),
-    should = require('should'),
-    sinon = require('sinon'),
     Config = require('../../../lib/config'),
     Model = require('../../../lib/model/model'),
     BuildSiteMapXML = require('../../../lib/tasks/sitemap-xml');

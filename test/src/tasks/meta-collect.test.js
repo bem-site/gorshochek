@@ -1,5 +1,4 @@
 var path = require('path'),
-    should = require('should'),
     fsExtra = require('fs-extra'),
     mockFs = require('mock-fs'),
     Config = require('../../../lib/config'),

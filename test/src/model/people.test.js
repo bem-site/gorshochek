@@ -1,5 +1,4 @@
 var fsExtra = require('fs-extra'),
-    sinon = require('sinon'),
     People = require('../../../lib/model/people');
 
 describe('People', function() {

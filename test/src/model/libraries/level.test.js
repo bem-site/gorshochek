@@ -1,7 +1,4 @@
-var _ = require('lodash'),
-    vow = require('vow'),
-    sinon = require('sinon'),
-    should = require('should'),
+var Q = require('q'),
     Block = require('../../../../lib/model/libraries/block'),
     Level = require('../../../../lib/model/libraries/level');
 
@@ -49,7 +46,7 @@ describe('Level', function() {
         };
 
         beforeEach(function() {
-            sandbox.stub(Block.prototype, 'processData').returns(vow.resolve({}));
+            sandbox.stub(Block.prototype, 'processData').returns(Q({}));
             level = new Level(versionData, 'desktop.docs');
         });
 

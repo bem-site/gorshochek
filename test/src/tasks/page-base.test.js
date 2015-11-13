@@ -1,5 +1,4 @@
-var should = require('should'),
-    Config = require('../../../lib/config'),
+var Config = require('../../../lib/config'),
     PageBase = require('../../../lib/tasks/page-base');
 
 describe('PageBase', function() {

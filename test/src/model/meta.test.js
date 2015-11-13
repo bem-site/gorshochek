@@ -1,6 +1,4 @@
-var sinon = require('sinon'),
-    should = require('should-sinon'),
-    fsExtra = require('fs-extra'),
+var fsExtra = require('fs-extra'),
     Meta = require('../../../lib/model/meta');
 
 describe('Meta', function() {

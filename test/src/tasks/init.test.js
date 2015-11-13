@@ -1,7 +1,6 @@
 var path = require('path'),
-    vow = require('vow'),
+    Q = require('q'),
     fsExtra = require('fs-extra'),
-    sinon = require('sinon'),
     Model = require('../../../lib/model/model'),
     Config = require('../../../lib/config'),
     Init = require('../../../lib/tasks/init');
@@ -18,7 +17,7 @@ describe('Init', function() {
 
         fsExtra.copy.yields(null);
         fsExtra.readJSON.yields(null, []);
-        task.readFileFromCache.returns(vow.resolve([]));
+        task.readFileFromCache.returns(Q([]));
     });
 
     afterEach(function() {
@@ -52,14 +51,14 @@ describe('Init', function() {
         var setOldModel = sandbox.spy(Model.prototype, 'setOldModel');
         var error = new Error('error');
         error.code = 'ENOENT';
-        task.readFileFromCache.returns(vow.reject(error));
+        task.readFileFromCache.returns(Q.reject(error));
         return task.run(new Model()).then(function() {
             setOldModel.calledWith([]).should.be.equal(true);
         });
     });
 
     it('should return rejected promise if loading of old model file was failed by another reason', function() {
-        task.readFileFromCache.returns(vow.reject(new Error('IO error')));
+        task.readFileFromCache.returns(Q.reject(new Error('IO error')));
         return task.run(new Model()).catch(function(error) {
             error.message.should.be.equal('IO error');
         });
@@ -75,7 +74,7 @@ describe('Init', function() {
     it('should replace old model file by new model file', function() {
         return task.run(new Model()).then(function() {
             fsExtra.copy
-                .calledWith(config.getModelFilePath(), path.join(config.getCacheFolder(), 'model.json'))
+                .calledWithMatch(sinon.match.any, config.getModelFilePath(), path.join(config.getCacheFolder(), 'model.json'))
                 .should.be.equal(true);
         });
     });

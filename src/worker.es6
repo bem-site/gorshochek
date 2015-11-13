@@ -1,6 +1,6 @@
 import path from 'path';
 import _ from 'lodash';
-import vow from 'vow';
+import Q from 'q';
 import fsExtra from 'fs-extra';
 import Version from './model/libraries/version';
 
@@ -12,12 +12,7 @@ import Version from './model/libraries/version';
  * @returns {Promise}
  */
 const readFile = (basePath, lib, version) => {
-    const filePath = path.join(basePath, lib, version, 'storage.data.json');
-    return new Promise((resolve, reject) => {
-        fsExtra.readJSON(filePath, (error, content) => {
-            error ? reject(error) : resolve(content);
-        });
-    });
+    return Q.nfcall(fsExtra.readJSON, path.join(basePath, lib, version, 'storage.data.json'));
 };
 
 /**
@@ -46,7 +41,7 @@ module.exports = function(data, callback) {
     return queue
         .reduce((prev, portion) => {
             return prev.then(() => {
-                return vow.all(portion.map(item => {
+                return Q.all(portion.map(item => {
                     const lib = item.lib;
                     const version = item.version;
 
@@ -54,7 +49,7 @@ module.exports = function(data, callback) {
                         .then((new Version(baseUrl, basePath, lib, version, languages)).processData);
                 }));
             });
-        }, vow.resolve())
+        }, Q())
         .then(() => {
             callback(null);
         })

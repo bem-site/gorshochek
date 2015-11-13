@@ -1,7 +1,5 @@
 --reporter spec
 --ui bdd
 --growl
---require should
---require should-sinon
---require should-promised
---timeout 5000
+--require ./test/setup.js
+--timeout 1000

@@ -1,5 +1,4 @@
-var should = require('should'),
-    Config = require('../../../lib/config'),
+var Config = require('../../../lib/config'),
     Model = require('../../../lib/model/model'),
     PageSearchMeta = require('../../../lib/tasks/page-search-meta');
 

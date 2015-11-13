@@ -4,12 +4,10 @@
  * @author Kuznetsov Andrey
  */
 
-import fs from 'fs';
 import path from 'path';
 import fsExtra from 'fs-extra';
 import MDS from 'mds-wrapper';
-import vow from 'vow';
-import vowNode from 'vow-node';
+import Q from 'q';
 import _ from 'lodash';
 import LibrariesBase from './libraries-base';
 
@@ -87,7 +85,7 @@ export default class LibrariesSyncMDS extends LibrariesBase {
     _getRegistryFromMDS() {
         // загружаем файл реестра с MDS хранилища с помощью MDS API
         // по url: http://{mds host}:{mds port}/get-{mds namespace}/root
-        return vowNode.invoke(this.api.read, 'root')
+        return Q.nfcall(this.api.read, 'root')
             .then(content => {
                 return content ? JSON.parse(content) : {};
             })
@@ -184,16 +182,14 @@ export default class LibrariesSyncMDS extends LibrariesBase {
         // http://{mds host}:{mds port}/{get-namespace}/{lib}/{version}/data.json
         // сохраняется на файловую систему по пути:
         // {директория кеша}/{baseUrl|libs}/{lib}/{version}/mds.data.json
-        return vowNode.invoke(fsExtra.ensureDir, this.getLibVersionPath(lib, version))
+        return Q.nfcall(fsExtra.ensureDir, this.getLibVersionPath(lib, version))
             .then(() => {
-                return vowNode.invoke(this.api.read, `${lib}/${version}/data.json`)
+                return Q.nfcall(this.api.read, `${lib}/${version}/data.json`);
             })
             .then(content => {
                 return this.writeFileToCache(filePath, content);
             })
-            .then(() => {
-                return item;
-            })
+            .thenResolve(item)
             .catch(error => {
                 this.logger
                     .error(error.message)
@@ -217,7 +213,7 @@ export default class LibrariesSyncMDS extends LibrariesBase {
 
         this.logger.debug(`Remove "data.json" file for library: ${lib} and version: ${version}`);
 
-        return vowNode.invoke(fsExtra.remove, this.getLibVersionPath(lib, version))
+        return Q.nfcall(fsExtra.remove, this.getLibVersionPath(lib, version))
             .catch(error => {
                 this.logger
                     .error(error.message)
@@ -240,8 +236,7 @@ export default class LibrariesSyncMDS extends LibrariesBase {
 
         let _remote;
 
-        return vow
-            .all([
+        return Q.all([
                 this.readFileFromCache('registry.json', true),
                 this._getRegistryFromMDS()
             ])
@@ -250,32 +245,29 @@ export default class LibrariesSyncMDS extends LibrariesBase {
                 return this._compareRegistryFiles(model, local, remote);
             })
             .then((diff) => {
-                return vow.all([
-                    vow.resolve([].concat(diff.added).concat(diff.modified)),
-                    vow.resolve([].concat(diff.removed).concat(diff.modified))
+                return Q.all([
+                    Q([].concat(diff.added).concat(diff.modified)),
+                    Q([].concat(diff.removed).concat(diff.modified))
                 ]);
             })
             .spread((downloadQueue, removeQueue) => {
-                return vow
-                    .all(removeQueue.map(this._removeLibraryVersionFolder.bind(this)))
-                    .then(() => {
-                        return downloadQueue;
-                    });
+                return Q.all(removeQueue.map(this._removeLibraryVersionFolder.bind(this)))
+                    .thenResolve(downloadQueue);
             })
             .then((downloadQueue) => {
                 const portions = _.chunk(downloadQueue, 5);
                 return portions.reduce((prev, portion) => {
                     return prev.then(() => {
-                        return vow.all(portion.map(this._saveLibraryVersionFile.bind(this)));
+                        return Q.all(portion.map(this._saveLibraryVersionFile.bind(this)));
                     });
-                }, vow.resolve());
+                }, Q());
             })
             .then(() => {
                 return this.writeFileToCache('registry.json', JSON.stringify(_remote));
             })
             .then(() => {
                 this.logger.info(`Successfully finish task "${this.constructor.getName()}"`);
-                return Promise.resolve(model);
+                return Q(model);
             });
     }
 }

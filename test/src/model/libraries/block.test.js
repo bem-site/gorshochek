@@ -1,6 +1,4 @@
-var vow = require('vow'),
-    sinon = require('sinon'),
-    should = require('should'),
+var Q = require('q'),
     Block = require('../../../../lib/model/libraries/block');
 
 describe('Block', function() {
@@ -28,7 +26,7 @@ describe('Block', function() {
     });
 
     it('should set block documentation to null if it is missed', function() {
-        should(block._rectifyBlockDocumentation(undefined, 'en')).equal(null);
+        should.not.exist(block._rectifyBlockDocumentation(undefined, 'en'));
     });
 
     it('should return valid block jsdoc', function() {
@@ -36,7 +34,7 @@ describe('Block', function() {
     });
 
     it('should set block jsdoc to null if it is missed', function() {
-        should(block._rectifyBlockJSDocumentation(undefined, 'en')).equal(null);
+        should.not.exist(block._rectifyBlockJSDocumentation(undefined, 'en'));
     });
 
     describe('processData', function() {
@@ -53,7 +51,7 @@ describe('Block', function() {
 
         beforeEach(function() {
             block = new Block(level, 'button');
-            sandbox.stub(block, 'saveFile').returns(vow.resolve());
+            sandbox.stub(block, 'saveFile').returns(Q());
         });
 
         it('should set valid block url', function() {

@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import Rsync from 'rsync';
 import _ from 'lodash';
-import vowNode from 'vow-node';
+import Q from 'q';
 import Base from './base';
 
 export default class Finalize extends Base {
@@ -95,7 +95,7 @@ export default class Finalize extends Base {
         const dataFilePath = path.join(this.getBaseConfig().getDataFolder(), 'data.json');
 
         this.logger.debug('Save data file:').debug(`==> to ${dataFilePath}`);
-        return vowNode.invoke(fs.writeFile, dataFilePath, JSON.stringify(model.getPages()))
+        return Q.nfcall(fs.writeFile, dataFilePath, JSON.stringify(model.getPages()))
             .catch(error => {
                 this.logger
                     .error('Error occur while saving data.json file').error(error.message);

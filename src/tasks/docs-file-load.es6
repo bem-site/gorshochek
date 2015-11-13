@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import vow from 'vow';
-import vowNode from 'vow-node';
+import Q from 'Q';
 import Base from './base';
 
 export default class DocsFileLoad extends Base {
@@ -47,7 +46,7 @@ export default class DocsFileLoad extends Base {
      * @private
      */
     _readFile(page, language, filePath) {
-        return vowNode.invoke(fs.readFile, filePath, {encoding: 'utf-8'})
+        return Q.nfcall(fs.readFile, filePath, {encoding: 'utf-8'})
             .catch(error => {
                 this.logger
                     .error(`Error occur while loading file for page: ${page.url} and language ${language}`)
@@ -97,14 +96,14 @@ export default class DocsFileLoad extends Base {
             .verbose(`fileName: ${fileName}`)
             .verbose(`fileExt: ${fileExt}`);
 
-        return vow.allResolved([
+        return Q.allSettled([
             this.readFileFromCache(cacheFilePath),
             this._readFile(page, language, localFilePath)
         ]).spread((cache, local) => {
             if(local.isRejected()) {
                 return onReadFileError(local);
             }else if(cache.isRejected()) {
-                return onAddedDocument(local)
+                return onAddedDocument(local);
             }else if(cache.valueOf() !== local.valueOf()) {
                 return onModifiedDocument(local);
             }else {
@@ -125,11 +124,9 @@ export default class DocsFileLoad extends Base {
      * @protected
      */
     processPage(model, page, languages) {
-        return vow.allResolved(languages.map((language) => {
+        return Q.allSettled(languages.map((language) => {
             return this._processPageForLang(model, page, language);
-        })).then(() => {
-            return page;
-        });
+        })).thenResolve(page);
     }
 
     /**
@@ -138,9 +135,7 @@ export default class DocsFileLoad extends Base {
      */
     run(model) {
         this.beforeRun();
-        return this.processPages(model, 20).then(() => {
-            return Promise.resolve(model);
-        });
+        return this.processPages(model, 20).thenResolve(model);
     }
 }
 

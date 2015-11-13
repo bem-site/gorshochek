@@ -1,6 +1,4 @@
 var fs = require('fs'),
-    sinon = require('sinon'),
-    should = require('should'),
     fsExtra = require('fs-extra'),
     Config = require('../../../lib/config'),
     Model = require('../../../lib/model/model'),

@@ -1,6 +1,4 @@
-var path = require('path'),
-    should = require('should'),
-    Config = require('../../../lib/config'),
+var Config = require('../../../lib/config'),
     Model = require('../../../lib/model/model'),
     LibrariesDataGen = require('../../../lib/tasks/libraries-data-gen');
 

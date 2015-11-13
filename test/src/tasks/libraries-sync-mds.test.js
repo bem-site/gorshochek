@@ -1,7 +1,6 @@
 var fs = require('fs'),
     path = require('path'),
-    vow = require('vow'),
-    should = require('should'),
+    Q = require('q'),
     MDS = require('mds-wrapper'),
     fsExtra = require('fs-extra'),
     emulator = require('mds-wrapper/mds-emulator.js'),
@@ -519,7 +518,7 @@ describe('LibrariesSynMDS', function() {
                         return testAPI.writeP(item.lib + '/' + item.version + '/data.json', JSON.stringify(item));
                     }));
 
-                return vow.all(promises)
+                return Q.all(promises)
                     .then(function() {
                         var model = new Model();
                         return task.run(model);

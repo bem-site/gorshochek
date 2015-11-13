@@ -1,5 +1,4 @@
 var _ = require('lodash'),
-    should = require('should'),
     nock = require('nock'),
     Github = require('../../lib/github');
 

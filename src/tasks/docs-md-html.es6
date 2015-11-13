@@ -1,6 +1,5 @@
 import path from 'path';
-import vow from 'vow';
-import vowNode from 'vow-node';
+import Q from 'q';
 import mdToHtml from 'bem-md-renderer';
 import Base from './base';
 
@@ -48,7 +47,7 @@ export default class DocsMdToHtml extends Base {
      * @private
      */
     _mdToHtml(page, language, md) {
-        return vowNode.invoke(mdToHtml.render, md)
+        return Q.nfcall(mdToHtml.render, md)
             .catch(error => {
                 this.logger
                     .error(`Error occur while transform md -> html for page: ${page.url} and language ${language}`)
@@ -66,9 +65,9 @@ export default class DocsMdToHtml extends Base {
      * @private
      */
     processPage(model, page, languages) {
-        return vow.allResolved(languages.map((language) => {
+        return Q.allSettled(languages.map((language) => {
             if(!this.getCriteria(page, language)) {
-                return Promise.resolve(page);
+                return Q(page);
             }
 
             this.logger.debug(`md -> html for language: => ${language} and page with url: => ${page.url}`);
@@ -84,9 +83,7 @@ export default class DocsMdToHtml extends Base {
                     page[language].contentFile = htmlFilePath;
                     return page;
                 });
-        })).then(() => {
-            return page;
-        });
+        })).thenResolve(page);
     }
 
     /**
@@ -95,8 +92,6 @@ export default class DocsMdToHtml extends Base {
      */
     run(model) {
         this.beforeRun();
-        return this.processPages(model, 20).then(() => {
-            return Promise.resolve(model);
-        });
+        return this.processPages(model, 20).thenResolve(model);
     }
 }

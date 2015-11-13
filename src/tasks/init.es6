@@ -1,7 +1,6 @@
 import path from 'path';
 import _ from 'lodash';
-import vow from 'vow';
-import vowNode from 'vow-node';
+import Q from 'q';
 import fsExtra from 'fs-extra';
 import Base from './base';
 
@@ -50,7 +49,7 @@ export default class Init extends Base {
      */
     _loadNewModel() {
         return _.chain(this.getBaseConfig().getModelFilePath())
-            .thru(vowNode.promisify(fsExtra.readJSON).bind(fsExtra))
+            .thru(Q.nfbind(fsExtra.readJSON, fsExtra))
             .value()
             .catch(error => {
                 this.logger.error(`Can\'t read or parse model file ${this.getBaseConfig().getModelFilePath()}`);
@@ -105,7 +104,7 @@ export default class Init extends Base {
             .debug(`==> from ${newModelFilePath}`)
             .debug(`==> to ${oldModelFilePath}`);
 
-        return vowNode.promisify(fsExtra.copy).call(fsExtra, newModelFilePath, oldModelFilePath);
+        return Q.nfbind(fsExtra.copy, fsExtra)(newModelFilePath, oldModelFilePath);
     }
 
     /**
@@ -120,8 +119,7 @@ export default class Init extends Base {
             ._createFolder(this.getBaseConfig().getCacheFolder())
             ._createFolder(this.getBaseConfig().getDataFolder());
 
-        return vow
-            .all([
+        return Q.all([
                 this._loadOldModel(),
                 this._loadNewModel()
             ])

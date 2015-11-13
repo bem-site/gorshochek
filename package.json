@@ -30,14 +30,15 @@
     "lodash": "^3.x",
     "mds-wrapper": "^1.4.0",
     "moment": "^2.x",
+    "q": "^1.4.1",
     "rsync": "^0.4.0",
-    "vow": "~0.4.x",
-    "vow-node": "^0.3.x",
     "worker-farm": "^1.3.1"
   },
   "devDependencies": {
     "babel": "^5.8.20",
     "babel-eslint": "^4.1.1",
+    "chai": "^3.4.1",
+    "chai-as-promised": "^5.1.0",
     "esdoc": "^0.1.4",
     "eslint-plugin-arrow-function": "^1.0.1",
     "gulp": "^3.9.0",
@@ -55,9 +56,8 @@
     "mocha-lcov-reporter": "0.0.x",
     "mock-fs": "^3.0.0",
     "nock": "^2.10.0",
-    "should": "~6.x",
-    "should-sinon": "0.0.3",
-    "sinon": "^1.17.2"
+    "sinon": "^1.17.2",
+    "sinon-chai": "^2.8.0"
   },
   "scripts": {
     "eslint": "gulp eslint",
