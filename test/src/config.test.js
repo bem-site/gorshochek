@@ -38,7 +38,7 @@ describe('Config', function() {
 
     describe('method setLanguages', function() {
         it('should can be used in chain', function() {
-            config.setLanguages().should.be.instanceOf(Config);
+            config.setLanguages().should.be.instanceof(Config);
         });
 
         it('should set with given value', function() {
@@ -54,7 +54,7 @@ describe('Config', function() {
 
     describe('method setLoggerSettings', function() {
         it('should can be used in chain', function() {
-            config.setLogLevel().should.be.instanceOf(Config);
+            config.setLogLevel().should.be.instanceof(Config);
         });
 
         it('should set with given value', function() {
@@ -70,17 +70,17 @@ describe('Config', function() {
 
     describe('method setModelFilePath', function() {
         it('should can be used in chain', function() {
-            config.setModelFilePath().should.be.instanceOf(Config);
+            config.setModelFilePath().should.be.instanceof(Config);
         });
 
         it('should set with given value', function() {
             config.setModelFilePath('./foo/bar.json');
-            config.getModelFilePath().should.equal('./foo/bar.json');
+            config.getModelFilePath().should.be.equal('./foo/bar.json');
         });
 
         it('should set with default value', function() {
             config.setModelFilePath();
-            config.getModelFilePath().should.equal('./model/model.json');
+            config.getModelFilePath().should.be.equal('./model/model.json');
         });
     });
 
@@ -91,12 +91,12 @@ describe('Config', function() {
 
         it('should set with given value', function() {
             config.setDataFolder('./data1');
-            config.getDataFolder().should.equal('./data1');
+            config.getDataFolder().should.be.equal('./data1');
         });
 
         it('should set with default value', function() {
             config.setDataFolder();
-            config.getDataFolder().should.equal('./data');
+            config.getDataFolder().should.be.equal('./data');
         });
     });
 

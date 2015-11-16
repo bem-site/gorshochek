@@ -10,20 +10,20 @@ describe('Model', function() {
     });
 
     it('should have empty array of pages after initialization', function() {
-        model.getPages().should.be.instanceOf(Array).and.have.length(0);
+        model.getPages().should.be.instanceof(Array).and.be.empty;
     });
 
     it('should have model of changes', function() {
-        model.getChanges().should.be.instanceOf(Changes);
+        model.getChanges().should.be.instanceof(Changes);
     });
 
     describe('newModel property', function() {
         it('should have getter', function() {
-            model.getNewModel.should.be.instanceOf(Function);
+            model.getNewModel.should.be.instanceof(Function);
         });
 
         it('should have setter', function() {
-            model.setNewModel.should.be.instanceOf(Function);
+            model.setNewModel.should.be.instanceof(Function);
         });
 
         it('should can set and get newModel', function() {
@@ -35,11 +35,11 @@ describe('Model', function() {
 
     describe('oldModel property', function() {
         it('should have getter', function() {
-            model.getOldModel.should.be.instanceOf(Function);
+            model.getOldModel.should.be.instanceof(Function);
         });
 
         it('should have setter', function() {
-            model.setOldModel.should.be.instanceOf(Function);
+            model.setOldModel.should.be.instanceof(Function);
         });
 
         it('should can set and get oldModel', function() {
@@ -51,15 +51,15 @@ describe('Model', function() {
 
     describe('pages property', function() {
         it('should have getter', function() {
-            model.getPages.should.be.instanceOf(Function);
+            model.getPages.should.be.instanceof(Function);
         });
 
         it('should have setter', function() {
-            model.setPages.should.be.instanceOf(Function);
+            model.setPages.should.be.instanceof(Function);
         });
 
         it('should can set and get pages', function() {
-            model.getPages().should.have.length(0);
+            model.getPages().should.be.empty;
             model.setPages([{url: '/url1'}]);
             model.getPages().should.be.eql([{url: '/url1'}]);
         });
@@ -166,37 +166,37 @@ describe('Model', function() {
         it('should set default "oldUrls" property value as empty array', function() {
             prepareModelPages({});
             model.normalize(languages);
-            model.getPages().shift().oldUrls.should.eql([]);
+            model.getPages().shift().oldUrls.should.be.empty;
         });
 
         it('should set given "view" property value as is if it was given', function() {
             prepareModelPages({view: 'index'});
             model.normalize(languages);
-            model.getPages().shift().view.should.equal('index');
+            model.getPages().shift().view.should.be.equal('index');
         });
 
         it('should set default "view" property value as "post"', function() {
             prepareModelPages({});
             model.normalize(languages);
-            model.getPages().shift().view.should.equal('post');
+            model.getPages().shift().view.should.be.equal('post');
         });
 
         it('should set given "published" property value as is', function() {
             prepareModelPages({ru: {published: true, title: 'Hello World'}});
             model.normalize(languages);
-            model.getPages().shift().ru.published.should.equal(true);
+            model.getPages().shift().ru.published.should.be.true;
         });
 
         it('should set default "published" property value as false', function() {
             prepareModelPages({});
             model.normalize(languages);
-            model.getPages().shift().ru.published.should.equal(false);
+            model.getPages().shift().ru.published.should.be.false;
         });
 
         it('should set "published" false when title as missed', function() {
             prepareModelPages({en: {published: true}});
             model.normalize(languages);
-            model.getPages().shift().en.published.should.equal(false);
+            model.getPages().shift().en.published.should.be.false;
         });
     });
 });

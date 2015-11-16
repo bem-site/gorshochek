@@ -20,23 +20,23 @@ describe('Version', function() {
     });
 
     it('should set valid value for "baseUrl" property after initialization', function() {
-        version.baseUrl.should.equal('/libraries');
+        version.baseUrl.should.be.equal('/libraries');
     });
 
     it('should set valid value for "basePath" property after initialization', function() {
-        version.basePath.should.equal('/base-path');
+        version.basePath.should.be.equal('/base-path');
     });
 
     it('should set valid value for "languages" property after initialization', function() {
-        version.languages.should.eql(['en']);
+        version.languages.should.be.eql(['en']);
     });
 
     it('should set valid value for "lib" property after initialization', function() {
-        version.lib.should.equal('some-lib');
+        version.lib.should.be.equal('some-lib');
     });
 
     it('should set valid value for "version" property after initialization', function() {
-        version.version.should.equal('v1');
+        version.version.should.be.equal('v1');
     });
 
     describe('processData', function() {
@@ -55,7 +55,7 @@ describe('Version', function() {
 
         it('should set valid value for "aliases" property', function() {
             return version.processData(versionData).then(function() {
-                version.getData().aliases.should.be.eql([]);
+                version.getData().aliases.should.be.instanceof(Array).and.be.empty;
             });
         });
 
@@ -79,7 +79,7 @@ describe('Version', function() {
 
         it('should set valid value for "deps" property', function() {
             return version.processData(versionData).then(function() {
-                version.getData().deps.should.be.eql({});
+                version.getData().deps.should.be.empty;
             });
         });
 
@@ -91,7 +91,7 @@ describe('Version', function() {
 
         it('should set valid value for "published" property', function() {
             return version.processData(versionData).then(function() {
-                version.getData().en.published.should.be.equal(true);
+                version.getData().en.published.should.be.true;
             });
         });
 
@@ -103,7 +103,7 @@ describe('Version', function() {
 
         it('should set valid value for "hasIssues" property', function() {
             return version.processData(versionData).then(function() {
-                version.getData().en.hasIssues.should.equal(true);
+                version.getData().en.hasIssues.should.be.true;
             });
         });
 
@@ -123,7 +123,7 @@ describe('Version', function() {
             var data = _.extend({readme: {content: {en: 'Hello World'}}}, versionData);
             return version.processData(data).then(function() {
                 version.saveFile.should.be.calledTwice;
-                version.saveFile.firstCall.calledWith('/base-path/some-lib/v1/en.html')
+                version.saveFile.firstCall.should.be.calledWith('/base-path/some-lib/v1/en.html')
             });
         });
 
@@ -131,14 +131,14 @@ describe('Version', function() {
             var data = _.extend({docs: {readme: {content: {en: 'Hello World'}}}}, versionData);
             return version.processData(data).then(function() {
                 version.saveFile.should.be.calledTwice;
-                version.saveFile.firstCall.calledWith('/base-path/some-lib/v1/en.html')
+                version.saveFile.firstCall.should.be.calledWith('/base-path/some-lib/v1/en.html')
             });
         });
 
         it('should set valid value for "contentFile" property after saving doc file', function() {
             var data = _.extend({docs: {readme: {content: {en: 'Hello World'}}}}, versionData);
             return version.processData(data).then(function() {
-                version.getData().en.contentFile.should.equal('/libraries/some-lib/v1/en.html');
+                version.getData().en.contentFile.should.be.equal('/libraries/some-lib/v1/en.html');
             });
         });
 
@@ -147,7 +147,7 @@ describe('Version', function() {
             return version.processData(data).then(function() {
                 var expectedPath = '/base-path/some-lib/v1/cache.json',
                     expectedContent = [version.getData(), {name: 'readme'}];
-                version.saveFile.calledWith(expectedPath, expectedContent, true).should.be.equal(true);
+                version.saveFile.should.be.calledWith(expectedPath, expectedContent, true);
             });
         });
 
@@ -156,7 +156,7 @@ describe('Version', function() {
             return version.processData(data).then(function() {
                 var expectedPath = '/base-path/some-lib/v1/cache.json',
                     expectedContent = [version.getData(), {name: 'desktop'}];
-                version.saveFile.calledWith(expectedPath, expectedContent, true).should.be.equal(true);
+                version.saveFile.should.be.calledWith(expectedPath, expectedContent, true);
             });
         });
 
@@ -168,7 +168,7 @@ describe('Version', function() {
             return version.processData(data).then(function() {
                 var expectedPath = '/base-path/some-lib/v1/cache.json',
                     expectedContent = [version.getData(), {name: 'readme'}, {name: 'desktop'}];
-                version.saveFile.calledWith(expectedPath, expectedContent, true).should.be.equal(true);
+                version.saveFile.should.be.calledWith(expectedPath, expectedContent, true);
             });
         });
     });

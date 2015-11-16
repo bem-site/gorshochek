@@ -52,16 +52,12 @@ describe('Base', function() {
 
         it('should return file path of saved file on successfully saving', function() {
             fsExtra.outputJSON.yields(null, './file.json');
-            base.saveFile('./file.json', {foo: 'bar'}, true).then(function(filePath) {
-                filePath.should.equal('./file.json');
-            });
+            base.saveFile('./file.json', {foo: 'bar'}, true).should.eventually.equal('./file.json');
         });
 
         it('should trow error if error was occur while saving file', function() {
             fsExtra.outputJSON.yields(new Error('file error'));
-            base.saveFile('./file.json', {foo: 'bar'}, true).catch(function(error) {
-                error.message.should.equal('file error');
-            });
+            base.saveFile('./file.json', {foo: 'bar'}, true).should.be.rejectedWith('file error');
         });
     });
 });

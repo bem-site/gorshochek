@@ -18,31 +18,27 @@ describe('Base', function() {
     });
 
     it('should return valid task name', function() {
-       TaskBase.getName().should.equal('base');
+       TaskBase.getName().should.be.equal('base');
     });
 
     it('getBaseConfig', function() {
-        task.getBaseConfig().should.be.instanceOf(Config);
+        task.getBaseConfig().should.be.instanceof(Config);
     });
 
     it('getTaskConfig', function() {
-        task.getTaskConfig().should.be.instanceOf(Object);
+        task.getTaskConfig().should.be.instanceof(Object);
     });
 
     describe('"readFileFromCache" method', function() {
         it('should be resolved with content of text file', function() {
             sandbox.stub(fs, 'readFile').yields(null, 'foo1');
-            return task.readFileFromCache('./file1').then(function(content) {
-                content.should.equal('foo1');
-            });
+            return task.readFileFromCache('./file1').should.eventually.equal('foo1');
         });
 
         it('should be resolved with parsed content of json file', function() {
             var obj = {foo: 'bar'};
             sandbox.stub(fsExtra, 'readJSON').yields(null, obj);
-            return task.readFileFromCache('./file1', true).then(function(content) {
-                content.should.eql(obj);
-            });
+            return task.readFileFromCache('./file1', true).should.eventually.eql(obj);
         });
 
         it('should be rejected on error if file does not exists', function() {
@@ -60,8 +56,8 @@ describe('Base', function() {
             sandbox.stub(fsExtra, 'ensureDir').yields(null);
             sandbox.stub(fs, 'writeFile').yields(null);
             return task.writeFileToCache('/path-to-dir/file', 'foo').then(function() {
-                fsExtra.ensureDir.calledOnce.should.be.equal(true);
-                fsExtra.ensureDir.calledWith('/path-to-dir');
+                fsExtra.ensureDir.should.be.calledOnce;
+                fsExtra.ensureDir.should.be.calledWithMatch('/path-to-dir');
             });
         });
 
@@ -69,36 +65,30 @@ describe('Base', function() {
             sandbox.stub(fsExtra, 'ensureDir').yields(null);
             sandbox.stub(fs, 'writeFile').yields(null);
             return task.writeFileToCache('/path-to-dir/file', 'foo').then(function() {
-                fs.writeFile.calledOnce.should.be.equal(true);
-                fs.writeFile.calledWith('/path-to-dir/file');
+                fs.writeFile.should.be.calledOnce;
+                fs.writeFile.should.be.calledWithMatch('/path-to-dir/file');
             });
         });
 
         it('should return rejected promise in case of error while saving file', function() {
             sandbox.stub(fsExtra, 'ensureDir').yields(null);
             sandbox.stub(fs, 'writeFile').yields(new Error('file error'));
-            return task.writeFileToCache('/path-to-dir/file', 'foo').catch(function(error) {
-                error.message.should.equal('file error');
-            });
+            return task.writeFileToCache('/path-to-dir/file', 'foo').should.be.rejectedWith('file error')
         });
     });
 
     it('default implementation of "getCriteria" method should return false', function() {
-        task.getCriteria().should.equal(false);
+        task.getCriteria().should.be.false;
     });
 
     describe('processPage', function() {
         it('should return resolved promise with page', function() {
             var page = {url: '/url1'};
-            return task.processPage(new Model(), page, ['en', 'ru']).then(function(result) {
-                result.should.eql(page);
-            });
+            return task.processPage(new Model(), page, ['en', 'ru']).should.eventually.eql(page);
         });
     });
 
     it('default implementation of "run" function should return resolved promise with true value', function() {
-        return task.run().then(function(result) {
-            result.should.equal(true);
-        });
+        return task.run().should.eventually.be.true;
     });
 });

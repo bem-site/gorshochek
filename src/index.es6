@@ -1,4 +1,4 @@
-const Logger = require('bem-site-logger');
+    const Logger = require('bem-site-logger');
 
 import Config from './config';
 import Model from './model/model';

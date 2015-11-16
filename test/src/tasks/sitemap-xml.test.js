@@ -57,9 +57,9 @@ describe('SiteMapXML', function() {
 
         task = new BuildSiteMapXML(config, {hosts: {en: 'https://en.site.com'}});
         return task.run(model).then(function() {
-            fs.writeFile.calledWithMatch('data/sitemap.xml', buildExpectedXML([
+            fs.writeFile.should.be.calledWithMatch('data/sitemap.xml', buildExpectedXML([
                 {loc: 'https://en.site.com/url1', changefreq: 'weekly', priority: 0.5}
-            ])).should.equal(true);
+            ]));
         });
     });
 
@@ -75,10 +75,10 @@ describe('SiteMapXML', function() {
 
         task = new BuildSiteMapXML(config, {hosts: {en: 'https://en.site.com', ru: 'https://ru.site.com'}});
         return task.run(model).then(function() {
-            fs.writeFile.calledWithMatch('data/sitemap.xml', buildExpectedXML([
+            fs.writeFile.should.be.calledWithMatch('data/sitemap.xml', buildExpectedXML([
                 {loc: 'https://en.site.com/url1', changefreq: 'weekly', priority: 0.5},
                 {loc: 'https://ru.site.com/url1', changefreq: 'weekly', priority: 0.5}
-            ])).should.equal(true);
+            ]));
         });
     });
 
@@ -94,10 +94,10 @@ describe('SiteMapXML', function() {
 
         task = new BuildSiteMapXML(config, {hosts: 'https://my.site.com'});
         return task.run(model).then(function() {
-            fs.writeFile.calledWithMatch('data/sitemap.xml', buildExpectedXML([
+            fs.writeFile.should.be.calledWithMatch('data/sitemap.xml', buildExpectedXML([
                 {loc: 'https://my.site.com/url1', changefreq: 'weekly', priority: 0.5},
                 {loc: 'https://my.site.com/url1', changefreq: 'weekly', priority: 0.5}
-            ])).should.equal(true);
+            ]));
         });
     });
 
@@ -118,9 +118,9 @@ describe('SiteMapXML', function() {
 
         task = new BuildSiteMapXML(config, {hosts: {en: 'https://en.site.com'}});
         return task.run(model).then(function() {
-            fs.writeFile.calledWithMatch('data/sitemap.xml', buildExpectedXML([
+            fs.writeFile.should.be.calledWithMatch('data/sitemap.xml', buildExpectedXML([
                 {loc: 'https://en.site.com/url1', changefreq: 'daily', priority: 0.5}
-            ])).should.equal(true);
+            ]));
         });
     });
 
@@ -141,9 +141,9 @@ describe('SiteMapXML', function() {
 
         task = new BuildSiteMapXML(config, {hosts: {en: 'https://en.site.com'}});
         return task.run(model).then(function() {
-            fs.writeFile.calledWithMatch('data/sitemap.xml', buildExpectedXML([
+            fs.writeFile.should.be.calledWithMatch('data/sitemap.xml', buildExpectedXML([
                 {loc: 'https://en.site.com/url1', changefreq: 'weekly', priority: 1.0}
-            ])).should.equal(true);
+            ]));
         });
     });
 
@@ -159,10 +159,10 @@ describe('SiteMapXML', function() {
 
         task = new BuildSiteMapXML(config, {hosts: {en: 'https://en.site.com'}});
         return task.run(model).then(function() {
-            fs.writeFile.calledWithMatch('data/sitemap.xml', buildExpectedXML([
+            fs.writeFile.should.be.calledWithMatch('data/sitemap.xml', buildExpectedXML([
                 {loc: 'https://en.site.com/url1', changefreq: 'weekly', priority: 0.5},
                 {loc: 'https://en.site.com/url11', changefreq: 'weekly', priority: 0.5}
-            ])).should.equal(true);
+            ]));
         });
     });
 
@@ -176,9 +176,7 @@ describe('SiteMapXML', function() {
         config.setLanguages(['en']);
 
         task = new BuildSiteMapXML(config, {hosts: {en: 'https://en.site.com'}});
-        return task.run(model).then(function(model) {
-            model.should.be.instanceOf(Model);
-        });
+        return task.run(model).should.eventually.be.instanceof(Model);
     });
 
     it('should return rejected promise with error if error occur on file saving', function() {
@@ -192,9 +190,7 @@ describe('SiteMapXML', function() {
         fs.writeFile.yields(new Error('error'));
 
         task = new BuildSiteMapXML(config, {hosts: {en: 'https://en.site.com'}});
-        return task.run(model).catch(function(error) {
-            error.message.should.equal('error');
-        });
+        return task.run(model).should.be.rejectedWith('error');
     });
 
     it('should not add sitemap nodes for missed page locale versions', function() {
@@ -208,9 +204,9 @@ describe('SiteMapXML', function() {
 
         task = new BuildSiteMapXML(config, {hosts: {en: 'https://en.site.com'}});
         return task.run(model).then(function() {
-            fs.writeFile.calledWithMatch('data/sitemap.xml', buildExpectedXML([
+            fs.writeFile.should.be.calledWithMatch('data/sitemap.xml', buildExpectedXML([
                 {loc: 'https://en.site.com/url1', changefreq: 'weekly', priority: 0.5}
-            ])).should.equal(true);
+            ]));
         });
     });
 

@@ -19,7 +19,7 @@ describe('Meta', function() {
 
     it('should have getter for "authors" property', function() {
         var meta = new Meta({});
-        meta.getAuthors.should.be.instanceOf(Function);
+        meta.getAuthors.should.be.instanceof(Function);
     });
 
     it('should return valid "authors" property value', function() {
@@ -29,7 +29,7 @@ describe('Meta', function() {
 
     it('should have getter for "translators" property', function() {
         var meta = new Meta({});
-        meta.getTranslators.should.be.instanceOf(Function);
+        meta.getTranslators.should.be.instanceof(Function);
     });
 
     it('should return valid "translators" property value', function() {
@@ -39,7 +39,7 @@ describe('Meta', function() {
 
     it('should have getter for "tags" property', function() {
         var meta = new Meta({});
-        meta.getTags.should.be.instanceOf(Function);
+        meta.getTags.should.be.instanceof(Function);
     });
 
     it('should return valid "tags" property value', function() {
@@ -53,10 +53,10 @@ describe('Meta', function() {
             tags = {};
 
         Meta.save('some.json', authors, translators, tags);
-        fsExtra.writeJSONSync.calledWith('some.json', {
+        fsExtra.writeJSONSync.should.be.calledWith('some.json', {
             authors: {},
             translators: {},
             tags: {}
-        }).should.be.equal(true);
+        });
     });
 });

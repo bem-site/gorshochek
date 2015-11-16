@@ -19,22 +19,22 @@ describe('Level', function() {
 
     it('should have valid version property after initialization', function() {
         level = new Level(versionData, 'desktop');
-        level.version.should.eql(versionData);
+        level.version.should.be.eql(versionData);
     });
 
     it('should have valid level property after initialization', function() {
         level = new Level(versionData, 'desktop');
-        level.level.should.equal('desktop');
+        level.level.should.be.equal('desktop');
     });
 
     it('should remove ".docs" suffix in level name after initialization', function() {
         level = new Level(versionData, 'desktop.docs');
-        level.level.should.equal('desktop');
+        level.level.should.be.equal('desktop');
     });
 
     it('should remove ".sets" suffix in level name after initialization', function() {
         level = new Level(versionData, 'desktop.sets');
-        level.level.should.equal('desktop');
+        level.level.should.be.equal('desktop');
     });
 
     describe('processData', function() {
@@ -94,20 +94,20 @@ describe('Level', function() {
 
         it('should set valid value for "published" property', function() {
             return level.processData(levelData).then(function() {
-                level.getData().en.published.should.equal(true);
+                level.getData().en.published.should.be.true;
             });
         });
 
         it('should set valid value for "updateDate" property', function() {
             return level.processData(levelData).then(function() {
-                level.getData().en.updateDate.should.above(+(new Date()) - 100);
+                level.getData().en.updateDate.should.be.above(+(new Date()) - 100);
             });
         });
 
         it('should concat result with processed result of nested blocks', function() {
             return level.processData(levelData).then(function(result) {
                 result.should.be.instanceOf(Array).and.have.length(2);
-                result[0].should.eql(level.getData());
+                result[0].should.be.eql(level.getData());
                 result[1].should.be.empty;
             });
         });

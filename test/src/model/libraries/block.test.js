@@ -104,7 +104,7 @@ describe('Block', function() {
 
         it('should have valid value for "published" field', function() {
             return block.processData({}).then(function() {
-                block.getData().en.published.should.be.equal(true);
+                block.getData().en.published.should.be.true;
             });
         });
 
@@ -117,15 +117,14 @@ describe('Block', function() {
         it('should save source file content to valid path', function() {
             return block.processData({}).then(function() {
                 var expectedPath = '/some-path/some-lib/v1/desktop/button/en.json';
-                block.saveFile.calledWith(expectedPath, {data: null, jsdoc: null}, true)
-                    .should.be.equal(true);
+                block.saveFile.should.be.calledWith(expectedPath, {data: null, jsdoc: null}, true);
             });
         });
 
         it('should set valid value for "contentFile" field after saving source content', function() {
             return block.processData({}).then(function() {
-                var expectedPath = '/libraries/some-lib/v1/desktop/button/en.json';
-                block.getData().contentFile.should.be.equal(expectedPath);
+                block.getData().contentFile
+                    .should.be.equal('/libraries/some-lib/v1/desktop/button/en.json');
             });
         });
     });

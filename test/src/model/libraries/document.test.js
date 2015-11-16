@@ -118,7 +118,7 @@ describe('Document', function() {
 
         it('should set valid value for "published" property', function() {
             return document.processData(docData).then(function() {
-                document.getData().en.published.should.be.equal(true);
+                document.getData().en.published.should.be.true;
             });
         });
 
@@ -149,7 +149,7 @@ describe('Document', function() {
         it('should save source file content to valid path', function() {
             return document.processData(docData).then(function() {
                 var expectedPath = '/base-parh/some-lib/v1/changelog/en.html';
-                document.saveFile.calledWith(expectedPath, 'Hello World', false).should.equal(true);
+                document.saveFile.should.be.calledWith(expectedPath, 'Hello World', false);
             });
         });
 
@@ -162,13 +162,13 @@ describe('Document', function() {
 
         it('should set value of "published" property to false if document content does not exist', function() {
             return document.processData(_.merge({}, docData, {content: null})).then(function() {
-                document.getData().en.published.should.equal(false);
+                document.getData().en.published.should.be.false;
             });
         });
 
         it('should set value of "published" property to false if document content does not exist for lang', function() {
             return document.processData(_.merge({}, docData, {content: {en: null}})).then(function() {
-                document.getData().en.published.should.equal(false);
+                document.getData().en.published.should.be.false;
             });
         });
     });

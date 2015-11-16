@@ -30,21 +30,19 @@ describe('Init', function() {
 
     it('should create cache folder if it does not exists yet', function() {
         return task.run(new Model()).then(function() {
-            fsExtra.ensureDirSync.firstCall.calledWith(config.getCacheFolder()).should.equal(true);
+            fsExtra.ensureDirSync.firstCall.should.be.calledWith(config.getCacheFolder());
         });
     });
 
     it ('should create data folder if it does not exists yet', function() {
         return task.run(new Model()).then(function() {
-            fsExtra.ensureDirSync.secondCall.calledWith(config.getDataFolder()).should.equal(true);
+            fsExtra.ensureDirSync.secondCall.should.be.calledWith(config.getDataFolder());
         });
     });
 
     it('should return rejected promise if new model was not found', function() {
         fsExtra.readJSON.yields(new Error('old model was not found'));
-        return task.run(new Model()).catch(function(error) {
-            error.message.should.be.equal('old model was not found');
-        });
+        return task.run(new Model()).should.be.rejectedWith('old model was not found');
     });
 
     it('should work with empty odl model if old model file does not exists', function() {
@@ -53,42 +51,39 @@ describe('Init', function() {
         error.code = 'ENOENT';
         task.readFileFromCache.returns(Q.reject(error));
         return task.run(new Model()).then(function() {
-            setOldModel.calledWith([]).should.be.equal(true);
+            setOldModel.should.be.calledWith([]);
         });
     });
 
     it('should return rejected promise if loading of old model file was failed by another reason', function() {
         task.readFileFromCache.returns(Q.reject(new Error('IO error')));
-        return task.run(new Model()).catch(function(error) {
-            error.message.should.be.equal('IO error');
-        });
+        return task.run(new Model()).should.be.rejectedWith('IO error');
     });
 
     it('should merge old and new models', function() {
         var merge = sandbox.spy(Model.prototype, 'merge');
         return task.run(new Model()).then(function() {
-            merge.calledOnce.should.be.equal(true);
+            merge.calledOnce.should.be.true;
         });
     });
 
     it('should replace old model file by new model file', function() {
         return task.run(new Model()).then(function() {
-            fsExtra.copy
-                .calledWithMatch(sinon.match.any, config.getModelFilePath(), path.join(config.getCacheFolder(), 'model.json'))
-                .should.be.equal(true);
+            fsExtra.copy.should.be.calledWithMatch(sinon.match.any,
+                config.getModelFilePath(), path.join(config.getCacheFolder(), 'model.json'));
         });
     });
 
     it('should normalize merged model', function() {
         var normalize = sandbox.spy(Model.prototype, 'normalize');
         return task.run(new Model()).then(function() {
-            normalize.calledOnce.should.be.equal(true);
+            normalize.should.be.calledOnce;
         });
     });
 
     it('should return fulfilled promise with model instance', function() {
         return task.run(new Model()).then(function(model) {
-            model.should.be.instanceOf(Model);
+            model.should.be.instanceof(Model);
         });
     });
 });
