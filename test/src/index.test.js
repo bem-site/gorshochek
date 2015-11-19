@@ -1,6 +1,6 @@
 var Config = require('../../lib/config'),
     Builder = require('../../lib/index'),
-    Init = require('../../lib/tasks/init');
+    Init = require('../../lib/tasks-core/init');
 
 describe('Builder', function() {
     var builder;
