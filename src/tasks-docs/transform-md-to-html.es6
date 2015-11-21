@@ -1,7 +1,7 @@
 import path from 'path';
 import Q from 'q';
 import mdToHtml from 'bem-md-renderer';
-import Base from '../tasks-core/base';
+import Base from './transform-base';
 
 export default class DocsMdToHtml extends Base {
 
@@ -14,7 +14,7 @@ export default class DocsMdToHtml extends Base {
      * @returns {String}
      */
     static getName() {
-        return 'docs markdown to html';
+        return 'docs transform markdown to html';
     }
 
     /**
@@ -43,7 +43,7 @@ export default class DocsMdToHtml extends Base {
      * @returns {Promise}
      * @private
      */
-    _mdToHtml(page, language, md) {
+    transform(page, language, md) {
         return Q.nfcall(mdToHtml.render, md)
             .catch(error => {
                 this.logger
@@ -51,46 +51,5 @@ export default class DocsMdToHtml extends Base {
                     .error(error.message);
                 throw error;
             });
-    }
-
-    /**
-     * Transform md content of page source file into html syntax
-     * @param {Model} model - data model
-     * @param {Object} page - page object
-     * @param {Array} languages - configured languages array
-     * @returns {Promise}
-     * @protected
-     */
-    processPage(model, page, languages) {
-        return Q.allSettled(languages.map((language) => {
-            if(!this.getCriteria(page, language)) {
-                return Q(page);
-            }
-
-            const mdFilePath = page[language].contentFile;
-            const mdFileDirectory = path.dirname(mdFilePath);
-            const htmlFilePath = path.join(mdFileDirectory, language + '.html');
-
-            return Q.when(mdFilePath)
-                .then(this.readFileFromCache.bind(this))
-                .then(this._mdToHtml.bind(this, page, language))
-                .then(this.writeFileToCache.bind(this, htmlFilePath))
-                .tap(() => {
-                    this.logger.debug(`md -> html for language: => ${language} and page with url: => ${page.url}`);
-                })
-                .then(() => {
-                    page[language].contentFile = htmlFilePath;
-                    return page;
-                });
-        })).thenResolve(page);
-    }
-
-    /**
-     * Performs task
-     * @returns {Promise}
-     */
-    run(model) {
-        this.beforeRun();
-        return this.processPages(model, 20).thenResolve(model);
     }
 }

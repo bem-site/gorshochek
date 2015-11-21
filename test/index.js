@@ -23,6 +23,7 @@ require('./src/tasks-core/init.test.js');
 
 // require('./src/tasks/docs-gh-load.test.js');
 // require('./src/tasks/docs-file-load.test.js');
+require('./src/tasks-docs/transform-base.test');
 require('./src/tasks-docs/transform-md-to-html.test');
 
 // require('./src/tasks/libraries-base.test.js');
