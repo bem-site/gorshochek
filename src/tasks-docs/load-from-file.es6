@@ -85,20 +85,15 @@ export default class DocsFileLoad extends Base {
             return this.writeFileToCache(cacheFilePath, promise.valueOf());
         };
 
-        this.logger
-            .verbose(`filePath: ${filePath}`)
-            .verbose(`fileName: ${fileName}`)
-            .verbose(`fileExt: ${fileExt}`);
-
         return Q.allSettled([
             this.readFileFromCache(cacheFilePath),
             this._readFile(page, language, localFilePath)
         ]).spread((cache, local) => {
-            if(local.isRejected()) {
+            if(local.state === 'rejected') {
                 return Q.reject(local);
-            }else if(cache.isRejected()) {
+            }else if(cache.state === 'rejected') {
                 return onAddedDocument(local);
-            }else if(cache.valueOf() !== local.valueOf()) {
+            }else if(cache.value !== local.value) {
                 return onModifiedDocument(local);
             }else {
                 return Q(page);

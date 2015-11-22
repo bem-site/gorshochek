@@ -1,155 +1,144 @@
 var fs = require('fs'),
+    path = require('path'),
     fsExtra = require('fs-extra'),
+    Q = require('Q'),
     Config = require('../../../lib/config'),
     Model = require('../../../lib/model/model'),
     DocsLoadFile = require('../../../lib/tasks-docs/load-from-file');
 
 describe('DocsLoadFile', function() {
+    var sandbox = sinon.sandbox.create(),
+        config = new Config('debug'),
+        task = new DocsLoadFile(config, {}),
+        model;
+
+    beforeEach(function() {
+        sandbox.stub(fsExtra);
+        sandbox.stub(task, 'readFileFromCache');
+        sandbox.stub(task, 'writeFileToCache');
+        model = new Model();
+    });
+
+    afterEach(function() {
+        sandbox.restore();
+    });
+
     it('should return valid task name', function() {
         DocsLoadFile.getName().should.equal('docs load from file');
     });
 
-    describe('instance methods', function() {
-        var config,
-            task;
-
-        beforeEach(function() {
-            config = new Config('debug');
-            task = new DocsLoadFile(config, {});
-            fsExtra.ensureDirSync('./.builder/cache/url1');
-            fsExtra.ensureDirSync('./foo/bar');
-            fs.writeFileSync('./foo/bar/test-file.md', 'Hello World', { encoding: 'utf-8' });
+    describe('getCriteria', function() {
+        it('should return false on missed language version of page', function() {
+            var page = {url: '/url1'};
+            task.getCriteria(page, 'en').should.equal(false);
         });
 
-        afterEach(function() {
-            fsExtra.removeSync('./.builder');
-            fsExtra.removeSync('./foo');
+        it('should return false on missed contentFile field for lang version of page', function() {
+            var page = {url: '/url1', en: {}};
+            task.getCriteria(page, 'en').should.equal(false);
         });
 
-        describe('getCriteria', function() {
-            it('should return false on missed language version of page', function() {
-                var page = { url: '/url1' };
-                task.getCriteria(page, 'en').should.equal(false);
-            });
-
-            it('should return false on missed contentFile field for lang version of page', function() {
-                var page = { url: '/url1', en: {} };
-                task.getCriteria(page, 'en').should.equal(false);
-            });
-
-            it('should return false if contentFile value does not match regular expression', function() {
-                var page = {
-                    url: '/url1',
-                    en: {
-                        sourceUrl: 'http://github.com/foo/bar'
-                    }
-                };
-                task.getCriteria(page, 'en').should.equal(false);
-            });
-
-            it('should return true if contentFile value matches regular expression', function() {
-                var page1 = { url: '/url1', en: { sourceUrl: '/foo/bar.md' } },
-                    page2 = { url: '/url2', en: { sourceUrl: './foo/bar.md' } },
-                    page3 = { url: '/url3', en: { sourceUrl: '../foo/bar.md' } },
-                    page4 = { url: '/url4', en: { sourceUrl: '../../foo/bar.md' } };
-
-                task.getCriteria(page1, 'en').should.equal(true);
-                task.getCriteria(page2, 'en').should.equal(true);
-                task.getCriteria(page3, 'en').should.equal(true);
-                task.getCriteria(page4, 'en').should.equal(true);
-            });
+        it('should return false if contentFile value does not match regular expression', function() {
+            var page = {
+                url: '/url1',
+                en: {sourceUrl: 'http://github.com/foo/bar'}
+            };
+            task.getCriteria(page, 'en').should.equal(false);
         });
 
-        describe('processPage', function() {
-            var languages = ['en'];
-
-            it('for non-matched local file path', function(done) {
-                var page = {
-                        url: '/url1',
-                        en: { sourceUrl: 'https://github.com/foo/bar.md' }
-                    },
-                    model = new Model();
-
-                task.processPage(model, page, languages).then(function(page) {
-                    model.getChanges().pages.added.should.be.instanceOf(Array).and.have.length(0);
-                    model.getChanges().pages.modified.should.be.instanceOf(Array).and.have.length(0);
-                    should(page['en']['contentFile']).equal(undefined);
-                    done();
-                });
+        describe('file path matches on task criteria', function() {
+            it('should match on file path like a "/foo/bar.file"', function() {
+                var page = {url: '/url', en: {sourceUrl: '/foo/bar.md'}};
+                task.getCriteria(page, 'en').should.equal(true);
             });
 
-            it('for missed local file', function(done) {
-                var page = {
-                        url: '/url1',
-                        en: { sourceUrl: './foo/bar/invalid' }
-                    },
-                    model = new Model();
-
-                task.processPage(model, page, languages).then(function(page) {
-                    model.getChanges().pages.added.should.be.instanceOf(Array).and.have.length(0);
-                    model.getChanges().pages.modified.should.be.instanceOf(Array).and.have.length(0);
-                    should(page['en']['contentFile']).equal(undefined);
-                    done();
-                });
+            it('should match on file path like a "./foo/bar.md"', function() {
+                var page = {url: '/url', en: {sourceUrl: './foo/bar.md'}};
+                task.getCriteria(page, 'en').should.equal(true);
             });
 
-            it('for new local file', function(done) {
-                var page = {
-                        url: '/url1',
-                        en: { sourceUrl: './foo/bar/test-file.md' }
-                    },
-                    model = new Model();
-
-                task.processPage(model, page, languages).then(function(page) {
-                    model.getChanges().pages.added.should.be.instanceOf(Array).and.have.length(1);
-                    model.getChanges().pages.modified.should.be.instanceOf(Array).and.have.length(0);
-                    should(page['en']['contentFile']).equal('/url1/en.md');
-                    fs.existsSync('./.builder/cache/url1/en.md').should.equal(true);
-                    done();
-                });
+            it('should match on file path like a "../foo/bar.md"', function() {
+                var page = {url: '/url', en: {sourceUrl: '../foo/bar.md'}};
+                task.getCriteria(page, 'en').should.equal(true);
             });
 
-            it('for modified local file', function(done) {
-                var page = {
-                        url: '/url1',
-                        en: { sourceUrl: './foo/bar/test-file.md' }
-                    },
-                    model = new Model();
-
-                task.processPage(model, page, languages).then(function(page) {
-                    fs.writeFileSync('./foo/bar/test-file.md', 'Hello World 2', { encoding: 'utf-8' });
-                    return task.processPage(model, page, languages).then(function(page) {
-                        model.getChanges().pages.added.should.be.instanceOf(Array).and.have.length(1);
-                        model.getChanges().pages.modified.should.be.instanceOf(Array).and.have.length(1);
-                        should(page['en']['contentFile']).equal('/url1/en.md');
-                        fs.existsSync('./.builder/cache/url1/en.md').should.equal(true);
-                        fs.readFileSync('./.builder/cache/url1/en.md', { encoding: 'utf-8' })
-                            .should.be.equal('Hello World 2');
-                        done();
-                    });
-                });
-            });
-
-            it('for non-modified local file', function(done) {
-                var page = {
-                        url: '/url1',
-                        en: { sourceUrl: './foo/bar/test-file.md' }
-                    },
-                    model = new Model();
-
-                task.processPage(model, page, languages).then(function(page) {
-                    return task.processPage(model, page, languages).then(function(page) {
-                        model.getChanges().pages.added.should.be.instanceOf(Array).and.have.length(1);
-                        model.getChanges().pages.modified.should.be.instanceOf(Array).and.have.length(0);
-                        should(page['en']['contentFile']).equal('/url1/en.md');
-                        fs.existsSync('./.builder/cache/url1/en.md').should.equal(true);
-                        fs.readFileSync('./.builder/cache/url1/en.md', { encoding: 'utf-8' })
-                            .should.be.equal('Hello World');
-                        done();
-                    });
-                });
+            it('should match on file path like a "../../foo/bar.md"', function() {
+                var page = {url: '/url', en: {sourceUrl: '../../foo/bar.md'}};
+                task.getCriteria(page, 'en').should.equal(true);
             });
         });
     });
-});
 
+    describe('processPage', function() {
+        var languages = ['en'],
+            page;
+
+        beforeEach(function() {
+            sandbox.stub(fs, 'readFile').yields(null, 'Hello World');
+            task.readFileFromCache.returns(Q('Hello World'));
+            task.writeFileToCache.returns(Q());
+            page = {url: '/url', en: {sourceUrl: '../foo.file'}};
+        });
+
+        it('should not load mismatching source file for page language version', function() {
+            page = {url: '/url1', en: {sourceFile: 'http://url'}};
+            return task.processPage(model, page, languages).then(function() {
+                fs.readFile.should.not.be.called;
+                task.readFileFromCache.should.not.be.called;
+            });
+        });
+
+        it('should read file from cache from given file path', function() {
+            return task.processPage(model, page, languages).then(function() {
+                task.readFileFromCache.should.be
+                    .calledWithMatch(path.join(page.url, 'en.file'));
+            });
+        });
+
+        it('should read file from local filesystem', function() {
+            return task.processPage(model, page, languages).then(function() {
+                fs.readFile.should.be.calledWithMatch('foo.file');
+            });
+        });
+
+        it('should reject operation in case of missed local file', function() {
+            fs.readFile.yields(new Error('ENOENT'));
+            return task.processPage(model, page, languages).then(function() {
+                task.writeFileToCache.should.not.be.called;
+                should.not.exist(page.en.contentFile);
+            });
+        });
+
+        it('should process file as new if it was not file in cache', function() {
+            task.readFileFromCache.returns(Q.reject('Error'));
+            return task.processPage(model, page, languages).then(function() {
+                model.getChanges().pages.added.should.have.length(1);
+            });
+        });
+
+        it('should process file as modified if it is not same as in cache', function() {
+            task.readFileFromCache.returns(Q('Hello World old'));
+            return task.processPage(model, page, languages).then(function() {
+                model.getChanges().pages.modified.should.have.length(1);
+            });
+        });
+
+        it('should not to do anything if file was not changed', function() {
+            return task.processPage(model, page, languages).then(function() {
+                var changes = model.getChanges().pages;
+                changes.added.should.be.empty;
+                changes.modified.should.be.empty;
+            });
+        });
+
+        it('should set valid value of "contentFile" field', function() {
+            return task.processPage(model, page, languages).then(function() {
+                page.en.contentFile.should.equal('/url/en.file');
+            });
+        });
+
+        it('should be resolved with page model instance', function() {
+            task.processPage(model, page, languages).should.eventually.be.eql(page);
+        });
+    });
+});
