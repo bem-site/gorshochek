@@ -143,51 +143,31 @@ export default class Base {
     }
 
     /**
-     * Returns criteria function base on page object and language
-     * This method shouldn't be called directly
-     * It should be override in child classes of DocsBase class
-     * @param {Object} page - page model object
-     * @param {String} lang - language
-     * @returns {Object|Boolean}
-     * @protected
+     * Processes all pages in model which satisfies to given criteria function
+     * @param {Model} model - application model instance
+     * @param {Function} criteria - page criteria function
+     * @param {Function} processFunc - function which will be applied to each of pages filtered by criteria
+     * @param {Number} portionSize - number of portion of pages for parallel operations
+     * @returns {Promise}
      */
-    getCriteria(page, lang) {
-        page;
-        lang;
-        return false;
-    }
-
-    /**
-     * Process single page for all page language version
-     * This method shouldn't be called directly
-     * It should be override in child classes of Base class
-     * @param {Model} model - data model
-     * @param {Object} page - page model object
-     * @param {Array} languages - array of languages
-     * @returns {*|Promise.<T>}
-     * @protected
-     */
-    processPage(model, page, languages) {
-        model;
-        languages;
-        return Promise.resolve(page);
-    }
-
-    processPages(model, portionSize = 5) {
+    processPagesAsync(model, criteria, processFunc, portionSize = 5) {
         const languages = this.getBaseConfig().getLanguages();
-        const filteredPages = model.getPagesByCriteria(this.getCriteria, languages);
-        const portions = _.chunk(filteredPages, portionSize);
 
-        return portions.reduce((prev, portion, index) => {
-            prev = prev.then(() => {
-                this.logger.debug('process portion of pages in range %s - %s',
-                    index * portionSize, (index + 1) * portionSize);
-                return Q.allSettled(portion.map((page) => {
-                    return this.processPage(model, page, languages);
-                }));
-            });
-            return prev;
-        }, Q());
+        criteria = criteria || _.constant(true);
+
+        return _(criteria)
+            .bind(this)
+            .thru(f => model.getPagesByCriteria(f, languages))
+            .chunk(portionSize)
+            .reduce((prev, portion, index) => {
+                return prev.then(() => {
+                    this.logger.debug('process portion of pages in range %s - %s',
+                        index * portionSize, (index + 1) * portionSize);
+                    return Q.allSettled(portion.map(page => {
+                        return processFunc.call(this, model, page, languages);
+                    }));
+                });
+            }, Q());
     }
 
     /**

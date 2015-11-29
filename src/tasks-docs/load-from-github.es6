@@ -211,7 +211,9 @@ export default class DocsLoadGithub extends Base {
      * @returns {Promise}
      */
     run(model) {
-        return this.processPages(model).thenResolve(model);
+        return this
+            .processPagesAsync(model, this.getCriteria.bind(this), this.processPage.bind(this), 5)
+            .thenResolve(model);
     }
 }
 

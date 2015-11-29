@@ -77,14 +77,38 @@ describe('Base', function() {
         });
     });
 
-    it('default implementation of "getCriteria" method should return false', function() {
-        task.getCriteria().should.be.false;
-    });
+    describe('"processPagesAsync" method', function() {
+        it('should call process function for each of filtered pages', function() {
+            var model = new Model();
+            model.setPages([
+                {url: '/url1'},
+                {url: '/url12'}
+            ]);
+            var criteria = function(page) {
+                return page.url.indexOf('/url1') > -1;
+            };
+            var processFunc = function() {return true;};
+            var processFuncSpy = sandbox.spy(processFunc);
 
-    describe('processPage', function() {
-        it('should return resolved promise with page', function() {
-            var page = {url: '/url1'};
-            return task.processPage(new Model(), page, ['en', 'ru']).should.eventually.eql(page);
+            return task.processPagesAsync(model, criteria, processFuncSpy).then(function() {
+                processFuncSpy.should.be.calledTwice;
+            });
+        });
+
+        it('should process all pages if criteria function was not given', function() {
+            var model = new Model();
+            model.setPages([
+                {url: '/url1'},
+                {url: '/url2'}
+            ]);
+            var processFunc = function() {return true;};
+            var processFuncSpy = sandbox.spy(processFunc);
+
+            return task.processPagesAsync(model, null, processFuncSpy).then(function() {
+                processFuncSpy.should.be.calledTwice;
+                processFuncSpy.firstCall.should.be.calledWithMatch(model, {url: '/url1'});
+                processFuncSpy.secondCall.should.be.calledWithMatch(model, {url: '/url2'});
+            });
         });
     });
 

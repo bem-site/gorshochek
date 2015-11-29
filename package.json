@@ -1,18 +1,19 @@
 {
-  "name": "bs-builder-core",
+  "name": "gorshochek",
   "version": "0.1.0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/bem-site/builder-core.git"
+    "url": "git://github.com/bem-site/gorshochek.git"
   },
-  "author": "Andrey Kuznetsov <andrey.kuznetsov48@yandex.ua> (http://github.com/tormozz48)",
+  "author": "Andrey Kuznetsov <andrey.kuznetsov48@yandex.ru> (http://github.com/tormozz48)",
   "maintainers": [
-    "Andrey Kuznetsov <andrey.kuznetsov48@yandex.ua> (http://github.com/tormozz48)"
+    "Andrey Kuznetsov <andrey.kuznetsov48@yandex.ru> (http://github.com/tormozz48)"
   ],
   "contributors": [
-    "Andrey Kuznetsov <andrey.kuznetsov48@yandex.ua> (http://github.com/tormozz48)",
+    "Andrey Kuznetsov <andrey.kuznetsov48@yandex.ru> (http://github.com/tormozz48)",
     "Nikolay Ilchenko <tavria@yandex-team.ru> (http://github.com/tavriaforever)",
-    "Gela Konstantinova <gela-d@yandex-team.ru> (http://github.com/gela-d)"
+    "Gela Konstantinova <gela-d@yandex-team.ru> (http://github.com/gela-d)",
+    "Vladimir Grinenko <tadatuta@yandex-team.ru> (http://github.com/tadatuta)"
   ],
   "engines": {
     "node": ">= 0.10.0"
@@ -74,6 +75,6 @@
   "readmeFilename": "README.md",
   "license": {
     "type": "MPL-2.0",
-    "url": "https://github.com/bem-site/builder-core/blob/master/LICENSE"
+    "url": "https://github.com/bem-site/gorshochek/blob/master/LICENSE"
   }
 }

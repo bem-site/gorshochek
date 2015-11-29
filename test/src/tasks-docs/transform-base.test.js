@@ -95,7 +95,7 @@ describe('DocsTransformBase', function() {
 
     describe('run', function() {
         it('should return fulfilled promise with model instance', function() {
-            sandbox.stub(task, 'processPages').returns(Q());
+            sandbox.stub(task, 'processPagesAsync').returns(Q());
             task.run(model).should.eventually.be.eql(model);
         });
     });
