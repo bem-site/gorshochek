@@ -99,8 +99,6 @@ export default class SitemapXML extends Base {
      * @returns {Promise}
      */
     run(model) {
-        this.beforeRun(this.name);
-
         return _.chain(model)
             .thru(this._buildSiteMapModel.bind(this, this._hosts, this.getBaseConfig().getLanguages()))
             .thru(value => {return {url: value};})

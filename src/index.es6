@@ -1,4 +1,5 @@
-    const Logger = require('bem-site-logger');
+import Q from 'q';
+import Logger from 'bem-site-logger';
 
 import Config from './config';
 import Model from './model/model';
@@ -106,38 +107,26 @@ export default class Builder {
     }
 
     /**
-     * Success callback function
-     * @param {Model} result - build data result object
-     * @returns {Model}
-     * @private
-     */
-    _onSuccess(result) {
-        this.logger.info('-- BUILD HAS BEEN FINISHED SUCCESSFULLY --');
-        return result;
-    }
-
-    /**
-     * Error callback function
-     * @param {Error} error - error object
-     * @private
-     */
-    _onError(error) {
-        this.logger
-            .error(error.message)
-            .error('-- BUILD HAS BEEN FAILED --');
-        throw error;
-    }
-
-    /**
      * Run all tasks in queue by async chain
      * @returns {Promise}
      */
     run() {
         this.logger.info('-- START BUILD DATA --');
         return this.getTasks().reduce((prev, task) => {
-            return prev.then(task.run.bind(task));
-        }, Promise.resolve(new Model()))
-            .then(this._onSuccess.bind(this))
-            .catch(this._onError.bind(this));
+            return prev.then(function(model) {
+                task.beforeRun();
+                return task.run(model);
+            }.bind(task));
+        }, Q(new Model()))
+            .then(result => {
+                this.logger.info('-- BUILD HAS BEEN FINISHED SUCCESSFULLY --');
+                return result;
+            })
+            .catch(error => {
+                this.logger
+                    .error(error.message)
+                    .error('-- BUILD HAS BEEN FAILED --');
+                throw error;
+            });
     }
 }

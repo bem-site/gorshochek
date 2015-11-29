@@ -113,8 +113,6 @@ export default class Init extends Base {
      * @public
      */
     run(model) {
-        this.beforeRun();
-
         this
             ._createFolder(this.getBaseConfig().getCacheFolder())
             ._createFolder(this.getBaseConfig().getDataFolder());
@@ -123,11 +121,7 @@ export default class Init extends Base {
                 this._loadOldModel(),
                 this._loadNewModel()
             ])
-            .spread((oldModel, newModel) => {
-                model.setOldModel(oldModel);
-                model.setNewModel(newModel);
-            })
-            .then(model.merge.bind(model))
+            .spread(model.merge.bind(model))
             .then(this._logModelChanges.bind(this))
             .then(this._replaceModelFileInCache.bind(this))
             .then(model.normalize.bind(model, this.getBaseConfig().getLanguages()));

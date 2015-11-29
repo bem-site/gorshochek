@@ -64,7 +64,6 @@ export default class DocsTransformBase extends Base {
      * @returns {Promise}
      */
     run(model) {
-        this.beforeRun();
         return this.processPages(model, 20).thenResolve(model);
     }
 }

@@ -211,7 +211,6 @@ export default class DocsLoadGithub extends Base {
      * @returns {Promise}
      */
     run(model) {
-        this.beforeRun();
         return this.processPages(model).thenResolve(model);
     }
 }

@@ -26,7 +26,6 @@ export default class PageBreadcrumbs extends PageBase {
      * @public
      */
     run(model) {
-        this.beforeRun();
         /*
          Для каждой языковой версии каждой страницы создаем
          поле breadcrumbs (хлебные крошки). В это поле записывается массив объектов типа

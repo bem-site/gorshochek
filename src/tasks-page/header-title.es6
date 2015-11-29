@@ -25,8 +25,6 @@ export default class PageHeaderTitle extends PageBase {
      * @public
      */
     run(model) {
-        this.beforeRun();
-
         /*
            Для каждой языковой версии каждой страницы создаем
            поле header.title в котором находится строка состоящая из

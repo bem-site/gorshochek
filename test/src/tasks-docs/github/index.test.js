@@ -37,6 +37,11 @@ describe('github API', function() {
         githubAPI.apis.get('public').should.be.instanceOf(PublicAPI);
     });
 
+    it('should throw error if token for public API was not set', function() {
+        githubAPI = new GithubAPI({logger: {level: 'debug'}});
+        publicApiStub.authenticate.should.not.be.called;
+    });
+
     describe('getContent', function() {
         var options = _.extend({ref: 'some-ref', path: 'some-path'}, baseOpts);
 

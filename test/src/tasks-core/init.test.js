@@ -46,12 +46,12 @@ describe('Init', function() {
     });
 
     it('should work with empty odl model if old model file does not exists', function() {
-        var setOldModel = sandbox.spy(Model.prototype, 'setOldModel');
+        var merge = sandbox.spy(Model.prototype, 'merge');
         var error = new Error('error');
         error.code = 'ENOENT';
         task.readFileFromCache.returns(Q.reject(error));
         return task.run(new Model()).then(function() {
-            setOldModel.should.be.calledWith([]);
+            merge.should.be.calledWithMatch([]);
         });
     });
 

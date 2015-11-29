@@ -3,10 +3,15 @@ var Config = require('../../lib/config'),
     Init = require('../../lib/tasks-core/init');
 
 describe('Builder', function() {
-    var builder;
+    var sandbox = sinon.sandbox.create(),
+        builder;
 
     beforeEach(function() {
         builder = new Builder('debug');
+    });
+
+    afterEach(function() {
+        sandbox.restore();
     });
 
     it('should has config instance available by getConfig() method', function() {

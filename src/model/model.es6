@@ -18,38 +18,6 @@ export default class Model {
     }
 
     /**
-     * Returns new model object
-     * @returns {Object}
-     */
-    getNewModel() {
-        return this._newModel;
-    }
-
-    /**
-     * Sets new model
-     * @param {Object} model object
-     */
-    setNewModel(model) {
-        this._newModel = model;
-    }
-
-    /**
-     * Returns old model object
-     * @returns {Object}
-     */
-    getOldModel() {
-        return this._oldModel;
-    }
-
-    /**
-     * Sets old model object
-     * @param {Object} model object
-     */
-    setOldModel(model) {
-        this._oldModel = model;
-    }
-
-    /**
      * Returns changes model
      * @returns {*}
      */
@@ -77,8 +45,11 @@ export default class Model {
 
     /**
      * Merges models and find differences
+     * @param {Array} previousModel
+     * @param {Array} currentModel
+     * @returns {Model}
      */
-    merge() {
+    merge(previousModel, currentModel) {
         const modifiedPages = [];
         const nonModifiedPages = [];
 
@@ -87,8 +58,8 @@ export default class Model {
          вызываем метод _generateUrlPageMap, который строит из данных массивов
          объекты в которых ключами являются url страниц, а значениями сами объекты
          */
-        const newModel = this.constructor._generateUrlPageMap(this.getNewModel());
-        const oldModel = this.constructor._generateUrlPageMap(this.getOldModel());
+        const newModel = this.constructor._generateUrlPageMap(currentModel);
+        const oldModel = this.constructor._generateUrlPageMap(previousModel);
 
         const newPages = _.keys(newModel); // получить все url из новой модели
         let oldPages = _.keys(oldModel); // получить все url из старой модели

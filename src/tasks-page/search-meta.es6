@@ -27,8 +27,6 @@ export default class PageSearchMeta extends PageBase {
      * @public
      */
     run(model) {
-        this.beforeRun();
-
         return super.run(model, (page, languages, pageTitlesMap) => {
             const urlSet = this.getParentUrls(page);
             languages.forEach(language => {

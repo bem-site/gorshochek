@@ -24,8 +24,6 @@ export default class PageMenu extends PageBase {
      * @public
      */
     run(model) {
-        this.beforeRun();
-
         // TODO implement menu creation here
 
         this.logger.info(`Successfully finish task "${this.constructor.getName()}"`);

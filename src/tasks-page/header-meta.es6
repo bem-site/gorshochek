@@ -27,8 +27,6 @@ export default class PageHeaderMeta extends PageBase {
      * @public
      */
     run(model) {
-        this.beforeRun();
-
         /*
          Для каждой языковой версии каждой страницы создаем
          поле header.meta в котором находится структура содержащая мета-информацию для header страницы.

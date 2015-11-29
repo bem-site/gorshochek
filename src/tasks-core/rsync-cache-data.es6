@@ -5,14 +5,14 @@ import _ from 'lodash';
 import Q from 'q';
 import Base from './base';
 
-export default class Finalize extends Base {
+export default class RsyncCacheData extends Base {
 
     static getLoggerName() {
         return module;
     }
 
     static getName() {
-        return 'finalize';
+        return 'rsync-cache-data';
     }
 
     /**
@@ -22,15 +22,9 @@ export default class Finalize extends Base {
      */
     _getOptions() {
         return _(this.getBaseConfig().getCacheFolder())
-            .thru(folder => {
-                return fs.readdirSync(folder);
-            })
-            .filter(item => {
-                return item !== 'model.json';
-            })
-            .map(item => {
-                return path.join(this.getBaseConfig().getCacheFolder(), item);
-            })
+            .thru(fs.readdirSync)
+            .filter(item => item !== 'model.json')
+            .map(path.join.bind(this, this.getBaseConfig().getCacheFolder()))
             .thru(sources => {
                 return {
                     source: sources, // все папки откуда нужно совершить rsync
@@ -39,18 +33,8 @@ export default class Finalize extends Base {
                 };
             })
             .tap(options => {
-                // добавление в exclude из переданных опций
-                // exclude - это паттерны файлов которые должны быть исключены из процесса синхронизации
                 if(this.getTaskConfig().exclude) {
                     options.exclude = [].concat(this.getTaskConfig().exclude);
-                }
-            })
-            .tap(options => {
-                // добавление в include из переданных опций
-                // include - это паттерны файлов которые должны быть включены в процесс синхронизации
-                // даже если они находятся в списке exclude.
-                if(this.getTaskConfig().include) {
-                    options.include = [].concat(this.getTaskConfig().include);
                 }
             })
             .value();
@@ -81,6 +65,7 @@ export default class Finalize extends Base {
         return new Promise((resolve, reject) => {
             sync.execute((error, code) => {
                 if(error || code !== 0) {
+                    error = error || new Error('rsync error with code ' + code);
                     onError(error, code);
                     reject(error);
                 } else {
@@ -108,11 +93,9 @@ export default class Finalize extends Base {
      * @returns {Promise}
      */
     run(model) {
-        this.beforeRun(this.name);
-
-        return Promise.all([
+        return Q.all([
             this._syncPageFiles(model),
             this._saveDataFile(model)
-        ]);
+        ]).thenResolve(model);
     }
 }

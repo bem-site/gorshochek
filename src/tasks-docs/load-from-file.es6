@@ -123,7 +123,6 @@ export default class DocsFileLoad extends Base {
      * @returns {Promise}
      */
     run(model) {
-        this.beforeRun();
         return this.processPages(model, 20).thenResolve(model);
     }
 }
