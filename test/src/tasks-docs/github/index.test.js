@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var Q = require('Q');
+var Q = require('q');
 var Api = require('github');
 
 var PublicAPI = require('../../../../lib/tasks-docs/github/public');

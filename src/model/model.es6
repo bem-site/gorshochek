@@ -170,9 +170,7 @@ export default class Model {
         // здесь происходит поиск страниц в модели у которых
         // хотя бы одна из языковых версий удовлетворяет критерию из функции criteria
         return this.getPages().filter(page => {
-            return languages.some(lang => {
-                return criteria(page, lang);
-            });
+            return languages.some(lang => criteria(page, lang));
         });
     }
 }
