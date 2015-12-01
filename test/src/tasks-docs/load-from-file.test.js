@@ -1,7 +1,7 @@
 var fs = require('fs'),
     path = require('path'),
     fsExtra = require('fs-extra'),
-    Q = require('Q'),
+    Q = require('q'),
     Config = require('../../../lib/config'),
     Model = require('../../../lib/model/model'),
     DocsLoadFile = require('../../../lib/tasks-docs/load-from-file');
