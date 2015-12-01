@@ -28,11 +28,6 @@ describe('DocsLoadFile', function() {
     });
 
     describe('getCriteria', function() {
-        it('should return false on missed language version of page', function() {
-            var page = {url: '/url1'};
-            task.getCriteria(page, 'en').should.equal(false);
-        });
-
         it('should return false on missed contentFile field for lang version of page', function() {
             var page = {url: '/url1', en: {}};
             task.getCriteria(page, 'en').should.equal(false);

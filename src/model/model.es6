@@ -139,11 +139,9 @@ export default class Model {
             page.view = page.view || 'post'; // поле представления страницы
 
             languages.forEach(language => {
-                // флаг видимости страницы
+                page[language] = page[language] || {};
                 page[language].published = !!page[language].published;
 
-                // каждый языковой вариант страницы должен иметь обязательное поле "title"
-                // в противном случае, скрываем страницу из показа
                 if(!page[language].title) {
                     page[language].published = false;
                 }

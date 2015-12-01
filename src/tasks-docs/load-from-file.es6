@@ -26,10 +26,6 @@ export default class DocsFileLoad extends Base {
      * @private
      */
     getCriteria(page, language) {
-        if(!page[language]) {
-            return false;
-        }
-
         const sourceUrl = page[language].sourceUrl;
         return !!sourceUrl && !!sourceUrl.match(/^(\/)?([^\/\0]+(\/)?)+$/);
     }

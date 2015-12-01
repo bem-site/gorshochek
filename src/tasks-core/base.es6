@@ -100,16 +100,21 @@ export default class Base {
     /**
      * Reads file from cache folder
      * @param {String} filePath - path to file (relative to cache folder)
+     * @param {Boolean} isJSON - use embedded JSON parsing for json files
+     * @param {Boolean} silent - if true then error message and error will not be created
      * @returns {Promise}
      * @protected
      */
-    readFileFromCache(filePath, isJSON = false) {
+    readFileFromCache(filePath, isJSON, silent) {
         const basePath = this.getBaseConfig().getCacheFolder();
         const func = isJSON ? fsExtra.readJSON : fs.readFile;
         filePath = path.join(basePath, filePath);
 
         return Q.nfcall(func, filePath, {encoding: 'utf-8'})
             .catch(error => {
+                if(silent) {
+                    return;
+                }
                 this.logger
                     .error(`Error occur while loading file ${filePath} from cache`)
                     .error(error.message);
