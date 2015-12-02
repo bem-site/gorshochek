@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import Q from 'Q';
+import Q from 'q';
 import Base from '../tasks-core/base';
 
 export default class DocsFileLoad extends Base {
