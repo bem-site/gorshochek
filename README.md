@@ -9,7 +9,7 @@
 
 Модуль сборки данных для bem сайтов.
 
-![GitHub Logo](./logo.jpg)
+![GitHub Logo](./.logo.jpg)
 
 ## Установка
 
