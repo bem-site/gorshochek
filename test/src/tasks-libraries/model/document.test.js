@@ -9,7 +9,7 @@ describe('Document', function() {
             basePath: '/base-parh',
             lib: 'some-lib',
             version: 'v1',
-            languages: ['en']
+            language: 'en'
         },
         document;
 
@@ -29,38 +29,38 @@ describe('Document', function() {
 
     it('should set valid changelog en title if data title was not set', function() {
         document = new Document(versionData, 'changelog');
-        document.getTitle({}, 'en').should.be.equal('Changelog');
-        document.getTitle({title: {}}, 'en').should.be.equal('Changelog');
+        document.getTitle({}).should.be.equal('Changelog');
+        document.getTitle({title: {}}).should.be.equal('Changelog');
     });
 
     it('should set valid changelog ru title if data title was not set', function() {
-        document = new Document(versionData, 'changelog');
-        document.getTitle({}, 'ru').should.be.equal('История изменений');
-        document.getTitle({title: {}}, 'ru').should.be.equal('История изменений');
+        document = new Document(_.extend({}, versionData, {language: 'ru'}), 'changelog');
+        document.getTitle({}).should.be.equal('История изменений');
+        document.getTitle({title: {}}).should.be.equal('История изменений');
     });
 
     it('should set valid migration en title if data title was not set', function() {
         document = new Document(versionData, 'migration');
-        document.getTitle({}, 'en').should.be.equal('Migration');
-        document.getTitle({title: {}}, 'en').should.be.equal('Migration');
+        document.getTitle({}).should.be.equal('Migration');
+        document.getTitle({title: {}}).should.be.equal('Migration');
     });
 
     it('should set valid migration ru title if data title was not set', function() {
-        document = new Document(versionData, 'migration');
-        document.getTitle({}, 'ru').should.be.equal('Миграция');
-        document.getTitle({title: {}}, 'ru').should.be.equal('Миграция');
+        document = new Document(_.extend({}, versionData, {language: 'ru'}), 'migration');
+        document.getTitle({}).should.be.equal('Миграция');
+        document.getTitle({title: {}}).should.be.equal('Миграция');
     });
 
     it('should set valid notes en title if data title was not set', function() {
         document = new Document(versionData, 'notes');
-        document.getTitle({}, 'en').should.be.equal('Release Notes');
-        document.getTitle({title: {}}, 'en').should.be.equal('Release Notes');
+        document.getTitle({}).should.be.equal('Release Notes');
+        document.getTitle({title: {}}).should.be.equal('Release Notes');
     });
 
     it('should set valid notes ru title if data title was not set', function() {
-        document = new Document(versionData, 'notes');
-        document.getTitle({}, 'ru').should.be.equal('Примечания к релизу');
-        document.getTitle({title: {}}, 'ru').should.be.equal('Примечания к релизу');
+        document = new Document(_.extend({}, versionData, {language: 'ru'}), 'notes');
+        document.getTitle({}).should.be.equal('Примечания к релизу');
+        document.getTitle({title: {}}).should.be.equal('Примечания к релизу');
     });
 
     describe('processData', function() {
@@ -112,63 +112,63 @@ describe('Document', function() {
 
         it('should set valid value for "title" property', function() {
             return document.processData(docData).then(function() {
-                document.getData().en.title.should.be.equal('Changelog');
+                document.getData().title.should.be.equal('Changelog');
             });
         });
 
         it('should set valid value for "published" property', function() {
             return document.processData(docData).then(function() {
-                document.getData().en.published.should.be.true;
+                document.getData().published.should.be.true;
             });
         });
 
         it('should set valid value for "updateDate" property', function() {
             return document.processData(docData).then(function() {
-                document.getData().en.updateDate.should.above(+(new Date()) - 100);
+                document.getData().updateDate.should.above(+(new Date()) - 100);
             });
         });
 
         it('should set null "sourceUrl" if it was not set', function() {
             return document.processData(_.merge({}, docData, {url: null})).then(function() {
-                should.not.exist(document.getData().en.sourceUrl);
+                should.not.exist(document.getData().sourceUrl);
             });
         });
 
         it('should set null "sourceUrl" if it was not set for given language', function() {
             return document.processData(_.merge({}, docData, {url: {en: null}})).then(function() {
-                should.not.exist(document.getData().en.sourceUrl);
+                should.not.exist(document.getData().sourceUrl);
             });
         });
 
         it('should return valid "sourceUrl" value for given lang', function() {
             return document.processData(_.merge({url: {en: 'http://url1'}}, docData)).then(function() {
-                document.getData().en.sourceUrl.should.equal('http://url1');
+                document.getData().sourceUrl.should.equal('http://url1');
             });
         });
 
         it('should save source file content to valid path', function() {
             return document.processData(docData).then(function() {
-                var expectedPath = '/base-parh/some-lib/v1/changelog/en.html';
+                var expectedPath = '/base-parh/some-lib/v1/changelog/index.html';
                 document.saveFile.should.be.calledWith(expectedPath, 'Hello World', false);
             });
         });
 
         it('should set valid value for "contentFile" field after saving source content', function() {
             return document.processData(docData).then(function() {
-                document.getData().en.contentFile
-                    .should.equal('/libraries/some-lib/v1/changelog/en.html');
+                document.getData().contentFile
+                    .should.equal('/libraries/some-lib/v1/changelog/index.html');
             });
         });
 
         it('should set value of "published" property to false if document content does not exist', function() {
             return document.processData(_.merge({}, docData, {content: null})).then(function() {
-                document.getData().en.published.should.be.false;
+                document.getData().published.should.be.false;
             });
         });
 
         it('should set value of "published" property to false if document content does not exist for lang', function() {
             return document.processData(_.merge({}, docData, {content: {en: null}})).then(function() {
-                document.getData().en.published.should.be.false;
+                document.getData().published.should.be.false;
             });
         });
     });

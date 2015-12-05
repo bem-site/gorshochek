@@ -27,7 +27,7 @@ export default class PageBreadcrumbs extends PageBase {
      */
     run(model) {
         /*
-         Для каждой языковой версии каждой страницы создаем
+         Для каждой страницы создаем
          поле breadcrumbs (хлебные крошки). В это поле записывается массив объектов типа
          [
             { url: '/', title: 'main page title' },
@@ -35,13 +35,10 @@ export default class PageBreadcrumbs extends PageBase {
             { url: '/url1/url2', title: 'url2 title' }
          ]
          */
-        return super.run(model, (page, languages, pageTitlesMap) => {
-            const urlSet = this.getParentUrls(page);
-            languages.forEach(language => {
-                page[language] && (page[language].breadcrumbs = urlSet.map(url => {
-                    return {url, title: pageTitlesMap.get(url).get(language)};
-                }));
-            });
+        return super.run(model, (page, pageTitlesMap) => {
+            page.breadcrumbs = this
+                .getParentUrls(page)
+                .map(url => ({url, title: pageTitlesMap.get(url)}));
         });
     }
 }

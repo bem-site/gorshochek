@@ -33,57 +33,50 @@ export default class DocsFileLoad extends Base {
     /**
      * Reads file from local filesystem
      * @param {Object} page - page model object
-     * @param {String} language version
      * @param {String} filePath - path to file on local filesystem
-     * @returns {*}
+     * @returns {Promise}
      * @private
      */
-    _readFile(page, language, filePath) {
+    _readFile(page, filePath) {
         return Q.nfcall(fs.readFile, filePath, {encoding: 'utf-8'})
             .catch(error => {
                 this.logger
-                    .error(`Error occur while loading file for page: ${page.url} and language ${language}`)
+                    .error(`Error occur while loading file for page: ${page.url}`)
                     .error(error.message);
                 throw error;
             });
     }
 
     /**
-     * Processes given language version of model page
+     * Loads file to cache
      * @param {Model} model - data model
-     * @param {Object} page - page object
-     * @param {String} language - language identifier
      * @returns {Promise}
-     * @private
+     * @protected
      */
-    _processPageForLang(model, page, language) {
-        if(!this.getCriteria(page, language)) {
-            return Q(page);
-        }
+    processPage(model, page) {
+        this.logger.debug(`load local file page with url: => ${page.url}`);
 
-        this.logger.debug(`load local file for language: => ${language} and page with url: => ${page.url}`);
-
-        const filePath = page[language].sourceUrl; // относительный путь к файлу
+        const filePath = page.sourceUrl; // относительный путь к файлу
         const fileName = path.basename(filePath); // имя файла (с расширением)
         const fileExt = path.extname(fileName); // расширение файла
 
         const localFilePath = path.resolve(filePath);
-        const cacheFilePath = path.join(page.url, (language + fileExt));
+        const cacheFilePath = path.join(page.url, ('index' + fileExt));
 
         const onAddedDocument = (promise) => {
-            this.logger.debug('Doc added: %s %s %s', page.url, language, page[language].title);
-            model.getChanges().pages.addAdded({type: 'doc', url: page.url, title: page[language].title});
+            this.logger.debug('Doc added: %s %s', page.url, page.title);
+            model.getChanges().pages.addAdded({type: 'doc', url: page.url, title: page.title});
             return this.writeFileToCache(cacheFilePath, promise.valueOf());
         };
         const onModifiedDocument = (promise) => {
-            this.logger.debug('Doc modified: %s %s %s', page.url, language, page[language].title);
-            model.getChanges().pages.addModified({type: 'doc', url: page.url, title: page[language].title});
+            this.logger.debug('Doc modified: %s %s', page.url, page.title);
+            model.getChanges().pages.addModified({type: 'doc', url: page.url, title: page.title});
             return this.writeFileToCache(cacheFilePath, promise.valueOf());
         };
 
         return Q.allSettled([
             this.readFileFromCache(cacheFilePath),
-            this._readFile(page, language, localFilePath)
+            this._readFile(page, localFilePath)
         ]).spread((cache, local) => {
             if(local.state === 'rejected') {
                 return Q.reject(local);
@@ -95,23 +88,9 @@ export default class DocsFileLoad extends Base {
                 return Q(page);
             }
         }).then(() => {
-            page[language].contentFile = cacheFilePath;
-            return cacheFilePath;
+            page.contentFile = cacheFilePath;
+            return page;
         });
-    }
-
-    /**
-     * Loads file to cache
-     * @param {Model} model - data model
-     * @param {Object} page - page object
-     * @param {Array} languages - configured languages array
-     * @returns {Promise}
-     * @protected
-     */
-    processPage(model, page, languages) {
-        return Q.allSettled(languages.map((language) => {
-            return this._processPageForLang(model, page, language);
-        })).thenResolve(page);
     }
 
     /**

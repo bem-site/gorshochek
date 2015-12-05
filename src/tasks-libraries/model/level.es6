@@ -11,7 +11,7 @@ export default class Level extends Base {
     /**
      * Level constructor
      * @param {Object} version data object
-     * @param {String[]}  version.languages - array of languages
+     * @param {String} version.language - language
      * @param {String} version.baseUrl - base libraries url
      * @param {String} version.basePath - base path for libraries file inside cache folder
      * @param {String} version.lib - name of library
@@ -24,7 +24,7 @@ export default class Level extends Base {
 
         /**
          * Library version data object
-         * @type {{languages: String[], baseUrl: String, basePath: String, lib: String, version: String}}
+         * @type {{language: String, baseUrl: String, basePath: String, lib: String, version: String}}
          */
         this.version = version;
 
@@ -48,13 +48,10 @@ export default class Level extends Base {
             .setValue('view', 'level') // представление
             .setValue('lib', version.lib) // название библиотеки
             .setValue('version', version.version) // название версии библиотеки
-            .setValue('level', this.level); // имя уровня переопредления
-
-        version.languages.forEach(lang => {
-            this.setValue('title', this.level, lang) // имя уровня переопределения
-                .setValue('published', true, lang) // флаг о том что страница опубликована
-                .setValue('updateDate', +(new Date()), lang); // дата обновления
-        });
+            .setValue('level', this.level) // имя уровня переопредления
+            .setValue('title', this.level) // имя уровня переопределения
+            .setValue('published', true) // флаг о том что страница опубликована
+            .setValue('updateDate', +(new Date())); // дата обновления
 
         // нужно создать данные для всех блоков данного уровня переопределения
         // сохранить файлы с документацией и jsdoc для каждого блока

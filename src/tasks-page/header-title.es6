@@ -26,21 +26,16 @@ export default class PageHeaderTitle extends PageBase {
      */
     run(model) {
         /*
-           Для каждой языковой версии каждой страницы создаем
+           Для каждой страницы создаем
            поле header.title в котором находится строка состоящая из
            соответствующих title-ов всех родительских страниц начиная от корневой
            и заканчивая текущей страницей. title-ы страниц разделены символом "/".
         */
-        return super.run(model, (page, languages, pageTitlesMap) => {
+        return super.run(model, (page, pageTitlesMap) => {
             const urlSet = this.getParentUrls(page).reverse();
-            languages.forEach(language => {
-                page[language] && _.chain(page)
-                    .get(language)
-                    .set('header.title', urlSet.map(url => {
-                        return pageTitlesMap.get(url).get(language);
-                    }).join('/'))
-                    .value();
-            });
+            _.chain(page)
+                .set('header.title', urlSet.map(url => pageTitlesMap.get(url)).join('/'))
+                .value();
         });
     }
 }

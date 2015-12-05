@@ -16,10 +16,10 @@ export default class Version extends Base {
      * @param {String} basePath - base path for libraries file inside cache folder
      * @param {String} lib - name of library
      * @param {String} version - name of library version
-     * @param {String[]} languages - array of languages
+     * @param {String} language - array of languages
      * @constructor
      */
-    constructor(baseUrl, basePath, lib, version, languages) {
+    constructor(baseUrl, basePath, lib, version, language) {
         super();
 
         /**
@@ -35,10 +35,10 @@ export default class Version extends Base {
         this.basePath = basePath;
 
         /**
-         * Array of languages
-         * @type {String[]}
+         * language
+         * @type {String}
          */
-        this.languages = languages;
+        this.language = language;
 
         /**
          * Name of library
@@ -56,45 +56,28 @@ export default class Version extends Base {
     /**
      * Returns source urls per languages
      * @param {Object} data - document data object
-     * @param {String[]} languages array
      * @returns {*}
      * @private
      */
-    _getSourceUrls(data, languages) {
-        const defaultLanguage = languages[0];
-        let result = languages.reduce((prev, item) => {
-                prev[item] = null;
-                return prev;
-            }, {});
-
+    _getSourceUrl(data) {
         if(!data.url) {
-            return result;
+            return null;
         }
 
-        result = languages.reduce((prev, item) => {
-            prev[item] = `${data.url}/tree/${data.ref}`;
-            if(item !== defaultLanguage) {
-                prev[item] += `/README.${item}.md`;
-            }
-            return prev;
-        }, result);
-        return result;
+        const language = this.version.language;
+        return language !== 'en' ? `/README.${language}.md` : '/README.md';
     }
 
     _setSource(data) {
         const readme = data.docs ? data.docs['readme'] : data['readme'];
         const basePath = path.join(this.basePath, this.lib, this.version);
-        const promises = this.languages.map((lang) => {
-            const filePath = path.join(basePath, `${lang}.html`);
-            const content = (readme && readme.content) ? readme.content[lang] : null;
+        const filePath = path.join(basePath, 'index.html');
+        const content = (readme && readme.content) ? readme.content[this.version.language] : null;
 
-            return this.saveFile(filePath, content, false).then(() => {
-                return this.setValue('contentFile',
-                    [this.baseUrl, this.lib, this.version, lang].join(path.sep) + '.html', lang);
-            });
+        return this.saveFile(filePath, content, false).then(() => {
+            return this.setValue('contentFile',
+                [this.baseUrl, this.lib, this.version, 'index.html'].join(path.sep));
         });
-
-        return Q.all(promises);
     }
 
     /**
@@ -104,14 +87,8 @@ export default class Version extends Base {
      * @private
      */
     _processDocuments(data) {
-        const documents = data['docs'];
-        let promises = [];
-
-        if(!documents) {
-            return Promise.resolve(promises);
-        }
-
-        promises = Object.keys(documents)
+        const documents = data['docs'] || {};
+        const promises = Object.keys(documents)
             .filter(item => {
                 return item !== 'readme';
             })
@@ -156,24 +133,19 @@ export default class Version extends Base {
      * @returns {Promise}
      */
     processData(data) {
-        const sourceUrls = this._getSourceUrls(data, this.languages);
-
-        this.setValue('url', `${this.baseUrl}/${this.lib}/${this.version}`)
+        return this
+            .setValue('url', `${this.baseUrl}/${this.lib}/${this.version}`)
             .setValue('aliases', []) // алиасы или редиректы
             .setValue('view', 'post') // представление
             .setValue('lib', this.lib) // название библиотеки
             .setValue('version', this.version) // название версии библиотеки
-            .setValue('deps', data.deps); // зависимости
-
-        this.languages.forEach(lang => {
-            this.setValue('title', this.version, lang)
-                .setValue('published', true, lang) // флаг о том что страница опубликована
-                .setValue('updateDate', +(new Date()), lang) // дата обновления
-                .setValue('hasIssues', data.hasIssues, lang) // флаг того, что репозиторий биб-теки имеет раздел issues
-                .setValue('sourceUrl', sourceUrls[lang], lang);
-        });
-
-        return this._setSource(data)
+            .setValue('deps', data.deps) // зависимости
+            .setValue('title', this.version)
+            .setValue('published', true) // флаг о том что страница опубликована
+            .setValue('updateDate', +(new Date())) // дата обновления
+            .setValue('hasIssues', data.hasIssues) // флаг того, что репозиторий биб-теки имеет раздел issues
+            .setValue('sourceUrl', this._getSourceUrl(data))
+            ._setSource(data)
             .then(() => {
                 return Q.all([
                     this._processDocuments(data),
@@ -181,9 +153,7 @@ export default class Version extends Base {
                 ]);
             })
             .spread((documents, levels) => {
-                return [this.getData()]
-                    .concat(documents)
-                    .concat(levels);
+                return [this.getData()].concat(documents).concat(levels);
             })
             .then(this._saveToCache.bind(this));
     }

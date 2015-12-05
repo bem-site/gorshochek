@@ -2,13 +2,10 @@ var Config = require('../../../lib/config'),
     PageBase = require('../../../lib/tasks-page/base');
 
 describe('PageBase', function() {
-    var config,
-        task;
+    var task;
 
     beforeEach(function() {
-        config = new Config('debug');
-        config.setLanguages(['en']);
-        task = new PageBase(config, {});
+        task = new PageBase(new Config('debug'), {});
     });
 
     it('should return valid task name', function() {
@@ -35,14 +32,13 @@ describe('PageBase', function() {
 
     describe('getPagesMap', function() {
         var pages = [
-                {url: '/', en: {title: '/ en'}, ru: {title: '/ ru'}},
-                {url: '/url1', ru: {title: 'url1 ru'}}
+                {url: '/', title: '/title'},
+                {url: '/url1', title: '/url1 title'}
         ];
         it ('should build valid complex map of titles by urls and languages', function() {
-            var pagesMap = task.createPageTitlesMap(pages, ['en', 'ru']);
-            pagesMap.get('/').get('en').should.equal('/ en');
-            pagesMap.get('/').get('ru').should.equal('/ ru');
-            pagesMap.get('/url1').get('ru').should.equal('url1 ru');
+            var pagesMap = task.createPageTitlesMap(pages);
+            pagesMap.get('/').should.equal('/title');
+            pagesMap.get('/url1').should.equal('/url1 title');
         });
     });
 });

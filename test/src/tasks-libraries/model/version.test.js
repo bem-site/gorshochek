@@ -9,7 +9,7 @@ describe('Version', function() {
         version;
 
     beforeEach(function() {
-        version = new Version('/libraries', '/base-path', 'some-lib', 'v1', ['en']);
+        version = new Version('/libraries', '/base-path', 'some-lib', 'v1', 'en');
         sandbox.stub(version, 'saveFile').returns(Q());
         sandbox.stub(Document.prototype, 'processData').returns(Q({name: 'readme'}));
         sandbox.stub(Level.prototype, 'processData').returns(Q({name: 'desktop'}));
@@ -28,7 +28,7 @@ describe('Version', function() {
     });
 
     it('should set valid value for "languages" property after initialization', function() {
-        version.languages.should.be.eql(['en']);
+        version.language.should.be.eql('en');
     });
 
     it('should set valid value for "lib" property after initialization', function() {
@@ -85,37 +85,37 @@ describe('Version', function() {
 
         it('should set valid value for "title" property', function() {
             return version.processData(versionData).then(function() {
-                version.getData().en.title.should.be.equal('v1');
+                version.getData().title.should.be.equal('v1');
             });
         });
 
         it('should set valid value for "published" property', function() {
             return version.processData(versionData).then(function() {
-                version.getData().en.published.should.be.true;
+                version.getData().published.should.be.true;
             });
         });
 
         it('should set valid value for "updateDate" property', function() {
             return version.processData(versionData).then(function() {
-                version.getData().en.updateDate.should.be.above(+(new Date()) - 100);
+                version.getData().updateDate.should.be.above(+(new Date()) - 100);
             });
         });
 
         it('should set valid value for "hasIssues" property', function() {
             return version.processData(versionData).then(function() {
-                version.getData().en.hasIssues.should.be.true;
+                version.getData().hasIssues.should.be.true;
             });
         });
 
         it('should set valid value for "sourceUrl" property', function() {
             return version.processData(versionData).then(function() {
-                version.getData().en.sourceUrl.should.equal('/base-library-url/tree/v1');
+                version.getData().sourceUrl.should.equal('/base-library-url/tree/v1');
             });
         });
 
         it('should set null value for "sourceUrl" property if version data has not "url" property', function() {
             return version.processData(_.omit(versionData, 'url')).then(function() {
-                should.not.exist(version.getData().en.sourceUrl);
+                should.not.exist(version.getData().sourceUrl);
             });
         });
 
@@ -123,7 +123,7 @@ describe('Version', function() {
             var data = _.extend({readme: {content: {en: 'Hello World'}}}, versionData);
             return version.processData(data).then(function() {
                 version.saveFile.should.be.calledTwice;
-                version.saveFile.firstCall.should.be.calledWith('/base-path/some-lib/v1/en.html')
+                version.saveFile.firstCall.should.be.calledWith('/base-path/some-lib/v1/index.html')
             });
         });
 
@@ -131,14 +131,14 @@ describe('Version', function() {
             var data = _.extend({docs: {readme: {content: {en: 'Hello World'}}}}, versionData);
             return version.processData(data).then(function() {
                 version.saveFile.should.be.calledTwice;
-                version.saveFile.firstCall.should.be.calledWith('/base-path/some-lib/v1/en.html')
+                version.saveFile.firstCall.should.be.calledWith('/base-path/some-lib/v1/index.html')
             });
         });
 
         it('should set valid value for "contentFile" property after saving doc file', function() {
             var data = _.extend({docs: {readme: {content: {en: 'Hello World'}}}}, versionData);
             return version.processData(data).then(function() {
-                version.getData().en.contentFile.should.be.equal('/libraries/some-lib/v1/en.html');
+                version.getData().contentFile.should.be.equal('/libraries/some-lib/v1/index.html');
             });
         });
 

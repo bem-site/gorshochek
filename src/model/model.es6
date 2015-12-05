@@ -122,53 +122,40 @@ export default class Model {
         return this;
     }
 
-    normalize(languages) {
+    normalize() {
         /**
          *
          * @param {Object} page - object in model
          * @param {String[]} languages - array of configured languages
          * @returns {Object} page
          */
-        const normalizePage = (page, languages) => {
+        const normalizePage = (page) => {
             /**
              * В каждом объекте модели есть одно обязательное поле url
              * Для остальных полей нужно провести проверку и выставить значения по умолчанию
              *
              */
-            page.oldUrls = page.oldUrls || []; // массив старых урлов
+            page.aliases = page.aliases || []; // массив алиасов
             page.view = page.view || 'post'; // поле представления страницы
+            page.published = !!page.published;
 
-            languages.forEach(language => {
-                page[language] = page[language] || {};
-                page[language].published = !!page[language].published;
-
-                if(!page[language].title) {
-                    page[language].published = false;
-                }
-            }, this);
-
+            if(!page.title) {
+                page.published = false;
+            }
             return page;
         };
 
-        this.setPages(this.getPages().map(item => {
-            return normalizePage(item, languages);
-        }));
-
+        this.setPages(this.getPages().map(normalizePage));
         return this;
     }
 
     /**
      * Returns pages with anyone language version satisfy getCriteria function criteria
      * @param {Function} criteria function
-     * @param {Array} languages - configured languages array
      * @returns {Array} filtered array of pages
-     * @private
+     * @public
      */
-    getPagesByCriteria(criteria, languages) {
-        // здесь происходит поиск страниц в модели у которых
-        // хотя бы одна из языковых версий удовлетворяет критерию из функции criteria
-        return this.getPages().filter(page => {
-            return languages.some(lang => criteria(page, lang));
-        });
+    getPagesByCriteria(criteria) {
+        return this.getPages().filter(criteria);
     }
 }

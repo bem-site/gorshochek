@@ -3,28 +3,15 @@ var Config = require('../../../lib/config'),
     PageSearchMeta = require('../../../lib/tasks-page/search-meta');
 
 describe('PageSearchMeta', function() {
-    var config = new Config('debug'),
+    var task,
         model = new Model(),
-        task = new PageSearchMeta(config, {}),
         pages = [
-            {
-                url: '/',
-                en: {
-                    title: '/ title'
-                }
-            },
-            {
-                url: '/url1',
-                en: {
-                    title: 'url1 title',
-                    tags: ['tag1', 'tag2']
-                }
-            }
+            {url: '/', title: '/ title'},
+            {url: '/url1', title: 'url1 title', tags: ['tag1', 'tag2']}
         ];
 
-    config.setLanguages(['en']);
-
     beforeEach(function() {
+        task = new PageSearchMeta(new Config('debug'), {});
         model.setPages(pages);
     });
 
@@ -34,7 +21,7 @@ describe('PageSearchMeta', function() {
 
     it('should set valid search meta-information for page without tags', function() {
         return task.run(model).then(function(result) {
-            result.getPages()[0].en.meta.should.eql({
+            result.getPages()[0].meta.should.eql({
                 breadcrumbs: [
                     {url: '/', title: '/ title'}
                 ],
@@ -48,7 +35,7 @@ describe('PageSearchMeta', function() {
 
     it('should set valid search meta-information for tagged pages', function() {
         return task.run(model).then(function(result) {
-            result.getPages()[1].en.meta.should.eql({
+            result.getPages()[1].meta.should.eql({
                 breadcrumbs: [
                     {url: '/', title: '/ title'},
                     {url: '/url1', title: 'url1 title'}

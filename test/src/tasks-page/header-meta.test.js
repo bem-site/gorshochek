@@ -3,22 +3,20 @@ var Config = require('../../../lib/config'),
     PageHeaderMeta = require('../../../lib/tasks-page/header-meta');
 
 describe('PageHeaderMeta', function() {
-    var config = new Config('debug'),
-        task = new PageHeaderMeta(config, {}),
+    var task,
         pages = [
-            {url: '/', en: {title: '/ title', tags: ['index1', 'index2']}},
-            {url: '/url1', en: {title: '/url1 title'}}
+            {url: '/', title: '/ title', tags: ['index1', 'index2']},
+            {url: '/url1', title: '/url1 title'}
         ],
         model = new Model();
 
-    config.setLanguages(['en']);
-
     function getMetaFieldValue(result, field, pageIndex) {
         pageIndex = pageIndex || 0;
-        return result.getPages()[pageIndex].en.header.meta[field];
+        return result.getPages()[pageIndex].header.meta[field];
     }
 
     beforeEach(function() {
+        task = new PageHeaderMeta(new Config('debug'), {});
         model.setPages(pages);
     });
 

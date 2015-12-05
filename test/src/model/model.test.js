@@ -111,53 +111,52 @@ describe('Model', function() {
     });
 
     describe('normalize', function() {
-        var languages = ['en', 'ru'],
-            commonPageProperties = {url: '/url1', en: {}, ru: {}};
+        var commonPageProperties = {url: '/url1'};
 
         function prepareModelPages(pageProperty) {
             model.setPages([_.merge(pageProperty, commonPageProperties)]);
         }
 
-        it('should set given "oldUrls" property value as is if it was set', function() {
-            prepareModelPages({oldUrls: ['/url11', '/url22']});
-            model.normalize(languages);
-            model.getPages().shift().oldUrls.should.eql(['/url11', '/url22']);
+        it('should set given "aliases" property value as is if it was set', function() {
+            prepareModelPages({aliases: ['/url11', '/url22']});
+            model.normalize();
+            model.getPages().shift().aliases.should.eql(['/url11', '/url22']);
         });
 
-        it('should set default "oldUrls" property value as empty array', function() {
+        it('should set default "aliases" property value as empty array', function() {
             prepareModelPages({});
-            model.normalize(languages);
-            model.getPages().shift().oldUrls.should.be.empty;
+            model.normalize();
+            model.getPages().shift().aliases.should.be.empty;
         });
 
         it('should set given "view" property value as is if it was given', function() {
             prepareModelPages({view: 'index'});
-            model.normalize(languages);
+            model.normalize();
             model.getPages().shift().view.should.be.equal('index');
         });
 
         it('should set default "view" property value as "post"', function() {
             prepareModelPages({});
-            model.normalize(languages);
+            model.normalize();
             model.getPages().shift().view.should.be.equal('post');
         });
 
         it('should set given "published" property value as is', function() {
-            prepareModelPages({ru: {published: true, title: 'Hello World'}});
-            model.normalize(languages);
-            model.getPages().shift().ru.published.should.be.true;
+            prepareModelPages({published: true, title: 'Hello World'});
+            model.normalize();
+            model.getPages().shift().published.should.be.true;
         });
 
         it('should set default "published" property value as false', function() {
             prepareModelPages({});
-            model.normalize(languages);
-            model.getPages().shift().ru.published.should.be.false;
+            model.normalize();
+            model.getPages().shift().published.should.be.false;
         });
 
         it('should set "published" false when title as missed', function() {
-            prepareModelPages({en: {published: true}});
-            model.normalize(languages);
-            model.getPages().shift().en.published.should.be.false;
+            prepareModelPages({published: true});
+            model.normalize();
+            model.getPages().shift().published.should.be.false;
         });
     });
 });

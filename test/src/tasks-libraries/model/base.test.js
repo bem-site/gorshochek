@@ -30,11 +30,6 @@ describe('Base', function() {
         base.getData().foo.should.equal('bar');
     });
 
-    it('should set value for given key and language', function() {
-        base.setValue('foo', 'bar', 'en');
-        base.getData()['en'].foo.should.equal('bar');
-    });
-
     describe('saveFile', function() {
         it('should call valid method for saving JSON file', function() {
             fsExtra.outputJSON.yields(null, './file.json');

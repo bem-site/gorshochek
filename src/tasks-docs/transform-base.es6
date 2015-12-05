@@ -24,12 +24,11 @@ export default class DocsTransformBase extends Base {
      * Transforms source text into html syntax.
      * This method should be overided in child classes
      * @param {Object} page - page object
-     * @param {String} language version
      * @param {String} source content
      * @returns {Promise}
      * @protected
      */
-    transform(page, language, source) {
+    transform(page, source) {
         return Q(source);
     }
 
@@ -37,29 +36,22 @@ export default class DocsTransformBase extends Base {
      * Transform md content of page source file into html syntax
      * @param {Model} model - data model
      * @param {Object} page - page object
-     * @param {Array} languages - configured languages array
      * @returns {Promise}
      * @protected
      */
-    processPage(model, page, languages) {
-        return Q.allSettled(languages.map((language) => {
-            if(!this.getCriteria(page, language)) {
-                return Q(page);
-            }
+    processPage(model, page) {
+        const sourceFilePath = page.contentFile;
+        const mdFileDirectory = path.dirname(sourceFilePath);
+        const htmlFilePath = path.join(mdFileDirectory, 'index.html');
 
-            const sourceFilePath = page[language].contentFile;
-            const mdFileDirectory = path.dirname(sourceFilePath);
-            const htmlFilePath = path.join(mdFileDirectory, language + '.html');
-
-            return Q(sourceFilePath)
-                .then(this.readFileFromCache.bind(this))
-                .then(this.transform.bind(this, page, language))
-                .then(this.writeFileToCache.bind(this, htmlFilePath))
-                .then(() => {
-                    page[language].contentFile = htmlFilePath;
-                    return page;
-                });
-        })).thenResolve(page);
+        return Q(sourceFilePath)
+            .then(this.readFileFromCache.bind(this))
+            .then(this.transform.bind(this, page))
+            .then(this.writeFileToCache.bind(this, htmlFilePath))
+            .then(() => {
+                page.contentFile = htmlFilePath;
+                return page;
+            });
     }
 
     /**

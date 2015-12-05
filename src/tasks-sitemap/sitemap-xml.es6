@@ -15,19 +15,10 @@ export default class SitemapXML extends Base {
     constructor(baseConfig, taskConfig) {
         super(baseConfig, taskConfig);
 
-        let hosts = this.getTaskConfig().hosts;
-        if(!hosts) {
-            throw new Error('Hosts undefined');
+        if(!this.getTaskConfig().host) {
+            throw new Error('Host parameter undefined. It is necessary for sitemap.xml creation');
         }
-
-        if(_.isString(hosts)) {
-            hosts = this.getBaseConfig().getLanguages().reduce((prev, lang) => {
-                prev[lang] = hosts;
-                return prev;
-            }, {});
-        }
-
-        this._hosts = hosts;
+        this._host = this.getTaskConfig().host;
     }
 
     /**
@@ -59,25 +50,22 @@ export default class SitemapXML extends Base {
 
     /**
      * Builds sitemap json model which can be converted into xml format
-     * @param {Object} hosts - hosts configuration object
-     * @param {Array} languages - array of languages
      * @param {Model} model - model object
      * @returns {Array}
      * @private
      */
-    _buildSiteMapModel(hosts, languages, model) {
+    _buildSiteMapModel(model) {
         return model.getPages().reduce((siteMap, page) => {
+            const host = this._host;
             const urls = [page.url].concat(page.aliases || []);
             const search = page.search || this.constructor._getDefaultSearchParams();
 
-            languages.forEach((lang) => {
-                if(page[lang] && page[lang].published) {
-                    urls.forEach((url) => {
-                        this.logger.verbose(`page: ${hosts[lang] + url} ${search.changefreq} ${search.priority}`);
-                        siteMap.push(_.extend({loc: hosts[lang] + url}, search));
-                    });
-                }
-            });
+            if(page.published) {
+                urls.forEach((url) => {
+                    this.logger.verbose(`page: ${host + url} ${search.changefreq} ${search.priority}`);
+                    siteMap.push(_.extend({loc: host + url}, search));
+                });
+            }
             return siteMap;
         }, []);
     }
@@ -100,7 +88,7 @@ export default class SitemapXML extends Base {
      */
     run(model) {
         return _.chain(model)
-            .thru(this._buildSiteMapModel.bind(this, this._hosts, this.getBaseConfig().getLanguages()))
+            .thru(this._buildSiteMapModel.bind(this))
             .thru(value => {return {url: value};})
             .thru(js2xml.bind(this, 'urlset'))
             .thru(this._saveSiteMapXML.bind(this))

@@ -3,9 +3,6 @@ require('./src/model/model.test.js');
 require('./src/model/changes/index.test.js');
 require('./src/model/changes/type.test.js');
 
-require('./src/model/people.test.js');
-require('./src/model/meta.test.js');
-
 require('./src/tasks-libraries/model/base.test.js');
 require('./src/tasks-libraries/model/block.test.js');
 require('./src/tasks-libraries/model/document.test.js');

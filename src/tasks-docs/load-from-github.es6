@@ -42,24 +42,22 @@ export default class DocsLoadGithub extends Base {
     /**
      * Returns parsed repository info for language version of page. Otherwise returns false
      * @param {Object} page - page model object
-     * @param {String} lang - language
      * @returns {Object|Boolean}
      * @protected
      */
-    getCriteria(page, lang) {
-        const sourceUrl = page[ lang ].sourceUrl;
-        return !!sourceUrl && !!sourceUrl.match(/^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/);
+    getCriteria(page) {
+        return page.sourceUrl &&
+            page.sourceUrl.match(/^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/);
     }
 
     /**
      * Synchronize docs for all page language version
      * @param {Model} model - data model
      * @param {Object} page - page model object
-     * @param {Array} languages - array of languages
      * @returns {*|Promise.<T>}
      * @private
      */
-    processPage(model, page, languages) {
+    processPage(model, page) {
         function getHeadersByCache(cache) {
             return (cache && cache.etag) ? {'If-None-Match': cache.etag} : null;
         }
@@ -75,11 +73,9 @@ export default class DocsLoadGithub extends Base {
             };
         }
 
-        const readFromCache = (language) => {
-            return this.readFileFromCache(path.join(page.url, language + '.meta.json'), true, true)
-                .catch(() => {
-                    return {};
-                });
+        const readFromCache = () => {
+            return this.readFileFromCache(path.join(page.url, 'index.meta.json'), true, true)
+                .catch(() => ({}));
         };
 
         /*
@@ -89,7 +85,7 @@ export default class DocsLoadGithub extends Base {
          3. Ветку из которой был загружен документ. Если загрузка была
          произведена из тега - то ссылку на основную ветку репозитория
          */
-        const loadAdvancedMetaInformation = (repoInfo, cache, language) => {
+        const loadAdvancedMetaInformation = (repoInfo, cache) => {
             const getUpdateDate = this.getTaskConfig().updateDate ?
                 this.getAPI().getLastCommitDate(repoInfo, getHeadersByCache(cache)) :
                 Q(null);
@@ -101,70 +97,55 @@ export default class DocsLoadGithub extends Base {
                 Q(null);
             return Q.allSettled([getUpdateDate, checkForIssues, getBranch])
                 .spread((updateDate, hasIssues, branch) => {
-                    page[ language ].updateDate = updateDate.value;
-                    page[ language ].hasIssues = hasIssues.value;
-                    page[ language ].branch = branch.value;
+                    page.updateDate = updateDate.value;
+                    page.hasIssues = hasIssues.value;
+                    page.branch = branch.value;
                 });
         };
 
-        const updateCacheMetaData = (result, language) => {
-            const cache = {
-                etag: result.meta.etag,
-                sha: result.sha
-            };
-            return this.writeFileToCache(path.join(page.url, language + '.meta.json'), JSON.stringify(cache, null, 4));
+        const updateCacheMetaData = (result) => {
+            return this.writeFileToCache(path.join(page.url, 'index.meta.json'),
+                JSON.stringify({etag: result.meta.etag, sha: result.sha}, null, 4));
         };
 
-        const saveResultToFileSystem = (result, language) => {
+        const saveResultToFileSystem = (result) => {
             const ext = result.name.split('.').pop();
-            const fileName = language + '.' + ext;
-            const filePath = path.join(page.url, fileName);
+            const filePath = path.join(page.url, 'index.' + ext);
             return this
                 .writeFileToCache(filePath, new Buffer(result.content, 'base64').toString())
                 .thenResolve(filePath);
         };
 
-        return Q.allSettled(languages.map(language => {
-            if(!this.getCriteria(page, language)) {
-                return Q(page);
-            }
+        this.logger.debug(`Load doc file for page with url: => ${page.url}`);
+        const repoInfo = parseSourceUrl(page.sourceUrl);
+        return readFromCache()
+            .then(cache => {
+                return Q.all([
+                    this.getAPI().getContent(repoInfo, getHeadersByCache(cache)),
+                    cache
+                ]);
+            })
+            .spread((result, cache) => {
+                if(result.meta.status === '304 Not Modified' || cache.sha === result.sha) {
+                    this.logger.verbose('Document was not changed: %s', page.url);
+                    return Q(path.join(page.url, cache.fileName));
+                } else if(!cache.sha) {
+                    this.logger.debug('Doc added: %s %s', page.url, page.title);
+                    model.getChanges().pages.addAdded({type: 'doc', url: page.url, title: page.title});
+                } else {
+                    this.logger.debug('Doc modified: %s %s %s', page.url, page.title);
+                    model.getChanges().pages.addModified({type: 'doc', url: page.url, title: page.title});
+                }
 
-            const repoInfo = parseSourceUrl(page[ language ].sourceUrl);
-
-            this.logger.debug(`Load doc file for language: => ${language} and page with url: => ${page.url}`);
-            return readFromCache(language)
-                .then(cache => {
-                    return Q.all([
-                        this.getAPI().getContent(repoInfo, getHeadersByCache(cache)),
-                        cache
-                    ]);
-                })
-                .spread((result, cache) => {
-                    if(result.meta.status === '304 Not Modified' || cache.sha === result.sha) {
-                        this.logger.verbose('Document was not changed: %s', page.url);
-                        return Q(path.join(page.url, cache.fileName));
-                    } else if(!cache.sha) {
-                        this.logger.debug('Doc added: %s %s %s', page.url, language, page[ language ].title);
-                        model.getChanges().pages.addAdded({type: 'doc', url: page.url, title: page[ language ].title});
-                    } else {
-                        this.logger.debug('Doc modified: %s %s %s', page.url, language, page[ language ].title);
-                        model.getChanges().pages.addModified({
-                            type: 'doc',
-                            url: page.url,
-                            title: page[ language ].title
-                        });
-                    }
-
-                    return Q()
-                        .then(() => loadAdvancedMetaInformation(repoInfo, cache, language))
-                        .then(() => updateCacheMetaData(result, language))
-                        .then(() => saveResultToFileSystem(result, language));
-                })
-                .then(filePath => {
-                    page[ language ].contentFile = filePath;
-                    return filePath;
-                });
-        })).thenResolve(page);
+                return Q()
+                    .then(() => loadAdvancedMetaInformation(repoInfo, cache))
+                    .then(() => updateCacheMetaData(result))
+                    .then(() => saveResultToFileSystem(result));
+            })
+            .then(filePath => {
+                page.contentFile = filePath;
+                return page;
+            });
     }
 
     /**

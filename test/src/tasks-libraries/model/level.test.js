@@ -9,7 +9,7 @@ describe('Level', function() {
             basePath: '/base-path',
             lib: 'some-lib',
             version: 'v1',
-            languages: ['en']
+            language: 'en'
         },
         level;
 
@@ -88,19 +88,19 @@ describe('Level', function() {
 
         it('should set valid value for "title" property', function() {
             return level.processData(levelData).then(function() {
-                level.getData().en.title.should.be.equal('desktop');
+                level.getData().title.should.be.equal('desktop');
             });
         });
 
         it('should set valid value for "published" property', function() {
             return level.processData(levelData).then(function() {
-                level.getData().en.published.should.be.true;
+                level.getData().published.should.be.true;
             });
         });
 
         it('should set valid value for "updateDate" property', function() {
             return level.processData(levelData).then(function() {
-                level.getData().en.updateDate.should.be.above(+(new Date()) - 100);
+                level.getData().updateDate.should.be.above(+(new Date()) - 100);
             });
         });
 

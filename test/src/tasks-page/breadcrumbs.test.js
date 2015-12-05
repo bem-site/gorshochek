@@ -3,19 +3,16 @@ var Config = require('../../../lib/config'),
     PageBreadcrumbs = require('../../../lib/tasks-page/breadcrumbs');
 
 describe('PageBreadcrumbs', function() {
-    var config = new Config('debug'),
-        model = new Model(),
-        task,
+    var model = new Model(),
         pages = [
-            {url: '/', en: {title: 'index title'}},
-            {url: '/url1', en: {title: 'url1 title'}},
-            {url: '/url1/url2', en: {title: 'url2 title'}}
-        ];
-
-    config.setLanguages(['en']);
+            {url: '/', title: 'index title'},
+            {url: '/url1', title: 'url1 title'},
+            {url: '/url1/url2', title: 'url2 title'}
+        ],
+        task;
 
     beforeEach(function() {
-        task = new PageBreadcrumbs(config, {});
+        task = new PageBreadcrumbs(new Config('debug'), {});
         model.setPages(pages);
     });
 
@@ -25,13 +22,13 @@ describe('PageBreadcrumbs', function() {
 
     it('should create valid breadcrumbs model for index page', function() {
         task.run(model).then(function(result) {
-            result.getPages()[0].en.breadcrumbs.should.eql([{url: '/', title: 'index title'}]);
+            result.getPages()[0].breadcrumbs.should.eql([{url: '/', title: 'index title'}]);
         });
     });
 
     it('should create valid breadcrumbs model for first-level pages', function() {
         task.run(model).then(function(result) {
-            result.getPages()[1].en.breadcrumbs.should.eql([
+            result.getPages()[1].breadcrumbs.should.eql([
                 {url: '/', title: 'index title'},
                 {url: '/url1', title: 'url1 title'}
             ]);
@@ -40,7 +37,7 @@ describe('PageBreadcrumbs', function() {
 
     it('should create valid breadcrumbs model for second-level pages', function() {
         task.run(model).then(function(result) {
-            result.getPages()[2].en.breadcrumbs.should.eql([
+            result.getPages()[2].breadcrumbs.should.eql([
                 {url: '/', title: 'index title'},
                 {url: '/url1', title: 'url1 title'},
                 {url: '/url1/url2', title: 'url2 title'}

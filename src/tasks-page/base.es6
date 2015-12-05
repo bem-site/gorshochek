@@ -29,16 +29,12 @@ export default class PageBase extends Base {
     /**
      * Creates map url -> lang -> title
      * @param {Array} pages - array of model pages
-     * @param {Array} languages - array of configured languages
      * @returns {Object}
      * @protected
      */
-    createPageTitlesMap(pages, languages) {
+    createPageTitlesMap(pages) {
         return pages.reduce((pagesMap, page) => {
-            pagesMap.set(page.url, languages.reduce((pageMap, language) => {
-                page[language] && pageMap.set(language, page[language].title);
-                return pageMap;
-            }, new Map()));
+            pagesMap.set(page.url, page.title);
             return pagesMap;
         }, new Map());
     }
@@ -72,11 +68,8 @@ export default class PageBase extends Base {
      * @protected
      */
     run(model, processFunc) {
-        const languages = this.getBaseConfig().getLanguages();
-        const pagesMap = this.createPageTitlesMap(model.getPages(), languages);
-
-        model.getPages().forEach(page => processFunc(page, languages, pagesMap));
-
+        const pagesMap = this.createPageTitlesMap(model.getPages());
+        model.getPages().forEach(page => processFunc(page, pagesMap));
         this.logger.info(`Successfully finish task "${this.constructor.getName()}"`);
         return Promise.resolve(model);
     }

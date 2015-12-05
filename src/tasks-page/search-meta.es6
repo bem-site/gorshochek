@@ -27,18 +27,12 @@ export default class PageSearchMeta extends PageBase {
      * @public
      */
     run(model) {
-        return super.run(model, (page, languages, pageTitlesMap) => {
+        return super.run(model, (page, pageTitlesMap) => {
             const urlSet = this.getParentUrls(page);
-            languages.forEach(language => {
-                // TODO add cases for library entities
-                page[language] && _.chain(page)
-                    .get(language)
-                    .set('meta.breadcrumbs', urlSet.map(url => {
-                        return {url, title: pageTitlesMap.get(url).get(language)};
-                    }))
-                    .set('meta.fields', {type: 'doc', keywords: page[language].tags || []})
-                    .value();
-            });
+            _.chain(page)
+                .set('meta.breadcrumbs', urlSet.map(url => ({url, title: pageTitlesMap.get(url)})))
+                .set('meta.fields', {type: 'doc', keywords: page.tags || []})
+                .value();
         });
     }
 }

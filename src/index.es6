@@ -43,16 +43,6 @@ export default class Builder {
     }
 
     /**
-     * Override configured languages
-     * @param {Array} languages array
-     * @returns {Builder}
-     */
-    setLanguages(languages) {
-        this.getConfig().setLanguages(languages);
-        return this;
-    }
-
-    /**
      * Overrides path to cache folder
      * @param {String} cacheFolder - path to cache folder
      * @returns {Builder}

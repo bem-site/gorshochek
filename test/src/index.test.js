@@ -22,17 +22,6 @@ describe('Builder', function() {
         builder.getTasks().should.be.instanceOf(Array).and.be.empty;
     });
 
-    describe('setLanguages', function() {
-        it('should return instance of Builder class', function() {
-            builder.setLanguages(['en', 'ru']).should.be.instanceof(Builder);
-        });
-
-        it('should override default languages configuration', function() {
-            builder.setLanguages(['en', 'ru']);
-            builder.getConfig().getLanguages().should.eql(['en', 'ru']);
-        });
-    });
-
     describe('setCacheFolder', function() {
         it('should return instance of Builder class', function() {
             builder.setCacheFolder('./cache').should.be.instanceof(Builder);

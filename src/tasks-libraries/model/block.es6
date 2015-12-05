@@ -69,21 +69,17 @@ export default class Block extends Base {
      * @private
      */
     _setSource(data) {
-        const {basePath, baseUrl, lib, version, languages} = this.level.version;
+        const {basePath, baseUrl, lib, version, language} = this.level.version;
         const sourcePath = path.join(basePath, lib, version, this.level.level, this.block);
-        const promises = languages.map(lang => {
-            const filePath = path.join(sourcePath, `${lang}.json`);
-            const contentFilePath = [baseUrl, lib, version,
-                    this.level.level, this.block, lang].join(path.sep) + '.json';
-            return Q({
-                    data: this._rectifyBlockDocumentation(data.data, lang),
-                    jsdoc: this._rectifyBlockJSDocumentation(data.jsdoc, lang)
-                })
-                .then(content => this.saveFile(filePath, content, true))
-                .then(() => this.setValue('contentFile', contentFilePath, lang));
-        });
-
-        return Q.all(promises);
+        const filePath = path.join(sourcePath, 'index.json');
+        const contentFilePath = [baseUrl, lib, version,
+                this.level.level, this.block, 'index.json'].join(path.sep);
+        return Q({
+                data: this._rectifyBlockDocumentation(data.data, language),
+                jsdoc: this._rectifyBlockJSDocumentation(data.jsdoc, language)
+            })
+            .then(content => this.saveFile(filePath, content, true))
+            .then(() => this.setValue('contentFile', contentFilePath));
     }
 
     /**
@@ -92,21 +88,20 @@ export default class Block extends Base {
      * @returns {Promise}
      */
     processData(data) {
-        const {baseUrl, lib, version, languages} = this.level.version;
+        const {baseUrl, lib, version} = this.level.version;
 
-        this.setValue('url', [baseUrl, lib, version, this.level.level, this.block].join('/'))
+        return this
+            .setValue('url', [baseUrl, lib, version, this.level.level, this.block].join('/'))
             .setValue('aliases', []) // алиасы или редиректы
             .setValue('view', 'block') // представление
             .setValue('lib', lib) // название библотеки
             .setValue('version', version) // название версии (ветки, тега, pr)
             .setValue('level', this.level.level) // название уровня переопредления
-            .setValue('block', this.block); // имя блока
-
-        languages.forEach(lang => {
-            this.setValue('title', this.block, lang) // имя блока
-                .setValue('published', true, lang) // флаг о том что страница опубликована
-                .setValue('updateDate', +(new Date()), lang); // дата обновления
-        });
-        return this._setSource(data).then(this.getData.bind(this));
+            .setValue('block', this.block) // имя блока
+            .setValue('title', this.block) // имя блока
+            .setValue('published', true) // флаг о том что страница опубликована
+            .setValue('updateDate', +(new Date())) // дата обновления
+            ._setSource(data)
+            .then(this.getData.bind(this));
     }
 }

@@ -21,7 +21,7 @@ const readFile = (basePath, lib, version) => {
  * @param {String} data.baseUrl — base libraries url
  * @param {String} data.basePath — base libraries path inside cache folder
  * @param {Object[]} data.data — array of library version objects
- * @param {String[]} data.languages — array of languages
+ * @param {String} data.language — language
  * @param {Function} callback function
  * @returns {Promise}
  */
@@ -29,7 +29,7 @@ module.exports = function(data, callback) {
     const PORTION_SIZE = 3;
     const baseUrl = data.baseUrl; // базовый url для библиотек
     const basePath = data.basePath; // базовый путь для сохранения файлов внутри директории кэша
-    const languages = data.languages; // массив с языками
+    const language = data.language;
     let queue = data.data;
 
     // делим очередь версий библиотек на порции размером PORTION_SIZE
@@ -46,14 +46,10 @@ module.exports = function(data, callback) {
                     const version = item.version;
 
                     return readFile(basePath, lib, version)
-                        .then((new Version(baseUrl, basePath, lib, version, languages)).processData);
+                        .then((new Version(baseUrl, basePath, lib, version, language)).processData);
                 }));
             });
         }, Q())
-        .then(() => {
-            callback(null);
-        })
-        .fail((error) => {
-            callback(error, process.pid);
-        });
+        .then(() => callback(null))
+        .fail(error => callback(error, process.pid));
 };

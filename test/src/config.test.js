@@ -7,10 +7,6 @@ describe('Config', function() {
         config = new Config('debug');
     });
 
-    it('should have default languages set', function() {
-        config.getLanguages().should.be.eql(['en']);
-    });
-
     it('should have default logger settings', function() {
         config.getLoggerSettings().should.be.eql({level: 'debug'});
     });
@@ -29,26 +25,9 @@ describe('Config', function() {
 
     it('should return valid default settings', function() {
         Config.defaults.should.be.eql({
-            languages: ['en'],
             modelFilePath: './model/model.json',
             dataFolder: './data',
             cacheFolder: './.builder/cache'
-        });
-    });
-
-    describe('method setLanguages', function() {
-        it('should can be used in chain', function() {
-            config.setLanguages().should.be.instanceof(Config);
-        });
-
-        it('should set with given value', function() {
-            config.setLanguages(['en', 'ru']);
-            config.getLanguages().should.be.eql(['en', 'ru']);
-        });
-
-        it('should set with default value', function() {
-            config.setLanguages();
-            config.getLanguages().should.be.eql(['en']);
         });
     });
 

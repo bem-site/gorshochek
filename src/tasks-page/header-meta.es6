@@ -28,7 +28,7 @@ export default class PageHeaderMeta extends PageBase {
      */
     run(model) {
         /*
-         Для каждой языковой версии каждой страницы создаем
+         Для каждой страницы создаем
          поле header.meta в котором находится структура содержащая мета-информацию для header страницы.
           - ogUrl
           - ogType
@@ -38,20 +38,17 @@ export default class PageHeaderMeta extends PageBase {
           - ogKeywords
          */
         const getKeywords = p => {return p.tags ? p.tags.join(', ') : '';};
-        return super.run(model, (page, languages) => {
-            languages.forEach(language => {
-                page[language] && _.chain(page)
-                    .get(language)
-                    .set('header.meta', _({})
-                        .set('ogUrl', page.url)
-                        .set('ogType', 'article')
-                        .set('description', page[language].title)
-                        .set('ogDescription', page[language].title)
-                        .set('keywords', getKeywords(page[language]))
-                        .set('ogKeywords', getKeywords(page[language]))
-                        .value())
-                    .value();
-            });
+        return super.run(model, page => {
+            _.chain(page)
+                .set('header.meta', _({})
+                    .set('ogUrl', page.url)
+                    .set('ogType', 'article')
+                    .set('description', page.title)
+                    .set('ogDescription', page.title)
+                    .set('keywords', getKeywords(page))
+                    .set('ogKeywords', getKeywords(page))
+                    .value())
+                .value();
         });
     }
 }

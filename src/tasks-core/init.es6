@@ -124,6 +124,6 @@ export default class Init extends Base {
             .spread(model.merge.bind(model))
             .then(this._logModelChanges.bind(this))
             .then(this._replaceModelFileInCache.bind(this))
-            .then(model.normalize.bind(model, this.getBaseConfig().getLanguages()));
+            .then(model.normalize.bind(model));
     }
 }

@@ -156,21 +156,17 @@ export default class Base {
      * @returns {Promise}
      */
     processPagesAsync(model, criteria, processFunc, portionSize = 5) {
-        const languages = this.getBaseConfig().getLanguages();
-
         criteria = criteria || _.constant(true);
 
         return _(criteria)
             .bind(this)
-            .thru(f => model.getPagesByCriteria(f, languages))
+            .thru(model.getPagesByCriteria.bind(model))
             .chunk(portionSize)
             .reduce((prev, portion, index) => {
                 return prev.then(() => {
                     this.logger.debug('process portion of pages in range %s - %s',
                         index * portionSize, (index + 1) * portionSize);
-                    return Q.allSettled(portion.map(page => {
-                        return processFunc.call(this, model, page, languages);
-                    }));
+                    return Q.allSettled(portion.map(processFunc.bind(this, model)));
                 });
             }, Q());
     }

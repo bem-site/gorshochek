@@ -12,7 +12,6 @@ export default class Config {
         this.logger = Logger.setOptions(loggerSettings).createLogger(module);
 
         this
-            .setLanguages(this.constructor.defaults.languages)
             .setLogLevel(logLevel)
             .setModelFilePath(this.constructor.defaults.modelFilePath)
             .setDataFolder(this.constructor.defaults.dataFolder)
@@ -27,22 +26,10 @@ export default class Config {
      */
     static get defaults() {
         return {
-            languages: ['en'],
             modelFilePath: './model/model.json',
             dataFolder: './data',
             cacheFolder: './.builder/cache'
         };
-    }
-
-    /**
-     * Sets array of given languages
-     * @param {Array} languages - array of languages
-     * @returns {Config}
-     */
-    setLanguages(languages = this.constructor.defaults.languages) {
-        this._languages = languages;
-        this.logger.debug(`config: languages = ${this._languages}`);
-        return this;
     }
 
     /**
@@ -87,14 +74,6 @@ export default class Config {
         this._cacheFolder = cacheFolder;
         this.logger.debug(`config: cache dir path = ${this._cacheFolder}`);
         return this;
-    }
-
-    /**
-     * Returns array with languages
-     * @returns {String[]}
-     */
-    getLanguages() {
-        return this._languages;
     }
 
     /**

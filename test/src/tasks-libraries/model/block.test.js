@@ -44,7 +44,7 @@ describe('Block', function() {
                 basePath: '/some-path',
                 lib: 'some-lib',
                 version: 'v1',
-                languages: ['en']
+                language: 'en'
             },
             level: 'desktop'
         };
@@ -98,25 +98,25 @@ describe('Block', function() {
 
         it('should have valid value for "title" field', function() {
             return block.processData({}).then(function() {
-                block.getData().en.title.should.be.equal('button');
+                block.getData().title.should.be.equal('button');
             });
         });
 
         it('should have valid value for "published" field', function() {
             return block.processData({}).then(function() {
-                block.getData().en.published.should.be.true;
+                block.getData().published.should.be.true;
             });
         });
 
         it('should have valid value for "updateDate" field', function() {
             return block.processData({}).then(function() {
-                block.getData().en.updateDate.should.above(+(new Date()) - 100);
+                block.getData().updateDate.should.above(+(new Date()) - 100);
             });
         });
 
         it('should save source file content to valid path', function() {
             return block.processData({}).then(function() {
-                var expectedPath = '/some-path/some-lib/v1/desktop/button/en.json';
+                var expectedPath = '/some-path/some-lib/v1/desktop/button/index.json';
                 block.saveFile.should.be.calledWith(expectedPath, {data: null, jsdoc: null}, true);
             });
         });
@@ -124,7 +124,7 @@ describe('Block', function() {
         it('should set valid value for "contentFile" field after saving source content', function() {
             return block.processData({}).then(function() {
                 block.getData().contentFile
-                    .should.be.equal('/libraries/some-lib/v1/desktop/button/en.json');
+                    .should.be.equal('/libraries/some-lib/v1/desktop/button/index.json');
             });
         });
     });

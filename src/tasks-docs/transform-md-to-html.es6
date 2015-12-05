@@ -21,33 +21,26 @@ export default class DocsMdToHtml extends Base {
      * Returns true if page[language] exists and have contentFile
      * pointed to *.md file. Otherwise returns false
      * @param {Object} page - page object
-     * @param {String} language version
      * @returns {Boolean}
      * @protected
      */
-    getCriteria(page, language) {
-        if(!page[language]) {
-            return false;
-        }
-
-        const contentFile = page[language].contentFile;
-        return !!contentFile && !!contentFile.match(/\.md$/);
+    getCriteria(page) {
+        return page.contentFile && page.contentFile.match(/\.md$/);
     }
 
     /**
      * Transforms markdown text into html syntax with help of marked library
      * wrapped into https://github.com/bem-site/bem-md-renderer npm package
      * @param {Object} page - page object
-     * @param {String} language version
      * @param {String} md - text in markdown syntax
      * @returns {Promise}
      * @private
      */
-    transform(page, language, md) {
+    transform(page, md) {
         return Q.nfcall(mdToHtml.render, md)
             .catch(error => {
                 this.logger
-                    .error(`Error occur while transform md -> html for page: ${page.url} and language ${language}`)
+                    .error(`Error occur while transform md -> html for page: ${page.url}`)
                     .error(error.message);
                 throw error;
             });

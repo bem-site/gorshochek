@@ -1,5 +1,4 @@
 import path from 'path';
-import Q from 'q';
 import Base from './base';
 
 /**
@@ -11,7 +10,7 @@ export default class Document extends Base {
     /**
      * Document constructor
      * @param {Object}    version data object
-     * @param {String[]}  version.languages - array of languages
+     * @param {String}    version.language - language
      * @param {String}    version.baseUrl - base libraries url
      * @param {String}    version.basePath - base path for libraries file inside cache folder
      * @param {String}    version.lib - name of library
@@ -24,7 +23,7 @@ export default class Document extends Base {
 
         /**
          * Library version data object
-         * @type {{languages: String[], baseUrl: String, basePath: String, lib: String, version: String}}
+         * @type {{language: String, baseUrl: String, basePath: String, lib: String, version: String}}
          */
         this.version = version;
 
@@ -38,35 +37,32 @@ export default class Document extends Base {
     /**
      * Returns title for document
      * @param {Object} data - document data object
-     * @param {String} lang - language
      * @returns {String}
      */
-    getTitle(data, lang) {
+    getTitle(data) {
+        const language = this.version.language;
         const TITLES = {
             changelog: {en: 'Changelog', ru: 'История изменений'},
             migration: {en: 'Migration', ru: 'Миграция'},
             notes: {en: 'Release Notes', ru: 'Примечания к релизу'}
         };
 
-        if(!data.title || !data.title[lang]) {
-            return TITLES[this.document][lang];
+        if(!data.title || !data.title[language]) {
+            return TITLES[this.document][language];
         }
 
-        return data.title[lang];
+        return data.title[language];
     }
 
     /**
      * Returns source url for document on github
      * @param {Object} data - document data object
-     * @param {String} lang - language
      * @returns {String|Null}
      * @private
      */
-    _getSourceUrl(data, lang) {
-        if(!data.url || !data.url[lang]) {
-            return null;
-        }
-        return data.url[lang];
+    _getSourceUrl(data) {
+        const language = this.version.language;
+        return (data.url && data.url[language]) ? data.url[language] : null;
     }
 
     /**
@@ -76,23 +72,19 @@ export default class Document extends Base {
      * @private
      */
     _setSource(data) {
-        const {basePath, baseUrl, lib, version, languages} = this.version;
+        const {basePath, baseUrl, lib, version, language} = this.version;
         const sourcePath = path.join(basePath, lib, version, this.document);
-        const promises = languages.map(lang => {
-            const filePath = path.join(sourcePath, `${lang}.html`);
-            const contentFilePath = [baseUrl, lib, version, this.document, lang].join(path.sep) + '.html';
-            const content = data.content ? data.content[lang] : null;
+        const filePath = path.join(sourcePath, 'index.html');
+        const contentFilePath = [baseUrl, lib, version, this.document, 'index.html'].join(path.sep);
 
-            if(!content) {
-                this.setValue('published', false, lang);
-            }
+        const content = data.content ? data.content[language] : null;
+        if(!content) {
+            this.setValue('published', false);
+        }
 
-            return this.saveFile(filePath, content, false).then(() => {
-                return this.setValue('contentFile', contentFilePath, lang);
-            });
+        return this.saveFile(filePath, content, false).then(() => {
+            return this.setValue('contentFile', contentFilePath);
         });
-
-        return Q.all(promises);
     }
 
     /**
@@ -103,21 +95,18 @@ export default class Document extends Base {
     processData(data) {
         const version = this.version;
 
-        this.setValue('url', [version.baseUrl, version.lib, version.version, this.document].join('/'))
+        return this
+            .setValue('url', [version.baseUrl, version.lib, version.version, this.document].join('/'))
             .setValue('aliases', []) // алиасы или редиректы
             .setValue('view', 'post') // представление
             .setValue('lib', version.lib) // название библиотеки
             .setValue('version', version.version) // название версии библиотеки
-            .setValue('document', this.document); // имя уровня переопредления WTF?
-
-        version.languages.forEach(lang => {
-            this.setValue('title', this.getTitle(data, lang), lang) // имя уровня переопределения
-                .setValue('published', true, lang) // флаг о том что страница опубликована
-                .setValue('updateDate', +(new Date()), lang); // дата обновления
-
-            this.setValue('sourceUrl', this._getSourceUrl(data, lang), lang);
-        });
-
-        return this._setSource(data).then(this.getData.bind(this));
+            .setValue('document', this.document) // имя уровня переопредления WTF?
+            .setValue('title', this.getTitle(data)) // имя уровня переопределения
+            .setValue('published', true) // флаг о том что страница опубликована
+            .setValue('updateDate', +(new Date())) // дата обновления
+            .setValue('sourceUrl', this._getSourceUrl(data))
+            ._setSource(data)
+            .then(this.getData.bind(this));
     }
 }
