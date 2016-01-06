@@ -25,7 +25,7 @@ export default class DocsMdToHtml extends Base {
      * @protected
      */
     getCriteria(page) {
-        return page.contentFile && page.contentFile.match(/\.md$/);
+        return !!(page.contentFile && page.contentFile.match(/\.md$/));
     }
 
     /**

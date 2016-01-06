@@ -65,11 +65,11 @@ export default class DocsLoadGithub extends Base {
         function parseSourceUrl(url) {
             const repoInfo = url.match(/^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/);
             return {
-                host: repoInfo[ 1 ],
-                user: repoInfo[ 2 ],
-                repo: repoInfo[ 3 ],
-                ref: repoInfo[ 5 ],
-                path: repoInfo[ 6 ]
+                host: repoInfo[1],
+                user: repoInfo[2],
+                repo: repoInfo[3],
+                ref: repoInfo[5],
+                path: repoInfo[6]
             };
         }
 

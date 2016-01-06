@@ -88,7 +88,7 @@ describe('DocsLoadFile', function() {
 
         it('should reject operation in case of missed local file', function() {
             fs.readFile.yields(new Error('ENOENT'));
-            return task.processPage(model, page).then(function() {
+            return task.processPage(model, page).catch(function() {
                 task.writeFileToCache.should.not.be.called;
                 should.not.exist(page.contentFile);
             });

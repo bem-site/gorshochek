@@ -76,7 +76,7 @@ describe('DocsTransformBase', function() {
 
         it('should update "contentFile" property of page model', function() {
             return task.processPage(model, page).then(function(page) {
-                page.en.contentFile.should.equal('/foo/index.html');
+                page.contentFile.should.equal('/foo/index.html');
             });
         });
     });

@@ -21,12 +21,11 @@ export default class DocsFileLoad extends Base {
      * Returns true if page[language] exists and have sourceUrl
      * which can be matched as relative file path on filesystem. Otherwise returns false
      * @param {Object} page - page object
-     * @param {String} language version
      * @returns {Boolean}
      * @private
      */
-    getCriteria(page, language) {
-        const sourceUrl = page[language].sourceUrl;
+    getCriteria(page) {
+        const sourceUrl = page.sourceUrl;
         return !!sourceUrl && !!sourceUrl.match(/^(\/)?([^\/\0]+(\/)?)+$/);
     }
 
