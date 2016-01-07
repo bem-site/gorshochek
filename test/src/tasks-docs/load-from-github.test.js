@@ -1,220 +1,191 @@
 var fs = require('fs'),
     fsExtra = require('fs-extra'),
+    Q = require('q'),
+    _ = require('lodash'),
     Config = require('../../../lib/config'),
     Model = require('../../../lib/model/model'),
-    DocsLoadGh = require('../../../lib/tasks-docs/load-from-github');
+    GithubAPI = require('../../../lib/tasks-docs/github'),
+    DocsLoadGithub = require('../../../lib/tasks-docs/load-from-github');
 
-describe('DocsLoadGh', function() {
+describe('DocsLoadGithub', function() {
+    var sandbox = sinon.sandbox.create(),
+        task = new DocsLoadGithub(new Config('debug'), {}),
+        model;
+
+    beforeEach(function() {
+        sandbox.stub(fsExtra);
+        sandbox.stub(task, 'readFileFromCache');
+        sandbox.stub(task, 'writeFileToCache');
+        model = new Model();
+    });
+
+    afterEach(function() {
+        sandbox.restore();
+    });
+
     it('should return valid task name', function() {
-       DocsLoadGh.getName().should.equal('docs load from gh');
+        DocsLoadGithub.getName().should.equal('docs load from github');
     });
 
-    it('should return valid gh url pattern', function() {
-        should.deepEqual(DocsLoadGh.getGhUrlPattern(),
-            /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/);
+    it('should initialize github API on task creation', function() {
+        task.getAPI().should.be.instanceof(GithubAPI);
     });
 
-    describe('instance methods', function() {
-        var config,
-            token,
-            task;
+    describe('getCriteria', function() {
+        it('should return false on missed sourceUrl field of page', function() {
+            var page = {url: '/url1'};
+            task.getCriteria(page).should.equal(false);
+        });
 
-        before(function() {
-            token = [
-                '92c5', 'a62f', '7ae4', '4c16', '40ed',
-                '1195', 'd448', '4689', '669c', '5caa'
-            ].join('');
+        it('should return false if sourceUrl value does not match regular expression', function() {
+            var page = {
+                url: '/url1',
+                sourceUrl: '//foo/bar'
+            };
+            task.getCriteria(page).should.equal(false);
+        });
 
-            config = new Config('debug');
-            task = new DocsLoadGh(config, {
-                token: token,
-                updateDate: true,
-                hasIssues: true,
-                getBranch: true
+        describe('sourceUrl matches on task criteria', function() {
+            it('should match on file path like a "http://github.com/org/user/blob/ref/path"', function() {
+                var page = {url: '/url', sourceUrl: 'http://github.com/org/user/blob/ref/path'};
+                task.getCriteria(page).should.equal(true);
+            });
+
+            it('should match on file path like a "https://github.com/org/user/blob/ref/path"', function() {
+                var page = {url: '/url', sourceUrl: 'https://github.com/org/user/blob/ref/path'};
+                task.getCriteria(page).should.equal(true);
+            });
+
+            it('should match on file path like a "http://github.com/org/user/tree/ref/path"', function() {
+                var page = {url: '/url', sourceUrl: 'http://github.com/org/user/tree/ref/path'};
+                task.getCriteria(page).should.equal(true);
+            });
+
+            it('should match on file path like a "https://github.com/org/user/tree/ref/path"', function() {
+                var page = {url: '/url', sourceUrl: 'https://github.com/org/user/tree/ref/path'};
+                task.getCriteria(page).should.equal(true);
+            });
+        });
+    });
+
+    describe('processPage', function() {
+        var page,
+            githubStubRes = {meta: {}, name: 'some-name.ext', sha: 'some-sha', content: 'some-content'};
+
+        beforeEach(function() {
+            task.writeFileToCache.returns(Q());
+            page = {url: '/url', sourceUrl: 'https://github.com/org/user/blob/ref/path.ext'};
+        });
+
+        it('should load file from github via github API', function() {
+            task.readFileFromCache.returns(Q.reject('Error'));
+            sandbox.stub(task.getAPI(), 'getContent').returns(Q(githubStubRes));
+            return task.processPage(model, page).then(function() {
+                task.getAPI().getContent.should.be.calledOnce;
             });
         });
 
-        it('_getAPI', function() {
-            task.getAPI().should.be.instanceOf(Github);
-        });
-
-        describe('getCriteria', function() {
-            it('should return false for missed lang version of page', function() {
-                var page = {
-                    url: '/url1'
-                };
-                task.getCriteria(page, 'en').should.equal(false);
-            });
-
-            it('should return false for missed sourceUrl field', function() {
-                var page = {
-                    url: '/url1',
-                    en: {}
-                };
-                task.getCriteria(page, 'en').should.equal(false);
-            });
-
-            it('should return false if sourceUrl field does not match criteria', function() {
-                var page = {
-                    url: '/url1',
-                    en: {
-                        sourceUrl: '/foo/bar'
-                    }
-                };
-                task.getCriteria(page, 'en').should.equal(false);
-            });
-
-            it('should return valid repository info object', function() {
-                var page = {
-                    url: '/url1',
-                    en: {
-                        sourceUrl: 'https://github.com/bem/bem-method/tree/bem-info-data/method/index/index.en.md'
-                    }
-                };
-                should.deepEqual(task.getCriteria(page, 'en'), {
-                    host: 'github.com',
-                    user: 'bem',
-                    repo: 'bem-method',
-                    ref:  'bem-info-data',
-                    path: 'method/index/index.en.md'
-                });
+        it('should save loaded file to cache by valid path', function() {
+            task.readFileFromCache.returns(Q.reject('Error'));
+            sandbox.stub(task.getAPI(), 'getContent').returns(Q(githubStubRes));
+            return task.processPage(model, page).then(function() {
+                task.writeFileToCache.should.be.calledWithMatch('/url/index.ext');
             });
         });
 
-        describe('getHeadersByCache', function() {
-            it('should return header object', function() {
-                should.deepEqual(task.getHeadersByCache({ etag: '123456789abcdef' }),
-                    { 'If-None-Match': '123456789abcdef' });
-            });
-
-            it('should return null in case of missing etag', function() {
-                should(task.getHeadersByCache({})).equal(null);
-                should(task.getHeadersByCache()).equal(null);
+        it('should mark loaded doc as added', function() {
+            task.readFileFromCache.returns(Q.reject('Error'));
+            sandbox.stub(task.getAPI(), 'getContent').returns(Q(githubStubRes));
+            return task.processPage(model, page).then(function() {
+                model.getChanges().pages.added.should.have.length(1);
             });
         });
 
-        describe('processPage', function() {
-            var model,
-                languages = ['en', 'ru'],
-                page = {
-                    url: '/url1',
-                    en: {
-                        title: 'foo bar',
-                        sourceUrl: 'https://github.com/bem/bem-method/tree/bem-info-data/method/index/index.en.md'
-                    },
-                    ru: {}
-                };
-
-            before(function() {
-                fsExtra.ensureDirSync('./.builder/cache/url1');
-            });
-
-            beforeEach(function() {
-                model = new Model();
-            });
-
-            after(function() {
-                fsExtra.removeSync('./.builder');
-            });
-
-            it('should load file from gh and place it to cache at first time', function(done) {
-                task.processPage(model, page, languages).then(function() {
-                    model.getChanges().pages.added.should.be.instanceOf(Array).and.have.length(1);
-                    model.getChanges().pages.modified.should.be.instanceOf(Array).and.have.length(0);
-                    should.deepEqual(model.getChanges().pages.added,
-                        [{ type: 'doc', url: '/url1', title: 'foo bar' }]);
-                    page['en'].contentFile.should.equal('/url1/en.md');
-                    fs.existsSync('.builder/cache/url1/en.meta.json').should.equal(true);
-                    fs.existsSync('.builder/cache/url1/en.md').should.equal(true);
-                    done();
-                });
-            });
-
-            it('should load cached file on the next verification', function(done) {
-                task.processPage(model, page, languages).then(function() {
-                    model.getChanges().pages.added.should.be.instanceOf(Array).and.have.length(0);
-                    model.getChanges().pages.modified.should.be.instanceOf(Array).and.have.length(0);
-                    done();
-                });
-            });
-
-            it('should load cached file if etag was changed but sha sum are equal', function(done) {
-                var p = './.builder/cache/url1/en.meta.json',
-                    o = { encoding: 'utf-8' },
-                    cache = fs.readFileSync(p, o);
-                cache = JSON.parse(cache);
-                cache.etag = cache.etag + 'a';
-                fs.writeFileSync(p, JSON.stringify(cache, null, 4), o);
-
-                task.processPage(model, page, languages).then(function() {
-                    model.getChanges().pages.added.should.be.instanceOf(Array).and.have.length(0);
-                    model.getChanges().pages.modified.should.be.instanceOf(Array).and.have.length(0);
-                    done();
-                });
-            });
-
-            it('should reload file if sha sum was changed', function(done) {
-                var p = './.builder/cache/url1/en.meta.json',
-                    o = { encoding: 'utf-8' },
-                    cache = fs.readFileSync(p, o);
-                cache = JSON.parse(cache);
-                cache.sha = cache.sha + 'a';
-                fs.writeFileSync(p, JSON.stringify(cache, null, 4), o);
-
-                task.processPage(model, page, languages).then(function() {
-                    model.getChanges().pages.added.should.be.instanceOf(Array).and.have.length(0);
-                    model.getChanges().pages.modified.should.be.instanceOf(Array).and.have.length(1);
-                    should.deepEqual(model.getChanges().pages.modified,
-                        [{ type: 'doc', url: '/url1', title: 'foo bar' }]);
-                    done();
-                });
+        it('should set valid value to "contentFile" field', function() {
+            task.readFileFromCache.returns(Q.reject('Error'));
+            sandbox.stub(task.getAPI(), 'getContent').returns(Q(githubStubRes));
+            return task.processPage(model, page).then(function() {
+                page.contentFile.should.equal('/url/index.ext');
             });
         });
 
-        describe('processPage without meta options', function() {
-            var model,
-                languages = ['en', 'ru'],
-                page = {
-                    url: '/url1',
-                    en: {
-                        title: 'foo bar',
-                        sourceUrl: 'https://github.com/bem/bem-method/tree/bem-info-data/method/index/index.en.md'
-                    },
-                    ru: {}
-                },
-                task1;
-
-            before(function() {
-                task1 = new DocsLoadGh(config, {
-                    token: token,
-                    updateDate: false,
-                    hasIssues: false,
-                    getBranch: false
-                });
-                fsExtra.ensureDirSync('./.builder/cache/url1');
+        it('should return fulfilled promise with page value', function() {
+            task.readFileFromCache.returns(Q.reject('Error'));
+            sandbox.stub(task.getAPI(), 'getContent').returns(Q(githubStubRes));
+            return task.processPage(model, page).then(function(_page) {
+                _page.url.should.equal(page.url);
+                _page.sourceUrl.should.equal(page.sourceUrl);
             });
+        });
 
-            beforeEach(function() {
-                model = new Model();
+        it('should save valid meta.json file to cache', function() {
+            task.readFileFromCache.returns(Q.reject('Error'));
+            sandbox.stub(task.getAPI(), 'getContent')
+                .returns(Q(_.extend({}, githubStubRes, {meta: {etag: 'some-etag'}})));
+            return task.processPage(model, page).then(function() {
+                var expectedContent = JSON.stringify({
+                    etag: 'some-etag',
+                    sha: 'some-sha'
+                }, null, 4);
+                task.writeFileToCache.firstCall.should.be.calledWith('/url/index.meta.json', expectedContent);
             });
+        });
 
-            after(function() {
-                fsExtra.removeSync('./.builder');
+        it('should skip loading if github return 304 status code', function() {
+            task.readFileFromCache.returns(Q({}));
+            sandbox.stub(task.getAPI(), 'getContent')
+                .returns(Q(_.extend({}, githubStubRes, {meta: {etag: 'some-etag', status: '304 Not Modified'}})));
+            return task.processPage(model, page).then(function() {
+                model.getChanges().pages.added.should.have.length(0);
+                model.getChanges().pages.modified.should.have.length(0);
             });
+        });
 
-            it('should load file from gh and place it to cache at first time', function(done) {
-                task1.processPage(model, page, languages).then(function() {
-                    model.getChanges().pages.added.should.be.instanceOf(Array).and.have.length(1);
-                    model.getChanges().pages.modified.should.be.instanceOf(Array).and.have.length(0);
-                    should.deepEqual(model.getChanges().pages.added,
-                        [{ type: 'doc', url: '/url1', title: 'foo bar' }]);
-                    page['en'].contentFile.should.equal('/url1/en.md');
-                    fs.existsSync('./.builder/cache/url1/en.meta.json').should.equal(true);
-                    fs.existsSync('./.builder/cache/url1/en.md').should.equal(true);
-                    done();
-                });
+        it('should skip loading if sha sums of github and cache files are equal', function() {
+            task.readFileFromCache.returns(Q({sha: 'some-sha'}));
+            sandbox.stub(task.getAPI(), 'getContent')
+                .returns(Q(_.extend({}, githubStubRes)));
+            return task.processPage(model, page).then(function() {
+                model.getChanges().pages.added.should.have.length(0);
+                model.getChanges().pages.modified.should.have.length(0);
+            });
+        });
+
+        it('should load file from github if it was modified', function() {
+
+        });
+
+        it('should mark doc as modified if it was modified and reloaded', function() {
+            task.readFileFromCache.returns(Q({sha: 'some-another-sha'}));
+            sandbox.stub(task.getAPI(), 'getContent')
+                .returns(Q(_.extend({}, githubStubRes)));
+            return task.processPage(model, page).then(function() {
+                model.getChanges().pages.modified.should.have.length(1);
+            });
+        });
+
+        it('should have "updateDate" field with null value if "updateDate" option was not set', function() {
+            task.readFileFromCache.returns(Q.reject('Error'));
+            sandbox.stub(task.getAPI(), 'getContent').returns(Q(githubStubRes));
+            return task.processPage(model, page).then(function() {
+                (page.updateDate == null).should.equal(true);
+            });
+        });
+
+        it('should have "hasIssues" field with null value if "hasIssues" option was not set', function() {
+            task.readFileFromCache.returns(Q.reject('Error'));
+            sandbox.stub(task.getAPI(), 'getContent').returns(Q(githubStubRes));
+            return task.processPage(model, page).then(function() {
+                (page.hasIssues == null).should.equal(true);
+            });
+        });
+
+        it('should have "branch" field with null value if "branch" option was not set', function() {
+            task.readFileFromCache.returns(Q.reject('Error'));
+            sandbox.stub(task.getAPI(), 'getContent').returns(Q(githubStubRes));
+            return task.processPage(model, page).then(function() {
+                (page.branch == null).should.equal(true);
             });
         });
     });
 });
-

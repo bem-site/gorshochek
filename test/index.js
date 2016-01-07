@@ -18,7 +18,7 @@ require('./src/tasks-core/base.test.js');
 require('./src/tasks-core/init.test.js');
 require('./src/tasks-core/rsync-cache-data.test.js');
 
-// require('./src/tasks/docs-gh-load.test.js');
+require('./src/tasks-docs/load-from-github.test.js');
 require('./src/tasks-docs/load-from-file.test.js');
 require('./src/tasks-docs/transform-base.test');
 require('./src/tasks-docs/transform-md-to-html.test');

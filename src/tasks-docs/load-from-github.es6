@@ -27,7 +27,7 @@ export default class DocsLoadGithub extends Base {
      * @returns {String}
      */
     static getName() {
-        return 'docs load from gh';
+        return 'docs load from github';
     }
 
     /**
@@ -46,8 +46,8 @@ export default class DocsLoadGithub extends Base {
      * @protected
      */
     getCriteria(page) {
-        return page.sourceUrl &&
-            page.sourceUrl.match(/^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/);
+        return !!(page.sourceUrl &&
+            page.sourceUrl.match(/^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/));
     }
 
     /**
@@ -128,7 +128,7 @@ export default class DocsLoadGithub extends Base {
             .spread((result, cache) => {
                 if(result.meta.status === '304 Not Modified' || cache.sha === result.sha) {
                     this.logger.verbose('Document was not changed: %s', page.url);
-                    return Q(path.join(page.url, cache.fileName));
+                    return Q(page.contentFile);
                 } else if(!cache.sha) {
                     this.logger.debug('Doc added: %s %s', page.url, page.title);
                     model.getChanges().pages.addAdded({type: 'doc', url: page.url, title: page.title});
