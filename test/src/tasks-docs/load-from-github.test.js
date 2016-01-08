@@ -125,7 +125,8 @@ describe('DocsLoadGithub', function() {
             return task.processPage(model, page).then(function() {
                 var expectedContent = JSON.stringify({
                     etag: 'some-etag',
-                    sha: 'some-sha'
+                    sha: 'some-sha',
+                    fileName: '/url/index.ext'
                 }, null, 4);
                 task.writeFileToCache.firstCall.should.be.calledWith('/url/index.meta.json', expectedContent);
             });

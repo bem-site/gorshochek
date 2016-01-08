@@ -69,7 +69,7 @@ describe('Init', function() {
 
     it('should replace old model file by new model file', function() {
         return task.run(new Model()).then(function() {
-            fsExtra.copy.should.be.calledWithMatch(sinon.match.any,
+            fsExtra.copy.should.be.calledWithMatch(
                 config.getModelFilePath(), path.join(config.getCacheFolder(), 'model.json'));
         });
     });
