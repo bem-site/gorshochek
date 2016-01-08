@@ -13,9 +13,9 @@ builder = Builder.init('debug')
     .setCacheFolder(cachePath)
     .addTask(tasks.core.Init)
     .addTask(tasks.docs.LoadFromGithub, {token: token})
-    //.addTask(tasks.docs.LoadFromFile)
+    .addTask(tasks.docs.LoadFromFile)
     .addTask(tasks.docs.TransformMdToHtml)
-    .addTask(tasks.core.RsyncCacheData);
+    .addTask(tasks.core.RsyncCacheData, {exclude: ['*.md', '*.meta.json']});
 
 builder.run();
 
