@@ -89,9 +89,6 @@ export default class Base {
      * Prints log message. Also you can override it in your own task module
      */
     beforeRun() {
-        if(process.env.NODE_ENV !== 'testing') {
-            console.log(os.EOL);
-        }
         this.logger
             .info(`${this.constructor.getName().toUpperCase()}`)
             .info(`Start to execute "${this.constructor.getName()}" task`);

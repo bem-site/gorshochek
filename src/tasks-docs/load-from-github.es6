@@ -75,6 +75,7 @@ export default class DocsLoadGithub extends Base {
 
         const readFromCache = () => {
             return this.readFileFromCache(path.join(page.url, 'index.meta.json'), true, true)
+                .then(cache => (cache || {}))
                 .catch(() => ({}));
         };
 
@@ -105,12 +106,20 @@ export default class DocsLoadGithub extends Base {
 
         const updateCacheMetaData = (result) => {
             return this.writeFileToCache(path.join(page.url, 'index.meta.json'),
-                JSON.stringify({etag: result.meta.etag, sha: result.sha}, null, 4));
+                JSON.stringify({
+                    etag: result.meta.etag,
+                    sha: result.sha,
+                    fileName: getCacheFilePath(result)
+                }, null, 4));
+        };
+
+        const getCacheFilePath = (result) => {
+            const ext = result.name.split('.').pop();
+            return path.join(page.url, 'index.' + ext);
         };
 
         const saveResultToFileSystem = (result) => {
-            const ext = result.name.split('.').pop();
-            const filePath = path.join(page.url, 'index.' + ext);
+            const filePath = getCacheFilePath(result);
             return this
                 .writeFileToCache(filePath, new Buffer(result.content, 'base64').toString())
                 .thenResolve(filePath);
@@ -128,7 +137,7 @@ export default class DocsLoadGithub extends Base {
             .spread((result, cache) => {
                 if(result.meta.status === '304 Not Modified' || cache.sha === result.sha) {
                     this.logger.verbose('Document was not changed: %s', page.url);
-                    return Q(page.contentFile);
+                    return Q(cache.fileName);
                 } else if(!cache.sha) {
                     this.logger.debug('Doc added: %s %s', page.url, page.title);
                     model.getChanges().pages.addAdded({type: 'doc', url: page.url, title: page.title});

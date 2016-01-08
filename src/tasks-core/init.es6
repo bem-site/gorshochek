@@ -48,9 +48,10 @@ export default class Init extends Base {
      * @private
      */
     _loadNewModel() {
-        return _.chain(this.getBaseConfig().getModelFilePath())
-            .thru(Q.nfbind(fsExtra.readJSON, fsExtra))
-            .value()
+        const filePath = this.getBaseConfig().getModelFilePath();
+
+        return Q
+            .nfcall(fsExtra.readJSON, filePath, {encoding: 'utf-8'})
             .catch(error => {
                 this.logger.error(`Can\'t read or parse model file ${this.getBaseConfig().getModelFilePath()}`);
                 throw error;
@@ -63,10 +64,7 @@ export default class Init extends Base {
      * @private
      */
     _loadOldModel() {
-        return _.chain('model.json')
-            .thru(path.join.bind(this, this.getBaseConfig().getCacheFolder()))
-            .thru(filePath => this.readFileFromCache(filePath, true))
-            .value()
+        return this.readFileFromCache('model.json', true, false)
             .catch(error => {
                 if(error.code !== 'ENOENT') {
                     throw error;
@@ -104,7 +102,7 @@ export default class Init extends Base {
             .debug(`==> from ${newModelFilePath}`)
             .debug(`==> to ${oldModelFilePath}`);
 
-        return Q.nfbind(fsExtra.copy, fsExtra)(newModelFilePath, oldModelFilePath);
+        return Q.nfcall(fsExtra.copy, newModelFilePath, oldModelFilePath);
     }
 
     /**

@@ -74,7 +74,7 @@ export default class DocsFileLoad extends Base {
         };
 
         return Q.allSettled([
-            this.readFileFromCache(cacheFilePath),
+            this.readFileFromCache(cacheFilePath, false, true),
             this._readFile(page, localFilePath)
         ]).spread((cache, local) => {
             if(local.state === 'rejected') {
