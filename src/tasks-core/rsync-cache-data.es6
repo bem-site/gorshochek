@@ -24,7 +24,7 @@ export default class RsyncCacheData extends Base {
         return _(this.getBaseConfig().getCacheFolder())
             .thru(fs.readdirSync)
             .filter(item => item !== 'model.json')
-            .map(path.join.bind(this, this.getBaseConfig().getCacheFolder()))
+            .map(item => path.join(this.getBaseConfig().getCacheFolder(), item))
             .thru(sources => {
                 return {
                     source: sources, // все папки откуда нужно совершить rsync

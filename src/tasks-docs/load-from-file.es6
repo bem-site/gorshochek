@@ -65,12 +65,12 @@ export default class DocsFileLoad extends Base {
         const onAddedDocument = (promise) => {
             this.logger.debug('Doc added: %s %s', page.url, page.title);
             model.getChanges().pages.addAdded({type: 'doc', url: page.url, title: page.title});
-            return this.writeFileToCache(cacheFilePath, promise.valueOf());
+            return this.writeFileToCache(cacheFilePath, promise.value);
         };
         const onModifiedDocument = (promise) => {
             this.logger.debug('Doc modified: %s %s', page.url, page.title);
             model.getChanges().pages.addModified({type: 'doc', url: page.url, title: page.title});
-            return this.writeFileToCache(cacheFilePath, promise.valueOf());
+            return this.writeFileToCache(cacheFilePath, promise.value);
         };
 
         return Q.allSettled([
