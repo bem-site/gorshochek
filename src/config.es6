@@ -7,7 +7,10 @@ export default class Config {
      * @param {String} logLevel - log verbosity level
      */
     constructor(logLevel) {
-        const loggerSettings = {level: logLevel};
+        const loggerSettings = {
+            useDate: false,
+            level: logLevel
+        };
 
         this.logger = Logger.setOptions(loggerSettings).createLogger(module);
 
@@ -17,7 +20,7 @@ export default class Config {
             .setDataFolder(this.constructor.defaults.dataFolder)
             .setCacheFolder(this.constructor.defaults.cacheFolder);
 
-        this.logger.info('builder configuration has been initialized successfully');
+        this.logger.info('default builder configuration has been initialized successfully');
     }
 
     /**
@@ -38,7 +41,10 @@ export default class Config {
      * @returns {Config}
      */
     setLogLevel(logLevel = 'debug') {
-        this._loggerSettings = {level: logLevel};
+        this._loggerSettings = {
+            useDate: false,
+            level: logLevel
+        };
         this.logger.debug(`config: logLevel = ${this._loggerSettings.level}`);
         return this;
     }

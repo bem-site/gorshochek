@@ -8,7 +8,7 @@ describe('Config', function() {
     });
 
     it('should have default logger settings', function() {
-        config.getLoggerSettings().should.be.eql({level: 'debug'});
+        config.getLoggerSettings().should.be.eql({level: 'debug', useDate: false});
     });
 
     it('should have default path to model file', function() {
@@ -38,12 +38,12 @@ describe('Config', function() {
 
         it('should set with given value', function() {
             config.setLogLevel('info');
-            config.getLoggerSettings().should.be.eql({level: 'info'});
+            config.getLoggerSettings().should.be.eql({level: 'info', useDate: false});
         });
 
         it('should set with default value', function() {
             config.setLogLevel();
-            config.getLoggerSettings().should.be.eql({level: 'debug'});
+            config.getLoggerSettings().should.be.eql({level: 'debug', useDate: false});
         });
     });
 
