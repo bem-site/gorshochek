@@ -20,6 +20,10 @@ exports.tasks = {
         HeaderTitle: require('./lib/tasks-page/header-title'),
         SearchMeta: require('./lib/tasks-page/search-meta')
     },
+    override: {
+        OverrideBase: require('./lib/tasks-override/override-base'),
+        OverrideDocLinks: require('./lib/tasks-override/override-docs')
+    },
     sitemap: {
         SitemapXML: require('./lib/tasks-sitemap/sitemap-xml')
     }
