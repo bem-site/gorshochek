@@ -72,7 +72,8 @@
     "prepublish": "gulp compile",
     "deps": "npm install && gulp compile",
     "mocha": "NODE_ENV=testing mocha",
-    "test": "NODE_ENV=testing ./node_modules/.bin/istanbul cover _mocha"
+    "test": "NODE_ENV=testing ./node_modules/.bin/istanbul cover _mocha",
+    "clean": "rm -rf ./.builder && rm -rf ./data"
   },
   "readmeFilename": "README.md",
   "license": {
