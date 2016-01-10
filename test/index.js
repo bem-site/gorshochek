@@ -27,7 +27,7 @@ require('./src/tasks-docs/transform-md-to-html.test');
 // require('./src/tasks/libraries-sync-mds.test.js');
 // require('./src/tasks/libraries-data-gen.test');
 
-require('./src/tasks-override/utils.test.js');
+require('./src/tasks-override/override-base.test.js');
 
 require('./src/tasks-page/base.test.js');
 require('./src/tasks-page/header-title.test.js');

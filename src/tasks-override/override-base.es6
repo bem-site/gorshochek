@@ -19,6 +19,77 @@ export default class OverrideBase extends Base {
         return 'base override functionality';
     }
 
+    /**
+     * Returns true if given url is absolute and has http(s) protocol. Otherwise returns false.
+     * @param {Object} url - parsed url
+     * @returns {Boolean}
+     */
+    isAbsoluteHttpUrl(url) {
+        return _.includes(['http:', 'https:'], url.protocol);
+    }
+
+    /**
+     * Returns true if given url is absolute and has not http(s) protocol
+     * @param {Object} url - parsed url
+     * @returns {Boolean}
+     */
+    hasUnsupportedProtocol(url) {
+        return !!url.protocol && !this.isAbsoluteHttpUrl(url);
+    }
+
+    /**
+     * Returns true if given url is anchor url. (Has only hash attribute)
+     * @param {Object} url - parsed url
+     * @returns {Boolean}
+     */
+    isAnchor(url) {
+        return !!url.hash && !url.protocol && !url.host && !url.path;
+    }
+
+    /**
+     * Returns true if given url is github url.
+     * (Hostname attribute should contain word 'github')
+     * @param {Object} url - parsed url
+     * @returns {Boolean}
+     */
+    isGithubUrl(url) {
+        return _.includes(url.hostname, 'github');
+    }
+
+    /**
+     * Returns true if given url is native website url. Otherwise returns false
+     * @param {Object} url - parsed url
+     * @param {Array} existedUrls - array of existed model urls
+     * @returns {Boolean}
+     */
+    isNativeWebsiteUrl(url, existedUrls) {
+        return _.includes(existedUrls, url.path.replace(/\/$/, ''));
+    }
+
+    findReplacement(variants, urlHash, existedUrls) {
+        var replacement = null;
+
+        variants.some(item => {
+            const alterItem = item + '/README.md';
+
+            if(urlHash.has(item)) {
+                replacement = urlHash.get(item);
+                return true;
+            }
+            if(urlHash.has(alterItem)) {
+                replacement = urlHash.get(alterItem);
+                return true;
+            }
+            if(_.includes(existedUrls, item)) {
+                replacement = item;
+                return true;
+            }
+            return false;
+        });
+
+        return replacement;
+    }
+
     createArrayOfModelPageUrls(pages) {
         return _.pluck(pages, 'url');
     }

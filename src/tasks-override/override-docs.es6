@@ -1,8 +1,8 @@
+import Path from 'path';
 import Url from 'url';
 import _ from 'lodash';
 import Q from 'q';
 import cheerio from 'cheerio';
-import * as overrideUtils from './utils';
 import Base from './override-base';
 
 export default class OverrideDocs extends Base {
@@ -32,7 +32,70 @@ export default class OverrideDocs extends Base {
         return page.contentFile && _.includes(page.contentFile, '.html');
     }
 
+    /**
+     * Parses github url
+     * @param {Object} url - parsed url object
+     * @returns {{host: *, user: *, repo: *, ref: *, path: *}}
+     * @private
+     */
+    _parseSourceUrl(url) {
+        const repoInfo = url.match(/^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/);
+        return {
+            host: repoInfo[1],
+            user: repoInfo[2],
+            repo: repoInfo[3],
+            ref: repoInfo[5],
+            path: repoInfo[6]
+        };
+    }
+
+    /**
+     * Resolves full github url by sourceUrl of doc and relative link to another doc
+     * @param {String} href - link to another doc
+     * @param {String} baseUrl - source url of doc
+     * @private
+     */
+    _resolveFullGithubUrl(href, baseUrl) {
+        const repo = this._parseSourceUrl(baseUrl);
+        return Url.resolve('https://' +
+            Path.join(repo.host, repo.user, repo.repo, 'blob', repo.ref, repo.path || ''), href);
+    }
+
     _findLinkHrefReplacement(linkHref, page, sourceUrlsMap, existedUrls) {
+        const _linkHref = linkHref;
+
+        linkHref = linkHref.replace(/&#(x?)([0-9a-fA-F]+);?/g, (str, bs, match) => {
+            return String.fromCharCode(parseInt(match, bs === 'x' ? 16 : 10));
+        });
+
+        const url = Url.parse(linkHref);
+
+        // якорная ссылка типа #some-anchor
+        // ссылки с неподдерживаемыми протоколами, например mail:// git://
+        // ссылка которая уже ведет на сайт
+        if(this.isAnchor(url) ||
+            this.hasUnsupportedProtocol(url) ||
+            this.isNativeWebsiteUrl(url, existedUrls)) {
+            return linkHref;
+        }
+
+        if(this.isAbsoluteHttpUrl(url) && !this.isGithubUrl(url)) {
+            return linkHref;
+        }
+
+        const variants = [];
+        const anchor = url.hash;
+        linkHref = Url.format(_.omit(url, 'hash'));
+
+        this.isGithubUrl(url) ?
+            variants.push(linkHref) :
+            variants.push(this._resolveFullGithubUrl(linkHref, page.sourceUrl));
+
+        if(anchor) {
+            linkHref = Url.format(_.merge(Url.parse(linkHref), {hash: anchor}));
+        }
+
+        this.logger.verbose(`Replace from: ${_linkHref} to: ${linkHref}`);
         return linkHref;
     }
 
@@ -49,7 +112,7 @@ export default class OverrideDocs extends Base {
         }
 
         const url = Url.parse(imgSrc);
-        if(overrideUtils.isAbsoluteHttpUrl(url)) {
+        if(this.isAbsoluteHttpUrl(url)) {
             return imgSrc;
         }
 
