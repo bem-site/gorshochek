@@ -91,13 +91,12 @@ export default class OverrideDocs extends Base {
 
         if(replacement) {
             linkHref = replacement;
+            this.logger.verbose(`Replace from: ${_linkHref} to: ${linkHref}`);
         }
 
         if(anchor) {
             linkHref = Url.format(_.merge(Url.parse(linkHref), {hash: anchor}));
         }
-
-        this.logger.verbose(`Replace from: ${_linkHref} to: ${linkHref}`);
         return linkHref;
     }
 

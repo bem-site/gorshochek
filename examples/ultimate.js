@@ -18,6 +18,7 @@ builder = Builder.init('debug')
     .addTask(tasks.page.HeaderTitle)
     .addTask(tasks.page.HeaderMeta)
     .addTask(tasks.page.Breadcrumbs)
+    .addTask(tasks.override.OverrideDocLinks)
     .addTask(tasks.sitemap.SitemapXML, {host: 'https://ru.bem.info'})
     .addTask(tasks.core.RsyncCacheData, {exclude: ['*.md', '*.meta.json']});
 
