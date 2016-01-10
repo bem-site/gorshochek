@@ -29,7 +29,7 @@ export default class OverrideDocs extends Base {
      * @returns {Boolean}
      */
     getCriteria(page) {
-        return page.contentFile && _.includes(page.contentFile, '.html');
+        return !!page.contentFile && _.includes(page.contentFile, '.html');
     }
 
     /**
@@ -40,13 +40,9 @@ export default class OverrideDocs extends Base {
      */
     _parseSourceUrl(url) {
         const repoInfo = url.match(/^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/);
-        return {
-            host: repoInfo[1],
-            user: repoInfo[2],
-            repo: repoInfo[3],
-            ref: repoInfo[5],
-            path: repoInfo[6]
-        };
+        return repoInfo ?
+            {host: repoInfo[1], user: repoInfo[2], repo: repoInfo[3], ref: repoInfo[5], path: repoInfo[6]} :
+            null;
     }
 
     /**
@@ -57,8 +53,8 @@ export default class OverrideDocs extends Base {
      */
     _resolveFullGithubUrl(href, baseUrl) {
         const repo = this._parseSourceUrl(baseUrl);
-        return Url.resolve('https://' +
-            Path.join(repo.host, repo.user, repo.repo, 'blob', repo.ref, repo.path || ''), href);
+        return repo ? Url.resolve('https://' +
+            Path.join(repo.host, repo.user, repo.repo, 'blob', repo.ref, repo.path || ''), href) : href;
     }
 
     _findLinkHrefReplacement(linkHref, page, sourceUrlsMap, existedUrls) {
@@ -90,6 +86,12 @@ export default class OverrideDocs extends Base {
         this.isGithubUrl(url) ?
             variants.push(linkHref) :
             variants.push(this._resolveFullGithubUrl(linkHref, page.sourceUrl));
+
+        const replacement = this.findReplacement(variants, sourceUrlsMap, existedUrls);
+
+        if(replacement) {
+            linkHref = replacement;
+        }
 
         if(anchor) {
             linkHref = Url.format(_.merge(Url.parse(linkHref), {hash: anchor}));
@@ -164,6 +166,6 @@ export default class OverrideDocs extends Base {
                 .then(this.override.bind(this, page, sourceUrlsMap, existedUrls))
                 .then(this.writeFileToCache.bind(this, sourceFilePath))
                 .thenResolve(page);
-        };
+        }.bind(this);
     }
 }
