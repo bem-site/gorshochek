@@ -1,44 +1,24 @@
-import PageBase from './base';
+import Q from 'q';
+import * as util from './util';
 
-export default class PageBreadcrumbs extends PageBase {
-
-    /**
-     * Returns logger module
-     * @returns {module|Object|*}
-     * @static
+export default function createBreadcrumbs(model) {
+    /*
+     Для каждой страницы создаем
+     поле breadcrumbs (хлебные крошки). В это поле записывается массив объектов типа
+     [
+         { url: '/', title: 'main page title' },
+         { url: '/url1', title: 'url1 title' },
+         { url: '/url1/url2', title: 'url2 title' }
+     ]
      */
-    static getLoggerName() {
-        return module;
+    function processFunc(map, page) {
+        page.breadcrumbs = this
+            .getParentUrls(page)
+            .map(url => ({url, title: map.get(url)}));
     }
 
-    /**
-     * Return task human readable description
-     * @returns {String}
-     * @static
-     */
-    static getName() {
-        return 'create page breadcrumbs';
-    }
-
-    /**
-     * Performs task
-     * @returns {Promise}
-     * @public
-     */
-    run(model) {
-        /*
-         Для каждой страницы создаем
-         поле breadcrumbs (хлебные крошки). В это поле записывается массив объектов типа
-         [
-            { url: '/', title: 'main page title' },
-            { url: '/url1', title: 'url1 title' },
-            { url: '/url1/url2', title: 'url2 title' }
-         ]
-         */
-        return super.run(model, (page, pageTitlesMap) => {
-            page.breadcrumbs = this
-                .getParentUrls(page)
-                .map(url => ({url, title: pageTitlesMap.get(url)}));
-        });
-    }
+    return function() {
+        model.getPages().forEach(processFunc.bind(null, util.createPageTitlesMap(model.getPages())));
+        return Q(model);
+    };
 }

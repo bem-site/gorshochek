@@ -1,38 +1,19 @@
 import _ from 'lodash';
-import PageBase from './base';
+import Q from 'q';
+import * as util from 'util';
 
-export default class PageSearchMeta extends PageBase {
+export default function createSearchMeta(model) {
 
-    /**
-     * Returns logger module
-     * @returns {module|Object|*}
-     * @static
-     */
-    static getLoggerName() {
-        return module;
+    function processFunc(map, page) {
+        const urlSet = util.getParentUrls(page);
+        _.chain(page)
+            .set('meta.breadcrumbs', urlSet.map(url => ({url, title: map.get(url)})))
+            .set('meta.fields', {type: 'doc', keywords: page.tags || []})
+            .value();
     }
 
-    /**
-     * Return task human readable description
-     * @returns {String}
-     * @static
-     */
-    static getName() {
-        return 'create page search meta-information';
-    }
-
-    /**
-     * Performs task
-     * @returns {Promise}
-     * @public
-     */
-    run(model) {
-        return super.run(model, (page, pageTitlesMap) => {
-            const urlSet = this.getParentUrls(page);
-            _.chain(page)
-                .set('meta.breadcrumbs', urlSet.map(url => ({url, title: pageTitlesMap.get(url)})))
-                .set('meta.fields', {type: 'doc', keywords: page.tags || []})
-                .value();
-        });
-    }
+    return function() {
+        model.getPages().forEach(processFunc.bind(null, util.createPageTitlesMap(model.getPages())));
+        return Q(model);
+    };
 }

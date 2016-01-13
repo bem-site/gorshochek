@@ -24,6 +24,7 @@
     "bem-md-renderer": "^0.3.0",
     "bem-site-logger": "^0.0.x",
     "cheerio": "^0.19.0",
+    "debug": "^2.2.0",
     "deep-diff": "^0.3.x",
     "deep-extend": "^0.4.x",
     "fs-extra": "^0.x",
