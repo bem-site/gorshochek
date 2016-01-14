@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import debug from 'debug';
 import js2xml from 'js2xmlparser';
-import * as baseUtil from '../util/util';
+import * as baseUtil from '../util';
 
 debug = debug('sitemap-xml');
 
