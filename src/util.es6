@@ -2,7 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import Q from 'q';
 import _ from 'lodash';
+import debug from 'debug';
 import fsExtra from 'fs-extra';
+
+debug = debug('util');
 
 const CACHE_FOLDER = './.builder/cache';
 createFolder(CACHE_FOLDER);
@@ -16,11 +19,35 @@ export function getCacheFolder() {
  * @param {String} folder - path to folder which should be created
  */
 export function createFolder(folder) {
+    debug(`create folder: ${folder}`);
     fsExtra.ensureDirSync(folder);
 }
 
 export function copyFile(sourcePath, destinationPath) {
+    debug(`copy file from: ${sourcePath} to: ${destinationPath}`);
     return Q.nfcall(fsExtra.copy, sourcePath, destinationPath);
+}
+
+function _readFile(method, filePath, fallbackValue) {
+    return Q.nfcall(method, filePath, {encoding: 'utf-8'})
+        .catch(error => {
+            if(!fallbackValue || error.code !== 'ENOENT') {
+                console.error(`Can\'t read file ${filePath}`);
+                throw error;
+            }
+            return fallbackValue;
+        });
+}
+
+/**
+ * Reads file from local filesystem
+ * @param {String} filePath - path to file on local filesystem
+ * @param {*} fallbackValue - value which will be returned if file does not exist on local filesystem
+ * @returns {*|Promise.<T>}
+ */
+export function readFile(filePath, fallbackValue) {
+    debug(`read file from: ${filePath}`);
+    return _readFile(fs.readFile, filePath, fallbackValue);
 }
 
 /**
@@ -30,15 +57,8 @@ export function copyFile(sourcePath, destinationPath) {
  * @returns {*|Promise.<T>}
  */
 export function readJSONFile(filePath, fallbackValue) {
-    return Q
-        .nfcall(fsExtra.readJSON, filePath, {encoding: 'utf-8'})
-        .catch(error => {
-            if(!fallbackValue || error.code !== 'ENOENT') {
-                console.error(`Can\'t read or parse JSON file ${filePath}`);
-                throw error;
-            }
-            return fallbackValue;
-        });
+    debug(`read JSON file from: ${filePath}`);
+    return _readFile(fsExtra.readJSON, filePath, fallbackValue);
 }
 
 /**
@@ -50,6 +70,8 @@ export function readJSONFile(filePath, fallbackValue) {
  * @returns {Promise}
  */
 export function readFileFromCache(filePath, isJSON, fallbackValue) {
+    debug(`read file from cache: ${filePath} isJSON: ${isJSON}`);
+
     const func = isJSON ? fsExtra.readJSON : fs.readFile;
     filePath = path.join(CACHE_FOLDER, filePath);
 
@@ -70,6 +92,8 @@ export function readFileFromCache(filePath, isJSON, fallbackValue) {
  * @returns {Promise}
  */
 export function writeFileToCache(filePath, content) {
+    debug(`write file to cache: ${filePath}`);
+
     filePath = path.join(CACHE_FOLDER, filePath);
     const dirPath = path.dirname(filePath);
 
@@ -91,7 +115,6 @@ export function writeFileToCache(filePath, content) {
  * @param {Number} portionSize - number of portion of pages for parallel operations
  * @returns {Promise}
  */
-// TODO разобраться с контекстом выполнения функции
 export function processPagesAsync(model, criteria, processFunc, portionSize = 5) {
     criteria = criteria || _.constant(true);
 
@@ -100,9 +123,8 @@ export function processPagesAsync(model, criteria, processFunc, portionSize = 5)
         .chunk(portionSize)
         .reduce((prev, portion, index) => {
             return prev.then(() => {
-                // this.logger.debug('process portion of pages in range %s - %s',
-                    // index * portionSize, (index + 1) * portionSize);
-                return Q.allSettled(portion.map(processFunc.bind(this, model)));
+                debug('process portion of pages in range: %s - %s', index * portionSize, (index + 1) * portionSize);
+                return Q.allSettled(portion.map(processFunc.bind(null, model)));
             });
         }, Q());
 }
