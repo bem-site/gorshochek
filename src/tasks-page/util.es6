@@ -1,3 +1,5 @@
+import Q from 'q';
+
 /**
  * Creates map url -> lang -> title
  * @param {Array} pages - array of model pages
@@ -30,4 +32,11 @@ export function getParentUrls(page) {
         url.length && result.push(url);
     }
     return result;
+}
+
+export function getExecFunction(model, pageProcessingFunction) {
+    return function() {
+        model.getPages().forEach(pageProcessingFunction.bind(null, createPageTitlesMap(model.getPages())));
+        return Q(model);
+    };
 }
