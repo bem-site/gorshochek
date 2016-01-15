@@ -1,5 +1,4 @@
 var fsExtra = require('fs-extra'),
-    Logger = require('bem-site-logger'),
     Base = require('../../../../lib/tasks-libraries/model/base');
 
 describe('Base', function() {
