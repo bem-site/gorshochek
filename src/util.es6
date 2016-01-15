@@ -2,10 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import Q from 'q';
 import _ from 'lodash';
-import debug from 'debug';
 import fsExtra from 'fs-extra';
 
-debug = debug('util');
+const debug = require('debug')('util');
 
 const CACHE_FOLDER = './.builder/cache';
 createFolder(CACHE_FOLDER);

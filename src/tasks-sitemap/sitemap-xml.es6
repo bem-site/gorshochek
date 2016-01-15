@@ -1,9 +1,8 @@
 import _ from 'lodash';
-import debug from 'debug';
 import js2xml from 'js2xmlparser';
 import * as baseUtil from '../util';
 
-debug = debug('sitemap-xml');
+const debug = require('debug')('sitemap-xml');
 
 export default function createSitemapXML(model, options = {}) {
     if(!options.host) {

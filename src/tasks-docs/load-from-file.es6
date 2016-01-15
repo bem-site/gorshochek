@@ -1,9 +1,8 @@
 import path from 'path';
-import debug from 'debug';
 import Q from 'q';
 import * as baseUtil from '../util';
 
-debug = debug('docs file load');
+const debug = require('debug')('docs file load');
 
 /**
  * Loads pages embedded sources from local filesystem

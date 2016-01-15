@@ -1,10 +1,9 @@
 import path from 'path';
 import _ from 'lodash';
 import Q from 'q';
-import debug from 'debug';
 import * as baseUtil from '../util';
 
-debug = debug('merge-models');
+const debug = require('debug')('merge-models');
 
 export default function(model, options) {
     options || (options = {});

@@ -1,10 +1,9 @@
 import path from 'path';
 import Q from 'q';
-import debug from 'debug';
 import GitHub from './github/index';
 import * as baseUtil from '../util';
 
-debug = debug('docs github load');
+const debug = require('debug')('docs github load');
 
 export default function loadSourcesFromGithub(model, options = {}) {
     const api = new GitHub({token: options.token});
