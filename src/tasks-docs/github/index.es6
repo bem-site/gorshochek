@@ -1,5 +1,4 @@
 import Q from 'q';
-import Logger from 'bem-site-logger';
 import Public from './public';
 import Private from './private';
 
@@ -9,8 +8,6 @@ export default class Github{
      * @param {Object} options object
      */
     constructor(options) {
-        this.logger = Logger.setOptions(options.logger).createLogger(module);
-
         this.apis = new Map();
         this.apis.set(Public.getType(), new Public(options));
         this.apis.set(Private.getType(), new Private(options));
@@ -110,15 +107,14 @@ export default class Github{
      */
     _createErrorHandler(errorMessage, options) {
         return error => {
-            this.logger
-                .error(`GH: ${error.message}`)
-                .error(errorMessage)
-                .error(`host: => ${options.host}`)
-                .error(`user: => ${options.user}`)
-                .error(`repo: => ${options.repo}`);
+            console.error(`GH: ${error.message}`);
+            console.error(errorMessage);
+            console.error(`host: => ${options.host}`);
+            console.error(`user: => ${options.user}`);
+            console.error(`repo: => ${options.repo}`);
 
-            options.ref && this.logger.error(`ref:  => ${options.ref}`);
-            options.path && this.logger.error(`path: => ${options.path}`);
+            options.ref && console.error(`ref:  => ${options.ref}`);
+            options.path && console.error(`path: => ${options.path}`);
 
             throw error;
         };

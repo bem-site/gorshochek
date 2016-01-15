@@ -13,7 +13,7 @@ export default class Public extends Custom {
         this.api = new Api(_.extend({host: 'api.github.com'}, Base.getBaseConfig()));
 
         if(!this.options.token) {
-            this.logger.warn('No github authorization token were set. ' +
+            console.warn('No github authorization token were set. ' +
                 'Number of requests will be limited by 60 requests per hour according to API rules');
             return;
         }

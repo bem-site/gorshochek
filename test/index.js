@@ -10,7 +10,7 @@ require('./src/model.test.js');
 // require('./src/config.test.js');
 // require('./src/index.test.js');
 
-// require('./src/tasks-docs/github/index.test.js');
+require('./src/tasks-docs/github/index.test.js');
 
 // require('./src/tasks-core/base.test.js');
 // require('./src/tasks-core/init.test.js');
