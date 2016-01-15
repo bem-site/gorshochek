@@ -1,6 +1,6 @@
 var ChangesType = require('../../lib/changes');
 
-describe('model/changes/type', function() {
+describe('Changes', function() {
     var changesType;
 
     beforeEach(function() {

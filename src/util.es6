@@ -30,11 +30,12 @@ export function copyFile(sourcePath, destinationPath) {
 function _readFile(method, filePath, fallbackValue) {
     return Q.nfcall(method, filePath, {encoding: 'utf-8'})
         .catch(error => {
-            if(!fallbackValue || error.code !== 'ENOENT') {
-                console.error(`Can\'t read file ${filePath}`);
-                throw error;
+            if(fallbackValue && error.code === 'ENOENT') {
+                return fallbackValue;
             }
-            return fallbackValue;
+            console.error(`Can\'t read file ${filePath}`);
+            throw error;
+
         });
 }
 

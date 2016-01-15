@@ -1,5 +1,6 @@
 require('./src/changes.test.js');
 require('./src/model.test.js');
+require('./src/util.test.js');
 
 require('./src/tasks-libraries/model/base.test.js');
 require('./src/tasks-libraries/model/block.test.js');
