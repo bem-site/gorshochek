@@ -1,14 +1,11 @@
 require('./src/changes.test.js');
 require('./src/model.test.js');
 
-// require('./src/tasks-libraries/model/base.test.js');
-// require('./src/tasks-libraries/model/block.test.js');
-// require('./src/tasks-libraries/model/document.test.js');
-// require('./src/tasks-libraries/model/level.test.js');
-// require('./src/tasks-libraries/model/version.test.js');
-
-// require('./src/config.test.js');
-// require('./src/index.test.js');
+require('./src/tasks-libraries/model/base.test.js');
+require('./src/tasks-libraries/model/block.test.js');
+require('./src/tasks-libraries/model/document.test.js');
+require('./src/tasks-libraries/model/level.test.js');
+require('./src/tasks-libraries/model/version.test.js');
 
 require('./src/tasks-docs/github/index.test.js');
 

@@ -7,6 +7,7 @@ describe('Base', function() {
         base;
 
     beforeEach(function() {
+        sandbox.stub(console, 'error');
         sandbox.stub(fsExtra, 'outputJSON');
         sandbox.stub(fsExtra, 'outputFile');
         base = new Base();
@@ -14,10 +15,6 @@ describe('Base', function() {
 
     afterEach(function() {
         sandbox.restore();
-    });
-
-    it('should have embedded logger', function() {
-        base.logger.should.be.instanceOf(Logger);
     });
 
     it('should have empty data after initialization', function() {
