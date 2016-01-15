@@ -1,14 +1,10 @@
-var ChangesType = require('../../../../lib/model/changes/type');
+var ChangesType = require('../../lib/changes');
 
 describe('model/changes/type', function() {
     var changesType;
 
     beforeEach(function() {
         changesType = new ChangesType('pages');
-    })
-
-    it('should be initialized successfully by given type', function() {
-        changesType._type.should.equal('pages');
     });
 
     describe('after initialization', function() {

@@ -1,6 +1,6 @@
 var _ = require('lodash'),
-    Changes = require('../../../lib/model/changes'),
-    Model = require('../../../lib/model/model');
+    Changes = require('../../lib/changes'),
+    Model = require('../../lib/model');
 
 describe('Model', function() {
     var model;
@@ -40,9 +40,9 @@ describe('Model', function() {
             });
 
             it('should not find any changes for empty models', function() {
-                model.getChanges().pages.added.should.be.empty;
-                model.getChanges().pages.modified.should.be.empty;
-                model.getChanges().pages.removed.should.be.empty;
+                model.getChanges().added.should.be.empty;
+                model.getChanges().modified.should.be.empty;
+                model.getChanges().removed.should.be.empty;
             });
 
             it('should have empty result model', function() {
@@ -58,17 +58,17 @@ describe('Model', function() {
 
             it('should have valid added changes model', function() {
                 model.merge([], [{url: '/url1'}]);
-                model.getChanges().pages.added.should.eql([{type: 'page', url: '/url1'}])
+                model.getChanges().added.should.eql([{type: 'page', url: '/url1'}])
             });
 
             it('should have empty modified changes model', function() {
                 model.merge([], [{url: '/url1'}]);
-                model.getChanges().pages.modified.should.be.empty;
+                model.getChanges().modified.should.be.empty;
             });
 
             it('should have empty removed changes model', function() {
                 model.merge([], [{url: '/url1'}]);
-                model.getChanges().pages.removed.should.be.empty;
+                model.getChanges().removed.should.be.empty;
             });
         });
 
@@ -95,17 +95,17 @@ describe('Model', function() {
 
             it ('should have valid added changes after merge', function() {
                 model.merge(oldModel, newModel);
-                model.getChanges().pages.added.should.eql([{type: 'page', url: '/url4'}]);
+                model.getChanges().added.should.eql([{type: 'page', url: '/url4'}]);
             });
 
             it ('should have valid modified changes after merge', function() {
                 model.merge(oldModel, newModel);
-                model.getChanges().pages.modified.should.eql([{type: 'page', url: '/url3'}]);
+                model.getChanges().modified.should.eql([{type: 'page', url: '/url3'}]);
             });
 
             it ('should have valid removed changes after merge', function() {
                 model.merge(oldModel, newModel);
-                model.getChanges().pages.removed.should.eql([{type: 'page', url: '/url2'}]);
+                model.getChanges().removed.should.eql([{type: 'page', url: '/url2'}]);
             });
         });
     });
