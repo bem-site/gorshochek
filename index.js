@@ -1,30 +1,30 @@
-exports.Builder = require('./lib/index');
+var Model = require('model'),
+    tasks = {};
 
-exports.tasks = {
-    core: {
-        Base: require('./lib/tasks-core/base'),
-        Init: require('./lib/tasks-core/init'),
-        RsyncCacheData: require('./lib/tasks-core/rsync-cache-data')
-    },
-    docs: {
-        LoadFromGithub: require('./lib/tasks-docs/load-from-github'),
-        LoadFromFile: require('./lib/tasks-docs/load-from-file'),
-        TransformBase: require('./lib/tasks-docs/transform-base'),
-        TransformMdToHtml: require('./lib/tasks-docs/transform-md-to-html')
-    },
-    libraries: {},
-    page: {
-        Base: require('./lib/tasks-page/base'),
-        Breadcrumbs: require('./lib/tasks-page/breadcrumbs'),
-        HeaderMeta: require('./lib/tasks-page/header-meta'),
-        HeaderTitle: require('./lib/tasks-page/header-title'),
-        SearchMeta: require('./lib/tasks-page/search-meta')
-    },
-    override: {
-        OverrideBase: require('./lib/tasks-override/override-base'),
-        OverrideDocLinks: require('./lib/tasks-override/override-docs')
-    },
-    sitemap: {
-        SitemapXML: require('./lib/tasks-sitemap/sitemap-xml')
-    }
+tasks.core = {};
+tasks.core.mergeModels = require('./lib/tasks-core/merge-models');
+tasks.core.normalizeModel = require('./lib/tasks-core/normalize-model');
+
+tasks.docs = {};
+tasks.docs.loadFromGithub = require('./lib/tasks-docs/load-from-github');
+tasks.docs.loadFromFile = require('./lib/tasks-docs/load-from-file');
+tasks.docs.transformMdToHtml = require('./lib/tasks-docs/transform-md-html');
+
+tasks.page = {};
+tasks.page.createHeaderTitle = require('./lib/tasks-page/header-title');
+tasks.page.createHeaderMeta = require('./lib/tasks-page/header-meta');
+tasks.page.createBreadcrumbs = require('./lib/tasks-page/breadcrumbs');
+tasks.page.createSearchMeta = require('./lib/tasks-page/search-meta');
+
+tasks.sitemap = {};
+tasks.sitemap.createSitemapXML = require('./lib/tasks-sitemap/sitemap-xml');
+
+exports.tasks = tasks;
+
+/**
+ * Creates empty model instance
+ * @returns {Model}
+ */
+exports.createModel = function() {
+    return new Model();
 };
