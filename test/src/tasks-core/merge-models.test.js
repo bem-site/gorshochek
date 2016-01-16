@@ -9,7 +9,6 @@ describe('tasks-core/merge-models', function() {
         model = new Model(),
         options = {modelPath: './some-model.json'},
 
-        modelMergeStub,
         consoleInfoStub,
         copyFileStub,
         readFileFromCacheStub,
