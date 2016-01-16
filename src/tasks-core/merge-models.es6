@@ -11,7 +11,7 @@ import * as baseUtil from '../util';
  * @param {Object} options.modelPath - path to model JSON file
  * @returns {Function}
  */
-export default function(model, options = {}) {
+export default function mergeModels(model, options = {}) {
 
     if(!_.has(options, 'modelPath')) {
         throw new Error('modelPath should be defined in task options');

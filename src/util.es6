@@ -3,11 +3,14 @@ import path from 'path';
 import Q from 'q';
 import _ from 'lodash';
 import fsExtra from 'fs-extra';
+import rsyncSlim from 'rsync-slim';
 
 const debug = require('debug')('util');
 
 const CACHE_FOLDER = './.builder/cache';
 createFolder(CACHE_FOLDER);
+
+export const rsync = rsyncSlim;
 
 export function getCacheFolder() {
     return CACHE_FOLDER;
@@ -22,6 +25,11 @@ export function createFolder(folder) {
     fsExtra.ensureDirSync(folder);
 }
 
+/**
+ * Copies file from sourcePath to destinationPath
+ * @param {String} sourcePath - source file path
+ * @param {String} destinationPath - destination file path
+ */
 export function copyFile(sourcePath, destinationPath) {
     debug(`copy file from: ${sourcePath} to: ${destinationPath}`);
     return Q.nfcall(fsExtra.copy, sourcePath, destinationPath);
@@ -71,18 +79,24 @@ export function readJSONFile(filePath, fallbackValue) {
  */
 export function readFileFromCache(filePath, isJSON, fallbackValue) {
     debug(`read file from cache: ${filePath} isJSON: ${isJSON}`);
+    return (isJSON ? readJSONFile : readFile).call(null, path.join(CACHE_FOLDER, filePath), fallbackValue);
+}
 
-    const func = isJSON ? fsExtra.readJSON : fs.readFile;
-    filePath = path.join(CACHE_FOLDER, filePath);
-
-    return Q.nfcall(func, filePath, {encoding: 'utf-8'})
-        .catch(error => {
-            if(fallbackValue && error.code === 'ENOENT') {
-                return fallbackValue;
-            }
-            console.error(`Error occur while loading file ${filePath} from cache`);
-            throw error;
-        });
+/**
+ * Writes file on local file system
+ * @param {String} filePath - path to file
+ * @param {String} content - content of file
+ * @param {Function} onError - error handling function
+ * @returns {Promise}
+ * @private
+ */
+function _writeFile(filePath, content, onError) {
+    const dirPath = path.dirname(filePath);
+    return Q.nfcall(fsExtra.ensureDir, dirPath)
+        .then(() => {
+            return Q.nfcall(fs.writeFile, filePath, content, {encoding: 'utf-8'});
+        })
+        .catch(onError);
 }
 
 /**
@@ -93,18 +107,25 @@ export function readFileFromCache(filePath, isJSON, fallbackValue) {
  */
 export function writeFileToCache(filePath, content) {
     debug(`write file to cache: ${filePath}`);
-
     filePath = path.join(CACHE_FOLDER, filePath);
-    const dirPath = path.dirname(filePath);
+    return _writeFile(filePath, content, error => {
+        console.error(`Error occur while saving file ${filePath} to cache`);
+        throw error;
+    });
+}
 
-    return Q.nfcall(fsExtra.ensureDir, dirPath)
-        .then(() => {
-            return Q.nfcall(fs.writeFile, filePath, content, {encoding: 'utf-8'});
-        })
-        .catch(error => {
-            console.error(`Error occur while saving file ${filePath} to cache`);
-            throw error;
-        });
+/**
+ * Writes file to local filesystem
+ * @param {String} filePath - path to file
+ * @param {String} content - content of file
+ * @returns {Promise}
+ */
+export function writeFile(filePath, content) {
+    debug(`write file to: ${filePath}`);
+    return _writeFile(filePath, content, error => {
+        console.error(`Error occur while saving file ${filePath}`);
+        throw error;
+    });
 }
 
 /**
