@@ -1,8 +1,8 @@
 var EOL = require('os').EOL,
     fs = require('fs'),
-    Config = require('../../../lib/config'),
-    Model = require('../../../lib/model/model'),
-    BuildSiteMapXML = require('../../../lib/tasks-sitemap/sitemap-xml');
+    _ = require('lodash'),
+    Model = require('../../../lib/model'),
+    createSiteMapXML = require('../../../lib/tasks-sitemap/sitemap-xml');
 
 function buildExpectedXML(items) {
     var items = items.map(function(item) {
@@ -23,12 +23,15 @@ function buildExpectedXML(items) {
     return items.join(EOL);
 }
 
-describe('SiteMapXML', function() {
+describe('tasks-sitemap/sitemap-xml', function() {
     var sandbox = sinon.sandbox.create(),
-        model,
-        task;
+        basePage = {url: '/url1', published: true},
+        options = {host: 'https://en.site.com'},
+        expecedFilePath = '.builder/cache/sitemap.xml',
+        model;
 
     beforeEach(function() {
+        sandbox.stub(console, 'error');
         sandbox.stub(fs, 'writeFile').yields(null);
         model = new Model();
     });
@@ -37,72 +40,50 @@ describe('SiteMapXML', function() {
         sandbox.restore();
     });
 
-    it('should return valid task name', function() {
-        BuildSiteMapXML.getName().should.equal('build sitemap xml');
-    });
-
     it('should throw error if hosts parameter was not set on initialization', function() {
-        (function() {new BuildSiteMapXML(new Config('debug'), {})}).should
+        (function() {return createSiteMapXML(model)}).should
             .throw('Host parameter undefined. It is necessary for sitemap.xml creation');
     });
 
-    it('should create valid content for sitemap.xml file', function() {
-        model.setPages([{url: '/url1', published: true}]);
+    it('should return function as result', function() {
+        createSiteMapXML(model, options).should.be.instanceOf(Function);
+    });
 
-        task = new BuildSiteMapXML(new Config('debug'), {host: 'https://en.site.com'});
-        return task.run(model).then(function() {
-            fs.writeFile.should.be.calledWithMatch('data/sitemap.xml', buildExpectedXML([
+    it('should create valid content for sitemap.xml file', function() {
+        model.setPages([basePage]);
+
+        return createSiteMapXML(model, options)().then(function() {
+            fs.writeFile.should.be.calledWith(expecedFilePath, buildExpectedXML([
                 {loc: 'https://en.site.com/url1', changefreq: 'weekly', priority: 0.5}
             ]));
         });
     });
 
     it('should use custom value for "changefreq" property if it was given in page model', function() {
-        model.setPages([
-            {
-                url: '/url1',
-                search: {
-                    changefreq: 'daily',
-                    priority: 0.5
-                },
-                published: true
-            }
-        ]);
+        model.setPages([_.extend({}, basePage, {search: {changefreq: 'daily', priority: 0.5}})]);
 
-        task = new BuildSiteMapXML(new Config('debug'), {host: 'https://en.site.com'});
-        return task.run(model).then(function() {
-            fs.writeFile.should.be.calledWithMatch('data/sitemap.xml', buildExpectedXML([
+        return createSiteMapXML(model, options)().then(function() {
+            fs.writeFile.should.be.calledWith(expecedFilePath, buildExpectedXML([
                 {loc: 'https://en.site.com/url1', changefreq: 'daily', priority: 0.5}
             ]));
         });
     });
 
     it('should use custom value for "priority" property if it was given in page model', function() {
-        model.setPages([
-            {
-                url: '/url1',
-                search: {
-                    changefreq: 'weekly',
-                    priority: 1.0
-                },
-                published: true
-            }
-        ]);
+        model.setPages([_.extend({}, basePage, {search: {changefreq: 'weekly', priority: 1.0}})]);
 
-        task = new BuildSiteMapXML(new Config('debug'), {host: 'https://en.site.com'});
-        return task.run(model).then(function() {
-            fs.writeFile.should.be.calledWithMatch('data/sitemap.xml', buildExpectedXML([
+        return createSiteMapXML(model, options)().then(function() {
+            fs.writeFile.should.be.calledWithMatch(expecedFilePath, buildExpectedXML([
                 {loc: 'https://en.site.com/url1', changefreq: 'weekly', priority: 1.0}
             ]));
         });
     });
 
     it('should also append nodes for page aliases', function() {
-        model.setPages([{url: '/url1', aliases: ['/url11'], published: true}]);
+        model.setPages([_.extend({}, basePage, {aliases: ['/url11']})]);
 
-        task = new BuildSiteMapXML(new Config('debug'), {host: 'https://en.site.com'});
-        return task.run(model).then(function() {
-            fs.writeFile.should.be.calledWithMatch('data/sitemap.xml', buildExpectedXML([
+        return createSiteMapXML(model, options)().then(function() {
+            fs.writeFile.should.be.calledWithMatch(expecedFilePath, buildExpectedXML([
                 {loc: 'https://en.site.com/url1', changefreq: 'weekly', priority: 0.5},
                 {loc: 'https://en.site.com/url11', changefreq: 'weekly', priority: 0.5}
             ]));
@@ -110,26 +91,23 @@ describe('SiteMapXML', function() {
     });
 
     it('should return fulfilled promise with model instance', function() {
-        model.setPages([{url: '/url1', published: true}]);
+        model.setPages([basePage]);
 
-        task = new BuildSiteMapXML(new Config('debug'), {host: 'https://en.site.com'});
-        return task.run(model).should.eventually.be.instanceof(Model);
+        return createSiteMapXML(model, options)().should.eventually.be.instanceof(Model);
     });
 
     it('should return rejected promise with error if error occur on file saving', function() {
-        model.setPages([{url: '/url1', published: true}]);
+        model.setPages([basePage]);
         fs.writeFile.yields(new Error('error'));
 
-        task = new BuildSiteMapXML(new Config('debug'), {host: 'https://en.site.com'});
-        return task.run(model).should.be.rejectedWith('error');
+        return createSiteMapXML(model, options)().should.be.rejectedWith('error');
     });
 
     it('should not add sitemap nodes for unpublished pages', function() {
-        model.setPages([{url: '/url1', published: false}]);
+        model.setPages([_.extend({}, basePage, {published: false})]);
 
-        task = new BuildSiteMapXML(new Config('debug'), {host: 'https://en.site.com'});
-        return task.run(model).then(function() {
-            fs.writeFile.calledWithMatch('data/sitemap.xml', buildExpectedXML([])).should.equal(true);
+        return createSiteMapXML(model, options)().then(function() {
+            fs.writeFile.calledWithMatch(expecedFilePath, buildExpectedXML([])).should.equal(true);
         });
     });
 });

@@ -32,4 +32,4 @@ require('./src/tasks-page/header-meta.test.js');
 require('./src/tasks-page/breadcrumbs.test.js');
 require('./src/tasks-page/search-meta.test.js');
 
-// require('./src/tasks-sitemap/sitemap-xml.test.js');
+require('./src/tasks-sitemap/sitemap-xml.test.js');
