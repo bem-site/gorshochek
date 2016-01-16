@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import * as util from 'util';
+import * as util from './util';
 
 export default function createSearchMeta(model) {
     return util.getExecFunction(model, (map, page) => {
