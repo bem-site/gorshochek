@@ -4,6 +4,13 @@ import * as baseUtil from '../util';
 
 const debug = require('debug')('sitemap-xml');
 
+/**
+ * Creates and saves sitemap.xml file to cache folder
+ * @param {Model} model - application model instance
+ * @param {Object} options - task options
+ * @param {String} options.host - host string
+ * @returns {Function}
+ */
 export default function createSitemapXML(model, options = {}) {
     if(!options.host) {
         throw new Error('Host parameter undefined. It is necessary for sitemap.xml creation');
