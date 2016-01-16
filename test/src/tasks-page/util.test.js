@@ -55,7 +55,7 @@ describe('tasks-page/util', function() {
                 {url: '/', title: '/title'},
                 {url: '/url1', title: '/url1 title'}
             ]);
-            
+
             return util.getExecFunction(model, spy)().then(function() {
                 spy.should.be.calledTwice;
                 spy.firstCall.should.be.calledWithMatch(sinon.match.any, {url: '/', title: '/title'});
