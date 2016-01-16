@@ -16,14 +16,9 @@ require('./src/tasks-core/rsync.test.js');
 
 // require('./src/tasks-docs/load-from-github.test.js');
 // require('./src/tasks-docs/load-from-file.test.js');
-// require('./src/tasks-docs/transform-base.test');
-// require('./src/tasks-docs/transform-md-to-html.test');
+require('./src/tasks-docs/transform-md-html.test.js');
 
-// require('./src/tasks/libraries-base.test.js');
-// require('./src/tasks/libraries-sync-mds.test.js');
-// require('./src/tasks/libraries-data-gen.test');
-
-// require('./src/tasks-override/override-base.test.js');
+require('./src/tasks-override/util.test.js');
 // require('./src/tasks-override/override-docs.test.js');
 
 require('./src/tasks-page/util.test.js');
