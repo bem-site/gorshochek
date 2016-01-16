@@ -27,11 +27,11 @@ export default class Base {
      */
     executeAPIMethod(method, options, headers, callback) {
         debug('github API call with options:');
-        debug(' - host: %s', options.host || 'N/A');
-        debug(' - user: %s', options.user || 'N/A');
-        debug(' - repo: %s', options.repo || 'N/A');
-        debug(' - ref: %s',  options.ref  || 'N/A');
-        debug(' - path: %s', options.path || 'N/A');
+        debug(' - host: ' + options.host);
+        debug(' - user: ' + options.user);
+        debug(' - repo: ' + options.repo);
+        debug(' - ref: ' + options.ref);
+        debug(' - path: ' + options.path);
 
         const ATTEMPTS = 5; // максимальное число допустимых повторных обращений к github в случае возникновения ошибки
         const requestFunc = (count) => {

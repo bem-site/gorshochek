@@ -1,7 +1,6 @@
 var fs = require('fs'),
     fsExtra = require('fs-extra'),
-    Q = require('q'),
-
+    Model = require('../../lib/model'),
     util = require('../../lib/util');
 
 describe('util', function() {
@@ -116,8 +115,14 @@ describe('util', function() {
     });
 
     describe('readFileFromCache', function() {
+        var readFileStub;
+
+        beforeEach(function() {
+            readFileStub = sandbox.stub(fs, 'readFile');
+        });
+
         it('should be resolved with content of text file', function() {
-            sandbox.stub(fs, 'readFile').yields(null, 'foo1');
+            readFileStub.yields(null, 'foo1');
             return util.readFileFromCache('./file1').should.eventually.equal('foo1');
         });
 
@@ -128,14 +133,25 @@ describe('util', function() {
             return util.readFileFromCache('./file1', true).should.eventually.eql(obj);
         });
 
-        it('should be rejected on error if file does not exists', function() {
-            var err = new Error('Error');
-            err.code = 'ENOENT';
-            sandbox.stub(fs, 'readFile').yields(err);
+        it('should rejected with error if fs error occur and fallback value was not set', function() {
+            readFileStub.yields(new Error('some-fs-error'));
+            return util.readFileFromCache('./some-path').should.be.rejectedWith('some-fs-error');
+        });
 
-            return util.readFileFromCache('./invalid-file').catch(function(error) {
-                error.code.should.equal(err.code);
-            });
+        it('should rejected with error if fallback value was set but fs error is not ENOENT ', function() {
+            var error = new Error('some-fs-error');
+            error.code = 'EISDIR';
+
+            readFileStub.yields(error);
+            return util.readFileFromCache('./some-path', 'some-fallback').should.be.rejectedWith('some-fs-error');
+        });
+
+        it('should resolve with given fallback value if file does not exist on filesystem', function() {
+            var error = new Error('some-fs-error');
+            error.code = 'ENOENT';
+
+            readFileStub.yields(error);
+            return util.readFileFromCache('./some-path', false, 'some-fallback').should.be.eventually.equal('some-fallback');
         });
     });
 
@@ -169,6 +185,37 @@ describe('util', function() {
     });
 
     describe('processPagesAsync', function() {
+        it('should call process function for each of filtered pages', function() {
+            var model = new Model();
+            model.setPages([
+                {url: '/url1'},
+                {url: '/url12'}
+            ]);
+            var criteria = function(page) {
+                return page.url.indexOf('/url1') > -1;
+            };
+            var processFunc = function() {return true;};
+            var processFuncSpy = sandbox.spy(processFunc);
 
+            return util.processPagesAsync(model, criteria, processFuncSpy).then(function() {
+                processFuncSpy.should.be.calledTwice;
+            });
+        });
+
+        it('should process all pages if criteria function was not given', function() {
+            var model = new Model();
+            model.setPages([
+                {url: '/url1'},
+                {url: '/url2'}
+            ]);
+            var processFunc = function() {return true;};
+            var processFuncSpy = sandbox.spy(processFunc);
+
+            return util.processPagesAsync(model, null, processFuncSpy).then(function() {
+                processFuncSpy.should.be.calledTwice;
+                processFuncSpy.firstCall.should.be.calledWithMatch(model, {url: '/url1'});
+                processFuncSpy.secondCall.should.be.calledWithMatch(model, {url: '/url2'});
+            });
+        });
     });
 });

@@ -77,11 +77,11 @@ export function readFileFromCache(filePath, isJSON, fallbackValue) {
 
     return Q.nfcall(func, filePath, {encoding: 'utf-8'})
         .catch(error => {
-            if(!fallbackValue || error.code !== 'ENOENT') {
-                console.error(`Error occur while loading file ${filePath} from cache`);
-                throw error;
+            if(fallbackValue && error.code === 'ENOENT') {
+                return fallbackValue;
             }
-            return fallbackValue;
+            console.error(`Error occur while loading file ${filePath} from cache`);
+            throw error;
         });
 }
 
