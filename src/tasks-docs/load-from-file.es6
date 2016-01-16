@@ -40,12 +40,12 @@ export default function loadSourcesFromLocal(model) {
 
         const onAddedDocument = (promise) => {
             debug('Doc added: %s %s', page.url, page.title);
-            model.getChanges().pages.addAdded({type: 'doc', url: page.url, title: page.title});
+            model.getChanges().addAdded({type: 'doc', url: page.url, title: page.title});
             return baseUtil.writeFileToCache(cacheFilePath, promise.value);
         };
         const onModifiedDocument = (promise) => {
             debug('Doc modified: %s %s', page.url, page.title);
-            model.getChanges().pages.addModified({type: 'doc', url: page.url, title: page.title});
+            model.getChanges().addModified({type: 'doc', url: page.url, title: page.title});
             return baseUtil.writeFileToCache(cacheFilePath, promise.value);
         };
 
@@ -72,4 +72,3 @@ export default function loadSourcesFromLocal(model) {
         return baseUtil.processPagesAsync(model, getCriteria, processPage, 20).thenResolve(model);
     };
 }
-

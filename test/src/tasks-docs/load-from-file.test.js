@@ -1,20 +1,20 @@
-var fs = require('fs'),
-    path = require('path'),
-    fsExtra = require('fs-extra'),
+var path = require('path'),
+    _ = require('lodash'),
     Q = require('q'),
-    Config = require('../../../lib/config'),
-    Model = require('../../../lib/model/model'),
-    DocsLoadFile = require('../../../lib/tasks-docs/load-from-file');
+    Model = require('../../../lib/model'),
+    baseUtil = require('../../../lib/util'),
+    loadFromFile = require('../../../lib/tasks-docs/load-from-file');
 
-describe('DocsLoadFile', function() {
+describe('tasks-docs/load-from-file', function() {
     var sandbox = sinon.sandbox.create(),
-        task = new DocsLoadFile(new Config('debug'), {}),
+        defaultPage = {url: '/url', sourceUrl: '../foo.file'},
         model;
 
     beforeEach(function() {
-        sandbox.stub(fsExtra);
-        sandbox.stub(task, 'readFileFromCache');
-        sandbox.stub(task, 'writeFileToCache');
+        sandbox.stub(console, 'error');
+        sandbox.stub(baseUtil, 'readFile').returns(Q('hello-world'));
+        sandbox.stub(baseUtil, 'readFileFromCache').returns(Q('hello-world'));
+        sandbox.stub(baseUtil, 'writeFileToCache').returns(Q()),
         model = new Model();
     });
 
@@ -22,108 +22,116 @@ describe('DocsLoadFile', function() {
         sandbox.restore();
     });
 
-    it('should return valid task name', function() {
-        DocsLoadFile.getName().should.equal('docs load from file');
+    it('should return function as result', function() {
+        loadFromFile(model).should.be.instanceOf(Function);
     });
 
-    describe('getCriteria', function() {
-        it('should return false on missed sourceUrl field of page', function() {
-            var page = {url: '/url1'};
-            task.getCriteria(page).should.equal(false);
-        });
-
-        it('should return false if sourceUrl value does not match regular expression', function() {
-            var page = {
-                url: '/url1',
-                sourceUrl: 'http://github.com/foo/bar'
-            };
-            task.getCriteria(page).should.equal(false);
-        });
-
-        describe('sourceUrl matches on task criteria', function() {
-            it('should match on file path like a "/foo/bar.file"', function() {
-                var page = {url: '/url', sourceUrl: '/foo/bar.md'};
-                task.getCriteria(page).should.equal(true);
-            });
-
-            it('should match on file path like a "./foo/bar.md"', function() {
-                var page = {url: '/url', sourceUrl: './foo/bar.md'};
-                task.getCriteria(page).should.equal(true);
-            });
-
-            it('should match on file path like a "../foo/bar.md"', function() {
-                var page = {url: '/url', sourceUrl: '../foo/bar.md'};
-                task.getCriteria(page).should.equal(true);
-            });
-
-            it('should match on file path like a "../../foo/bar.md"', function() {
-                var page = {url: '/url', sourceUrl: '../../foo/bar.md'};
-                task.getCriteria(page).should.equal(true);
-            });
+    it('should not process pages without "sourceUrl" property', function() {
+        model.setPages([{url: '/url1'}]);
+        return loadFromFile(model)().then(function() {
+            baseUtil.readFileFromCache.should.not.be.called;
         });
     });
 
-    describe('processPage', function() {
-        var page;
-
-        beforeEach(function() {
-            sandbox.stub(fs, 'readFile').yields(null, 'Hello World');
-            task.readFileFromCache.returns(Q('Hello World'));
-            task.writeFileToCache.returns(Q());
-            page = {url: '/url', sourceUrl: '../foo.file'};
+    it('should not process page if "sourceUrl" value does not match local file regular expression', function() {
+        model.setPages([{url: '/url1', sourceUrl: 'http://github.com/foo/bar'}]);
+        return loadFromFile(model)().then(function() {
+            baseUtil.readFileFromCache.should.not.be.called;
         });
+    });
 
-        it('should read file from cache from given file path', function() {
-            return task.processPage(model, page).then(function() {
-                task.readFileFromCache.should.be
-                    .calledWithMatch(path.join(page.url, 'index.file'));
+    describe('sourceUrl matches local file path criteria', function() {
+        it('should match on file path like a "/foo/bar.file"', function() {
+            model.setPages([{url: '/url', sourceUrl: '/foo/bar.md'}]);
+            return loadFromFile(model)().then(function() {
+                baseUtil.readFileFromCache.should.be.calledOnce;
             });
         });
 
-        it('should read file from local filesystem', function() {
-            return task.processPage(model, page).then(function() {
-                fs.readFile.should.be.calledWithMatch('foo.file');
+        it('should match on file path like a "./foo/bar.md"', function() {
+            model.setPages([{url: '/url', sourceUrl: './foo/bar.md'}]);
+            return loadFromFile(model)().then(function() {
+                baseUtil.readFileFromCache.should.be.calledOnce;
             });
         });
 
-        it('should reject operation in case of missed local file', function() {
-            fs.readFile.yields(new Error('ENOENT'));
-            return task.processPage(model, page).catch(function() {
-                task.writeFileToCache.should.not.be.called;
-                should.not.exist(page.contentFile);
+        it('should match on file path like a "../foo/bar.md"', function() {
+            model.setPages([{url: '/url', sourceUrl: '../foo/bar.md'}]);
+            return loadFromFile(model)().then(function() {
+                baseUtil.readFileFromCache.should.be.calledOnce;
             });
         });
 
-        it('should process file as new if it was not file in cache', function() {
-            task.readFileFromCache.returns(Q.reject('Error'));
-            return task.processPage(model, page).then(function() {
-                model.getChanges().pages.added.should.have.length(1);
+        it('should match on file path like a "../../foo/bar.md"', function() {
+            model.setPages([{url: '/url', sourceUrl: '../../foo/bar.md'}]);
+            return loadFromFile(model)().then(function() {
+                baseUtil.readFileFromCache.should.be.calledOnce;
             });
         });
+    });
 
-        it('should process file as modified if it is not same as in cache', function() {
-            task.readFileFromCache.returns(Q('Hello World old'));
-            return task.processPage(model, page).then(function() {
-                model.getChanges().pages.modified.should.have.length(1);
-            });
-        });
+    it('should try to read file from cache by valid file path', function() {
+        model.setPages([_.extend({}, defaultPage)]);
 
-        it('should not to do anything if file was not changed', function() {
-            return task.processPage(model, page).then(function() {
-                var changes = model.getChanges().pages;
-                changes.added.should.be.empty;
-                changes.modified.should.be.empty;
-            });
+        return loadFromFile(model)().then(function() {
+            baseUtil.readFileFromCache.should.be
+                .calledWithMatch(path.join('/url', 'index.file'));
         });
+    });
 
-        it('should set valid value of "contentFile" field', function() {
-            return task.processPage(model, page).then(function() {
-                page.contentFile.should.equal('/url/index.file');
-            });
-        });
+    it('should read file from local filesystem by valid path', function() {
+        model.setPages([_.extend({}, defaultPage)]);
 
-        it('should be resolved with page model instance', function() {
-            task.processPage(model, page).should.eventually.be.eql(page);
+        return loadFromFile(model)().then(function() {
+            baseUtil.readFile.should.be.calledWithMatch('foo.file');
         });
+    });
+
+    it('should reject operation in case of missed local file', function() {
+        model.setPages([_.extend({}, defaultPage)]);
+        baseUtil.readFile.returns(Q.reject('Error'));
+
+        return loadFromFile(model)().then(function() {
+            baseUtil.writeFileToCache.should.not.be.called;
+            should.not.exist(model.getPages()[0].contentFile);
+        });
+    });
+
+    it('should process file as new if it was not file in cache', function() {
+        model.setPages([_.extend({}, defaultPage)]);
+        baseUtil.readFileFromCache.returns(Q.reject('Error'));
+
+        return loadFromFile(model)().then(function() {
+            model.getChanges().added.should.have.length(1);
+        });
+    });
+
+    it('should process file as modified if it is not same as in cache', function() {
+        model.setPages([_.extend({}, defaultPage)]);
+        baseUtil.readFileFromCache.returns(Q('Hello World old'));
+
+        return loadFromFile(model)().then(function() {
+            model.getChanges().modified.should.have.length(1);
+        });
+    });
+
+    it('should not to do anything if file was not changed', function() {
+        model.setPages([_.extend({}, defaultPage)]);
+        return loadFromFile(model)().then(function() {
+            var changes = model.getChanges();
+            changes.added.should.be.empty;
+            changes.modified.should.be.empty;
+        });
+    });
+
+    it('should set valid value of "contentFile" field', function() {
+        model.setPages([_.extend({}, defaultPage)]);
+        return loadFromFile(model)().then(function() {
+            model.getPages()[0].contentFile.should.equal('/url/index.file');
+        });
+    });
+
+    it('should be resolved with model instance', function() {
+        loadFromFile(model)().should.eventually.be.instanceOf(Model);
     });
 });
