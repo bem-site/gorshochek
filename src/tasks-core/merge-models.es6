@@ -3,10 +3,15 @@ import _ from 'lodash';
 import Q from 'q';
 import * as baseUtil from '../util';
 
-const debug = require('debug')('merge-models');
-
-export default function(model, options) {
-    options || (options = {});
+/**
+ * Find difference between current and previous models
+ * Merges models and saves current model file in cache
+ * @param {Model} model - application model instance
+ * @param {Object} options - options object
+ * @param {Object} options.modelPath - path to model JSON file
+ * @returns {Function}
+ */
+export default function(model, options = {}) {
 
     if(!_.has(options, 'modelPath')) {
         throw new Error('modelPath should be defined in task options');
@@ -15,7 +20,6 @@ export default function(model, options) {
     /**
      * Prints changes for all types to log
      * @param {Model} model - application model
-     * @private
      */
     function logModelChanges(model) {
         ['added', 'modified', 'removed'].forEach(type => {

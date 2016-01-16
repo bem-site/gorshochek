@@ -10,8 +10,7 @@ require('./src/tasks-libraries/model/version.test.js');
 
 require('./src/tasks-docs/github/index.test.js');
 
-// require('./src/tasks-core/base.test.js');
-// require('./src/tasks-core/init.test.js');
+require('./src/tasks-core/merge-models.test.js');
 // require('./src/tasks-core/rsync-cache-data.test.js');
 
 // require('./src/tasks-docs/load-from-github.test.js');
