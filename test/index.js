@@ -26,7 +26,7 @@ require('./src/tasks-docs/github/index.test.js');
 // require('./src/tasks-override/override-base.test.js');
 // require('./src/tasks-override/override-docs.test.js');
 
-// require('./src/tasks-page/base.test.js');
+require('./src/tasks-page/util.test.js');
 // require('./src/tasks-page/header-title.test.js');
 // require('./src/tasks-page/header-meta.test.js');
 // require('./src/tasks-page/breadcrumbs.test.js');
