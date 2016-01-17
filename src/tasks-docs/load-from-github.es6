@@ -6,6 +6,7 @@ import * as baseUtil from '../util';
 const debug = require('debug')('docs github load');
 
 export default function loadSourcesFromGithub(model, options = {}) {
+    const GITHUB_URL_REGEXP = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/;
     const api = new GitHub({token: options.token});
 
     /**
@@ -15,7 +16,7 @@ export default function loadSourcesFromGithub(model, options = {}) {
      */
     function getCriteria(page) {
         return !!(page.sourceUrl &&
-        page.sourceUrl.match(/^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/));
+        page.sourceUrl.match(GITHUB_URL_REGEXP));
     }
 
     /**
@@ -33,7 +34,7 @@ export default function loadSourcesFromGithub(model, options = {}) {
      * @returns {{host: *, user: *, repo: *, ref: *, path: *}}
      */
     function parseSourceUrl(url) {
-        const repoInfo = url.match(/^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/);
+        const repoInfo = url.match(GITHUB_URL_REGEXP);
         return {
             host: repoInfo[1],
             user: repoInfo[2],
@@ -82,11 +83,12 @@ export default function loadSourcesFromGithub(model, options = {}) {
 
     /**
      * Save loaded content to local cache
+     * @param {Object} page - model page object
      * @param {String} content - base64 encoded content of file
      * @returns {Promise}
      */
-    function saveContentToFile(content) {
-        const filePath = getCacheFilePath(content);
+    function saveContentToFile(page, content) {
+        const filePath = getCacheFilePath(page, content);
         return baseUtil
             .writeFileToCache(filePath, new Buffer(content.content, 'base64').toString())
             .thenResolve(filePath);
@@ -128,16 +130,16 @@ export default function loadSourcesFromGithub(model, options = {}) {
                     return Q(cache.fileName);
                 } else if(!cache.sha) {
                     debug('Doc added: %s %s', page.url, page.title);
-                    model.getChanges().pages.addAdded({type: 'doc', url: page.url, title: page.title});
+                    model.getChanges().addAdded({type: 'doc', url: page.url, title: page.title});
                 } else {
                     debug('Doc modified: %s %s %s', page.url, page.title);
-                    model.getChanges().pages.addModified({type: 'doc', url: page.url, title: page.title});
+                    model.getChanges().addModified({type: 'doc', url: page.url, title: page.title});
                 }
 
                 return Q()
                     .then(() => loadAdvancedMetaInformation(page, repoInfo, cache))
                     .then(() => writeMetaToCache(page, result))
-                    .then(() => saveContentToFile(result));
+                    .then(() => saveContentToFile(page, result));
             })
             .then(filePath => {
                 page.contentFile = filePath;

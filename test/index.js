@@ -14,7 +14,7 @@ require('./src/tasks-core/merge-models.test.js');
 require('./src/tasks-core/normalize-model.test.js');
 require('./src/tasks-core/rsync.test.js');
 
-// require('./src/tasks-docs/load-from-github.test.js');
+require('./src/tasks-docs/load-from-github.test.js');
 require('./src/tasks-docs/load-from-file.test.js');
 require('./src/tasks-docs/transform-md-html.test.js');
 
