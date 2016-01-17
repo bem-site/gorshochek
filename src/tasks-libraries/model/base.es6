@@ -1,6 +1,5 @@
 import Q from 'q';
 import fsExtra from 'fs-extra';
-import Logger from 'bem-site-logger';
 
 /**
  * @exports
@@ -12,12 +11,6 @@ export default class Base {
      * @constructor
      */
     constructor() {
-        /**
-         * Instance of logger
-         * @type {Logger}
-         */
-        this.logger = Logger.createLogger(module);
-
         /**
          * Private data property for hold all key-value data pairs
          * @type {{}}
@@ -52,9 +45,8 @@ export default class Base {
         return Q.nfcall(fsExtra[method], filePath, content)
             .thenResolve(filePath)
             .catch(error => {
-                this.logger
-                    .error(`Error occur while saving file: ${filePath}`)
-                    .error(`Error: ${error.stack}`);
+                console.error(`Error occur while saving file: ${filePath}`);
+                console.error(`Error: ${error.stack}`);
                 throw error;
             });
     }

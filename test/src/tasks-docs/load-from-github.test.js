@@ -1,21 +1,36 @@
-var fs = require('fs'),
-    fsExtra = require('fs-extra'),
-    Q = require('q'),
+var Q = require('q'),
     _ = require('lodash'),
-    Config = require('../../../lib/config'),
-    Model = require('../../../lib/model/model'),
+    Model = require('../../../lib/model'),
+    baseUtil = require('../../../lib/util'),
     GithubAPI = require('../../../lib/tasks-docs/github'),
-    DocsLoadGithub = require('../../../lib/tasks-docs/load-from-github');
+    loadFromGithub = require('../../../lib/tasks-docs/load-from-github');
 
-describe('DocsLoadGithub', function() {
-    var sandbox = sinon.sandbox.create(),
-        task = new DocsLoadGithub(new Config('debug'), {}),
+describe('tasks-docs/load-from-github', function() {
+    var pageStub = {
+            url: '/url',
+            sourceUrl: 'https://github.com/org/user/blob/ref/path.ext'
+        },
+        githubStubRes = {
+            meta: {},
+            name: 'some-name.ext',
+            sha: 'some-sha',
+            content: 'some-content'
+        },
+        sandbox = sinon.sandbox.create(),
+        githubGetContentStub,
+        githubGetLastCommitDateStub,
+        githubHasIssuesStub,
+        githubGetBranchOrDefault,
         model;
 
     beforeEach(function() {
-        sandbox.stub(fsExtra);
-        sandbox.stub(task, 'readFileFromCache');
-        sandbox.stub(task, 'writeFileToCache');
+        sandbox.stub(console, 'warn');
+        sandbox.stub(baseUtil, 'readFileFromCache').returns(Q.reject('Error'));
+        sandbox.stub(baseUtil, 'writeFileToCache').returns(Q());
+        githubGetContentStub = sandbox.stub(GithubAPI.prototype, 'getContent').returns(Q(githubStubRes));
+        githubGetLastCommitDateStub = sandbox.stub(GithubAPI.prototype, 'getLastCommitDate');
+        githubHasIssuesStub = sandbox.stub(GithubAPI.prototype, 'hasIssues');
+        githubGetBranchOrDefault = sandbox.stub(GithubAPI.prototype, 'getBranchOrDefault');
         model = new Model();
     });
 
@@ -23,170 +38,173 @@ describe('DocsLoadGithub', function() {
         sandbox.restore();
     });
 
-    it('should return valid task name', function() {
-        DocsLoadGithub.getName().should.equal('docs load from github');
+    it('should return function as result', function() {
+        loadFromGithub(model).should.be.instanceOf(Function);
     });
 
-    it('should initialize github API on task creation', function() {
-        task.getAPI().should.be.instanceof(GithubAPI);
-    });
-
-    describe('getCriteria', function() {
-        it('should return false on missed sourceUrl field of page', function() {
-            var page = {url: '/url1'};
-            task.getCriteria(page).should.equal(false);
-        });
-
-        it('should return false if sourceUrl value does not match regular expression', function() {
-            var page = {
-                url: '/url1',
-                sourceUrl: '//foo/bar'
-            };
-            task.getCriteria(page).should.equal(false);
-        });
-
-        describe('sourceUrl matches on task criteria', function() {
-            it('should match on file path like a "http://github.com/org/user/blob/ref/path"', function() {
-                var page = {url: '/url', sourceUrl: 'http://github.com/org/user/blob/ref/path'};
-                task.getCriteria(page).should.equal(true);
-            });
-
-            it('should match on file path like a "https://github.com/org/user/blob/ref/path"', function() {
-                var page = {url: '/url', sourceUrl: 'https://github.com/org/user/blob/ref/path'};
-                task.getCriteria(page).should.equal(true);
-            });
-
-            it('should match on file path like a "http://github.com/org/user/tree/ref/path"', function() {
-                var page = {url: '/url', sourceUrl: 'http://github.com/org/user/tree/ref/path'};
-                task.getCriteria(page).should.equal(true);
-            });
-
-            it('should match on file path like a "https://github.com/org/user/tree/ref/path"', function() {
-                var page = {url: '/url', sourceUrl: 'https://github.com/org/user/tree/ref/path'};
-                task.getCriteria(page).should.equal(true);
-            });
+    it('should not process pages without "sourceUrl" property', function() {
+        model.setPages([{url: '/url1'}]);
+        return loadFromGithub(model)().then(function() {
+            githubGetContentStub.should.not.be.called;
         });
     });
 
-    describe('processPage', function() {
-        var page,
-            githubStubRes = {meta: {}, name: 'some-name.ext', sha: 'some-sha', content: 'some-content'};
-
-        beforeEach(function() {
-            task.writeFileToCache.returns(Q());
-            page = {url: '/url', sourceUrl: 'https://github.com/org/user/blob/ref/path.ext'};
+    it('should not process page if "sourceUrl" value does not match github url regular expression', function() {
+        model.setPages([{url: '/url1', sourceUrl: '//foo/bar'}]);
+        return loadFromGithub(model)().then(function() {
+            githubGetContentStub.should.not.be.called;
         });
+    });
 
-        it('should load file from github via github API', function() {
-            task.readFileFromCache.returns(Q.reject('Error'));
-            sandbox.stub(task.getAPI(), 'getContent').returns(Q(githubStubRes));
-            return task.processPage(model, page).then(function() {
-                task.getAPI().getContent.should.be.calledOnce;
+    describe('sourceUrl matches github url criteria', function() {
+        function testAsseptedSourceUrl(url) {
+            model.setPages([{url: '/url', sourceUrl: url}]);
+            return loadFromGithub(model)().then(function() {
+                githubGetContentStub.should.be.calledOnce;
             });
+        }
+
+        it('should process page with sourceUrl like a "http://github.com/org/user/blob/ref/path"', function() {
+            return testAsseptedSourceUrl('http://github.com/org/user/blob/ref/path');
         });
 
-        it('should save loaded file to cache by valid path', function() {
-            task.readFileFromCache.returns(Q.reject('Error'));
-            sandbox.stub(task.getAPI(), 'getContent').returns(Q(githubStubRes));
-            return task.processPage(model, page).then(function() {
-                task.writeFileToCache.should.be.calledWithMatch('/url/index.ext');
-            });
+        it('should process page with sourceUrl like a "https://github.com/org/user/blob/ref/path"', function() {
+            return testAsseptedSourceUrl('https://github.com/org/user/blob/ref/path');
         });
 
-        it('should mark loaded doc as added', function() {
-            task.readFileFromCache.returns(Q.reject('Error'));
-            sandbox.stub(task.getAPI(), 'getContent').returns(Q(githubStubRes));
-            return task.processPage(model, page).then(function() {
-                model.getChanges().pages.added.should.have.length(1);
-            });
+        it('should process page with sourceUrl like "http://github.com/org/user/tree/ref/path"', function() {
+            return testAsseptedSourceUrl('http://github.com/org/user/tree/ref/path');
         });
 
-        it('should set valid value to "contentFile" field', function() {
-            task.readFileFromCache.returns(Q.reject('Error'));
-            sandbox.stub(task.getAPI(), 'getContent').returns(Q(githubStubRes));
-            return task.processPage(model, page).then(function() {
-                page.contentFile.should.equal('/url/index.ext');
-            });
+        it('should process page with sourceUrl like "https://github.com/org/user/tree/ref/path"', function() {
+            return testAsseptedSourceUrl('https://github.com/org/user/tree/ref/path');
         });
+    });
 
-        it('should return fulfilled promise with page value', function() {
-            task.readFileFromCache.returns(Q.reject('Error'));
-            sandbox.stub(task.getAPI(), 'getContent').returns(Q(githubStubRes));
-            return task.processPage(model, page).then(function(_page) {
-                _page.url.should.equal(page.url);
-                _page.sourceUrl.should.equal(page.sourceUrl);
-            });
+    it('should load file from github via github API', function() {
+        model.setPages([_.extend({}, pageStub)]);
+        return loadFromGithub(model)().then(function() {
+            githubGetContentStub.should.be.calledOnce;
         });
+    });
 
-        it('should save valid meta.json file to cache', function() {
-            task.readFileFromCache.returns(Q.reject('Error'));
-            sandbox.stub(task.getAPI(), 'getContent')
-                .returns(Q(_.extend({}, githubStubRes, {meta: {etag: 'some-etag'}})));
-            return task.processPage(model, page).then(function() {
-                var expectedContent = JSON.stringify({
-                    etag: 'some-etag',
-                    sha: 'some-sha',
-                    fileName: '/url/index.ext'
-                }, null, 4);
-                task.writeFileToCache.firstCall.should.be.calledWith('/url/index.meta.json', expectedContent);
-            });
+    it('should save loaded file to cache by valid path', function() {
+        model.setPages([_.extend({}, pageStub)]);
+        return loadFromGithub(model)().then(function() {
+            baseUtil.writeFileToCache.secondCall.should.be.calledWithMatch('/url/index.ext');
         });
+    });
 
-        it('should skip loading if github return 304 status code', function() {
-            task.readFileFromCache.returns(Q({}));
-            sandbox.stub(task.getAPI(), 'getContent')
-                .returns(Q(_.extend({}, githubStubRes, {meta: {etag: 'some-etag', status: '304 Not Modified'}})));
-            return task.processPage(model, page).then(function() {
-                model.getChanges().pages.added.should.have.length(0);
-                model.getChanges().pages.modified.should.have.length(0);
-            });
+    it('should mark loaded doc as added', function() {
+        model.setPages([_.extend({}, pageStub)]);
+        return loadFromGithub(model)().then(function() {
+            model.getChanges().added.should.have.length(1);
         });
+    });
 
-        it('should skip loading if sha sums of github and cache files are equal', function() {
-            task.readFileFromCache.returns(Q({sha: 'some-sha'}));
-            sandbox.stub(task.getAPI(), 'getContent')
-                .returns(Q(_.extend({}, githubStubRes)));
-            return task.processPage(model, page).then(function() {
-                model.getChanges().pages.added.should.have.length(0);
-                model.getChanges().pages.modified.should.have.length(0);
-            });
+    it('should set valid value to "contentFile" field', function() {
+        model.setPages([_.extend({}, pageStub)]);
+        return loadFromGithub(model)().then(function() {
+            model.getPages()[0].contentFile.should.equal('/url/index.ext');
         });
+    });
 
-        it('should load file from github if it was modified', function() {
-
+    it('should save valid meta.json file to cache', function() {
+        model.setPages([_.extend({}, pageStub)]);
+        githubGetContentStub.returns(Q(_.extend({}, githubStubRes, {meta: {etag: 'some-etag'}})));
+        return loadFromGithub(model)().then(function() {
+            var expectedContent = JSON.stringify({
+                etag: 'some-etag',
+                sha: 'some-sha',
+                fileName: '/url/index.ext'
+            }, null, 4);
+            baseUtil.writeFileToCache.firstCall.should.be.calledWith('/url/index.meta.json', expectedContent);
         });
+    });
 
-        it('should mark doc as modified if it was modified and reloaded', function() {
-            task.readFileFromCache.returns(Q({sha: 'some-another-sha'}));
-            sandbox.stub(task.getAPI(), 'getContent')
-                .returns(Q(_.extend({}, githubStubRes)));
-            return task.processPage(model, page).then(function() {
-                model.getChanges().pages.modified.should.have.length(1);
-            });
+    it('should skip loading if github return 304 status code', function() {
+        model.setPages([_.extend({}, pageStub)]);
+        baseUtil.readFileFromCache.returns(Q({}));
+        githubGetContentStub
+            .returns(Q(_.extend({}, githubStubRes, {meta: {etag: 'some-etag', status: '304 Not Modified'}})));
+        return loadFromGithub(model)().then(function() {
+            model.getChanges().added.should.be.empty;
+            model.getChanges().modified.should.be.empty;
         });
+    });
 
-        it('should have "updateDate" field with null value if "updateDate" option was not set', function() {
-            task.readFileFromCache.returns(Q.reject('Error'));
-            sandbox.stub(task.getAPI(), 'getContent').returns(Q(githubStubRes));
-            return task.processPage(model, page).then(function() {
-                (page.updateDate == null).should.equal(true);
-            });
+    it('should skip loading if sha sums of github and cache files are equal', function() {
+        model.setPages([_.extend({}, pageStub)]);
+        baseUtil.readFileFromCache.returns(Q({sha: 'some-sha'}));
+        return loadFromGithub(model)().then(function() {
+            model.getChanges().added.should.be.empty;
+            model.getChanges().modified.should.be.empty;
         });
+    });
 
-        it('should have "hasIssues" field with null value if "hasIssues" option was not set', function() {
-            task.readFileFromCache.returns(Q.reject('Error'));
-            sandbox.stub(task.getAPI(), 'getContent').returns(Q(githubStubRes));
-            return task.processPage(model, page).then(function() {
-                (page.hasIssues == null).should.equal(true);
-            });
-        });
+    it('should mark doc as modified if it was modified and reloaded', function() {
+        model.setPages([_.extend({}, pageStub)]);
+        baseUtil.readFileFromCache.returns(Q({sha: 'some-another-sha'}));
 
-        it('should have "branch" field with null value if "branch" option was not set', function() {
-            task.readFileFromCache.returns(Q.reject('Error'));
-            sandbox.stub(task.getAPI(), 'getContent').returns(Q(githubStubRes));
-            return task.processPage(model, page).then(function() {
-                (page.branch == null).should.equal(true);
-            });
+        return loadFromGithub(model)().then(function() {
+            model.getChanges().modified.should.have.length(1);
         });
+    });
+
+    it('should have "updateDate" field with null value if "updateDate" option was not set', function() {
+        model.setPages([_.extend({}, pageStub)]);
+
+        return loadFromGithub(model)().then(function() {
+            (model.getPages()[0].updateDate == null).should.equal(true);
+        });
+    });
+
+    it('should have "hasIssues" field with null value if "hasIssues" option was not set', function() {
+        model.setPages([_.extend({}, pageStub)]);
+
+        return loadFromGithub(model)().then(function() {
+            (model.getPages()[0].hasIssues == null).should.equal(true);
+        });
+    });
+
+    it('should have "branch" field with null value if "branch" option was not set', function() {
+        model.setPages([_.extend({}, pageStub)]);
+
+        return loadFromGithub(model)().then(function() {
+            (model.getPages()[0].branch == null).should.equal(true);
+        });
+    });
+
+    it('should receive last update date of doc if "updateDate" option was set', function() {
+        var expected = (new Date()).getTime();
+        model.setPages([_.extend({}, pageStub)]);
+        githubGetLastCommitDateStub.returns(Q(expected));
+
+        return loadFromGithub(model, {updateDate: true})().then(function() {
+            model.getPages()[0].updateDate.should.equal(expected);
+        });
+    });
+
+    it('should receive info about issues section of repo if "hasIssues" option was set', function() {
+        model.setPages([_.extend({}, pageStub)]);
+        githubHasIssuesStub.returns(Q(true));
+
+        return loadFromGithub(model, {hasIssues: true})().then(function() {
+            model.getPages()[0].hasIssues.should.equal(true);
+        });
+    });
+
+    it('should receive info about source branch if "branch" option was set', function() {
+        model.setPages([_.extend({}, pageStub)]);
+        githubGetBranchOrDefault.returns(Q('some-branch'));
+
+        return loadFromGithub(model, {branch: true})().then(function() {
+            model.getPages()[0].branch.should.equal('some-branch');
+        });
+    });
+
+    it('should be resolved with model instance', function() {
+        model.setPages([_.extend({}, pageStub)]);
+        return loadFromGithub(model)().should.eventually.be.instanceOf(Model);
     });
 });

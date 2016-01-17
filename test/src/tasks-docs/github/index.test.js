@@ -23,6 +23,8 @@ describe('github API', function() {
         githubAPI = new GithubAPI(options);
         publicApiStub = sandbox.stub(githubAPI.apis.get('public').api);
         privateApiStub = sandbox.stub(githubAPI.apis.get('private').api);
+        sandbox.stub(console, 'error');
+        sandbox.stub(console, 'warn');
     });
 
     afterEach(function() {

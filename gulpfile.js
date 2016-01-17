@@ -49,7 +49,7 @@ gulp.task('esdoc', ['clean-jsdoc'], function() {
 });
 
 gulp.task('copy-logo', ['esdoc'], function() {
-    return gulp.src('./logo.gif')
+    return gulp.src('./logo.jpg')
         .pipe(gulp.dest('./jsdoc'));
 });
 

@@ -1,41 +1,26 @@
 import _ from 'lodash';
-import PageBase from './base';
+import * as util from './util';
 
-export default class PageHeaderTitle extends PageBase {
+/*
+ Для каждой страницы создаем
+ поле header.title в котором находится строка состоящая из
+ соответствующих title-ов всех родительских страниц начиная от корневой
+ и заканчивая текущей страницей. title-ы страниц разделены символом "/".
+ */
 
-    /**
-     * Returns logger module
-     * @returns {module|Object|*}
-     */
-    static getLoggerName() {
-        return module;
-    }
-
-    /**
-     * Return task human readable description
-     * @returns {String}
-     */
-    static getName() {
-        return 'create page titles';
-    }
-
-    /**
-     * Performs task
-     * @returns {Promise}
-     * @public
-     */
-    run(model) {
-        /*
-           Для каждой страницы создаем
-           поле header.title в котором находится строка состоящая из
-           соответствующих title-ов всех родительских страниц начиная от корневой
-           и заканчивая текущей страницей. title-ы страниц разделены символом "/".
-        */
-        return super.run(model, (page, pageTitlesMap) => {
-            const urlSet = this.getParentUrls(page).reverse();
-            _.chain(page)
-                .set('header.title', urlSet.map(url => pageTitlesMap.get(url)).join('/'))
-                .value();
-        });
-    }
+/**
+ * Returns execution function for page header title creation
+ * @param {Model} model - application model instance
+ * @param {Object} [options] - task options
+ * @param {String} [options.delimiter] - delimiter for page title chunks separation
+ * @returns {Function}
+ */
+export default function createPageTitle(model, options = {delimiter: ' / '}) {
+    return util.getExecFunction(model, (map, page) => {
+        const urlSet = util.getParentUrls(page).reverse();
+        _.chain(page)
+            .set('header.title', urlSet.map(url => map.get(url)).join(options.delimiter))
+            .value();
+    });
 }
+

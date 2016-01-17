@@ -1,44 +1,26 @@
 import _ from 'lodash';
-import PageBase from './base';
+import Q from 'q';
 
-export default class PageHeaderMeta extends PageBase {
+/*
+ Для каждой страницы создаем
+ поле header.meta в котором находится структура содержащая мета-информацию для header страницы.
+ - ogUrl
+ - ogType
+ - description
+ - ogDescription
+ - keywords
+ - ogKeywords
+ */
 
-    /**
-     * Returns logger module
-     * @returns {module|Object|*}
-     * @static
-     */
-    static getLoggerName() {
-        return module;
-    }
-
-    /**
-     * Return task human readable description
-     * @returns {String}
-     * @static
-     */
-    static getName() {
-        return 'create page header meta-information';
-    }
-
-    /**
-     * Performs task
-     * @returns {Promise}
-     * @public
-     */
-    run(model) {
-        /*
-         Для каждой страницы создаем
-         поле header.meta в котором находится структура содержащая мета-информацию для header страницы.
-          - ogUrl
-          - ogType
-          - description
-          - ogDescription
-          - keywords
-          - ogKeywords
-         */
+/**
+ * Returns execution function for page header meta creation
+ * @param {Model} model - application model instance
+ * @returns {Function}
+ */
+export default function createHeaderMeta(model) {
+    return function() {
         const getKeywords = p => {return p.tags ? p.tags.join(', ') : '';};
-        return super.run(model, page => {
+        model.getPages().forEach(page => {
             _.chain(page)
                 .set('header.meta', _({})
                     .set('ogUrl', page.url)
@@ -50,5 +32,6 @@ export default class PageHeaderMeta extends PageBase {
                     .value())
                 .value();
         });
-    }
+        return Q(model);
+    };
 }

@@ -1,7 +1,8 @@
 'use strict';
 
 import _ from 'lodash';
-import Logger from 'bem-site-logger';
+
+const debug = require('debug')('github api');
 
 /**
  * @exports
@@ -15,7 +16,6 @@ export default class Base {
      */
     constructor(options) {
         this.options = options;
-        this.logger = Logger.setOptions(options.logger).createLogger(module);
     }
 
     /**
@@ -26,17 +26,16 @@ export default class Base {
      * @param {Function} callback function
      */
     executeAPIMethod(method, options, headers, callback) {
-        this.logger
-            .verbose('github API call with options:')
-            .verbose(' - host: %s', options.host || 'N/A')
-            .verbose(' - user: %s', options.user || 'N/A')
-            .verbose(' - repo: %s', options.repo || 'N/A')
-            .verbose(' - ref: %s',  options.ref  || 'N/A')
-            .verbose(' - path: %s', options.path || 'N/A');
+        debug('github API call with options:');
+        debug(' - host: ' + options.host);
+        debug(' - user: ' + options.user);
+        debug(' - repo: ' + options.repo);
+        debug(' - ref: ' + options.ref);
+        debug(' - path: ' + options.path);
 
         const ATTEMPTS = 5; // максимальное число допустимых повторных обращений к github в случае возникновения ошибки
         const requestFunc = (count) => {
-            this.logger.verbose(`attempt #${count}`);
+            debug(`attempt #${count}`);
             return this.api['repos'][method](_.extend(headers ? {headers} : {}, options),
                 (error, result) => {
                     if(!error) {

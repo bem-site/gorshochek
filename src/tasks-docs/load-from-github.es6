@@ -1,53 +1,116 @@
 import path from 'path';
 import Q from 'q';
-import _ from 'lodash';
 import GitHub from './github/index';
-import Base from '../tasks-core/base';
+import * as baseUtil from '../util';
 
-export default class DocsLoadGithub extends Base {
+const debug = require('debug')('docs github load');
 
-    /**
-     * Constructor
-     * @param {Config} baseConfig common configuration instance
-     * @param {Object} taskConfig special task configuration object
-     */
-    constructor(baseConfig, taskConfig) {
-        super(baseConfig, taskConfig);
-
-        const ghOptions = _.extend({token: taskConfig.token}, baseConfig.getLoggerSettings());
-        this._api = new GitHub(ghOptions);
-    }
-
-    static getLoggerName() {
-        return module;
-    }
-
-    /**
-     * Return task human readable description
-     * @returns {String}
-     */
-    static getName() {
-        return 'docs load from github';
-    }
-
-    /**
-     * Returns github API class instance
-     * @returns {Github}
-     * @private
-     */
-    getAPI() {
-        return this._api;
-    }
+export default function loadSourcesFromGithub(model, options = {}) {
+    const GITHUB_URL_REGEXP = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/;
+    const api = new GitHub({token: options.token});
 
     /**
      * Returns parsed repository info for language version of page. Otherwise returns false
      * @param {Object} page - page model object
      * @returns {Object|Boolean}
-     * @protected
      */
-    getCriteria(page) {
+    function getCriteria(page) {
         return !!(page.sourceUrl &&
-            page.sourceUrl.match(/^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/));
+        page.sourceUrl.match(GITHUB_URL_REGEXP));
+    }
+
+    /**
+     * Return request headers depending on cache content
+     * @param {Object} cache - cache content
+     * @returns {Object|null}
+     */
+    function getHeadersByCache(cache) {
+        return (cache && cache.etag) ? {'If-None-Match': cache.etag} : null;
+    }
+
+    /**
+     * Parses https github url to source
+     * @param {String} url - https github url
+     * @returns {{host: *, user: *, repo: *, ref: *, path: *}}
+     */
+    function parseSourceUrl(url) {
+        const repoInfo = url.match(GITHUB_URL_REGEXP);
+        return {
+            host: repoInfo[1],
+            user: repoInfo[2],
+            repo: repoInfo[3],
+            ref: repoInfo[5],
+            path: repoInfo[6]
+        };
+    }
+
+    /**
+     * Returns path to source file in local cache
+     * @param {Object} page - model page object
+     * @param {Object} result
+     * @returns {String|*}
+     */
+    function getCacheFilePath(page, result) {
+        const ext = result.name.split('.').pop();
+        return path.join(page.url, 'index.' + ext);
+    }
+
+    /**
+     * Read source meta.json file from local cache
+     * @param {Object} page - model page object
+     * @returns {Promise.<T>}
+     */
+    function readMetaFromCache(page) {
+        return baseUtil.readFileFromCache(path.join(page.url, 'index.meta.json'), true, true)
+            .then(cache => (cache || {}))
+            .catch(() => ({}));
+    }
+
+    /**
+     * Write source meta.json file to local cache
+     * @param {Object} page - model page object
+     * @param {Object} result
+     * @returns {Promise}
+     */
+    function writeMetaToCache(page, result) {
+        return baseUtil.writeFileToCache(path.join(page.url, 'index.meta.json'),
+            JSON.stringify({
+                etag: result.meta.etag,
+                sha: result.sha,
+                fileName: getCacheFilePath(page, result)
+            }, null, 4));
+    }
+
+    /**
+     * Save loaded content to local cache
+     * @param {Object} page - model page object
+     * @param {String} content - base64 encoded content of file
+     * @returns {Promise}
+     */
+    function saveContentToFile(page, content) {
+        const filePath = getCacheFilePath(page, content);
+        return baseUtil
+            .writeFileToCache(filePath, new Buffer(content.content, 'base64').toString())
+            .thenResolve(filePath);
+    }
+
+    /*
+     Дополнительно загружается некоторая мета-информация
+     1. Дата обновления документа как дата последнего коммита
+     2. Инфо о том имеет ли данный репозиторий раздел issues или нет
+     3. Ветку из которой был загружен документ. Если загрузка была
+     произведена из тега - то ссылку на основную ветку репозитория
+     */
+    function loadAdvancedMetaInformation(page, repoInfo, cache) {
+        const getUpdateDate = options.updateDate ? api.getLastCommitDate(repoInfo, getHeadersByCache(cache)) : Q(null);
+        const checkForIssues = options.hasIssues ? api.hasIssues(repoInfo, getHeadersByCache(cache)) : Q(null);
+        const getBranch = options.branch ? api.getBranchOrDefault(repoInfo, getHeadersByCache(cache)) : Q(null);
+        return Q.allSettled([getUpdateDate, checkForIssues, getBranch])
+            .spread((updateDate, hasIssues, branch) => {
+                page.updateDate = updateDate.value;
+                page.hasIssues = hasIssues.value;
+                page.branch = branch.value;
+            });
     }
 
     /**
@@ -55,101 +118,28 @@ export default class DocsLoadGithub extends Base {
      * @param {Model} model - data model
      * @param {Object} page - page model object
      * @returns {*|Promise.<T>}
-     * @private
      */
-    processPage(model, page) {
-        function getHeadersByCache(cache) {
-            return (cache && cache.etag) ? {'If-None-Match': cache.etag} : null;
-        }
-
-        function parseSourceUrl(url) {
-            const repoInfo = url.match(/^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/);
-            return {
-                host: repoInfo[1],
-                user: repoInfo[2],
-                repo: repoInfo[3],
-                ref: repoInfo[5],
-                path: repoInfo[6]
-            };
-        }
-
-        const readFromCache = () => {
-            return this.readFileFromCache(path.join(page.url, 'index.meta.json'), true, true)
-                .then(cache => (cache || {}))
-                .catch(() => ({}));
-        };
-
-        /*
-         Дополнительно загружается некоторая мета-информация
-         1. Дата обновления документа как дата последнего коммита
-         2. Инфо о том имеет ли данный репозиторий раздел issues или нет
-         3. Ветку из которой был загружен документ. Если загрузка была
-         произведена из тега - то ссылку на основную ветку репозитория
-         */
-        const loadAdvancedMetaInformation = (repoInfo, cache) => {
-            const getUpdateDate = this.getTaskConfig().updateDate ?
-                this.getAPI().getLastCommitDate(repoInfo, getHeadersByCache(cache)) :
-                Q(null);
-            const checkForIssues = this.getTaskConfig().hasIssues ?
-                this.getAPI().hasIssues(repoInfo, getHeadersByCache(cache)) :
-                Q(null);
-            const getBranch = this.getTaskConfig().getBranch ?
-                this.getAPI().getBranchOrDefault(repoInfo, getHeadersByCache(cache)) :
-                Q(null);
-            return Q.allSettled([getUpdateDate, checkForIssues, getBranch])
-                .spread((updateDate, hasIssues, branch) => {
-                    page.updateDate = updateDate.value;
-                    page.hasIssues = hasIssues.value;
-                    page.branch = branch.value;
-                });
-        };
-
-        const updateCacheMetaData = (result) => {
-            return this.writeFileToCache(path.join(page.url, 'index.meta.json'),
-                JSON.stringify({
-                    etag: result.meta.etag,
-                    sha: result.sha,
-                    fileName: getCacheFilePath(result)
-                }, null, 4));
-        };
-
-        const getCacheFilePath = (result) => {
-            const ext = result.name.split('.').pop();
-            return path.join(page.url, 'index.' + ext);
-        };
-
-        const saveResultToFileSystem = (result) => {
-            const filePath = getCacheFilePath(result);
-            return this
-                .writeFileToCache(filePath, new Buffer(result.content, 'base64').toString())
-                .thenResolve(filePath);
-        };
-
-        this.logger.debug(`Load doc file for page with url: => ${page.url}`);
+    function processPage(model, page) {
+        debug(`Load doc file for page with url: => ${page.url}`);
         const repoInfo = parseSourceUrl(page.sourceUrl);
-        return readFromCache()
-            .then(cache => {
-                return Q.all([
-                    this.getAPI().getContent(repoInfo, getHeadersByCache(cache)),
-                    cache
-                ]);
-            })
+        return readMetaFromCache(page)
+            .then(cache => Q.all([api.getContent(repoInfo, getHeadersByCache(cache)), cache]))
             .spread((result, cache) => {
                 if(result.meta.status === '304 Not Modified' || cache.sha === result.sha) {
-                    this.logger.verbose('Document was not changed: %s', page.url);
+                    debug('Document was not changed: %s', page.url);
                     return Q(cache.fileName);
                 } else if(!cache.sha) {
-                    this.logger.debug('Doc added: %s %s', page.url, page.title);
-                    model.getChanges().pages.addAdded({type: 'doc', url: page.url, title: page.title});
+                    debug('Doc added: %s %s', page.url, page.title);
+                    model.getChanges().addAdded({type: 'doc', url: page.url, title: page.title});
                 } else {
-                    this.logger.debug('Doc modified: %s %s %s', page.url, page.title);
-                    model.getChanges().pages.addModified({type: 'doc', url: page.url, title: page.title});
+                    debug('Doc modified: %s %s %s', page.url, page.title);
+                    model.getChanges().addModified({type: 'doc', url: page.url, title: page.title});
                 }
 
                 return Q()
-                    .then(() => loadAdvancedMetaInformation(repoInfo, cache))
-                    .then(() => updateCacheMetaData(result))
-                    .then(() => saveResultToFileSystem(result));
+                    .then(() => loadAdvancedMetaInformation(page, repoInfo, cache))
+                    .then(() => writeMetaToCache(page, result))
+                    .then(() => saveContentToFile(page, result));
             })
             .then(filePath => {
                 page.contentFile = filePath;
@@ -157,13 +147,7 @@ export default class DocsLoadGithub extends Base {
             });
     }
 
-    /**
-     * Performs task
-     * @returns {Promise}
-     */
-    run(model) {
-        return this
-            .processPagesAsync(model, this.getCriteria.bind(this), this.processPage.bind(this), 5)
-            .thenResolve(model);
-    }
+    return function() {
+        return baseUtil.processPagesAsync(model, getCriteria, processPage, 5).thenResolve(model);
+    };
 }

@@ -1,12 +1,12 @@
 var fsExtra = require('fs-extra'),
-    Logger = require('bem-site-logger'),
     Base = require('../../../../lib/tasks-libraries/model/base');
 
-describe('Base', function() {
+describe('task-libraries/model/Base', function() {
     var sandbox = sinon.sandbox.create(),
         base;
 
     beforeEach(function() {
+        sandbox.stub(console, 'error');
         sandbox.stub(fsExtra, 'outputJSON');
         sandbox.stub(fsExtra, 'outputFile');
         base = new Base();
@@ -14,10 +14,6 @@ describe('Base', function() {
 
     afterEach(function() {
         sandbox.restore();
-    });
-
-    it('should have embedded logger', function() {
-        base.logger.should.be.instanceOf(Logger);
     });
 
     it('should have empty data after initialization', function() {

@@ -1,22 +1,15 @@
-import fs from 'fs';
 import path from 'path';
 import Q from 'q';
-import Base from '../tasks-core/base';
+import * as baseUtil from '../util';
 
-export default class DocsFileLoad extends Base {
+const debug = require('debug')('docs file load');
 
-    static getLoggerName() {
-        return module;
-    }
-
-    /**
-     * Returns task human readable description
-     * @returns {String}
-     */
-    static getName() {
-        return 'docs load from file';
-    }
-
+/**
+ * Loads pages embedded sources from local filesystem
+ * @param {Model} model - application model instance
+ * @returns {Function}
+ */
+export default function loadSourcesFromLocal(model) {
     /**
      * Returns true if page[language] exists and have sourceUrl
      * which can be matched as relative file path on filesystem. Otherwise returns false
@@ -24,26 +17,9 @@ export default class DocsFileLoad extends Base {
      * @returns {Boolean}
      * @private
      */
-    getCriteria(page) {
+    function getCriteria(page) {
         const sourceUrl = page.sourceUrl;
         return !!sourceUrl && !!sourceUrl.match(/^(\/)?([^\/\0]+(\/)?)+$/);
-    }
-
-    /**
-     * Reads file from local filesystem
-     * @param {Object} page - page model object
-     * @param {String} filePath - path to file on local filesystem
-     * @returns {Promise}
-     * @private
-     */
-    _readFile(page, filePath) {
-        return Q.nfcall(fs.readFile, filePath, {encoding: 'utf-8'})
-            .catch(error => {
-                this.logger
-                    .error(`Error occur while loading file for page: ${page.url}`)
-                    .error(error.message);
-                throw error;
-            });
     }
 
     /**
@@ -52,8 +28,8 @@ export default class DocsFileLoad extends Base {
      * @returns {Promise}
      * @protected
      */
-    processPage(model, page) {
-        this.logger.debug(`load local file page with url: => ${page.url}`);
+    function processPage(model, page) {
+        debug(`load local file page with url: => ${page.url}`);
 
         const filePath = page.sourceUrl; // относительный путь к файлу
         const fileName = path.basename(filePath); // имя файла (с расширением)
@@ -63,19 +39,19 @@ export default class DocsFileLoad extends Base {
         const cacheFilePath = path.join(page.url, ('index' + fileExt));
 
         const onAddedDocument = (promise) => {
-            this.logger.debug('Doc added: %s %s', page.url, page.title);
-            model.getChanges().pages.addAdded({type: 'doc', url: page.url, title: page.title});
-            return this.writeFileToCache(cacheFilePath, promise.value);
+            debug('Doc added: %s %s', page.url, page.title);
+            model.getChanges().addAdded({type: 'doc', url: page.url, title: page.title});
+            return baseUtil.writeFileToCache(cacheFilePath, promise.value);
         };
         const onModifiedDocument = (promise) => {
-            this.logger.debug('Doc modified: %s %s', page.url, page.title);
-            model.getChanges().pages.addModified({type: 'doc', url: page.url, title: page.title});
-            return this.writeFileToCache(cacheFilePath, promise.value);
+            debug('Doc modified: %s %s', page.url, page.title);
+            model.getChanges().addModified({type: 'doc', url: page.url, title: page.title});
+            return baseUtil.writeFileToCache(cacheFilePath, promise.value);
         };
 
         return Q.allSettled([
-            this.readFileFromCache(cacheFilePath, false, true),
-            this._readFile(page, localFilePath)
+            baseUtil.readFileFromCache(cacheFilePath, false, true),
+            baseUtil.readFile(localFilePath, null)
         ]).spread((cache, local) => {
             if(local.state === 'rejected') {
                 return Q.reject(local);
@@ -92,14 +68,7 @@ export default class DocsFileLoad extends Base {
         });
     }
 
-    /**
-     * Performs task
-     * @returns {Promise}
-     */
-    run(model) {
-        return this
-            .processPagesAsync(model, this.getCriteria.bind(this), this.processPage.bind(this), 20)
-            .thenResolve(model);
-    }
+    return function() {
+        return baseUtil.processPagesAsync(model, getCriteria, processPage, 20).thenResolve(model);
+    };
 }
-

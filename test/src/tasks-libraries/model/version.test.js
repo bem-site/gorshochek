@@ -4,7 +4,7 @@ var _ = require('lodash'),
     Document = require('../../../../lib/tasks-libraries/model/document'),
     Level = require('../../../../lib/tasks-libraries/model/level');
 
-describe('Version', function() {
+describe('task-libraries/model/Version', function() {
     var sandbox = sinon.sandbox.create(),
         version;
 
