@@ -15,7 +15,8 @@ export default function saveModel(model, options = {}) {
         return baseUtil.writeFile(destinationPath, JSON.stringify(model.getPages()))
             .thenResolve(model)
             .catch(error => {
-                console.error('Error occur while saving model to file').error(error.message);
+                console.error('Error occur while saving model to file');
+                console.error(error.stack);
                 throw error;
             });
     };
