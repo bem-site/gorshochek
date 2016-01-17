@@ -156,10 +156,12 @@ describe('util', function() {
     });
 
     describe('writeFileToCache', function() {
-        it('should create directory for target file if it not exists yet', function() {
+        beforeEach(function() {
             sandbox.stub(fsExtra, 'ensureDir').yields(null);
             sandbox.stub(fs, 'writeFile').yields(null);
+        });
 
+        it('should create directory for target file if it not exists yet', function() {
             return util.writeFileToCache('/path-to-dir/file', 'foo').then(function() {
                 fsExtra.ensureDir.should.be.calledOnce;
                 fsExtra.ensureDir.should.be.calledWithMatch('/path-to-dir');
@@ -167,9 +169,6 @@ describe('util', function() {
         });
 
         it('should save file to valid file path', function() {
-            sandbox.stub(fsExtra, 'ensureDir').yields(null);
-            sandbox.stub(fs, 'writeFile').yields(null);
-
             return util.writeFileToCache('/path-to-dir/file', 'foo').then(function() {
                 fs.writeFile.should.be.calledOnce;
                 fs.writeFile.should.be.calledWithMatch('/path-to-dir/file');
@@ -177,10 +176,34 @@ describe('util', function() {
         });
 
         it('should return rejected promise in case of error while saving file', function() {
-            sandbox.stub(fsExtra, 'ensureDir').yields(null);
-            sandbox.stub(fs, 'writeFile').yields(new Error('file error'));
-
+            fs.writeFile.yields(new Error('file error'));
             return util.writeFileToCache('/path-to-dir/file', 'foo').should.be.rejectedWith('file error');
+        });
+    });
+
+    describe('writeFile', function() {
+        beforeEach(function() {
+            sandbox.stub(fsExtra, 'ensureDir').yields(null);
+            sandbox.stub(fs, 'writeFile').yields(null);
+        });
+
+        it('should create directory for target file if it not exists yet', function() {
+            return util.writeFile('/path-to-dir/file', 'foo').then(function() {
+                fsExtra.ensureDir.should.be.calledOnce;
+                fsExtra.ensureDir.should.be.calledWithMatch('/path-to-dir');
+            });
+        });
+
+        it('should save file to valid file path', function() {
+            return util.writeFile('/path-to-dir/file', 'foo').then(function() {
+                fs.writeFile.should.be.calledOnce;
+                fs.writeFile.should.be.calledWithMatch('/path-to-dir/file');
+            });
+        });
+
+        it('should return rejected promise in case of error while saving file', function() {
+            fs.writeFile.yields(new Error('file error'));
+            return util.writeFile('/path-to-dir/file', 'foo').should.be.rejectedWith('file error');
         });
     });
 
