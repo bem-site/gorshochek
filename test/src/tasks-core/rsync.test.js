@@ -8,7 +8,7 @@ describe('tasks-core/rsync', function() {
         rsyncStub,
         model = new Model(),
         baseParams = {
-            src: './.builder/cache',
+            src: './.builder/cache/',
             dest: './data',
             options: '-rd --delete --delete-excluded --force',
             sync: false
@@ -63,7 +63,7 @@ describe('tasks-core/rsync', function() {
     it('should be able to set given excluded patterns', function() {
         return rsync(model, {options: '-rd', exclude: ['*.js', '*.css']})().then(function() {
             rsyncStub.should.be
-                .calledWithMatch(_.extend({}, baseParams, {options: '-rd --exclude *.js --exclude *.css'}));
+                .calledWithMatch(_.extend({}, baseParams, {options: '-rd --exclude \'*.js\' --exclude \'*.css\''}));
         });
     });
 });

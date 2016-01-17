@@ -176,11 +176,31 @@ describe('tasks-docs/load-from-github', function() {
     });
 
     it('should receive last update date of doc if "updateDate" option was set', function() {
+        var expected = (new Date()).getTime();
+        model.setPages([_.extend({}, pageStub)]);
+        githubGetLastCommitDateStub.returns(Q(expected));
 
+        return loadFromGithub(model, {updateDate: true})().then(function() {
+            model.getPages()[0].updateDate.should.equal(expected);
+        });
     });
 
     it('should receive info about issues section of repo if "hasIssues" option was set', function() {
+        model.setPages([_.extend({}, pageStub)]);
+        githubHasIssuesStub.returns(Q(true));
 
+        return loadFromGithub(model, {hasIssues: true})().then(function() {
+            model.getPages()[0].hasIssues.should.equal(true);
+        });
+    });
+
+    it('should receive info about source branch if "branch" option was set', function() {
+        model.setPages([_.extend({}, pageStub)]);
+        githubGetBranchOrDefault.returns(Q('some-branch'));
+
+        return loadFromGithub(model, {branch: true})().then(function() {
+            model.getPages()[0].branch.should.equal('some-branch');
+        });
     });
 
     it('should be resolved with model instance', function() {

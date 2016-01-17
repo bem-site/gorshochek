@@ -104,7 +104,7 @@ export default function loadSourcesFromGithub(model, options = {}) {
     function loadAdvancedMetaInformation(page, repoInfo, cache) {
         const getUpdateDate = options.updateDate ? api.getLastCommitDate(repoInfo, getHeadersByCache(cache)) : Q(null);
         const checkForIssues = options.hasIssues ? api.hasIssues(repoInfo, getHeadersByCache(cache)) : Q(null);
-        const getBranch = options.getBranch ? api.getBranchOrDefault(repoInfo, getHeadersByCache(cache)) : Q(null);
+        const getBranch = options.branch ? api.getBranchOrDefault(repoInfo, getHeadersByCache(cache)) : Q(null);
         return Q.allSettled([getUpdateDate, checkForIssues, getBranch])
             .spread((updateDate, hasIssues, branch) => {
                 page.updateDate = updateDate.value;
