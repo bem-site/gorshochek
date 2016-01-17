@@ -1,6 +1,6 @@
 # Gorshochek
 
-Сборщик всякого разного для построения БЭМ сайта
+Набор плагинов сборки данных для BEM сайтов.
 
 [![NPM version](http://img.shields.io/npm/v/gorshochek.svg?style=flat)](http://www.npmjs.org/package/gorshochek)
 [![Coveralls branch](https://img.shields.io/coveralls/bem-site/gorshochek/master.svg)](https://coveralls.io/r/bem-site/gorshochek?branch=master)
