@@ -128,7 +128,6 @@ export default class Model {
         /**
          *
          * @param {Object} page - object in model
-         * @param {String[]} languages - array of configured languages
          * @returns {Object} page
          */
         const normalizePage = (page) => {
