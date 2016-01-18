@@ -18,9 +18,7 @@ import * as util from './util';
 export default function createPageTitle(model, options = {delimiter: ' / '}) {
     return util.getExecFunction(model, (map, page) => {
         const urlSet = util.getParentUrls(page).reverse();
-        _.chain(page)
-            .set('header.title', urlSet.map(url => map.get(url)).join(options.delimiter))
-            .value();
+        page.header || (page.header = {});
+        page.header.title = urlSet.map(url => map.get(url)).join(options.delimiter);
     });
 }
-

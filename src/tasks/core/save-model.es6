@@ -11,11 +11,11 @@ import * as baseUtil from '../util';
  */
 export default function saveModel(model, options = {}) {
     return function() {
-        const destinationPath = path.join(_.get(options, 'dataPath', baseUtil.getCacheFolder()), 'data.json');
+        const destinationPath = path.join(options.dataPath || baseUtil.getCacheFolder(), 'data.json');
         return baseUtil.writeFile(destinationPath, JSON.stringify(model.getPages()))
             .thenResolve(model)
             .catch(error => {
-                console.error('Error occur while saving model to file');
+                console.error('Error occured while saving model to file');
                 console.error(error.stack);
                 throw error;
             });

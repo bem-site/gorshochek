@@ -1,5 +1,7 @@
 'use strict';
 
+// TODO: merge to model
+
 /**
  * @exports
  * @class Changes
@@ -16,9 +18,10 @@ export default class Changes {
     }
 
     /**
-     * Verify if data of given type were modified
+     * Verify if data of given type is modified
      * @returns {Boolean}
      */
+     // TODO -> isModified
     areModified() {
         return !!(this.added.length || this.modified.length || this.removed.length);
     }

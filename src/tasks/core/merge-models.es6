@@ -13,7 +13,7 @@ import * as baseUtil from '../util';
  */
 export default function mergeModels(model, options = {}) {
 
-    if(!_.has(options, 'modelPath')) {
+    if(!options.modelPath) {
         throw new Error('modelPath should be defined in task options');
     }
 
@@ -34,13 +34,13 @@ export default function mergeModels(model, options = {}) {
      * @returns {Promise}
      */
     function replaceModelFileInCache() {
-        return baseUtil.copyFile(_.get(options, 'modelPath'), path.join(baseUtil.getCacheFolder(), 'model.json'));
+        return baseUtil.copyFile(options.modelPath, path.join(baseUtil.getCacheFolder(), 'model.json'));
     }
 
     return function() {
         return Q.all([
                 baseUtil.readFileFromCache('model.json', true, []),
-                baseUtil.readJSONFile(_.get(options, 'modelPath'), null)
+                baseUtil.readJSONFile(options.modelPath, null)
             ])
             .spread(model.merge.bind(model))
             .then(logModelChanges)

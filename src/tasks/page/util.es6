@@ -8,9 +8,9 @@ import Q from 'q';
  */
 export function createPageTitlesMap(pages) {
     return pages.reduce((pagesMap, page) => {
-        pagesMap.set(page.url, page.title);
+        pagesMap[page.url] = page.title;
         return pagesMap;
-    }, new Map());
+    }, {});
 }
 
 /**
@@ -20,16 +20,16 @@ export function createPageTitlesMap(pages) {
  * @protected
  */
 export function getParentUrls(page) {
-    const DELIMETER = '/';
-    const chunks = page.url.split(DELIMETER);
-    const result = [DELIMETER];
+    const chunks = page.url.split('/');
+    // TODO: не хардкодить /, брать из модели
+    const result = ['/'];
 
-    for(let i = 1; i < chunks.length; i++) {
-        let url = '';
+    // TODO: избавиться от вложенного цикла за счет chunks.splice().join('/')
+    for(let i = 1, url = ''; i < chunks.length; i++) {
         for(let j = 0; j <= i; j++) {
-            chunks[j].length && (url += (DELIMETER + chunks[j]));
+            chunks[j] && (url += ('/' + chunks[j]));
         }
-        url.length && result.push(url);
+        result.push(url);
     }
     return result;
 }

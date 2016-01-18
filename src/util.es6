@@ -7,13 +7,11 @@ import rsyncSlim from 'rsync-slim';
 
 const debug = require('debug')('util');
 
-const CACHE_FOLDER = './.builder/cache';
-createFolder(CACHE_FOLDER);
-
+// TODO: try to get rid of it
 export const rsync = rsyncSlim;
 
 export function getCacheFolder() {
-    return CACHE_FOLDER;
+    return process.env.GORSHOCHEK_CACHE_FOLDER || './.builder/cache';
 }
 
 /**
@@ -24,6 +22,8 @@ export function createFolder(folder) {
     debug(`create folder: ${folder}`);
     fsExtra.ensureDirSync(folder);
 }
+
+createFolder(getCacheFolder());
 
 /**
  * Copies file from sourcePath to destinationPath
@@ -43,7 +43,6 @@ function _readFile(method, filePath, fallbackValue) {
             }
             console.error(`Can\'t read file ${filePath}`);
             throw error;
-
         });
 }
 
@@ -77,6 +76,7 @@ export function readJSONFile(filePath, fallbackValue) {
  * will be returned if file does not exists in cache
  * @returns {Promise}
  */
+// TODO: get rid of isJSON for path.extname()
 export function readFileFromCache(filePath, isJSON, fallbackValue) {
     debug(`read file from cache: ${filePath} isJSON: ${isJSON}`);
     return (isJSON ? readJSONFile : readFile).call(null, path.join(CACHE_FOLDER, filePath), fallbackValue);
@@ -90,6 +90,7 @@ export function readFileFromCache(filePath, isJSON, fallbackValue) {
  * @returns {Promise}
  * @private
  */
+ // TODO: looks like useless function
 function _writeFile(filePath, content, onError) {
     const dirPath = path.dirname(filePath);
     return Q.nfcall(fsExtra.ensureDir, dirPath)
@@ -107,9 +108,9 @@ function _writeFile(filePath, content, onError) {
  */
 export function writeFileToCache(filePath, content) {
     debug(`write file to cache: ${filePath}`);
-    filePath = path.join(CACHE_FOLDER, filePath);
+    filePath = path.join(getCacheFolder(), filePath);
     return _writeFile(filePath, content, error => {
-        console.error(`Error occur while saving file ${filePath} to cache`);
+        console.error(`Error occured while saving file ${filePath} to cache`);
         throw error;
     });
 }
@@ -123,7 +124,7 @@ export function writeFileToCache(filePath, content) {
 export function writeFile(filePath, content) {
     debug(`write file to: ${filePath}`);
     return _writeFile(filePath, content, error => {
-        console.error(`Error occur while saving file ${filePath}`);
+        console.error(`Error occured while saving file ${filePath}`);
         throw error;
     });
 }
@@ -137,7 +138,7 @@ export function writeFile(filePath, content) {
  * @returns {Promise}
  */
 export function processPagesAsync(model, criteria, processFunc, portionSize = 5) {
-    criteria = criteria || _.constant(true);
+    criteria = criteria || function(() => true);
 
     return _(criteria)
         .thru(model.getPagesByCriteria.bind(model))

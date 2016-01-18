@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import Q from 'q';
 
 /*
@@ -13,7 +12,7 @@ import Q from 'q';
  */
 
 /**
- * Returns execution function for page header meta creation
+ * Returns function for page header meta creation
  * @param {Model} model - application model instance
  * @returns {Function}
  */
@@ -21,17 +20,17 @@ export default function createHeaderMeta(model) {
     return function() {
         const getKeywords = p => {return p.tags ? p.tags.join(', ') : '';};
         model.getPages().forEach(page => {
-            _.chain(page)
-                .set('header.meta', _({})
-                    .set('ogUrl', page.url)
-                    .set('ogType', 'article')
-                    .set('description', page.title)
-                    .set('ogDescription', page.title)
-                    .set('keywords', getKeywords(page))
-                    .set('ogKeywords', getKeywords(page))
-                    .value())
-                .value();
+            page.header || (page.header = {});
+            page.header.meta = {
+                ogUrl: page.url,
+                ogType: 'article',
+                description: page.title,
+                ogDescription: page.title,
+                keywords: getKeywords(page),
+                ogKeywords: getKeywords(page)
+            };
         });
+
         return Q(model);
     };
 }
