@@ -23,7 +23,7 @@ export default class Github{
     _getApiByHost(options) {
         const host = options.host;
         const type = (host && host.indexOf('github.com') < 0) ? 'private' : 'public';
-        return this.apis.get(type);
+        return this.apis[type];
     }
 
     /**

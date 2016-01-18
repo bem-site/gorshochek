@@ -23,8 +23,6 @@ export function createFolder(folder) {
     fsExtra.ensureDirSync(folder);
 }
 
-createFolder(getCacheFolder());
-
 /**
  * Copies file from sourcePath to destinationPath
  * @param {String} sourcePath - source file path
@@ -79,7 +77,7 @@ export function readJSONFile(filePath, fallbackValue) {
 // TODO: get rid of isJSON for path.extname()
 export function readFileFromCache(filePath, isJSON, fallbackValue) {
     debug(`read file from cache: ${filePath} isJSON: ${isJSON}`);
-    return (isJSON ? readJSONFile : readFile).call(null, path.join(CACHE_FOLDER, filePath), fallbackValue);
+    return (isJSON ? readJSONFile : readFile).call(null, path.join(getCacheFolder(), filePath), fallbackValue);
 }
 
 /**
@@ -138,7 +136,7 @@ export function writeFile(filePath, content) {
  * @returns {Promise}
  */
 export function processPagesAsync(model, criteria, processFunc, portionSize = 5) {
-    criteria = criteria || function(() => true);
+    criteria = criteria || (() => true);
 
     return _(criteria)
         .thru(model.getPagesByCriteria.bind(model))
@@ -150,3 +148,6 @@ export function processPagesAsync(model, criteria, processFunc, portionSize = 5)
             });
         }, Q());
 }
+
+// try to create cache folder on initialization
+createFolder(getCacheFolder());

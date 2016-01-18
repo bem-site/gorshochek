@@ -20,16 +20,18 @@ export function createPageTitlesMap(pages) {
  * @protected
  */
 export function getParentUrls(page) {
-    const chunks = page.url.split('/');
     // TODO: не хардкодить /, брать из модели
-    const result = ['/'];
-
     // TODO: избавиться от вложенного цикла за счет chunks.splice().join('/')
-    for(let i = 1, url = ''; i < chunks.length; i++) {
+    const DELIMITER = '/';
+    const chunks = page.url.split(DELIMITER);
+    const result = [DELIMITER];
+
+    for(let i = 1; i < chunks.length; i++) {
+        let url = '';
         for(let j = 0; j <= i; j++) {
-            chunks[j] && (url += ('/' + chunks[j]));
+            chunks[j].length && (url += (DELIMITER + chunks[j]));
         }
-        result.push(url);
+        url.length && result.push(url);
     }
     return result;
 }

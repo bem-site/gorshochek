@@ -2,7 +2,7 @@ var Q = require('q'),
     mdToHtml = require('bem-md-renderer'),
     Model = require('../../../lib/model'),
     baseUtil = require('../../../lib/util'),
-    transformMdToHtml = require('../../../lib/tasks-docs/transform-md-html');
+    transformMdToHtml = require('../../../index').tasks.docs.transformMdToHtml;
 
 describe('tasks-docs/transform-md-html', function() {
     var sandbox = sinon.sandbox.create(),

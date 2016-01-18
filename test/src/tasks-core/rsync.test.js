@@ -1,7 +1,7 @@
 var _ = require('lodash'),
     Model = require('../../../lib/model'),
     baseUtil = require('../../../lib/util'),
-    rsync = require('../../../lib/tasks-core/rsync');
+    rsync = require('../../../index').tasks.core.rsync;
 
 describe('tasks-core/rsync', function() {
     var sandbox = sinon.sandbox.create(),

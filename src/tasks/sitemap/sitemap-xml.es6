@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import js2xml from 'js2xmlparser';
-import * as baseUtil from '../util';
+import * as baseUtil from '../../util';
 
 const debug = require('debug')('sitemap-xml');
 

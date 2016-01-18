@@ -1,5 +1,5 @@
 var Model = require('../../../lib/model'),
-    util = require('../../../lib/tasks-page/util');
+    util = require('../../../lib/tasks/page/util');
 
 describe('tasks-page/util', function() {
     var sandbox = sinon.sandbox.create();
@@ -33,8 +33,8 @@ describe('tasks-page/util', function() {
         ];
         it('should build valid complex map of titles by urls and languages', function() {
             var pagesMap = util.createPageTitlesMap(pages);
-            pagesMap.get('/').should.equal('/title');
-            pagesMap.get('/url1').should.equal('/url1 title');
+            pagesMap['/'].should.equal('/title');
+            pagesMap['/url1'].should.equal('/url1 title');
         });
     });
 

@@ -1,7 +1,7 @@
 import path from 'path';
 import _ from 'lodash';
 import Q from 'q';
-import * as baseUtil from '../util';
+import * as baseUtil from '../../util';
 
 /**
  * Find difference between current and previous models

@@ -1,7 +1,7 @@
 import path from 'path';
 import Q from 'q';
 import mdToHtml from 'bem-md-renderer';
-import * as baseUtil from '../util';
+import * as baseUtil from '../../util';
 
 /**
  * Transforms page content source files from markdown format to html

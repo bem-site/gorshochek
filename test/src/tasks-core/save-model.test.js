@@ -1,7 +1,7 @@
 var Q = require('q'),
     Model = require('../../../lib/model'),
     baseUtil = require('../../../lib/util'),
-    saveModel = require('../../../lib/tasks-core/save-model');
+    saveModel = require('../../../index').tasks.core.saveModel;
 
 describe('tasks-core/save-model', function() {
     var sandbox = sinon.sandbox.create(),
@@ -41,7 +41,7 @@ describe('tasks-core/save-model', function() {
 
         return saveModel(model)().catch(function() {
             console.error.should.be.calledTwice;
-            console.error.firstCall.should.be.calledWith('Error occur while saving model to file');
+            console.error.firstCall.should.be.calledWith('Error occured while saving model to file');
         });
     });
 

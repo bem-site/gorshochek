@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import Q from 'q';
-import * as baseUtil from '../util';
+import * as baseUtil from '../../util';
 
 const debug = require('debug')('rsync');
 

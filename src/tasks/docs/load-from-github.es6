@@ -1,7 +1,7 @@
 import path from 'path';
 import Q from 'q';
 import GitHub from './github/index';
-import * as baseUtil from '../util';
+import * as baseUtil from '../../util';
 
 const debug = require('debug')('docs github load');
 
@@ -53,7 +53,7 @@ export default function loadSourcesFromGithub(model, options = {}) {
      * @returns {String|*}
      */
     function getCacheFilePath(page, result) {
-        return path.join(page.url, 'index.' + path.extname(result.name));
+        return path.join(page.url, 'index' + path.extname(result.name));
     }
 
     /**

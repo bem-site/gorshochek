@@ -1,6 +1,6 @@
 var Q = require('q'),
-    Block = require('../../../../lib/tasks-libraries/model/block'),
-    Level = require('../../../../lib/tasks-libraries/model/level');
+    Block = require('../../../../lib/tasks/libraries/model/block'),
+    Level = require('../../../../lib/tasks/libraries/model/level');
 
 describe('task-libraries/model/Level', function() {
     var sandbox = sinon.sandbox.create(),

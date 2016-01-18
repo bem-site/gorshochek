@@ -1,5 +1,5 @@
 var Q = require('q'),
-    Block = require('../../../../lib/tasks-libraries/model/block');
+    Block = require('../../../../lib/tasks/libraries/model/block');
 
 describe('task-libraries/model/Block', function() {
     var sandbox = sinon.sandbox.create(),

@@ -1,6 +1,6 @@
 import path from 'path';
 import _ from 'lodash';
-import * as baseUtil from '../util';
+import * as baseUtil from '../../util';
 
 /**
  * Saves model to JSON file

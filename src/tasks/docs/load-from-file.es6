@@ -1,6 +1,6 @@
 import path from 'path';
 import Q from 'q';
-import * as baseUtil from '../util';
+import * as baseUtil from '../../util';
 
 const debug = require('debug')('docs file load');
 

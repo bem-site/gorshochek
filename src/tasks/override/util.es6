@@ -4,7 +4,8 @@
  * @returns {Boolean}
  */
 export function isAbsoluteHttpUrl(url) {
-    return url.protocol.indexOf('http') === 0;
+    // url.protocol is not defined for relative links
+    return !!url.protocol && url.protocol.indexOf('http') === 0;
 }
 
 /**
@@ -13,7 +14,7 @@ export function isAbsoluteHttpUrl(url) {
  * @returns {Boolean}
  */
 export function hasUnsupportedProtocol(url) {
-    return url.protocol && !this.isAbsoluteHttpUrl(url);
+    return !!url.protocol && !this.isAbsoluteHttpUrl(url);
 }
 
 /**
@@ -21,8 +22,7 @@ export function hasUnsupportedProtocol(url) {
  * @param {Object} url - parsed url
  * @returns {Boolean}
  */
- // TODO: rename to isOnlyAnchor
-export function isAnchor(url) {
+export function isOnlyAnchor(url) {
     return url.hash && !url.protocol && !url.host && !url.path;
 }
 
@@ -33,7 +33,7 @@ export function isAnchor(url) {
  * @returns {Boolean}
  */
 export function isGithubUrl(url) {
-    return url.hostname.includes('github');
+    return url.hostname.indexOf('github') > -1;
 }
 
 /**
@@ -43,7 +43,7 @@ export function isGithubUrl(url) {
  * @returns {Boolean}
  */
 export function isNativeWebsiteUrl(url, existedUrls) {
-    return existedUrls.includes(url.path.replace(/\/$/, ''));
+    return existedUrls.indexOf(url.path.replace(/\/$/, '')) > -1;
 }
 
 export function findReplacement(variants, urlHash, existedUrls) {
@@ -60,7 +60,7 @@ export function findReplacement(variants, urlHash, existedUrls) {
             replacement = urlHash.get(alterItem);
             return true;
         }
-        if(existedUrls.includes(item)) {
+        if(existedUrls.indexOf(item) > -1) {
             replacement = item;
             return true;
         }

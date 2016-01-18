@@ -1,5 +1,5 @@
 var Model = require('../../../lib/model'),
-    createBreadcrumbs = require('../../../lib/tasks-page/breadcrumbs');
+    createBreadcrumbs = require('../../../index').tasks.page.createBreadcrumbs;
 
 describe('tasks-pages/breadcrumbs', function() {
     var model = new Model(),

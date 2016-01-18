@@ -19,6 +19,6 @@ export default function createBreadcrumbs(model) {
     return util.getExecFunction(model, (map, page) => {
         page.breadcrumbs = util
             .getParentUrls(page)
-            .map(url => ({url, title: map.get(url)}));
+            .map(url => ({url, title: map[url]}));
     });
 }

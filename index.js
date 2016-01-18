@@ -27,7 +27,7 @@ module.exports = {
             createSearchMeta: require('./lib/tasks/page/search-meta')
         },
         sitemap: {
-            createSitemapXML: require('./lib/tasks-sitemap/sitemap-xml')
+            createSitemapXML: require('./lib/tasks/sitemap/sitemap-xml')
         }
     }
 };
