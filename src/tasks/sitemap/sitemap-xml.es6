@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import js2xml from 'js2xmlparser';
-import * as baseUtil from '../util';
+import * as baseUtil from '../../util';
 
 const debug = require('debug')('sitemap-xml');
 
@@ -41,7 +41,7 @@ export default function createSitemapXML(model, options = {}) {
             .value()
             .thenResolve(model)
             .catch(error => {
-                console.error('Error occur while saving sitemap.xml file');
+                console.error('Error occured while saving sitemap.xml file');
                 console.error(error.stack);
                 throw error;
             });

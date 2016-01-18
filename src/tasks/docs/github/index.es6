@@ -8,9 +8,10 @@ export default class Github{
      * @param {Object} options object
      */
     constructor(options) {
-        this.apis = new Map();
-        this.apis.set(Public.getType(), new Public(options));
-        this.apis.set(Private.getType(), new Private(options));
+        this.apis = {
+            public: new Public(options),
+            private: new Private(options)
+        };
     }
 
     /**
@@ -21,8 +22,8 @@ export default class Github{
      */
     _getApiByHost(options) {
         const host = options.host;
-        const type = (host && host.indexOf('github.com') < 0) ? Private.getType() : Public.getType();
-        return this.apis.get(type);
+        const type = (host && host.indexOf('github.com') < 0) ? 'private' : 'public';
+        return this.apis[type];
     }
 
     /**
@@ -39,7 +40,7 @@ export default class Github{
         var api = this._getApiByHost(options);
         return Q
             .nfcall(api.getContent.bind(api), options, headers)
-            .catch(this._createErrorHandler(`Error occur while loading content from:`, options));
+            .catch(this._createErrorHandler(`Error occured while loading content from:`, options));
     }
 
     /**
@@ -55,9 +56,10 @@ export default class Github{
         var api = this._getApiByHost(options);
         return Q
             .nfcall(api.getCommits.bind(api), options, headers)
-            .catch(this._createErrorHandler(`Error occur while get commits from:`, options))
+            .catch(this._createErrorHandler(`Error occured while get commits from:`, options))
             .then(result => {
                 if(!result || !result[0]) {
+                    // TODO: check
                     throw new Error('Can not read commits');
                 }
                 return (new Date(result[0].commit.committer.date)).getTime();
@@ -76,7 +78,7 @@ export default class Github{
         var api = this._getApiByHost(options);
         return Q
             .nfcall(api.hasIssues.bind(api), options, headers)
-            .catch(this._createErrorHandler(`Error occur while get issues repo information:`, options));
+            .catch(this._createErrorHandler(`Error occured while getting issues repo information:`, options));
     }
 
     /**
@@ -92,7 +94,7 @@ export default class Github{
         var api = this._getApiByHost(options);
         return Q
             .nfcall(api.isBranchExists.bind(api), options, headers)
-            .catch(this._createErrorHandler(`Error occur while get branch information:`, options))
+            .catch(this._createErrorHandler(`Error occured while getting branch information:`, options))
             .then(result => {
                 return result ? options.ref : Q.nfcall(api.getDefaultBranch.bind(api), options, headers);
             });
@@ -113,8 +115,8 @@ export default class Github{
             console.error(`user: => ${options.user}`);
             console.error(`repo: => ${options.repo}`);
 
-            options.ref && console.error(`ref:  => ${options.ref}`);
-            options.path && console.error(`path: => ${options.path}`);
+            options.ref && console.error('ref: =>', options.ref);
+            options.path && console.error('path: =>', options.path);
 
             throw error;
         };

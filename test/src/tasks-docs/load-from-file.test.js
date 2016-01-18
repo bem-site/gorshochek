@@ -3,7 +3,7 @@ var path = require('path'),
     Q = require('q'),
     Model = require('../../../lib/model'),
     baseUtil = require('../../../lib/util'),
-    loadFromFile = require('../../../lib/tasks-docs/load-from-file');
+    loadFromFile = require('../../../index').tasks.docs.loadFromFile;
 
 describe('tasks-docs/load-from-file', function() {
     var sandbox = sinon.sandbox.create(),

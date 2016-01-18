@@ -1,7 +1,7 @@
 import path from 'path';
 import Q from 'q';
 import GitHub from './github/index';
-import * as baseUtil from '../util';
+import * as baseUtil from '../../util';
 
 const debug = require('debug')('docs github load');
 
@@ -10,13 +10,13 @@ export default function loadSourcesFromGithub(model, options = {}) {
     const api = new GitHub({token: options.token});
 
     /**
-     * Returns parsed repository info for language version of page. Otherwise returns false
+     * Checks if given page source is GH
      * @param {Object} page - page model object
-     * @returns {Object|Boolean}
+     * @returns {Boolean}
      */
+     // TODO: isFromGithub
     function getCriteria(page) {
-        return !!(page.sourceUrl &&
-        page.sourceUrl.match(GITHUB_URL_REGEXP));
+        return !!(page.sourceUrl && GITHUB_URL_REGEXP.test(page.sourceUrl));
     }
 
     /**
@@ -34,7 +34,9 @@ export default function loadSourcesFromGithub(model, options = {}) {
      * @returns {{host: *, user: *, repo: *, ref: *, path: *}}
      */
     function parseSourceUrl(url) {
+        // TODO: check if it is possible to use ES6
         const repoInfo = url.match(GITHUB_URL_REGEXP);
+
         return {
             host: repoInfo[1],
             user: repoInfo[2],
@@ -51,8 +53,7 @@ export default function loadSourcesFromGithub(model, options = {}) {
      * @returns {String|*}
      */
     function getCacheFilePath(page, result) {
-        const ext = result.name.split('.').pop();
-        return path.join(page.url, 'index.' + ext);
+        return path.join(page.url, 'index' + path.extname(result.name));
     }
 
     /**

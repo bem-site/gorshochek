@@ -2,8 +2,8 @@ var Q = require('q'),
     _ = require('lodash'),
     Model = require('../../../lib/model'),
     baseUtil = require('../../../lib/util'),
-    GithubAPI = require('../../../lib/tasks-docs/github'),
-    loadFromGithub = require('../../../lib/tasks-docs/load-from-github');
+    GithubAPI = require('../../../lib/tasks/docs/github'),
+    loadFromGithub = require('../../../index').tasks.docs.loadFromGithub;
 
 describe('tasks-docs/load-from-github', function() {
     var pageStub = {

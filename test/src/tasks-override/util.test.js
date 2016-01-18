@@ -1,5 +1,5 @@
 var Url = require('url'),
-    util = require('../../../lib/tasks-override/util');
+    util = require('../../../lib/tasks/override/util');
 
 describe('tasks-override/util', function() {
     describe('isAbsoluteHttpUrl', function() {
@@ -36,15 +36,15 @@ describe('tasks-override/util', function() {
 
     describe('isAnchor', function() {
         it('should return false for non-anchor absolute url', function() {
-            util.isAnchor(Url.parse('http://some-website.com#some-anchor')).should.equal(false);
+            util.isOnlyAnchor(Url.parse('http://some-website.com#some-anchor')).should.equal(false);
         });
 
         it('should return false for non-anchor relative url', function() {
-            util.isAnchor(Url.parse('../some-website.com#some-anchor')).should.equal(false);
+            util.isOnlyAnchor(Url.parse('../some-website.com#some-anchor')).should.equal(false);
         });
 
         it('should return true for anchor url', function() {
-            util.isAnchor(Url.parse('#some-anchor')).should.equal(true);
+            util.isOnlyAnchor(Url.parse('#some-anchor')).should.equal(true);
         });
     });
 

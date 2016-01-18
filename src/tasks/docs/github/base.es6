@@ -1,5 +1,7 @@
 'use strict';
 
+// TODO: merge everything about GH into one class
+
 import _ from 'lodash';
 
 const debug = require('debug')('github api');

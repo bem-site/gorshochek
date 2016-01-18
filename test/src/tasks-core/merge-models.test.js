@@ -2,7 +2,7 @@ var path = require('path'),
     Q = require('q'),
     Model = require('../../../lib/model'),
     baseUtil = require('../../../lib/util'),
-    mergeModels = require('../../../lib/tasks-core/merge-models');
+    mergeModels = require('../../../index').tasks.core.mergeModels;
 
 describe('tasks-core/merge-models', function() {
     var sandbox = sinon.sandbox.create(),

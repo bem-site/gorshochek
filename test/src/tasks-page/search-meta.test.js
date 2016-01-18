@@ -1,5 +1,5 @@
 var Model = require('../../../lib/model'),
-    createSearchMeta = require('../../../lib/tasks-page/search-meta');
+    createSearchMeta = require('../../../index').tasks.page.createSearchMeta;
 
 describe('tasks-page/search-meta', function() {
     var model = new Model(),

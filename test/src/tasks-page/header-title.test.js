@@ -1,5 +1,5 @@
 var Model = require('../../../lib/model'),
-    createHeaderTitle = require('../../../lib/tasks-page/header-title');
+    createHeaderTitle = require('../../../index').tasks.page.createHeaderTitle;
 
 describe('tasks-page/header-title', function() {
     var pages = [

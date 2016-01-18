@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import Q from 'q';
-import * as baseUtil from '../util';
+import * as baseUtil from '../../util';
 
 const debug = require('debug')('rsync');
 
@@ -17,12 +17,12 @@ const debug = require('debug')('rsync');
 export default function rsync(model, options = {}) {
 
     function prepareRsyncOptions() {
-        const src = _.get(options, 'src', baseUtil.getCacheFolder() + '/');
-        const dest = _.get(options, 'dest', './data');
-        let rawOptions = _.get(options, 'options', '-rd --delete --delete-excluded --force');
+        const src = options.src || baseUtil.getCacheFolder() + '/';
+        const dest = options.dest || './data';
+        let rawOptions = options.options || '-rd --delete --delete-excluded --force';
 
-        if(_.has(options, 'exclude')) {
-            rawOptions = _.get(options, 'exclude').reduce((prev, pattern) => {
+        if(options.exclude) {
+            rawOptions = options.exclude.reduce((prev, pattern) => {
                 prev += ' --exclude \'' + pattern + '\'';
                 return prev;
             }, rawOptions);

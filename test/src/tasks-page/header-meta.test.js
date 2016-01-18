@@ -1,5 +1,5 @@
 var Model = require('../../../lib/model'),
-    createHeaderMeta = require('../../../lib/tasks-page/header-meta');
+    createHeaderMeta = require('../../../index').tasks.page.createHeaderMeta;
 
 describe('tasks-page/header-meta', function() {
     var pages = [

@@ -1,10 +1,8 @@
 var _ = require('lodash');
-var Q = require('q');
-var Api = require('github');
 
-var PublicAPI = require('../../../../lib/tasks-docs/github/public');
-var PrivateAPI = require('../../../../lib/tasks-docs/github/private');
-var GithubAPI = require('../../../../lib/tasks-docs/github');
+var PublicAPI = require('../../../../lib/tasks/docs/github/public');
+var PrivateAPI = require('../../../../lib/tasks/docs/github/private');
+var GithubAPI = require('../../../../lib/tasks/docs/github');
 
 describe('github API', function() {
     var sandbox = sinon.sandbox.create(),
@@ -21,8 +19,8 @@ describe('github API', function() {
 
     beforeEach(function() {
         githubAPI = new GithubAPI(options);
-        publicApiStub = sandbox.stub(githubAPI.apis.get('public').api);
-        privateApiStub = sandbox.stub(githubAPI.apis.get('private').api);
+        publicApiStub = sandbox.stub(githubAPI.apis['public'].api);
+        privateApiStub = sandbox.stub(githubAPI.apis['private'].api);
         sandbox.stub(console, 'error');
         sandbox.stub(console, 'warn');
     });
@@ -32,11 +30,11 @@ describe('github API', function() {
     });
 
     it('should have initialized private API', function() {
-        githubAPI.apis.get('private').should.be.instanceOf(PrivateAPI);
+        githubAPI.apis['private'].should.be.instanceOf(PrivateAPI);
     });
 
     it('should have initialized public API', function() {
-        githubAPI.apis.get('public').should.be.instanceOf(PublicAPI);
+        githubAPI.apis['public'].should.be.instanceOf(PublicAPI);
     });
 
     it('should throw error if token for public API was not set', function() {

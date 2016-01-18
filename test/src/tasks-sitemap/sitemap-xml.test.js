@@ -2,7 +2,7 @@ var EOL = require('os').EOL,
     fs = require('fs'),
     _ = require('lodash'),
     Model = require('../../../lib/model'),
-    createSiteMapXML = require('../../../lib/tasks-sitemap/sitemap-xml');
+    createSiteMapXML = require('../../../index').tasks.sitemap.createSitemapXML;
 
 function buildExpectedXML(items) {
     var items = items.map(function(item) {

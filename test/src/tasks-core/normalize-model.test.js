@@ -1,5 +1,5 @@
 var Model = require('../../../lib/model'),
-    normalizeModel = require('../../../lib/tasks-core/normalize-model');
+    normalizeModel = require('../../../index').tasks.core.normalizeModel;
 
 describe('tasks-core/normalize-model', function() {
     var sandbox = sinon.sandbox.create(),

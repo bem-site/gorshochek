@@ -1,6 +1,6 @@
 import path from 'path';
 import Q from 'q';
-import * as baseUtil from '../util';
+import * as baseUtil from '../../util';
 
 const debug = require('debug')('docs file load');
 
@@ -55,13 +55,17 @@ export default function loadSourcesFromLocal(model) {
         ]).spread((cache, local) => {
             if(local.state === 'rejected') {
                 return Q.reject(local);
-            }else if(cache.state === 'rejected') {
-                return onAddedDocument(local);
-            }else if(cache.value !== local.value) {
-                return onModifiedDocument(local);
-            }else {
-                return Q(page);
             }
+
+            if(cache.state === 'rejected') {
+                return onAddedDocument(local);
+            }
+
+            if(cache.value !== local.value) {
+                return onModifiedDocument(local);
+            }
+
+            return Q(page);
         }).then(() => {
             page.contentFile = cacheFilePath;
             return page;
