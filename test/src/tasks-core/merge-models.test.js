@@ -43,7 +43,7 @@ describe('tasks-core/merge-models', function() {
     it('should read old model from cache', function() {
         return mergeModels(model, options)().then(function() {
             readFileFromCacheStub.should.be.calledOnce;
-            readFileFromCacheStub.should.be.calledWithExactly('model.json', true, []);
+            readFileFromCacheStub.should.be.calledWithExactly('model.json', []);
         });
     });
 

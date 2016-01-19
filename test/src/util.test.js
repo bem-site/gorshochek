@@ -130,7 +130,7 @@ describe('util', function() {
             var obj = {foo: 'bar'};
             sandbox.stub(fsExtra, 'readJSON').yields(null, obj);
 
-            return util.readFileFromCache('./file1', true).should.eventually.eql(obj);
+            return util.readFileFromCache('./file1.json', true).should.eventually.eql(obj);
         });
 
         it('should rejected with error if fs error occur and fallback value was not set', function() {
@@ -151,7 +151,7 @@ describe('util', function() {
             error.code = 'ENOENT';
 
             readFileStub.yields(error);
-            return util.readFileFromCache('./some-path', false, 'some-fallback').should.be.eventually.equal('some-fallback');
+            return util.readFileFromCache('./some-path', 'some-fallback').should.be.eventually.equal('some-fallback');
         });
     });
 

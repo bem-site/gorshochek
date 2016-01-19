@@ -62,7 +62,7 @@ export default function loadSourcesFromGithub(model, options = {}) {
      * @returns {Promise.<T>}
      */
     function readMetaFromCache(page) {
-        return baseUtil.readFileFromCache(path.join(page.url, 'index.meta.json'), true, true)
+        return baseUtil.readFileFromCache(path.join(page.url, 'index.meta.json'))
             .then(cache => (cache || {}))
             .catch(() => ({}));
     }

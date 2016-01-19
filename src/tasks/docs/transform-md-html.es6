@@ -53,4 +53,4 @@ export default function transformMdToHtml(model) {
     return function() {
         return baseUtil.processPagesAsync(model, getCriteria, processPage, 20).thenResolve(model);
     };
-};
+}

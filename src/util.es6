@@ -10,6 +10,12 @@ const debug = require('debug')('util');
 // TODO: try to get rid of it
 export const rsync = rsyncSlim;
 
+/**
+ * Returns path to cache folder
+ * It can be set as process environment variable
+ * By default it is pointed to ./.builder/cache relative to current working directory
+ * @returns {String}
+ */
 export function getCacheFolder() {
     return process.env.GORSHOCHEK_CACHE_FOLDER || './.builder/cache';
 }
@@ -33,6 +39,14 @@ export function copyFile(sourcePath, destinationPath) {
     return Q.nfcall(fsExtra.copy, sourcePath, destinationPath);
 }
 
+/**
+ * Reads file from local filesystem.
+ * @param {Function} method - function which is used for reading
+ * @param {String} filePath - path to file
+ * @param {*} [fallbackValue] - value which will be returned if file does not exist on local filesystem
+ * @returns {*|Promise.<T>}
+ * @private
+ */
 function _readFile(method, filePath, fallbackValue) {
     return Q.nfcall(method, filePath, {encoding: 'utf-8'})
         .catch(error => {
@@ -69,33 +83,13 @@ export function readJSONFile(filePath, fallbackValue) {
 /**
  * Reads file from cache folder
  * @param {String} filePath - path to file (relative to cache folder)
- * @param {Boolean} isJSON - use embedded JSON parsing for json files
- * @param {Object|Array} [fallbackValue] if set then fallback value
- * will be returned if file does not exists in cache
+ * @param {Object|Array} [fallbackValue] value which will be returned if file does not exist on local filesystem
  * @returns {Promise}
  */
-// TODO: get rid of isJSON for path.extname()
-export function readFileFromCache(filePath, isJSON, fallbackValue) {
-    debug(`read file from cache: ${filePath} isJSON: ${isJSON}`);
-    return (isJSON ? readJSONFile : readFile).call(null, path.join(getCacheFolder(), filePath), fallbackValue);
-}
-
-/**
- * Writes file on local file system
- * @param {String} filePath - path to file
- * @param {String} content - content of file
- * @param {Function} onError - error handling function
- * @returns {Promise}
- * @private
- */
- // TODO: looks like useless function
-function _writeFile(filePath, content, onError) {
-    const dirPath = path.dirname(filePath);
-    return Q.nfcall(fsExtra.ensureDir, dirPath)
-        .then(() => {
-            return Q.nfcall(fs.writeFile, filePath, content, {encoding: 'utf-8'});
-        })
-        .catch(onError);
+export function readFileFromCache(filePath, fallbackValue) {
+    debug(`read file from cache: ${filePath}`);
+    return (path.extname(filePath) === '.json' ? readJSONFile : readFile)
+        .call(null, path.join(getCacheFolder(), filePath), fallbackValue);
 }
 
 /**
@@ -106,11 +100,7 @@ function _writeFile(filePath, content, onError) {
  */
 export function writeFileToCache(filePath, content) {
     debug(`write file to cache: ${filePath}`);
-    filePath = path.join(getCacheFolder(), filePath);
-    return _writeFile(filePath, content, error => {
-        console.error(`Error occured while saving file ${filePath} to cache`);
-        throw error;
-    });
+    return writeFile(path.join(getCacheFolder(), filePath), content);
 }
 
 /**
@@ -121,10 +111,15 @@ export function writeFileToCache(filePath, content) {
  */
 export function writeFile(filePath, content) {
     debug(`write file to: ${filePath}`);
-    return _writeFile(filePath, content, error => {
-        console.error(`Error occured while saving file ${filePath}`);
-        throw error;
-    });
+    const dirPath = path.dirname(filePath);
+    return Q.nfcall(fsExtra.ensureDir, dirPath)
+        .then(() => {
+            return Q.nfcall(fs.writeFile, filePath, content, {encoding: 'utf-8'});
+        })
+        .catch(error => {
+            console.error(`Error occured while saving file ${filePath}`);
+            throw error;
+        });
 }
 
 /**

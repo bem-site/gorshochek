@@ -50,7 +50,7 @@ export default function loadSourcesFromLocal(model) {
         };
 
         return Q.allSettled([
-            baseUtil.readFileFromCache(cacheFilePath, false, true),
+            baseUtil.readFileFromCache(cacheFilePath),
             baseUtil.readFile(localFilePath, null)
         ]).spread((cache, local) => {
             if(local.state === 'rejected') {
