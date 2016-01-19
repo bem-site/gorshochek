@@ -15,9 +15,8 @@ export default function loadSourcesFromLocal(model) {
      * which can be matched as relative file path on filesystem. Otherwise returns false
      * @param {Object} page - page object
      * @returns {Boolean}
-     * @private
      */
-    function getCriteria(page) {
+    function hasLocalSource(page) {
         const sourceUrl = page.sourceUrl;
         return !!sourceUrl && !!sourceUrl.match(/^(\/)?([^\/\0]+(\/)?)+$/);
     }
@@ -26,7 +25,6 @@ export default function loadSourcesFromLocal(model) {
      * Loads file to cache
      * @param {Model} model - data model
      * @returns {Promise}
-     * @protected
      */
     function processPage(model, page) {
         debug(`load local file page with url: => ${page.url}`);
@@ -73,6 +71,6 @@ export default function loadSourcesFromLocal(model) {
     }
 
     return function() {
-        return baseUtil.processPagesAsync(model, getCriteria, processPage, 20).thenResolve(model);
+        return baseUtil.processPagesAsync(model, hasLocalSource, processPage, 20).thenResolve(model);
     };
 }

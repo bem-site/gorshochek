@@ -5,6 +5,19 @@ import * as baseUtil from '../../util';
 
 const debug = require('debug')('docs github load');
 
+/**
+ * Loads pages embedded sources from github via github API
+ * @param {Model} model - application model instance
+ * @param {Object} [options] - task options object
+ * @param {String} [options.token] - github token. (needs for increasing github requests limit up to 5000 rph)
+ * @param {Boolean} [options.updateDate] - if set to true then advanced meta-information
+ * about last file modification date also will be loaded
+ * @param {Boolean} [options.hasIssues] - if set to true then advanced meta-information about
+ * issues section existence will be loaded
+ * @param {Boolean} [options.branch] - if set to true then advance meta-information about source branch will be loaded.
+ * If source is corresponded to tag reference then default repository branch name will be loaded
+ * @returns {Function}
+ */
 export default function loadSourcesFromGithub(model, options = {}) {
     const GITHUB_URL_REGEXP = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/;
     const api = new GitHub({token: options.token});
@@ -14,8 +27,7 @@ export default function loadSourcesFromGithub(model, options = {}) {
      * @param {Object} page - page model object
      * @returns {Boolean}
      */
-     // TODO: isFromGithub
-    function getCriteria(page) {
+    function hasGithubSource(page) {
         return !!(page.sourceUrl && GITHUB_URL_REGEXP.test(page.sourceUrl));
     }
 
@@ -102,6 +114,14 @@ export default function loadSourcesFromGithub(model, options = {}) {
      3. Ветку из которой был загружен документ. Если загрузка была
      произведена из тега - то ссылку на основную ветку репозитория
      */
+
+    /**
+     * Loads advanced meta-information about github source
+     * @param {Object} page - page model object
+     * @param {Object} repoInfo - parsed github url
+     * @param {Object} cache - cache file content
+     * @returns {Function|*}
+     */
     function loadAdvancedMetaInformation(page, repoInfo, cache) {
         const getUpdateDate = options.updateDate ? api.getLastCommitDate(repoInfo, getHeadersByCache(cache)) : Q(null);
         const checkForIssues = options.hasIssues ? api.hasIssues(repoInfo, getHeadersByCache(cache)) : Q(null);
@@ -149,6 +169,6 @@ export default function loadSourcesFromGithub(model, options = {}) {
     }
 
     return function() {
-        return baseUtil.processPagesAsync(model, getCriteria, processPage, 5).thenResolve(model);
+        return baseUtil.processPagesAsync(model, hasGithubSource, processPage, 5).thenResolve(model);
     };
 }

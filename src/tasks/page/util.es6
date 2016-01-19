@@ -36,6 +36,12 @@ export function getParentUrls(page) {
     return result;
 }
 
+/**
+ * Returns execution function
+ * @param {Model} model - application model instance
+ * @param {Function} pageProcessingFunction - function which should be performed for each of model pages
+ * @returns {Function}
+ */
 export function getExecFunction(model, pageProcessingFunction) {
     return function() {
         model.getPages().forEach(pageProcessingFunction.bind(null, createPageTitlesMap(model.getPages())));

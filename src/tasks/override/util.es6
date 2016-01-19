@@ -46,6 +46,13 @@ export function isNativeWebsiteUrl(url, existedUrls) {
     return existedUrls.indexOf(url.path.replace(/\/$/, '')) > -1;
 }
 
+/**
+ * Tries to find link replacement from urlHash and site existed urls array for given variants
+ * @param {String[]} variants - array of link variants
+ * @param {Object} urlHash - hash of page sourceUrl -> page url
+ * @param {String[]} existedUrls - array of site existed urls
+ * @returns {String|null}
+ */
 export function findReplacement(variants, urlHash, existedUrls) {
     var replacement = null;
 
@@ -70,6 +77,11 @@ export function findReplacement(variants, urlHash, existedUrls) {
     return replacement;
 }
 
+/**
+ * Creates array of urls of all model pages
+ * @param {Object[]} pages - array of model pages
+ * @returns {String[]}
+ */
 export function createArrayOfModelPageUrls(pages) {
     return pages.map(page => page.url);
 }

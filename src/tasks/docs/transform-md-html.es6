@@ -10,7 +10,13 @@ import * as baseUtil from '../../util';
  */
 export default function transformMdToHtml(model) {
 
-    function getCriteria(page) {
+    /**
+     * Returns true if given page has contentFile field
+     * and value of this field ends on .md
+     * @param {Object} page - model page object
+     * @returns {Boolean}
+     */
+    function hasMarkdownSource(page) {
         return !!(page.contentFile && page.contentFile.match(/\.md$/));
     }
 
@@ -51,6 +57,6 @@ export default function transformMdToHtml(model) {
     }
 
     return function() {
-        return baseUtil.processPagesAsync(model, getCriteria, processPage, 20).thenResolve(model);
+        return baseUtil.processPagesAsync(model, hasMarkdownSource, processPage, 20).thenResolve(model);
     };
 }

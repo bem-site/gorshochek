@@ -12,12 +12,21 @@ const debug = require('debug')('sitemap-xml');
  * @returns {Function}
  */
 export default function createSitemapXML(model, options = {}) {
+    // option host is required parameter
     if(!options.host) {
         throw new Error('Host parameter undefined. It is necessary for sitemap.xml creation');
     }
 
     const DEFAULT_SEARCH_PARAMS = {changefreq: 'weekly', priority: 0.5};
 
+    /**
+     * Builds js sitemap presentation
+     * Also take into account:
+     * 1. page aliases
+     * 2. page published state
+     * 3. individual page search settings
+     * @returns {Object}
+     */
     function buildSiteMapModel() {
         return model.getPages().reduce((siteMap, page) => {
             const urls = [page.url].concat(page.aliases || []);
