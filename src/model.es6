@@ -3,15 +3,36 @@
 import _ from 'lodash';
 import deepDiff from 'deep-diff';
 import deepExtend from 'deep-extend';
-import Changes from './changes';
 
+/**
+ * @desc Application model class
+ */
 export default class Model {
-
     constructor() {
-        this._changes = new Changes();
+        /**
+         * Model changes
+         * @type {{added: Array, modified: Array, removed: Array}}
+         * @private
+         */
+        this._changes = {
+            added: [],
+            modified: [],
+            removed: []
+        };
+        /**
+         * Array of model pages
+         * @type {Array}
+         * @private
+         */
         this._pages = [];
     }
 
+    /**
+     * Generates map with page urls as keys and page object as values
+     * @param {Object[]} arr - array of page objects
+     * @returns {Object}
+     * @private
+     */
     static _generateUrlPageMap(arr) {
         return arr.reduce((prev, item) => {
             prev[item.url] = item;
@@ -20,11 +41,51 @@ export default class Model {
     }
 
     /**
-     * Returns changes model
-     * @returns {*}
+     * Returns true if model has some non-empty changes of any type
+     * @returns {Boolean}
+     */
+    hasChanges() {
+        return this.getChanges().added.length > 0 ||
+            this.getChanges().modified.length > 0 ||
+            this.getChanges().removed.length > 0;
+    }
+
+    /**
+     * Return model changes
+     * @returns {{added: Array, modified: Array, removed: Array}|*}
      */
     getChanges() {
         return this._changes;
+    }
+
+    /**
+     * Add new item to added changes group
+     * @param {Object} item
+     * @returns {Model}
+     */
+    pushChangeAdd(item) {
+        this.getChanges().added.push(item);
+        return this;
+    }
+
+    /**
+     * Add new item to modified changes group
+     * @param {Object} item
+     * @returns {Model}
+     */
+    pushChangeModify(item) {
+        this.getChanges().modified.push(item);
+        return this;
+    }
+
+    /**
+     * Add new item to removed changes group
+     * @param {Object} item
+     * @returns {Model}
+     */
+    pushChangeRemove(item) {
+        this.getChanges().removed.push(item);
+        return this;
     }
 
     /**
@@ -74,7 +135,7 @@ export default class Model {
         const removedPages = _.difference(oldPages, newPages);
 
         removedPages.forEach(url => {
-            this.getChanges().addRemoved({type: 'page', url});
+            this.pushChangeRemove({type: 'page', url});
         });
 
         // отбрасываем удаленные страницы
@@ -98,7 +159,7 @@ export default class Model {
         // add new pages
         this.setPages(
             this.getPages().concat(addedPages.map(url => {
-                this.getChanges().addAdded({type: 'page', url});
+                this.pushChangeAdd({type: 'page', url});
                 return newModel[url];
             }))
         );
@@ -117,13 +178,18 @@ export default class Model {
         // add modified pages
         this.setPages(
             this.getPages().concat(modifiedPages.map(url => {
-                this.getChanges().addModified({type: 'page', url});
+                this.pushChangeModify({type: 'page', url});
                 return deepExtend(oldModel[url], newModel[url]);
             }, this))
         );
         return this;
     }
 
+    /**
+     * Normalize model.
+     * Sets some default values and fix wrong
+     * @returns {Model}
+     */
     normalize() {
         /**
          *

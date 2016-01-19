@@ -1,5 +1,4 @@
 var _ = require('lodash'),
-    Changes = require('../../lib/changes'),
     Model = require('../../lib/model');
 
 describe('Model', function() {
@@ -14,7 +13,37 @@ describe('Model', function() {
     });
 
     it('should have model of changes', function() {
-        model.getChanges().should.be.instanceof(Changes);
+        model.getChanges().should.be.instanceof(Object);
+    });
+
+    it('should add new items to changes add collection', function() {
+        model.pushChangeAdd('url1');
+        model.getChanges().added[0].should.be.equal('url1');
+    });
+
+    it('should mark changes as modified after pushing new item into added collection', function() {
+        model.pushChangeAdd('url1');
+        model.hasChanges().should.be.equal(true);
+    });
+
+    it('should add new items to modified collection', function() {
+        model.pushChangeModify('url1');
+        model.getChanges().modified[0].should.be.equal('url1');
+    });
+
+    it('should mark changes as modified after pushing new item into modified collection', function() {
+        model.pushChangeModify('url1');
+        model.hasChanges().should.be.equal(true);
+    });
+
+    it('should add new items to removed collection', function() {
+        model.pushChangeRemove('url1');
+        model.getChanges().removed[0].should.be.equal('url1');
+    });
+
+    it('should mark changes as modified after pushing new item into removed collection', function() {
+        model.pushChangeRemove('url1');
+        model.hasChanges().should.be.equal(true);
     });
 
     describe('pages property', function() {

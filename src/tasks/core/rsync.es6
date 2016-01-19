@@ -16,6 +16,10 @@ const debug = require('debug')('rsync');
  */
 export default function rsync(model, options = {}) {
 
+    /**
+     * Returns rsync options object
+     * @returns {{src: (String), dest: (String), sync: Boolean, options: (String)}}
+     */
     function prepareRsyncOptions() {
         const src = options.src || baseUtil.getCacheFolder() + '/';
         const dest = options.dest || './data';

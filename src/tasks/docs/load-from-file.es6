@@ -40,12 +40,12 @@ export default function loadSourcesFromLocal(model) {
 
         const onAddedDocument = (promise) => {
             debug('Doc added: %s %s', page.url, page.title);
-            model.getChanges().addAdded({type: 'doc', url: page.url, title: page.title});
+            model.pushChangeAdd({type: 'doc', url: page.url, title: page.title});
             return baseUtil.writeFileToCache(cacheFilePath, promise.value);
         };
         const onModifiedDocument = (promise) => {
             debug('Doc modified: %s %s', page.url, page.title);
-            model.getChanges().addModified({type: 'doc', url: page.url, title: page.title});
+            model.pushChangeModify({type: 'doc', url: page.url, title: page.title});
             return baseUtil.writeFileToCache(cacheFilePath, promise.value);
         };
 

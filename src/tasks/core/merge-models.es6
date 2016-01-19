@@ -13,6 +13,7 @@ import * as baseUtil from '../../util';
  */
 export default function mergeModels(model, options = {}) {
 
+    // modelPath is required param
     if(!options.modelPath) {
         throw new Error('modelPath should be defined in task options');
     }

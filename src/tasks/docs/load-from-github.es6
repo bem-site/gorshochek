@@ -131,10 +131,10 @@ export default function loadSourcesFromGithub(model, options = {}) {
                     return Q(cache.fileName);
                 } else if(!cache.sha) {
                     debug('Doc added: %s %s', page.url, page.title);
-                    model.getChanges().addAdded({type: 'doc', url: page.url, title: page.title});
+                    model.pushChangeAdd({type: 'doc', url: page.url, title: page.title});
                 } else {
                     debug('Doc modified: %s %s %s', page.url, page.title);
-                    model.getChanges().addModified({type: 'doc', url: page.url, title: page.title});
+                    model.pushChangeModify({type: 'doc', url: page.url, title: page.title});
                 }
 
                 return Q()
