@@ -1,124 +1,96 @@
-import Q from 'q';
-import Public from './public';
-import Private from './private';
+import _ from 'lodash';
+import Api from 'github';
 
-export default class Github{
+const debug = require('debug')('github api');
+
+export default class Github {
     /**
      * Constructor
      * @param {Object} options object
      */
-    constructor(options) {
-        this.apis = {
-            public: new Public(options),
-            private: new Private(options)
+    constructor(options = {}) {
+        const defaultParams = {
+            version: '3.0.0',
+            protocol: 'https',
+            timeout: 60000,
+            debug: false
         };
+
+        const githubHosts = options.githubHosts || [];
+        this._apis = githubHosts.reduce((prev, item) => {
+            prev[item.host] = new Api(_.extend(item, defaultParams));
+            return prev;
+        }, {public: this._initPublicAPI(options, defaultParams)});
     }
 
     /**
-     * Selects API by given options by host criteria
+     * Initialize public github API
      * @param {Object} options object
-     * @returns {Public|Private}
+     * @param {Object} options.token - github auth token
+     * @param {Object} defaultParams - default github options
      * @private
      */
-    _getApiByHost(options) {
-        const host = options.host;
-        const type = (host && host.indexOf('github.com') < 0) ? 'private' : 'public';
-        return this.apis[type];
+    _initPublicAPI(options, defaultParams) {
+        var publicAPI = new Api(_.extend({host: 'api.github.com'}, defaultParams));
+        const {token} = options;
+
+        if(!token) {
+            console.warn('No github authorization token were set. ' +
+                'Number of requests will be limited by 60 requests per hour according to API rules');
+            return;
+        }
+
+        publicAPI['authenticate']({type: 'oauth', token});
+        return publicAPI;
     }
 
     /**
-     * Loads content of file from github via github API
-     * @param {Object} options for api request. Fields:
-     *    - user {String} name of user or organization which this repository is belong to
-     *    - repo {String} name of repository
-     *    - ref {String} name of branch
-     *    - path {String} relative path from the root of repository
-     * @param {Object} headers - optional header params
-     * @returns {Promise}
+     * Executes given github API method with given options and headers
+     * @param {String} method - name of github method
+     * @param {Object} options
+     * @param {Object} headers - github request headers
+     * @param {Function} callback function
+     * @public
      */
-    getContent(options, headers) {
-        var api = this._getApiByHost(options);
-        return Q
-            .nfcall(api.getContent.bind(api), options, headers)
-            .catch(this._createErrorHandler(`Error occured while loading content from:`, options));
-    }
+    executeAPIMethod(method, options, headers, callback) {
+        // максимальное число допустимых повторных обращений к github в случае возникновения ошибки
+        const ATTEMPTS = 5;
 
-    /**
-     * Returns date of last commit for given file path
-     * @param {Object} options for api request. Fields:
-     *    - user {String} name of user or organization which this repository is belong to
-     *    - repo {String} name of repository
-     *    - path {String} relative path from the root of repository
-     * @param {Object} headers - optional header params
-     * @returns {Promise}
-     */
-    getLastCommitDate(options, headers) {
-        var api = this._getApiByHost(options);
-        return Q
-            .nfcall(api.getCommits.bind(api), options, headers)
-            .catch(this._createErrorHandler(`Error occured while get commits from:`, options))
-            .then(result => {
-                if(!result || !result[0]) {
-                    // TODO: check
-                    throw new Error('Can not read commits');
-                }
-                return (new Date(result[0].commit.committer.date)).getTime();
-            });
-    }
+        debug('github API call with options:');
+        debug(' - host: ' + options.host);
+        debug(' - user: ' + options.user);
+        debug(' - repo: ' + options.repo);
+        debug(' - ref: ' + options.ref);
+        debug(' - path: ' + options.path);
 
-    /**
-     * Checks if given repository has issues section or not
-     * @param {Object} options for api request. Fields:
-     *    - user {String} name of user or organization which this repository is belong to
-     *    - repo {String} name of repository
-     * @param {Object} headers - optional header params
-     * @returns {Promise}
-     */
-    hasIssues(options, headers) {
-        var api = this._getApiByHost(options);
-        return Q
-            .nfcall(api.hasIssues.bind(api), options, headers)
-            .catch(this._createErrorHandler(`Error occured while getting issues repo information:`, options));
-    }
+        const api = this._apis[options.host] || this._apis['public'];
+        const requestFunc = (count) => {
+            debug(`attempt #${count}`);
+            return api['repos'][method](_.extend(headers ? {headers} : {}, options),
+                (error, result) => {
+                    if(!error) {
+                        return callback(null, result);
+                    }
 
-    /**
-     * Returns name of branch by path or repository default branch if given path is tag
-     * @param {Object} options for api request. Fields:
-     *    - user {String} name of user or organization which this repository is belong to
-     *    - repo {String} name of repository
-     *    - ref {String} name of branch
-     * @param {Object} headers - optional header params
-     * @returns {Promise}
-     */
-    getBranchOrDefault(options, headers) {
-        var api = this._getApiByHost(options);
-        return Q
-            .nfcall(api.isBranchExists.bind(api), options, headers)
-            .catch(this._createErrorHandler(`Error occured while getting branch information:`, options))
-            .then(result => {
-                return result ? options.ref : Q.nfcall(api.getDefaultBranch.bind(api), options, headers);
-            });
-    }
+                    // если число попыток не превысило максимально возможное, то повторно запрашиваем данные
+                    if(count < ATTEMPTS) {
+                        return requestFunc(++count);
+                    }
 
-    /**
-     * Returns error handler function
-     * @param {String} errorMessage - base error message
-     * @param {Object} options arg
-     * @returns {Function} error handler function
-     * @private
-     */
-    _createErrorHandler(errorMessage, options) {
-        return error => {
-            console.error(`GH: ${error.message}`);
-            console.error(errorMessage);
-            console.error(`host: => ${options.host}`);
-            console.error(`user: => ${options.user}`);
-            console.error(`repo: => ${options.repo}`);
+                    // выводим сообщение об ошибке
+                    console.error(`GH: ${method} failed with ${error.message}`);
+                    console.error(`host: => ${options.host}`);
+                    console.error(`user: => ${options.user}`);
+                    console.error(`repo: => ${options.repo}`);
 
-            options.ref && console.error('ref: =>', options.ref);
-            options.path && console.error('path: =>', options.path);
+                    options.ref && console.error(`ref: => ${options.ref}`);
+                    options.path && console.error(`path: => ${options.path}`);
 
-            throw error;
+                    // отправляем callback с ошибкой если все попытки завершились с ошибкой
+                    callback(error);
+                });
         };
+
+        requestFunc(0);
     }
 }

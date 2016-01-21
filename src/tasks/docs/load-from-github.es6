@@ -107,6 +107,59 @@ export default function loadSourcesFromGithub(model, options = {}) {
             .thenResolve(filePath);
     }
 
+    /**
+     * Loads content from github repository via github API
+     * @param {...{Object}} params - parameters for github API call
+     */
+    function getContentFromGithubSource(...params) {
+        return Q.nfcall(api.executeAPIMethod, 'getContent', params);
+    }
+
+    /**
+     * Returns timestamp of last commit for given source
+     * @param {...{Object}} params - parameters for github API call
+     * @returns {*|Promise.<T>}
+     * @returns {Promise}
+     */
+    function getSourceLastUpdateDate(...params) {
+        return Q.nfcall(api.executeAPIMethod, 'getCommits', params)
+            .catch(() => null)
+            .then(commits => {
+                return (commits && commits.length) ?
+                    (new Date(commits[0].commit.committer.date)).getTime() : null;
+            });
+    }
+
+    /**
+     * Returns information about repo issues section existence
+     * @param {...{Object}} params - parameters for github API call
+     * @returns {*|Promise.<T>}
+     */
+    function hasRepoIssues(...params) {
+        return Q.nfcall(api.executeAPIMethod, 'get', params)
+            .get('has_issues')
+            .catch(() => null);
+    }
+
+    /**
+     * Tries to retrieve repository branch meta-information
+     * On success returns promise with branch name
+     * On error tries to find name of default branch in repository
+     * @param {Object} options - options for github call
+     * @param {Object} headers - optional gh request headers
+     * @returns {*|Promise.<T>}
+     */
+    function getSourceBranchOrRepoDefault(options, headers) {
+        options.branch = options.branch || options.ref;
+        return Q.nfcall(api.executeAPIMethod, 'getBranch', options, headers)
+            .thenResolve(options.branch)
+            .catch(() => {
+                return Q.nfcall(api.executeAPIMethod, 'get', options, headers)
+                    .catch(() => null)
+                    .get('default_branch');
+            });
+    }
+
     /*
      Дополнительно загружается некоторая мета-информация
      1. Дата обновления документа как дата последнего коммита
@@ -114,7 +167,6 @@ export default function loadSourcesFromGithub(model, options = {}) {
      3. Ветку из которой был загружен документ. Если загрузка была
      произведена из тега - то ссылку на основную ветку репозитория
      */
-
     /**
      * Loads advanced meta-information about github source
      * @param {Object} page - page model object
@@ -123,9 +175,13 @@ export default function loadSourcesFromGithub(model, options = {}) {
      * @returns {Function|*}
      */
     function loadAdvancedMetaInformation(page, repoInfo, cache) {
-        const getUpdateDate = options.updateDate ? api.getLastCommitDate(repoInfo, getHeadersByCache(cache)) : Q(null);
-        const checkForIssues = options.hasIssues ? api.hasIssues(repoInfo, getHeadersByCache(cache)) : Q(null);
-        const getBranch = options.branch ? api.getBranchOrDefault(repoInfo, getHeadersByCache(cache)) : Q(null);
+        const getUpdateDate = options.updateDate ?
+            getSourceLastUpdateDate(repoInfo, getHeadersByCache(cache)) : Q(null);
+        const checkForIssues = options.hasIssues ?
+            hasRepoIssues(repoInfo, getHeadersByCache(cache)) : Q(null);
+        const getBranch = options.branch ?
+            getSourceBranchOrRepoDefault(repoInfo, getHeadersByCache(cache)) : Q(null);
+
         return Q.allSettled([getUpdateDate, checkForIssues, getBranch])
             .spread((updateDate, hasIssues, branch) => {
                 page.updateDate = updateDate.value;
@@ -144,7 +200,10 @@ export default function loadSourcesFromGithub(model, options = {}) {
         debug(`Load doc file for page with url: => ${page.url}`);
         const repoInfo = parseSourceUrl(page.sourceUrl);
         return readMetaFromCache(page)
-            .then(cache => Q.all([api.getContent(repoInfo, getHeadersByCache(cache)), cache]))
+            .then(cache => Q.all([
+                getContentFromGithubSource(repoInfo, getHeadersByCache(cache)),
+                cache
+            ]))
             .spread((result, cache) => {
                 if(result.meta.status === '304 Not Modified' || cache.sha === result.sha) {
                     debug('Document was not changed: %s', page.url);

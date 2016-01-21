@@ -1,150 +1,119 @@
-var _ = require('lodash');
+var _ = require('lodash'),
+    nock = require('nock'),
+    proxyquire = require('proxyquire'),
+    GithubAPI = require('../../../../lib/tasks/docs/github');
 
-var PublicAPI = require('../../../../lib/tasks/docs/github/public');
-var PrivateAPI = require('../../../../lib/tasks/docs/github/private');
-var GithubAPI = require('../../../../lib/tasks/docs/github');
+proxyquire.preserveCache();
 
-describe('github API', function() {
+describe('GithubAPI', function() {
     var sandbox = sinon.sandbox.create(),
-        token = 'secret-token',
-        options = {token: token, logger: {level: 'debug'}},
-        baseOpts = {
+        githubAPI,
+        callOptions = {
             host: 'github.com',
             user: 'some-user',
             repo: 'some-repo'
-        },
-        publicApiStub,
-        privateApiStub,
-        githubAPI;
+        };
 
     beforeEach(function() {
-        githubAPI = new GithubAPI(options);
-        publicApiStub = sandbox.stub(githubAPI.apis['public'].api);
-        privateApiStub = sandbox.stub(githubAPI.apis['private'].api);
-        sandbox.stub(console, 'error');
         sandbox.stub(console, 'warn');
+        sandbox.stub(console, 'error');
+        githubAPI = new GithubAPI({token: 'some-gh-token'});
     });
 
     afterEach(function() {
         sandbox.restore();
     });
 
-    it('should have initialized private API', function() {
-        githubAPI.apis['private'].should.be.instanceOf(PrivateAPI);
+    it('should show warning message if token for public API was not set', function() {
+        githubAPI = new GithubAPI();
+        console.warn.firstCall.should.be.calledWith('No github authorization token were set. ' +
+            'Number of requests will be limited by 60 requests per hour according to API rules')
     });
 
-    it('should have initialized public API', function() {
-        githubAPI.apis['public'].should.be.instanceOf(PublicAPI);
+    it('should execute github API method and return result', function(done) {
+        nock('https://api.github.com')
+            .get('/repos/some-user/some-repo')
+            .query({access_token: 'some-gh-token'})
+            .reply(200, {name: 'some-repo'});
+
+        githubAPI.executeAPIMethod('get', callOptions, {}, function(error, result) {
+            result.should.eql({name: 'some-repo', meta: {}});
+            done();
+        });
     });
 
-    it('should throw error if token for public API was not set', function() {
-        githubAPI = new GithubAPI({logger: {level: 'debug'}});
-        publicApiStub.authenticate.should.not.be.called;
+    it('should retry on failed call and receive results on next successfully call', function(done) {
+        nock('https://api.github.com')
+            .get('/repos/some-user/some-repo')
+            .query({access_token: 'some-gh-token'})
+            .once()
+            .replyWithError('some network error')
+            .get('/repos/some-user/some-repo')
+            .query({access_token: 'some-gh-token'})
+            .reply(200, {name: 'some-repo'});
+
+        githubAPI.executeAPIMethod('get', callOptions, {}, function(error, result) {
+            result.should.eql({name: 'some-repo', meta: {}});
+            done();
+        });
     });
 
-    describe('getContent', function() {
-        var options = _.extend({ref: 'some-ref', path: 'some-path'}, baseOpts);
+    it('should return error if all retry attempts were already failed', function(done) {
+        nock('https://api.github.com')
+            .get('/repos/some-user/some-repo')
+            .query({access_token: 'some-gh-token'})
+            .times(6)
+            .replyWithError('some network error');
 
-        it('should call corresponded github API method', function() {
-            sandbox.stub(publicApiStub.repos, 'getContent').yields(null);
-            return githubAPI.getContent(options, {}).then(function() {
-                publicApiStub.repos.getContent.should.be.calledOnce;
+        githubAPI.executeAPIMethod('get', callOptions, {}, function(error) {
+            error.message.should.equal('some network error');
+            done();
+        });
+    });
+
+    it('should show error messages if errors were occured for all attempts', function(done) {
+        nock('https://api.github.com')
+            .get('/repos/some-user/some-repo')
+            .query({access_token: 'some-gh-token'})
+            .times(6)
+            .replyWithError('some network error');
+
+        githubAPI.executeAPIMethod('get', callOptions, {}, function(error) {
+            console.error.getCall(0).should.be.calledWith('GH: get failed with some network error');
+            console.error.getCall(1).should.be.calledWith('host: => github.com');
+            console.error.getCall(2).should.be.calledWith('user: => some-user');
+            console.error.getCall(3).should.be.calledWith('repo: => some-repo');
+            done();
+        });
+    });
+
+    it('should show advanced error messages if branch and path params were given', function(done) {
+        nock('https://api.github.com')
+            .get('/repos/some-user/some-repo/contents/some-path')
+            .query({access_token: 'some-gh-token', ref: 'some-ref'})
+            .times(6)
+            .replyWithError('some network error');
+
+        githubAPI.executeAPIMethod('getContent',
+            _.extend({ref: 'some-ref', path: 'some-path'}, callOptions), {}, function(error) {
+                console.error.getCall(0).should.be.calledWith('GH: getContent failed with some network error');
+                console.error.getCall(4).should.be.calledWith('ref: => some-ref');
+                console.error.getCall(5).should.be.calledWith('path: => some-path');
+                done();
             });
-        });
-
-        it('should return fulfilled promise with content of repo for given options', function() {
-            sandbox.stub(publicApiStub.repos, 'getContent').yields(null, 'Hello World');
-            return githubAPI.getContent(options, {}).should.eventually.equal('Hello World');
-        });
-
-        it('should return rejected promise in case of github error call', function() {
-            sandbox.stub(publicApiStub.repos, 'getContent').yields(new Error('github error'));
-            return githubAPI.getContent(options, {}).should.be.rejectedWith('github error');
-        });
     });
 
-    describe('getLastCommitDate', function() {
-        var options = _.extend({ref: 'some-ref', path: 'some-path'}, baseOpts);
-
-        it('should call corresponded github API method', function() {
-            sandbox.stub(publicApiStub.repos, 'getCommits').yields(null, [
-                {commit: {committer: {date: new Date()}}}
-            ]);
-            return githubAPI.getLastCommitDate(options, {}).then(function() {
-                publicApiStub.repos.getCommits.should.be.calledOnce;
-            });
-        });
-
-        it('should return fulfilled promise with date of latest commit', function() {
-            var result = [
-                {commit: {committer: {date: new Date()}}}
-            ];
-            sandbox.stub(publicApiStub.repos, 'getCommits').yields(null, result);
-            return githubAPI.getLastCommitDate(options, {})
-                .should.eventually.equal(result[0].commit.committer.date.getTime());
-        });
-
-        it('should return rejected promise in case of github error call', function() {
-            sandbox.stub(publicApiStub.repos, 'getCommits').yields(new Error('github error'));
-            return githubAPI.getLastCommitDate(options, {}).should.be.rejectedWith('github error');
-        });
-
-        it('should return rejected promise in case of not existed result', function() {
-            sandbox.stub(publicApiStub.repos, 'getCommits').yields(null);
-            return githubAPI.getLastCommitDate(options, {}).should.be.rejectedWith('Can not read commits');
-        });
-
-        it('should return rejected promise in case of empty result', function() {
-            sandbox.stub(publicApiStub.repos, 'getCommits').yields(null, []);
-            return githubAPI.getLastCommitDate(options, {}).should.be.rejectedWith('Can not read commits');
-        });
-    });
-
-    describe('hasIssues', function() {
-        var options = _.extend({}, baseOpts);
-
-        it('should call corresponded github API method', function() {
-            sandbox.stub(publicApiStub.repos, 'get').yields(null, {});
-            return githubAPI.hasIssues(options, {}).then(function() {
-                publicApiStub.repos.get.should.be.calledOnce;
-            });
-        });
-
-        it('should return fulfilled promise with hasIssues flag', function() {
-            sandbox.stub(publicApiStub.repos, 'get').yields(null, {has_issues: true});
-            return githubAPI.hasIssues(options, {}).should.eventually.equal(true);
-        });
-
-        it('should return rejected promise in case of github error call', function() {
-            sandbox.stub(publicApiStub.repos, 'get').yields(new Error('github error'));
-            return githubAPI.hasIssues(options, {}).should.be.rejectedWith('github error');
-        });
-    });
-
-    describe('getBranchOrDefault', function() {
-        var options = _.extend({ref: 'some-ref'}, baseOpts);
-
-        it('should call corresponded github API method', function() {
-            sandbox.stub(publicApiStub.repos, 'getBranch').yields(null, {});
-            return githubAPI.getBranchOrDefault(options, {}).then(function() {
-                publicApiStub.repos.getBranch.should.be.called;
-            });
-        });
-
-        it('should return fulfilled promise with name of requested branch', function() {
-            sandbox.stub(publicApiStub.repos, 'getBranch').yields(null, {});
-            return githubAPI.getBranchOrDefault(options, {}).should.eventually.equal('some-ref');
-        });
-
-        it('should return fulfilled promise with name of default branch if request branch does not exist', function() {
-            sandbox.stub(publicApiStub.repos, 'getBranch').yields({code: 404});
-            sandbox.stub(publicApiStub.repos, 'get').yields(null, {default_branch: 'master'});
-            return githubAPI.getBranchOrDefault(options, {}).should.eventually.equal('master');
-        });
-
-        it('should return rejected promise in case of github error call', function() {
-            sandbox.stub(publicApiStub.repos, 'getBranch').yields(new Error('github error'));
-            githubAPI.getBranchOrDefault(options, {}).should.be.rejectedWith('github error');
-        });
+    it('should also initialize APIs for advanced hosts given by "githubHosts" option', function() {
+        var githubAPIStub = sinon.stub();
+        GithubAPI = proxyquire('../../../../lib/tasks/docs/github/index.js', {github: githubAPIStub});
+        githubAPI = new GithubAPI({githubHosts: [{host: 'my.github.com'}]});
+        githubAPIStub.should.be.calledWithNew;
+        githubAPIStub.secondCall.should.be.calledWith({
+            host: 'my.github.com',
+            version: '3.0.0',
+            protocol: 'https',
+            timeout: 60000,
+            debug: false
+        })
     });
 });

@@ -18,19 +18,21 @@ describe('tasks-docs/load-from-github', function() {
         },
         sandbox = sinon.sandbox.create(),
         githubGetContentStub,
-        githubGetLastCommitDateStub,
-        githubHasIssuesStub,
-        githubGetBranchOrDefault,
+        githubGetCommitsStub,
+        githubGetStub,
+        githubGetBranchStub,
         model;
 
     beforeEach(function() {
         sandbox.stub(console, 'warn');
         sandbox.stub(baseUtil, 'readFileFromCache').returns(Q.reject('Error'));
         sandbox.stub(baseUtil, 'writeFileToCache').returns(Q());
-        githubGetContentStub = sandbox.stub(GithubAPI.prototype, 'getContent').returns(Q(githubStubRes));
-        githubGetLastCommitDateStub = sandbox.stub(GithubAPI.prototype, 'getLastCommitDate');
-        githubHasIssuesStub = sandbox.stub(GithubAPI.prototype, 'hasIssues');
-        githubGetBranchOrDefault = sandbox.stub(GithubAPI.prototype, 'getBranchOrDefault');
+
+        var githubStub = sandbox.stub(GithubAPI.prototype, 'executeAPIMethod')
+        githubGetContentStub = githubStub.withArgs('getContent').yields(null, githubStubRes);
+        githubGetCommitsStub = githubStub.withArgs('getCommits');
+        githubGetStub = githubStub.withArgs('get');
+        githubGetBranchStub = githubStub.withArgs('getBranch');
         model = new Model();
     });
 
@@ -111,7 +113,7 @@ describe('tasks-docs/load-from-github', function() {
 
     it('should save valid meta.json file to cache', function() {
         model.setPages([_.extend({}, pageStub)]);
-        githubGetContentStub.returns(Q(_.extend({}, githubStubRes, {meta: {etag: 'some-etag'}})));
+        githubGetContentStub.yields(null, _.extend({}, githubStubRes, {meta: {etag: 'some-etag'}}));
         return loadFromGithub(model)().then(function() {
             var expectedContent = JSON.stringify({
                 etag: 'some-etag',
@@ -126,7 +128,7 @@ describe('tasks-docs/load-from-github', function() {
         model.setPages([_.extend({}, pageStub)]);
         baseUtil.readFileFromCache.returns(Q({}));
         githubGetContentStub
-            .returns(Q(_.extend({}, githubStubRes, {meta: {etag: 'some-etag', status: '304 Not Modified'}})));
+            .yields(_.extend({}, githubStubRes, {meta: {etag: 'some-etag', status: '304 Not Modified'}}));
         return loadFromGithub(model)().then(function() {
             model.getChanges().added.should.be.empty;
             model.getChanges().modified.should.be.empty;
@@ -178,28 +180,78 @@ describe('tasks-docs/load-from-github', function() {
     it('should receive last update date of doc if "updateDate" option was set', function() {
         var expected = (new Date()).getTime();
         model.setPages([_.extend({}, pageStub)]);
-        githubGetLastCommitDateStub.returns(Q(expected));
+        githubGetCommitsStub.yields(null, [{commit: {committer: {date: expected}}}]);
 
         return loadFromGithub(model, {updateDate: true})().then(function() {
             model.getPages()[0].updateDate.should.equal(expected);
         });
     });
 
+    it('should set update date to null if "updateDate" option was set but error was occured on commits loading',
+        function() {
+            model.setPages([_.extend({}, pageStub)]);
+            githubGetCommitsStub.yields(new Error());
+
+            return loadFromGithub(model, {updateDate: true})().then(function() {
+                (model.getPages()[0].updateDate == null).should.equal(true);
+            });
+    });
+
+    it('should set update date to null if "updateDate" option was set but source has not any commits',
+        function() {
+            model.setPages([_.extend({}, pageStub)]);
+            githubGetCommitsStub.yields(null, []);
+
+            return loadFromGithub(model, {updateDate: true})().then(function() {
+                (model.getPages()[0].updateDate == null).should.equal(true);
+            });
+        });
+
     it('should receive info about issues section of repo if "hasIssues" option was set', function() {
         model.setPages([_.extend({}, pageStub)]);
-        githubHasIssuesStub.returns(Q(true));
+        githubGetStub.yields(null, {has_issues: true});
 
         return loadFromGithub(model, {hasIssues: true})().then(function() {
             model.getPages()[0].hasIssues.should.equal(true);
         });
     });
 
+    it('should set hasIssues value to null if "hasIssues" option was set but error was occured on gh data loading',
+        function() {
+            model.setPages([_.extend({}, pageStub)]);
+            githubGetStub.yields(new Error());
+
+            return loadFromGithub(model, {hasIssues: true})().then(function() {
+                (model.getPages()[0].hasIssues == null).should.equal(true);
+            });
+        });
+
     it('should receive info about source branch if "branch" option was set', function() {
         model.setPages([_.extend({}, pageStub)]);
-        githubGetBranchOrDefault.returns(Q('some-branch'));
+        githubGetBranchStub.yields(null, {});
+
+        return loadFromGithub(model, {branch: true})().then(function() {
+            model.getPages()[0].branch.should.equal('ref');
+        });
+    });
+
+    it('should set default repo branch if "branch" option was set and source branch was not retrieved', function() {
+        model.setPages([_.extend({}, pageStub)]);
+        githubGetBranchStub.yields(new Error());
+        githubGetStub.yields(null, {default_branch: 'some-branch'});
 
         return loadFromGithub(model, {branch: true})().then(function() {
             model.getPages()[0].branch.should.equal('some-branch');
+        });
+    });
+
+    it('should set null if "branch" option was set and source and default branches were not retrieved', function() {
+        model.setPages([_.extend({}, pageStub)]);
+        githubGetBranchStub.yields(new Error());
+        githubGetStub.yields(new Error());
+
+        return loadFromGithub(model, {branch: true})().then(function() {
+            (model.getPages()[0].branch == null).should.equal(true);
         });
     });
 
