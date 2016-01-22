@@ -10,13 +10,11 @@ var fs = require('fs'),
 const SRC_PATH = './src/**/*.es6';
 
 gulp.task('clean-jsdoc', function() {
-    return gulp.src('./jsdoc', {read: false})
-        .pipe(clean());
+    return gulp.src('./jsdoc', {read: false}).pipe(clean());
 });
 
 gulp.task('clean-lib', function() {
-    return gulp.src('./lib', {read: false})
-        .pipe(clean());
+    return gulp.src('./lib', {read: false}).pipe(clean());
 });
 
 gulp.task('eslint', function() {
@@ -27,8 +25,7 @@ gulp.task('eslint', function() {
 });
 
 gulp.task('jscs', function() {
-    return gulp.src(SRC_PATH)
-        .pipe(jscs({configPath: './.jscs.js', esnext: true}));
+    return gulp.src(SRC_PATH).pipe(jscs({configPath: './.jscs.js', esnext: true}));
 });
 
 gulp.task('lint', ['eslint', 'jscs']);
@@ -39,8 +36,6 @@ gulp.task('compile', ['clean-lib'], function() {
         .pipe(gulp.dest('lib'));
 });
 
-gulp.task('pretest', ['codestyle', 'compile']);
-
 gulp.task('esdoc', ['clean-jsdoc'], function() {
     var esdocConfig = fs.readFileSync('./esdoc.json', 'utf-8');
     esdocConfig = JSON.parse(esdocConfig);
@@ -49,13 +44,11 @@ gulp.task('esdoc', ['clean-jsdoc'], function() {
 });
 
 gulp.task('copy-logo', ['esdoc'], function() {
-    return gulp.src('./logo.jpg')
-        .pipe(gulp.dest('./jsdoc'));
+    return gulp.src('./logo.jpg').pipe(gulp.dest('./jsdoc'));
 });
 
 gulp.task('ghPages', ['esdoc', 'copy-logo'], function() {
-    return gulp.src('./jsdoc/**/*')
-        .pipe(ghPages());
+    return gulp.src('./jsdoc/**/*').pipe(ghPages());
 });
 
 gulp.task('publish-doc', ['esdoc', 'copy-logo', 'ghPages']);
