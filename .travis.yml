@@ -14,3 +14,6 @@ notifications:
   email:
     - tormozz48@gmail.com
     - yndx.tavria@yandex.ru
+addons:
+    code_climate:
+        repo_token: 37516eee0136bb74ea6f0dc66130fb58ade5f3bee97bfca05a9978928169abaf
