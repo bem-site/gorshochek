@@ -5,11 +5,8 @@
 [![NPM version](http://img.shields.io/npm/v/gorshochek.svg?style=flat)](http://www.npmjs.org/package/gorshochek)
 [![Coveralls branch](https://img.shields.io/coveralls/bem-site/gorshochek/master.svg)](https://coveralls.io/r/bem-site/gorshochek?branch=master)
 [![Travis](https://img.shields.io/travis/bem-site/gorshochek.svg)](https://travis-ci.org/bem-site/gorshochek)
-[![wercker status](https://app.wercker.com/status/3fd74ae0262e6f6884b519ed1587862c/s "wercker status")](https://app.wercker.com/project/bykey/3fd74ae0262e6f6884b519ed1587862c)
 [![Code Climate](https://codeclimate.com/github/bem-site/gorshochek/badges/gpa.svg)](https://codeclimate.com/github/bem-site/gorshochek)
 [![David](https://img.shields.io/david/bem-site/gorshochek.svg)](https://david-dm.org/bem-site/gorshochek)
-
-[![Build Status](https://semaphoreci.com/api/v1/projects/2e769052-c0d2-413e-bc11-b84e4344390d/671231/badge.svg)](https://semaphoreci.com/tormozz48/gorshochek)
 
 Модуль сборки данных для bem сайтов.
 
