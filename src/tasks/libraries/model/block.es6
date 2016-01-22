@@ -75,11 +75,11 @@ export default class Block extends Base {
         const contentFilePath = [baseUrl, lib, version,
                 this.level.level, this.block, 'index.json'].join(path.sep);
         return Q({
-                data: this._rectifyBlockDocumentation(data.data, language),
-                jsdoc: this._rectifyBlockJSDocumentation(data.jsdoc, language)
-            })
-            .then(content => this.saveFile(filePath, content, true))
-            .then(() => this.setValue('contentFile', contentFilePath));
+            data: this._rectifyBlockDocumentation(data.data, language),
+            jsdoc: this._rectifyBlockJSDocumentation(data.jsdoc, language)
+        })
+        .then(content => this.saveFile(filePath, content, true))
+        .then(() => this.setValue('contentFile', contentFilePath));
     }
 
     /**

@@ -1,5 +1,4 @@
 import path from 'path';
-import _ from 'lodash';
 import Q from 'q';
 import * as baseUtil from '../../util';
 
@@ -40,12 +39,12 @@ export default function mergeModels(model, options = {}) {
 
     return function() {
         return Q.all([
-                baseUtil.readFileFromCache('model.json', []),
-                baseUtil.readJSONFile(options.modelPath, null)
-            ])
-            .spread(model.merge.bind(model))
-            .then(logModelChanges)
-            .then(replaceModelFileInCache)
-            .thenResolve(model);
+            baseUtil.readFileFromCache('model.json', []),
+            baseUtil.readJSONFile(options.modelPath, null)
+        ])
+        .spread(model.merge.bind(model))
+        .then(logModelChanges)
+        .then(replaceModelFileInCache)
+        .thenResolve(model);
     };
 }

@@ -31,7 +31,7 @@ export default class Github {
      * @private
      */
     _initPublicAPI(options, defaultParams) {
-        var publicAPI = new Api(_.extend({host: 'api.github.com'}, defaultParams));
+        const publicAPI = new Api(_.extend({host: 'api.github.com'}, defaultParams));
         const {token} = options;
 
         if(!token) {

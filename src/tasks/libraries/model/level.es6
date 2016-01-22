@@ -58,12 +58,12 @@ export default class Level extends Base {
         // и вернуть данные страниц блоков. После чего эти данные склеиваются друг с другом
         // и данными самого уровня переопределения в единый массив
         return Q.all(data.blocks.map(block => {
-                return (new Block(this, block.name)).processData(block);
-            }))
-            .then(blocks => {
-                return blocks.reduce((prev, item) => {
-                    return prev.concat(item);
-                }, [this.getData()]);
-            });
+            return (new Block(this, block.name)).processData(block);
+        }))
+        .then(blocks => {
+            return blocks.reduce((prev, item) => {
+                return prev.concat(item);
+            }, [this.getData()]);
+        });
     }
 }

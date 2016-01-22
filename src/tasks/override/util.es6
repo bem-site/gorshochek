@@ -54,7 +54,7 @@ export function isNativeWebsiteUrl(url, existedUrls) {
  * @returns {String|null}
  */
 export function findReplacement(variants, urlHash, existedUrls) {
-    var replacement = null;
+    let replacement = null;
 
     variants.some(item => {
         const alterItem = item + '/README.md';
