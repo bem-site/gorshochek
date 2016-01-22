@@ -1,6 +1,6 @@
-import _ from 'lodash';
 import Q from 'q';
 import * as baseUtil from '../../util';
+import rsyncSlim from 'rsync-slim';
 
 const debug = require('debug')('rsync');
 
@@ -39,7 +39,7 @@ export default function rsync(model, options = {}) {
     }
 
     return function() {
-        return Q.nfcall(baseUtil.rsync, prepareRsyncOptions())
+        return Q.nfcall(rsyncSlim, prepareRsyncOptions())
             .thenResolve(model)
             .catch(error => {
                 console.error('file synchronization failed');

@@ -1,11 +1,11 @@
 var _ = require('lodash'),
-    Model = require('../../../lib/model'),
-    baseUtil = require('../../../lib/util'),
-    rsync = require('../../../index').tasks.core.rsync;
+    proxyquire = require('proxyquire'),
+    Model = require('../../../lib/model');
 
 describe('tasks-core/rsync', function() {
-    var sandbox = sinon.sandbox.create(),
+    var rsync,
         rsyncStub,
+        sandbox = sinon.sandbox.create(),
         model = new Model(),
         baseParams = {
             src: './.builder/cache/',
@@ -16,7 +16,8 @@ describe('tasks-core/rsync', function() {
 
     beforeEach(function() {
         sandbox.stub(console, 'error');
-        rsyncStub = sandbox.stub(baseUtil, 'rsync').yields(null);
+        rsyncStub = sandbox.stub().yields(null);
+        rsync = proxyquire('../../../lib/tasks/core/rsync', {'rsync-slim': rsyncStub});
     });
 
     afterEach(function() {

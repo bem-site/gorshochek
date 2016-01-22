@@ -3,12 +3,8 @@ import path from 'path';
 import Q from 'q';
 import _ from 'lodash';
 import fsExtra from 'fs-extra';
-import rsyncSlim from 'rsync-slim';
 
 const debug = require('debug')('util');
-
-// TODO: try to get rid of it
-export const rsync = rsyncSlim;
 
 /**
  * Returns path to cache folder
