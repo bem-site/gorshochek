@@ -57,7 +57,7 @@
     "jshint-stylish": "^2.0.1",
     "mocha": "^2.3.4",
     "mocha-lcov-reporter": "^1.0.0",
-    "nock": "^5.2.1",
+    "nock": "^6.x",
     "proxyquire": "^1.7.3",
     "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0"
