@@ -1,4 +1,4 @@
-var Model = require('./lib/model');
+const Model = require('./lib/model');
 
 module.exports = {
     /**
@@ -25,6 +25,9 @@ module.exports = {
             createHeaderMeta: require('./lib/tasks/page/header-meta'),
             createBreadcrumbs: require('./lib/tasks/page/breadcrumbs'),
             createSearchMeta: require('./lib/tasks/page/search-meta')
+        },
+        override: {
+            overrideDocLinks: require('./lib/tasks/override/override-docs')
         },
         sitemap: {
             createSitemapXML: require('./lib/tasks/sitemap/sitemap-xml')

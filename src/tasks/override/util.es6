@@ -33,7 +33,7 @@ export function isOnlyAnchor(url) {
  * @returns {Boolean}
  */
 export function isGithubUrl(url) {
-    return url.hostname.indexOf('github') > -1;
+    return url.hostname && url.hostname.indexOf('github') > -1;
 }
 
 /**
