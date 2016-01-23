@@ -29,7 +29,7 @@
     "fs-extra": "^0.26.x",
     "github": "^0.2.4",
     "js2xmlparser": "^1.0.0",
-    "lodash": "^3.x",
+    "lodash": "^4.x",
     "mds-wrapper": "^1.4.0",
     "moment": "^2.x",
     "q": "^2.x",
