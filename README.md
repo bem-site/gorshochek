@@ -8,7 +8,7 @@
 [![Travis](https://img.shields.io/travis/bem-site/gorshochek.svg)](https://travis-ci.org/bem-site/gorshochek)
 [![Code Climate](https://codeclimate.com/github/bem-site/gorshochek/badges/gpa.svg)](https://codeclimate.com/github/bem-site/gorshochek)
 [![David](https://img.shields.io/david/bem-site/gorshochek.svg)](https://david-dm.org/bem-site/gorshochek)
-![](https://reposs.herokuapp.com/?path=CocoaPods/Specs&style=flat)
+![](https://reposs.herokuapp.com/?path=bem-site/gorshochek&style=flat)
 
 Модуль сборки данных для bem сайтов.
 
