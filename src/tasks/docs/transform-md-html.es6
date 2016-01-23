@@ -27,7 +27,7 @@ export default function transformMdToHtml(model) {
      * @returns {Promise}
      */
     function transform(page, md) {
-        return Q.nfcall(mdToHtml.render, md)
+        return Q.denodeify(mdToHtml.render)(md)
             .catch(error => {
                 console.error(`Error occur while transform md -> html for page: ${page.url}`);
                 console.error(error.stack);

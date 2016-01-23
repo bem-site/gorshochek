@@ -42,7 +42,7 @@ export default class Base {
      */
     saveFile(filePath, content, isJSON) {
         const method = isJSON ? 'outputJSON' : 'outputFile';
-        return Q.nfcall(fsExtra[method], filePath, content)
+        return Q.denodeify(fsExtra[method])(filePath, content)
             .thenResolve(filePath)
             .catch(error => {
                 console.error(`Error occur while saving file: ${filePath}`);

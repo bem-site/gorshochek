@@ -39,7 +39,7 @@ export default function rsync(model, options = {}) {
     }
 
     return function() {
-        return Q.nfcall(rsyncSlim, prepareRsyncOptions())
+        return Q.denodeify(rsyncSlim)(prepareRsyncOptions())
             .thenResolve(model)
             .catch(error => {
                 console.error('file synchronization failed');

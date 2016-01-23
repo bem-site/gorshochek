@@ -32,7 +32,7 @@ export function createFolder(folder) {
  */
 export function copyFile(sourcePath, destinationPath) {
     debug(`copy file from: ${sourcePath} to: ${destinationPath}`);
-    return Q.nfcall(fsExtra.copy, sourcePath, destinationPath);
+    return Q.denodeify(fsExtra.copy)(sourcePath, destinationPath);
 }
 
 /**
@@ -44,7 +44,7 @@ export function copyFile(sourcePath, destinationPath) {
  * @private
  */
 function _readFile(method, filePath, fallbackValue) {
-    return Q.nfcall(method, filePath, {encoding: 'utf-8'})
+    return Q.denodeify(method)(filePath, {encoding: 'utf-8'})
         .catch(error => {
             if(fallbackValue && error.code === 'ENOENT') {
                 return fallbackValue;
@@ -108,9 +108,9 @@ export function writeFileToCache(filePath, content) {
 export function writeFile(filePath, content) {
     debug(`write file to: ${filePath}`);
     const dirPath = path.dirname(filePath);
-    return Q.nfcall(fsExtra.ensureDir, dirPath)
+    return Q.denodeify(fsExtra.ensureDir)(dirPath)
         .then(() => {
-            return Q.nfcall(fs.writeFile, filePath, content, {encoding: 'utf-8'});
+            return Q.denodeify(fs.writeFile)(filePath, content, {encoding: 'utf-8'});
         })
         .catch(error => {
             console.error(`Error occured while saving file ${filePath}`);
