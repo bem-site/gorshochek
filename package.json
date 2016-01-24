@@ -1,6 +1,14 @@
 {
   "name": "gorshochek",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "description": "Set of plugins for BEM site data generation",
+  "keywords": [
+    "BEM", "bem", "bem-site", "website", "data", "generation", "generator", "plugins", "gulp"
+  ],
+  "bugs": {
+    "url" : "https://github.com/bem-site/gorshochek/issues",
+    "email" : "andrey.kuznetsov48@yandex.ru"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/bem-site/gorshochek.git"
@@ -18,7 +26,27 @@
   "engines": {
     "node": ">= 0.10.0"
   },
+  "os" : [ "darwin", "linux" ],
   "main": "index.js",
+  "scripts": {
+    "eslint": "gulp eslint",
+    "jscs": "gulp jscs",
+    "lint": "gulp lint",
+    "jsdoc": "gulp esdoc",
+    "publish-doc": "gulp publish-doc",
+    "compile": "gulp compile",
+    "pretest": "npm run compile",
+    "prepublish": "gulp compile",
+    "deps": "npm install && gulp compile",
+    "mocha": "NODE_ENV=testing mocha",
+    "test": "NODE_ENV=testing ./node_modules/.bin/istanbul cover _mocha",
+    "clean": "rm -rf ./.builder && rm -rf ./data"
+  },
+  "readmeFilename": "README.md",
+  "license": {
+    "type": "MPL-2.0",
+    "url": "https://github.com/bem-site/gorshochek/blob/master/LICENSE"
+  },
   "dependencies": {
     "babel-runtime": "^6.x",
     "bem-md-renderer": "^0.3.0",
@@ -61,24 +89,5 @@
     "proxyquire": "^1.7.3",
     "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0"
-  },
-  "scripts": {
-    "eslint": "gulp eslint",
-    "jscs": "gulp jscs",
-    "lint": "gulp lint",
-    "jsdoc": "gulp esdoc",
-    "publish-doc": "gulp publish-doc",
-    "compile": "gulp compile",
-    "pretest": "npm run compile",
-    "prepublish": "gulp compile",
-    "deps": "npm install && gulp compile",
-    "mocha": "NODE_ENV=testing mocha",
-    "test": "NODE_ENV=testing ./node_modules/.bin/istanbul cover _mocha",
-    "clean": "rm -rf ./.builder && rm -rf ./data"
-  },
-  "readmeFilename": "README.md",
-  "license": {
-    "type": "MPL-2.0",
-    "url": "https://github.com/bem-site/gorshochek/blob/master/LICENSE"
   }
 }
