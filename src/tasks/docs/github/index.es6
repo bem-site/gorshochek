@@ -56,7 +56,7 @@ export default class Github {
         // максимальное число допустимых повторных обращений к github в случае возникновения ошибки
         const ATTEMPTS = 5;
 
-        debug('github API call with options:');
+        debug(`github API call for ${method} with options:`);
         debug(' - host: ' + options.host);
         debug(' - user: ' + options.user);
         debug(' - repo: ' + options.repo);

@@ -1,7 +1,6 @@
 var Q = require('q'),
     gorshochek = require('../index'),
-    // TODO: get via ENV vars
-    token = '54fa292690dc4b5410bb' + '57d08170f11d32691633';
+    token = process.env.TOKEN;
 
 var model = gorshochek.createModel(),
     tasks = gorshochek.tasks;
@@ -17,6 +16,7 @@ Q()
     .then(tasks.page.createHeaderTitle(model))
     .then(tasks.page.createHeaderMeta(model))
     .then(tasks.page.createBreadcrumbs(model))
+    .then(tasks.override.overrideDocLinks(model))
     .then(tasks.sitemap.createSitemapXML(model, {host: 'https://ru.bem.info'}))
     .then(tasks.core.saveModel(model))
     .then(tasks.core.rsync(model, {

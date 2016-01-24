@@ -74,8 +74,7 @@ export default function loadSourcesFromGithub(model, options = {}) {
      * @returns {Promise.<T>}
      */
     function readMetaFromCache(page) {
-        return baseUtil.readFileFromCache(path.join(page.url, 'index.meta.json'))
-            .then(cache => (cache || {}))
+        return baseUtil.readFileFromCache(path.join(page.url, 'index.meta.json'), {})
             .catch(() => ({}));
     }
 
@@ -112,7 +111,7 @@ export default function loadSourcesFromGithub(model, options = {}) {
      * @param {...{Object}} params - parameters for github API call
      */
     function getContentFromGithubSource(...params) {
-        return Q.denodeify(api.executeAPIMethod)('getContent', params);
+        return Q.denodeify(api.executeAPIMethod.bind(api))('getContent', ...params);
     }
 
     /**
@@ -122,7 +121,7 @@ export default function loadSourcesFromGithub(model, options = {}) {
      * @returns {Promise}
      */
     function getSourceLastUpdateDate(...params) {
-        return Q.denodeify(api.executeAPIMethod)('getCommits', params)
+        return Q.denodeify(api.executeAPIMethod.bind(api))('getCommits', ...params)
             .catch(() => null)
             .then(commits => {
                 return (commits && commits.length) ?
@@ -136,7 +135,7 @@ export default function loadSourcesFromGithub(model, options = {}) {
      * @returns {*|Promise.<T>}
      */
     function hasRepoIssues(...params) {
-        return Q.denodeify(api.executeAPIMethod)('get', params)
+        return Q.denodeify(api.executeAPIMethod.bind(api))('get', ...params)
             .get('has_issues')
             .catch(() => null);
     }
@@ -151,10 +150,10 @@ export default function loadSourcesFromGithub(model, options = {}) {
      */
     function getSourceBranchOrRepoDefault(options, headers) {
         options.branch = options.branch || options.ref;
-        return Q.denodeify(api.executeAPIMethod)('getBranch', options, headers)
+        return Q.denodeify(api.executeAPIMethod.bind(api))('getBranch', options, headers)
             .thenResolve(options.branch)
             .catch(() => {
-                return Q.denodeify(api.executeAPIMethod)('get', options, headers)
+                return Q.denodeify(api.executeAPIMethod.bind(api))('get', options, headers)
                     .catch(() => null)
                     .get('default_branch');
             });
