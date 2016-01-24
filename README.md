@@ -27,7 +27,7 @@ $ npm install --save gorshochek
 
 ## Описание задач
 
-### mergeModels. [Модуль](./src/tasks-core/merge-model)
+### core.mergeModels. [Модуль](./src/tasks-core/merge-model)
 
 1. Считывает новую модель по пути указанному в опции `modelPath`. 
 2. Сравнивает ее со старой моделью, загруженной из кэша. 
@@ -41,7 +41,7 @@ $ npm install --save gorshochek
 
 Зависимости: нет.
 
-### normalizeModel. [Модуль](./src/tasks-core/normalize-model)
+### core.normalizeModel. [Модуль](./src/tasks-core/normalize-model)
 
 Проверяет модель на корректность. По возможности вносит исправления и выставляет дефолтные значения
 для отсутствующих или некорректных полей.
@@ -57,27 +57,108 @@ gulp.task('normalize-model', gorshochek.tasks.core.normalizeModel(model));
 
 Параметры: отсутствуют.
 
-Зависимости: требует выполнения задачи `mergeModels`
+Зависимости: требует выполнения задачи [`core.mergeModels`](core.mergeModels)
 
-### saveModel
+### core.saveModel [Модуль](./src/tasks-core/save-model)
 
-### rsync
+Сохраняет модель на файловую систему (по умолчанию в `{CACHE_FOLDER}/data.json`).
 
-### loadFromGithub
+Пример вызова: 
+```
+var gulp = require('gulp');
+var gorshochek = require('gorshochek');
+var model = gorshochek.createModel();
 
-### loadFromFile
+gulp.task('save-model', gorshochek.tasks.core.saveModel(model, options));
+``` 
 
-### transformMdToHtml
+Параметры: 
 
-### createHeaderTitle
+* {String} dataPath - директория для сохранения файла модели. Необязательный параметр.
 
-### createHeaderMeta
+Зависимости: нет
 
-### createBreadcrumbs
+### core.rsync [Модуль](./src/tasks-core/rsync)
 
-### createSearchMeta
+Выполняет синхронизацию файлов между директорией кэша и целевой директорией для собранных данных.
 
-### createSitemapXML
+Пример вызова: 
+```
+var gulp = require('gulp');
+var gorshochek = require('gorshochek');
+var model = gorshochek.createModel();
+
+gulp.task('rsync', gorshochek.tasks.core.rsync(model, {
+    src: './.builder/cache',
+    dest: './data',
+    options: '-rd --delete --delete-excluded --force',
+    exclude: ['*.md', '*.meta.json']
+}));
+``` 
+
+Параметры: 
+
+* {String} src - исходная директория для синхронизации. По умолчанию это директория в которой хранится 
+кэш сборки. Необязательный параметр.
+* {String} dest -  целевая директория для синхронизации. По умолчанию `./data`. Необязательный параметр.
+* {String} options - Дополнительные опции для синхронизации. Необязательный параметр. 
+По умолчанию синхронизация выполняется с такими предустановленными опциями: 
+`-rd --delete --delete-excluded --force`. 
+* {String[]} exclude - Массив с масками для файлов которые должны быть исключены из процесса копирования. 
+Необязательный параметр.
+
+Зависимости: нет
+
+### docs.loadFromGithub [Модуль](./src/tasks-docs/load-from-github)
+
+Загружает контент для страниц с помощью Github API. Выполняется для тех страниц модели у которых поле
+`sourceUrl` указывает на файл расположенный в каком-либо github-репозитории. Кроме того, данная задача 
+включает в себя следующую дополнительную функциональность:
+
+* Определение даты последнего коммита для загружаемого файла ресурса.
+* Определение наличия раздела issues в репозитории.
+* Определение ветки или тега с которого загружается ресурс. В случае, если ресурс загружается 
+из тега, то вернется имя основной ветки ропозитория установленной по умолчанию.
+
+Пример вызова: 
+```
+var gulp = require('gulp');
+var gorshochek = require('gorshochek');
+var model = gorshochek.createModel();
+
+gulp.task('save-model', gorshochek.tasks.docs.loadFromGithub(model, {
+    token: 'your github auth token',
+    updateDate: true,
+    hasIssues: true,
+    branch: true
+}));
+``` 
+
+Параметры: 
+
+* {String} token - github токен. Без указания этого переметра количество возможных запросов к 
+github будет ограничено 60-ю запросами в час.
+* {Boolean} updateDate - загружать дату последнего коммита ресурса. Значение по умолчанию - `false`.
+* {Boolean} hasIssues - определять наличие раздела `issues` репозитория ресурса. Значение по умолчанию - `false`.
+* {Boolean} branch - определять ветку репозитория с которого был загружен ресурс. Значение по умолчанию - `false`.
+
+Зависимости: требует выполнения задачи [`core.mergeModels`](core.mergeModels)
+
+### docs.loadFromFile [Модуль](./src/tasks-docs/load-from-file)
+
+### docs.transformMdToHtml [Модуль](./src/tasks-docs/transform-md-html)
+
+### page.createHeaderTitle [Модуль](./src/tasks-page/header-title)
+
+### page.createHeaderMeta [Модуль](./src/tasks-page/header-meta)
+
+### page.createBreadcrumbs [Модуль](./src/tasks-page/breadcrumbs)
+
+### page.createSearchMeta [Модуль](./src/tasks-page/search-meta)
+
+### override.overrideDocLinks [Модуль](./src/tasks-core/override-docs)
+
+### sitemap.createSitemapXML [Модуль](./src/sitemap/sitemap-xml)
 
 ## Создание собственной задачи сборки
 
@@ -107,14 +188,15 @@ export default function(model, options = {}) {
 npm test
 ```
 
-Проверка синтаксиса кода с помощью [jshint](https://www.npmjs.com/package/jshint) и [jscs](https://www.npmjs.com/package/jscs)
+Проверка синтаксиса кода с помощью [eslint](http://eslint.org) и [jscs](https://www.npmjs.com/package/jscs)
 ```
-npm run codestyle
+npm run lint
 ```
 
 Особая благодарность за помощь в разработке:
 
 * Гриненко Владимир (http://github.com/tadatuta)
+* Харисов Виталий (https://github.com/vithar)
 
 Разработчик Кузнецов Андрей Серргеевич @tormozz48
-Вопросы и предложения присылать по адресу: tormozz48@gmail.com
+Вопросы и предложения присылать по адресу: andrey.kuznetsov48@yandex.ru
