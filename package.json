@@ -3,11 +3,19 @@
   "version": "0.2.0",
   "description": "Set of plugins for BEM site data generation",
   "keywords": [
-    "BEM", "bem", "bem-site", "website", "data", "generation", "generator", "plugins", "gulp"
+    "BEM",
+    "bem",
+    "bem-site",
+    "website",
+    "data",
+    "generation",
+    "generator",
+    "plugins",
+    "gulp"
   ],
   "bugs": {
-    "url" : "https://github.com/bem-site/gorshochek/issues",
-    "email" : "andrey.kuznetsov48@yandex.ru"
+    "url": "https://github.com/bem-site/gorshochek/issues",
+    "email": "andrey.kuznetsov48@yandex.ru"
   },
   "repository": {
     "type": "git",
@@ -26,7 +34,10 @@
   "engines": {
     "node": ">= 0.10.0"
   },
-  "os" : [ "darwin", "linux" ],
+  "os": [
+    "darwin",
+    "linux"
+  ],
   "main": "index.js",
   "scripts": {
     "eslint": "gulp eslint",

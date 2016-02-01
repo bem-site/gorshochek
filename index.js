@@ -20,6 +20,9 @@ module.exports = {
             loadFromFile: require('./lib/tasks/docs/load-from-file'),
             transformMdToHtml: require('./lib/tasks/docs/transform-md-html')
         },
+        meta: {
+            tags: require('./lib/tasks/meta/tags')
+        },
         page: {
             createHeaderTitle: require('./lib/tasks/page/header-title'),
             createHeaderMeta: require('./lib/tasks/page/header-meta'),

@@ -7,7 +7,7 @@ var fs = require('fs'),
     esdoc = require('gulp-esdoc'),
     ghPages = require('gulp-gh-pages');
 
-const SRC_PATH = './src/**/*.es6';
+const SRC_PATH = './src/**/*.js';
 
 gulp.task('clean-jsdoc', function() {
     return gulp.src('./jsdoc', {read: false}).pipe(clean());

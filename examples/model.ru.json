@@ -19,7 +19,8 @@
     "site": "/methodology/",
     "title": "Основные понятия",
     "published": true,
-    "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/method/key-concepts/key-concepts.ru.md"
+    "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/method/key-concepts/key-concepts.ru.md",
+    "tags": ["methodology", "key-concepts"]
   },
   {
     "url": "/methodology/naming-convention",
@@ -33,7 +34,8 @@
     "site": "/methodology/",
     "title": "Файловая система",
     "published": true,
-    "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/method/filesystem/filesystem.ru.md"
+    "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/method/filesystem/filesystem.ru.md",
+    "tags": ["methodology", "filesystem"]
   },
   {
     "url": "/methodology/build",
@@ -61,7 +63,8 @@
     "site": "/methodology/",
     "title": "История создания",
     "published": true,
-    "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/method/history/history.ru.md"
+    "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/method/history/history.ru.md",
+    "tags": ["methodology", "history"]
   },
   {
     "url": "/platform",
