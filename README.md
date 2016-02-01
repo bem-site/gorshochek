@@ -27,7 +27,7 @@ $ npm install --save gorshochek
 
 ## Описание задач
 
-### core.mergeModels. [Модуль](./src/tasks-core/merge-model)
+### [core.mergeModels](./src/tasks-core/merge-model)
 
 1. Считывает новую модель по пути указанному в опции `modelPath`. 
 2. Сравнивает ее со старой моделью, загруженной из кэша. 
@@ -41,7 +41,7 @@ $ npm install --save gorshochek
 
 Зависимости: нет.
 
-### core.normalizeModel. [Модуль](./src/tasks-core/normalize-model)
+### [core.normalizeModel](./src/tasks-core/normalize-model)
 
 Проверяет модель на корректность. По возможности вносит исправления и выставляет дефолтные значения
 для отсутствующих или некорректных полей.
@@ -59,7 +59,7 @@ gulp.task('normalize-model', gorshochek.tasks.core.normalizeModel(model));
 
 Зависимости: требует выполнения задачи [`core.mergeModels`](core.mergeModels)
 
-### core.saveModel [Модуль](./src/tasks-core/save-model)
+### [core.saveModel](./src/tasks-core/save-model)
 
 Сохраняет модель на файловую систему (по умолчанию в `{CACHE_FOLDER}/data.json`).
 
@@ -78,7 +78,7 @@ gulp.task('save-model', gorshochek.tasks.core.saveModel(model, options));
 
 Зависимости: нет
 
-### core.rsync [Модуль](./src/tasks-core/rsync)
+### [core.rsync](./src/tasks-core/rsync)
 
 Выполняет синхронизацию файлов между директорией кэша и целевой директорией для собранных данных.
 
@@ -109,7 +109,7 @@ gulp.task('rsync', gorshochek.tasks.core.rsync(model, {
 
 Зависимости: нет
 
-### docs.loadFromGithub [Модуль](./src/tasks-docs/load-from-github)
+### [docs.loadFromGithub](./src/tasks-docs/load-from-github)
 
 Загружает контент для страниц с помощью Github API. Выполняется для тех страниц модели у которых поле
 `sourceUrl` указывает на файл расположенный в каком-либо github-репозитории. Кроме того, данная задача 
@@ -144,21 +144,84 @@ github будет ограничено 60-ю запросами в час.
 
 Зависимости: требует выполнения задачи [`core.mergeModels`](core.mergeModels)
 
-### docs.loadFromFile [Модуль](./src/tasks-docs/load-from-file)
+### [docs.loadFromFile](./src/tasks-docs/load-from-file)
 
-### docs.transformMdToHtml [Модуль](./src/tasks-docs/transform-md-html)
+### [docs.transformMdToHtml](./src/tasks-docs/transform-md-html)
 
-### page.createHeaderTitle [Модуль](./src/tasks-page/header-title)
+### [page.createHeaderTitle](./src/tasks-page/header-title)
 
-### page.createHeaderMeta [Модуль](./src/tasks-page/header-meta)
+Генерирует поле `header.title` для каждой страницы в модели и записывает
+в него title, предназначенный для вывода в тэге `<title>` заголовка страницы.
 
-### page.createBreadcrumbs [Модуль](./src/tasks-page/breadcrumbs)
+Пример вызова: 
+```
+var gulp = require('gulp');
+var gorshochek = require('gorshochek');
+var model = gorshochek.createModel();
 
-### page.createSearchMeta [Модуль](./src/tasks-page/search-meta)
+gulp.task('header-title', gorshochek.tasks.page.createHeaderTitle(model, {
+   delimiter: '/'
+}));
+```
 
-### override.overrideDocLinks [Модуль](./src/tasks-core/override-docs)
+Параметры: 
 
-### sitemap.createSitemapXML [Модуль](./src/sitemap/sitemap-xml)
+* {String} delimiter - разделитель частей из которых состоит header.title 
+
+Зависимости: требует выполнения задачи [`core.mergeModels`](core.mergeModels)
+
+Примечание: если сборка содержит задачи, которые динамически генерируют и добавляют в модель 
+новые страницы, то данная задача должна запускаться после того как в модель будут добавлены 
+все сгенерированные страницы.
+
+### [page.createHeaderMeta](./src/tasks-page/header-meta)
+
+Генерирует поле `header.meta` для каждой страницы в модели и записывает в него объект,
+содержащий мета-информацию, предназначенную для шаблонизации в тегах `<meta>` заголовка страницы.
+
+Пример вызова: 
+```
+var gulp = require('gulp');
+var gorshochek = require('gorshochek');
+var model = gorshochek.createModel();
+
+gulp.task('header-meta', gorshochek.tasks.page.createHeaderMeta(model));
+```
+
+Зависимости: требует выполнения задачи [`core.mergeModels`](core.mergeModels)
+
+Примечание: если сборка содержит задачи, которые динамически генерируют и добавляют в модель 
+новые страницы, то данная задача должна запускаться после того как в модель будут добавлены 
+все сгенерированные страницы.
+
+### [page.createBreadcrumbs](./src/tasks-page/breadcrumbs)
+
+Генерирует поле `breadcrumbs` для каждой страницы в модели и записывает в него массив
+объектов содержащий поля `title` и `url` текущей и всех родительских страниц включая корневую страницы сайта.
+Данный объект удобен для шаблонизации и последующего отображения "хлебных крошек" на сайте.
+
+Пример вызова: 
+```
+var gulp = require('gulp');
+var gorshochek = require('gorshochek');
+var model = gorshochek.createModel();
+
+gulp.task('breadcrumbs', gorshochek.tasks.page.createBreadcrumbs(model));
+```
+
+Зависимости: требует выполнения задачи [`core.mergeModels`](core.mergeModels)
+
+Примечание: если сборка содержит задачи, которые динамически генерируют и добавляют в модель 
+новые страницы, то данная задача должна запускаться после того как в модель будут добавлены 
+все сгенерированные страницы.
+
+### [page.createSearchMeta](./src/tasks-page/search-meta)
+
+Добавляет некоторую мета-информацию для каждой страницы преднаначенную для работы поискового робота Яндекса.
+
+### [override.overrideDocLinks](./src/tasks-core/override-docs)
+
+### [sitemap.createSitemapXML](./src/sitemap/sitemap-xml)
 
 ## Создание собственной задачи сборки
 
