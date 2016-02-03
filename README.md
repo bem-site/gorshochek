@@ -55,7 +55,7 @@ Q()
 ```js
 var gulp = require('gulp'),
     gorshochek = require('../index'),
-    token = '54fa292690dc4b5410bb' + '57d08170f11d32691633';
+    token = process.env.TOKEN;
 
 var model = gorshochek.createModel(),
     tasks = gorshochek.tasks;
