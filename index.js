@@ -21,7 +21,7 @@ module.exports = {
             transformMdToHtml: require('./lib/tasks/docs/transform-md-html')
         },
         meta: {
-            tags: require('./lib/tasks/meta/tags')
+            generateTagPages: require('./lib/tasks/meta/tags')
         },
         page: {
             createHeaderTitle: require('./lib/tasks/page/header-title'),

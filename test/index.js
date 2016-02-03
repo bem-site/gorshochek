@@ -18,6 +18,8 @@ require('./src/tasks-docs/load-from-github.test.js');
 require('./src/tasks-docs/load-from-file.test.js');
 require('./src/tasks-docs/transform-md-html.test.js');
 
+require('./src/tasks-meta/tags.test.js');
+
 require('./src/tasks-override/util.test.js');
 require('./src/tasks-override/override-docs.test.js');
 
