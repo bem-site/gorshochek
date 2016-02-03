@@ -10,7 +10,7 @@ var model = gorshochek.createModel(),
 Q()
     .then(tasks.core.mergeModels(model, {modelPath: './examples/model.ru.json'}))
     .then(tasks.core.normalizeModel(model))
-    .then(tasks.meta.tags(model))
+    .then(tasks.meta.generateTagPages(model))
     .then(tasks.docs.loadSourceFromGithub(model, {token: token}))
     .then(tasks.docs.loadSourceFromLocal(model))
     .then(tasks.docs.transformMdToHtml(model))
