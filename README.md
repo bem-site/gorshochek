@@ -21,207 +21,69 @@
 $ npm install --save gorshochek
 ```
 
-## Пример использования
+## Примеры использования
 
-//TODO написать документацию
-
-## Описание задач
-
-### [core.mergeModels](./src/tasks-core/merge-model)
-
-1. Считывает новую модель по пути указанному в опции `modelPath`. 
-2. Сравнивает ее со старой моделью, загруженной из кэша. 
-3. Находит и сохраняет отличия между старой и новой моделью данных в модель изменений.
-4. Произвоит слияние (merge) моделей.
-5. Сохраняет новую модель в кэш и заменяет файл старой модели.
-
-Параметры: 
-
-* {String} modelPath - путь к модели данных. Обязательный параметр.
-
-Зависимости: нет.
-
-### [core.normalizeModel](./src/tasks-core/normalize-model)
-
-Проверяет модель на корректность. По возможности вносит исправления и выставляет дефолтные значения
-для отсутствующих или некорректных полей.
- 
-Пример вызова: 
+Простой запуск сборки путем последовательного выполнения всех необходимых задач:
 ```
-var gulp = require('gulp');
-var gorshochek = require('gorshochek');
-var model = gorshochek.createModel();
+var Q = require('q'),
+    gorshochek = require('../index'),
+    token = process.env.TOKEN;
 
-gulp.task('normalize-model', gorshochek.tasks.core.normalizeModel(model));
-``` 
+var model = gorshochek.createModel(),
+    tasks = gorshochek.tasks;
 
-Параметры: отсутствуют.
-
-Зависимости: требует выполнения задачи [`core.mergeModels`](core.mergeModels)
-
-### [core.saveModel](./src/tasks-core/save-model)
-
-Сохраняет модель на файловую систему (по умолчанию в `{CACHE_FOLDER}/data.json`).
-
-Пример вызова: 
+Q()
+    .then(tasks.core.mergeModels(model, {modelPath: './examples/model.ru.json'}))
+    .then(tasks.core.normalizeModel(model))
+    .then(tasks.meta.tags(model))
+    .then(tasks.docs.loadFromGithub(model, {token: token}))
+    .then(tasks.docs.loadFromFile(model))
+    .then(tasks.docs.transformMdToHtml(model))
+    .then(tasks.page.createHeaderTitle(model))
+    .then(tasks.page.createHeaderMeta(model))
+    .then(tasks.page.createBreadcrumbs(model))
+    .then(tasks.override.overrideDocLinks(model))
+    .then(tasks.sitemap.createSitemapXML(model, {host: 'https://ru.bem.info'}))
+    .then(tasks.core.saveModel(model))
+    .then(tasks.core.rsync(model, {
+        dest: './data',
+        exclude: ['*.meta.json', 'model.json', '*.md']
+    }));
 ```
-var gulp = require('gulp');
-var gorshochek = require('gorshochek');
-var model = gorshochek.createModel();
 
-gulp.task('save-model', gorshochek.tasks.core.saveModel(model, options));
-``` 
-
-Параметры: 
-
-* {String} dataPath - директория для сохранения файла модели. Необязательный параметр.
-
-Зависимости: нет
-
-### [core.rsync](./src/tasks-core/rsync)
-
-Выполняет синхронизацию файлов между директорией кэша и целевой директорией для собранных данных.
-
-Пример вызова: 
+Запуск с помощью [gulp](https://npmjs.org/package/gulp):
 ```
-var gulp = require('gulp');
-var gorshochek = require('gorshochek');
-var model = gorshochek.createModel();
+var gulp = require('gulp'),
+    gorshochek = require('../index'),
+    token = '54fa292690dc4b5410bb' + '57d08170f11d32691633';
 
-gulp.task('rsync', gorshochek.tasks.core.rsync(model, {
-    src: './.builder/cache',
+var model = gorshochek.createModel(),
+    tasks = gorshochek.tasks;
+
+gulp.task('merge-model', tasks.core.mergeModels(model, {modelPath: './examples/model.ru.json'}));
+gulp.task('normalize-model', ['merge-model'], tasks.core.normalizeModel(model));
+gulp.task('process-model', ['normalize-model']);
+
+gulp.task('load-from-github', ['process-model'], tasks.docs.loadFromGithub(model, {token: token}));
+gulp.task('load-from-file', ['process-model'], tasks.docs.loadFromFile(model));
+gulp.task('transform-md-html', ['load-from-github', 'load-from-file'], tasks.docs.transformMdToHtml(model));
+gulp.task('process-docs', ['transform-md-html']);
+
+gulp.task('header-title', ['process-model'], tasks.page.createHeaderTitle(model));
+gulp.task('header-meta', ['process-model'], tasks.page.createHeaderMeta(model));
+gulp.task('breadcrumbs', ['process-model'], tasks.page.createBreadcrumbs(model));
+gulp.task('page-meta', ['header-title', 'header-meta', 'breadcrumbs']);
+
+gulp.task('sitemap-xml', ['process-model'], tasks.sitemap.createSitemapXML(model, {host: 'https://ru.bem.info'}));
+
+gulp.task('save-model', ['process-docs', 'page-meta', 'sitemap-xml'], tasks.core.saveModel(model));
+gulp.task('rsync', ['save-model'], tasks.core.rsync(model, {
     dest: './data',
-    options: '-rd --delete --delete-excluded --force',
-    exclude: ['*.md', '*.meta.json']
+    exclude: ['*.meta.json', 'model.json', '*.md']
 }));
-``` 
 
-Параметры: 
-
-* {String} src - исходная директория для синхронизации. По умолчанию это директория в которой хранится 
-кэш сборки. Необязательный параметр.
-* {String} dest -  целевая директория для синхронизации. По умолчанию `./data`. Необязательный параметр.
-* {String} options - Дополнительные опции для синхронизации. Необязательный параметр. 
-По умолчанию синхронизация выполняется с такими предустановленными опциями: 
-`-rd --delete --delete-excluded --force`. 
-* {String[]} exclude - Массив с масками для файлов которые должны быть исключены из процесса копирования. 
-Необязательный параметр.
-
-Зависимости: нет
-
-### [docs.loadFromGithub](./src/tasks-docs/load-from-github)
-
-Загружает контент для страниц с помощью Github API. Выполняется для тех страниц модели у которых поле
-`sourceUrl` указывает на файл расположенный в каком-либо github-репозитории. Кроме того, данная задача 
-включает в себя следующую дополнительную функциональность:
-
-* Определение даты последнего коммита для загружаемого файла ресурса.
-* Определение наличия раздела issues в репозитории.
-* Определение ветки или тега с которого загружается ресурс. В случае, если ресурс загружается 
-из тега, то вернется имя основной ветки ропозитория установленной по умолчанию.
-
-Пример вызова: 
+gulp.task('default', ['rsync']);
 ```
-var gulp = require('gulp');
-var gorshochek = require('gorshochek');
-var model = gorshochek.createModel();
-
-gulp.task('save-model', gorshochek.tasks.docs.loadFromGithub(model, {
-    token: 'your github auth token',
-    updateDate: true,
-    hasIssues: true,
-    branch: true
-}));
-``` 
-
-Параметры: 
-
-* {String} token - github токен. Без указания этого переметра количество возможных запросов к 
-github будет ограничено 60-ю запросами в час.
-* {Boolean} updateDate - загружать дату последнего коммита ресурса. Значение по умолчанию - `false`.
-* {Boolean} hasIssues - определять наличие раздела `issues` репозитория ресурса. Значение по умолчанию - `false`.
-* {Boolean} branch - определять ветку репозитория с которого был загружен ресурс. Значение по умолчанию - `false`.
-
-Зависимости: требует выполнения задачи [`core.mergeModels`](core.mergeModels)
-
-### [docs.loadFromFile](./src/tasks-docs/load-from-file)
-
-### [docs.transformMdToHtml](./src/tasks-docs/transform-md-html)
-
-### [page.createHeaderTitle](./src/tasks-page/header-title)
-
-Генерирует поле `header.title` для каждой страницы в модели и записывает
-в него title, предназначенный для вывода в тэге `<title>` заголовка страницы.
-
-Пример вызова: 
-```
-var gulp = require('gulp');
-var gorshochek = require('gorshochek');
-var model = gorshochek.createModel();
-
-gulp.task('header-title', gorshochek.tasks.page.createHeaderTitle(model, {
-   delimiter: '/'
-}));
-```
-
-Параметры: 
-
-* {String} delimiter - разделитель частей из которых состоит header.title 
-
-Зависимости: требует выполнения задачи [`core.mergeModels`](core.mergeModels)
-
-Примечание: если сборка содержит задачи, которые динамически генерируют и добавляют в модель 
-новые страницы, то данная задача должна запускаться после того как в модель будут добавлены 
-все сгенерированные страницы.
-
-### [page.createHeaderMeta](./src/tasks-page/header-meta)
-
-Генерирует поле `header.meta` для каждой страницы в модели и записывает в него объект,
-содержащий мета-информацию, предназначенную для шаблонизации в тегах `<meta>` заголовка страницы.
-
-Пример вызова: 
-```
-var gulp = require('gulp');
-var gorshochek = require('gorshochek');
-var model = gorshochek.createModel();
-
-gulp.task('header-meta', gorshochek.tasks.page.createHeaderMeta(model));
-```
-
-Зависимости: требует выполнения задачи [`core.mergeModels`](core.mergeModels)
-
-Примечание: если сборка содержит задачи, которые динамически генерируют и добавляют в модель 
-новые страницы, то данная задача должна запускаться после того как в модель будут добавлены 
-все сгенерированные страницы.
-
-### [page.createBreadcrumbs](./src/tasks-page/breadcrumbs)
-
-Генерирует поле `breadcrumbs` для каждой страницы в модели и записывает в него массив
-объектов содержащий поля `title` и `url` текущей и всех родительских страниц включая корневую страницы сайта.
-Данный объект удобен для шаблонизации и последующего отображения "хлебных крошек" на сайте.
-
-Пример вызова: 
-```
-var gulp = require('gulp');
-var gorshochek = require('gorshochek');
-var model = gorshochek.createModel();
-
-gulp.task('breadcrumbs', gorshochek.tasks.page.createBreadcrumbs(model));
-```
-
-Зависимости: требует выполнения задачи [`core.mergeModels`](core.mergeModels)
-
-Примечание: если сборка содержит задачи, которые динамически генерируют и добавляют в модель 
-новые страницы, то данная задача должна запускаться после того как в модель будут добавлены 
-все сгенерированные страницы.
-
-### [page.createSearchMeta](./src/tasks-page/search-meta)
-
-Добавляет некоторую мета-информацию для каждой страницы преднаначенную для работы поискового робота Яндекса.
-
-### [override.overrideDocLinks](./src/tasks-core/override-docs)
-
-### [sitemap.createSitemapXML](./src/sitemap/sitemap-xml)
 
 ## Создание собственной задачи сборки
 
