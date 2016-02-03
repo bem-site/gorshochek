@@ -49,6 +49,31 @@ describe('tasks-meta/tags', function() {
         });
     });
 
+    it('should save content of tag page into file', function() {
+        return generateTagPages(model)().then(function() {
+            baseUtil.writeFileToCache.should.be.calledTwice;
+            baseUtil.writeFileToCache.firstCall.should.be.calledWith('/tags/tag1/index.json');
+        });
+    });
+
+    it('should generate valid content file for tag page', function() {
+        return generateTagPages(model)().then(function() {
+            baseUtil.writeFileToCache.should.be.calledTwice;
+            baseUtil.writeFileToCache.firstCall.should.be.calledWith('/tags/tag1/index.json',
+                JSON.stringify([{
+                    url: '/url1',
+                    title: 'some-title',
+                    tags: [
+                        {
+                            url: '/tags/tag1',
+                            title: 'tag1'
+                        }
+                    ]
+                }])
+            );
+        });
+    });
+
     it('should generate base tags page', function() {
         return generateTagPages(model)().then(function(model) {
             model.getPages()[2].should.eql({
@@ -95,6 +120,31 @@ describe('tasks-meta/tags', function() {
                 title: 'some-title',
                 tags: [{title: 'tag1', url: '/tags/tag1'}]
             });
+        });
+    });
+
+    it('should save content of base tags page into file', function() {
+        return generateTagPages(model)().then(function() {
+            baseUtil.writeFileToCache.should.be.calledTwice;
+            baseUtil.writeFileToCache.secondCall.should.be.calledWith('/tags/index.json');
+        });
+    });
+
+    it('should generate valid content file for base tags page', function() {
+        return generateTagPages(model)().then(function() {
+            baseUtil.writeFileToCache.should.be.calledTwice;
+            baseUtil.writeFileToCache.secondCall.should.be.calledWith('/tags/index.json',
+                JSON.stringify([{
+                    url: '/url1',
+                    title: 'some-title',
+                    tags: [
+                        {
+                            url: '/tags/tag1',
+                            title: 'tag1'
+                        }
+                    ]
+                }])
+            );
         });
     });
 });
