@@ -3,7 +3,7 @@ var path = require('path'),
     Q = require('q'),
     Model = require('../../../lib/model'),
     baseUtil = require('../../../lib/util'),
-    loadFromFile = require('../../../index').tasks.docs.loadFromFile;
+    loadSourceFromLocal = require('../../../index').tasks.docs.loadSourceFromLocal;
 
 describe('tasks-docs/load-from-file', function() {
     var sandbox = sinon.sandbox.create(),
@@ -23,19 +23,19 @@ describe('tasks-docs/load-from-file', function() {
     });
 
     it('should return function as result', function() {
-        loadFromFile(model).should.be.instanceOf(Function);
+        loadSourceFromLocal(model).should.be.instanceOf(Function);
     });
 
     it('should not process pages without "sourceUrl" property', function() {
         model.setPages([{url: '/url1'}]);
-        return loadFromFile(model)().then(function() {
+        return loadSourceFromLocal(model)().then(function() {
             baseUtil.readFileFromCache.should.not.be.called;
         });
     });
 
     it('should not process page if "sourceUrl" value does not match local file regular expression', function() {
         model.setPages([{url: '/url1', sourceUrl: 'http://github.com/foo/bar'}]);
-        return loadFromFile(model)().then(function() {
+        return loadSourceFromLocal(model)().then(function() {
             baseUtil.readFileFromCache.should.not.be.called;
         });
     });
@@ -43,28 +43,28 @@ describe('tasks-docs/load-from-file', function() {
     describe('sourceUrl matches local file path criteria', function() {
         it('should match on file path like a "/foo/bar.file"', function() {
             model.setPages([{url: '/url', sourceUrl: '/foo/bar.md'}]);
-            return loadFromFile(model)().then(function() {
+            return loadSourceFromLocal(model)().then(function() {
                 baseUtil.readFileFromCache.should.be.calledOnce;
             });
         });
 
         it('should match on file path like a "./foo/bar.md"', function() {
             model.setPages([{url: '/url', sourceUrl: './foo/bar.md'}]);
-            return loadFromFile(model)().then(function() {
+            return loadSourceFromLocal(model)().then(function() {
                 baseUtil.readFileFromCache.should.be.calledOnce;
             });
         });
 
         it('should match on file path like a "../foo/bar.md"', function() {
             model.setPages([{url: '/url', sourceUrl: '../foo/bar.md'}]);
-            return loadFromFile(model)().then(function() {
+            return loadSourceFromLocal(model)().then(function() {
                 baseUtil.readFileFromCache.should.be.calledOnce;
             });
         });
 
         it('should match on file path like a "../../foo/bar.md"', function() {
             model.setPages([{url: '/url', sourceUrl: '../../foo/bar.md'}]);
-            return loadFromFile(model)().then(function() {
+            return loadSourceFromLocal(model)().then(function() {
                 baseUtil.readFileFromCache.should.be.calledOnce;
             });
         });
@@ -73,7 +73,7 @@ describe('tasks-docs/load-from-file', function() {
     it('should try to read file from cache by valid file path', function() {
         model.setPages([_.extend({}, defaultPage)]);
 
-        return loadFromFile(model)().then(function() {
+        return loadSourceFromLocal(model)().then(function() {
             baseUtil.readFileFromCache.should.be
                 .calledWithMatch(path.join('/url', 'index.file'));
         });
@@ -82,7 +82,7 @@ describe('tasks-docs/load-from-file', function() {
     it('should read file from local filesystem by valid path', function() {
         model.setPages([_.extend({}, defaultPage)]);
 
-        return loadFromFile(model)().then(function() {
+        return loadSourceFromLocal(model)().then(function() {
             baseUtil.readFile.should.be.calledWithMatch('foo.file');
         });
     });
@@ -91,7 +91,7 @@ describe('tasks-docs/load-from-file', function() {
         model.setPages([_.extend({}, defaultPage)]);
         baseUtil.readFile.returns(Q.reject('Error'));
 
-        return loadFromFile(model)().then(function() {
+        return loadSourceFromLocal(model)().then(function() {
             baseUtil.writeFileToCache.should.not.be.called;
             should.not.exist(model.getPages()[0].contentFile);
         });
@@ -101,7 +101,7 @@ describe('tasks-docs/load-from-file', function() {
         model.setPages([_.extend({}, defaultPage)]);
         baseUtil.readFileFromCache.returns(Q.reject('Error'));
 
-        return loadFromFile(model)().then(function() {
+        return loadSourceFromLocal(model)().then(function() {
             model.getChanges().added.should.have.length(1);
         });
     });
@@ -110,14 +110,14 @@ describe('tasks-docs/load-from-file', function() {
         model.setPages([_.extend({}, defaultPage)]);
         baseUtil.readFileFromCache.returns(Q('Hello World old'));
 
-        return loadFromFile(model)().then(function() {
+        return loadSourceFromLocal(model)().then(function() {
             model.getChanges().modified.should.have.length(1);
         });
     });
 
     it('should not to do anything if file was not changed', function() {
         model.setPages([_.extend({}, defaultPage)]);
-        return loadFromFile(model)().then(function() {
+        return loadSourceFromLocal(model)().then(function() {
             var changes = model.getChanges();
             changes.added.should.be.empty;
             changes.modified.should.be.empty;
@@ -126,12 +126,12 @@ describe('tasks-docs/load-from-file', function() {
 
     it('should set valid value of "contentFile" field', function() {
         model.setPages([_.extend({}, defaultPage)]);
-        return loadFromFile(model)().then(function() {
+        return loadSourceFromLocal(model)().then(function() {
             model.getPages()[0].contentFile.should.equal('/url/index.file');
         });
     });
 
     it('should be resolved with model instance', function() {
-        loadFromFile(model)().should.eventually.be.instanceOf(Model);
+        loadSourceFromLocal(model)().should.eventually.be.instanceOf(Model);
     });
 });

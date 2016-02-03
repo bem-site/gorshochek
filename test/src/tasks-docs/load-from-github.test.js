@@ -3,7 +3,7 @@ var Q = require('q'),
     Model = require('../../../lib/model'),
     baseUtil = require('../../../lib/util'),
     GithubAPI = require('../../../lib/tasks/docs/github'),
-    loadFromGithub = require('../../../index').tasks.docs.loadFromGithub;
+    loadSourceFromGithub = require('../../../index').tasks.docs.loadSourceFromGithub;
 
 describe('tasks-docs/load-from-github', function() {
     var pageStub = {
@@ -41,19 +41,19 @@ describe('tasks-docs/load-from-github', function() {
     });
 
     it('should return function as result', function() {
-        loadFromGithub(model).should.be.instanceOf(Function);
+        loadSourceFromGithub(model).should.be.instanceOf(Function);
     });
 
     it('should not process pages without "sourceUrl" property', function() {
         model.setPages([{url: '/url1'}]);
-        return loadFromGithub(model)().then(function() {
+        return loadSourceFromGithub(model)().then(function() {
             githubGetContentStub.should.not.be.called;
         });
     });
 
     it('should not process page if "sourceUrl" value does not match github url regular expression', function() {
         model.setPages([{url: '/url1', sourceUrl: '//foo/bar'}]);
-        return loadFromGithub(model)().then(function() {
+        return loadSourceFromGithub(model)().then(function() {
             githubGetContentStub.should.not.be.called;
         });
     });
@@ -61,7 +61,7 @@ describe('tasks-docs/load-from-github', function() {
     describe('sourceUrl matches github url criteria', function() {
         function testAsseptedSourceUrl(url) {
             model.setPages([{url: '/url', sourceUrl: url}]);
-            return loadFromGithub(model)().then(function() {
+            return loadSourceFromGithub(model)().then(function() {
                 githubGetContentStub.should.be.calledOnce;
             });
         }
@@ -85,28 +85,28 @@ describe('tasks-docs/load-from-github', function() {
 
     it('should load file from github via github API', function() {
         model.setPages([_.extend({}, pageStub)]);
-        return loadFromGithub(model)().then(function() {
+        return loadSourceFromGithub(model)().then(function() {
             githubGetContentStub.should.be.calledOnce;
         });
     });
 
     it('should save loaded file to cache by valid path', function() {
         model.setPages([_.extend({}, pageStub)]);
-        return loadFromGithub(model)().then(function() {
+        return loadSourceFromGithub(model)().then(function() {
             baseUtil.writeFileToCache.secondCall.should.be.calledWithMatch('/url/index.ext');
         });
     });
 
     it('should mark loaded doc as added', function() {
         model.setPages([_.extend({}, pageStub)]);
-        return loadFromGithub(model)().then(function() {
+        return loadSourceFromGithub(model)().then(function() {
             model.getChanges().added.should.have.length(1);
         });
     });
 
     it('should set valid value to "contentFile" field', function() {
         model.setPages([_.extend({}, pageStub)]);
-        return loadFromGithub(model)().then(function() {
+        return loadSourceFromGithub(model)().then(function() {
             model.getPages()[0].contentFile.should.equal('/url/index.ext');
         });
     });
@@ -114,7 +114,7 @@ describe('tasks-docs/load-from-github', function() {
     it('should save valid meta.json file to cache', function() {
         model.setPages([_.extend({}, pageStub)]);
         githubGetContentStub.yields(null, _.extend({}, githubStubRes, {meta: {etag: 'some-etag'}}));
-        return loadFromGithub(model)().then(function() {
+        return loadSourceFromGithub(model)().then(function() {
             var expectedContent = JSON.stringify({
                 etag: 'some-etag',
                 sha: 'some-sha',
@@ -129,7 +129,7 @@ describe('tasks-docs/load-from-github', function() {
         baseUtil.readFileFromCache.returns(Q({}));
         githubGetContentStub
             .yields(_.extend({}, githubStubRes, {meta: {etag: 'some-etag', status: '304 Not Modified'}}));
-        return loadFromGithub(model)().then(function() {
+        return loadSourceFromGithub(model)().then(function() {
             model.getChanges().added.should.be.empty;
             model.getChanges().modified.should.be.empty;
         });
@@ -138,7 +138,7 @@ describe('tasks-docs/load-from-github', function() {
     it('should skip loading if sha sums of github and cache files are equal', function() {
         model.setPages([_.extend({}, pageStub)]);
         baseUtil.readFileFromCache.returns(Q({sha: 'some-sha'}));
-        return loadFromGithub(model)().then(function() {
+        return loadSourceFromGithub(model)().then(function() {
             model.getChanges().added.should.be.empty;
             model.getChanges().modified.should.be.empty;
         });
@@ -148,7 +148,7 @@ describe('tasks-docs/load-from-github', function() {
         model.setPages([_.extend({}, pageStub)]);
         baseUtil.readFileFromCache.returns(Q({sha: 'some-another-sha'}));
 
-        return loadFromGithub(model)().then(function() {
+        return loadSourceFromGithub(model)().then(function() {
             model.getChanges().modified.should.have.length(1);
         });
     });
@@ -156,7 +156,7 @@ describe('tasks-docs/load-from-github', function() {
     it('should have "updateDate" field with null value if "updateDate" option was not set', function() {
         model.setPages([_.extend({}, pageStub)]);
 
-        return loadFromGithub(model)().then(function() {
+        return loadSourceFromGithub(model)().then(function() {
             (model.getPages()[0].updateDate == null).should.equal(true);
         });
     });
@@ -164,7 +164,7 @@ describe('tasks-docs/load-from-github', function() {
     it('should have "hasIssues" field with null value if "hasIssues" option was not set', function() {
         model.setPages([_.extend({}, pageStub)]);
 
-        return loadFromGithub(model)().then(function() {
+        return loadSourceFromGithub(model)().then(function() {
             (model.getPages()[0].hasIssues == null).should.equal(true);
         });
     });
@@ -172,7 +172,7 @@ describe('tasks-docs/load-from-github', function() {
     it('should have "branch" field with null value if "branch" option was not set', function() {
         model.setPages([_.extend({}, pageStub)]);
 
-        return loadFromGithub(model)().then(function() {
+        return loadSourceFromGithub(model)().then(function() {
             (model.getPages()[0].branch == null).should.equal(true);
         });
     });
@@ -182,7 +182,7 @@ describe('tasks-docs/load-from-github', function() {
         model.setPages([_.extend({}, pageStub)]);
         githubGetCommitsStub.yields(null, [{commit: {committer: {date: expected}}}]);
 
-        return loadFromGithub(model, {updateDate: true})().then(function() {
+        return loadSourceFromGithub(model, {updateDate: true})().then(function() {
             model.getPages()[0].updateDate.should.equal(expected);
         });
     });
@@ -192,7 +192,7 @@ describe('tasks-docs/load-from-github', function() {
             model.setPages([_.extend({}, pageStub)]);
             githubGetCommitsStub.yields(new Error());
 
-            return loadFromGithub(model, {updateDate: true})().then(function() {
+            return loadSourceFromGithub(model, {updateDate: true})().then(function() {
                 (model.getPages()[0].updateDate == null).should.equal(true);
             });
     });
@@ -202,7 +202,7 @@ describe('tasks-docs/load-from-github', function() {
             model.setPages([_.extend({}, pageStub)]);
             githubGetCommitsStub.yields(null, []);
 
-            return loadFromGithub(model, {updateDate: true})().then(function() {
+            return loadSourceFromGithub(model, {updateDate: true})().then(function() {
                 (model.getPages()[0].updateDate == null).should.equal(true);
             });
         });
@@ -211,7 +211,7 @@ describe('tasks-docs/load-from-github', function() {
         model.setPages([_.extend({}, pageStub)]);
         githubGetStub.yields(null, {has_issues: true});
 
-        return loadFromGithub(model, {hasIssues: true})().then(function() {
+        return loadSourceFromGithub(model, {hasIssues: true})().then(function() {
             model.getPages()[0].hasIssues.should.equal(true);
         });
     });
@@ -221,7 +221,7 @@ describe('tasks-docs/load-from-github', function() {
             model.setPages([_.extend({}, pageStub)]);
             githubGetStub.yields(new Error());
 
-            return loadFromGithub(model, {hasIssues: true})().then(function() {
+            return loadSourceFromGithub(model, {hasIssues: true})().then(function() {
                 (model.getPages()[0].hasIssues == null).should.equal(true);
             });
         });
@@ -230,7 +230,7 @@ describe('tasks-docs/load-from-github', function() {
         model.setPages([_.extend({}, pageStub)]);
         githubGetBranchStub.yields(null, {});
 
-        return loadFromGithub(model, {branch: true})().then(function() {
+        return loadSourceFromGithub(model, {branch: true})().then(function() {
             model.getPages()[0].branch.should.equal('ref');
         });
     });
@@ -240,7 +240,7 @@ describe('tasks-docs/load-from-github', function() {
         githubGetBranchStub.yields(new Error());
         githubGetStub.yields(null, {default_branch: 'some-branch'});
 
-        return loadFromGithub(model, {branch: true})().then(function() {
+        return loadSourceFromGithub(model, {branch: true})().then(function() {
             model.getPages()[0].branch.should.equal('some-branch');
         });
     });
@@ -250,13 +250,13 @@ describe('tasks-docs/load-from-github', function() {
         githubGetBranchStub.yields(new Error());
         githubGetStub.yields(new Error());
 
-        return loadFromGithub(model, {branch: true})().then(function() {
+        return loadSourceFromGithub(model, {branch: true})().then(function() {
             (model.getPages()[0].branch == null).should.equal(true);
         });
     });
 
     it('should be resolved with model instance', function() {
         model.setPages([_.extend({}, pageStub)]);
-        return loadFromGithub(model)().should.eventually.be.instanceOf(Model);
+        return loadSourceFromGithub(model)().should.eventually.be.instanceOf(Model);
     });
 });
