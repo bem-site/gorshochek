@@ -24,7 +24,7 @@ $ npm install --save gorshochek
 ## Примеры использования
 
 Простой запуск сборки путем последовательного выполнения всех необходимых задач:
-```
+```js
 var Q = require('q'),
     gorshochek = require('../index'),
     token = process.env.TOKEN;
@@ -52,7 +52,7 @@ Q()
 ```
 
 Запуск с помощью [gulp](https://npmjs.org/package/gulp):
-```
+```js
 var gulp = require('gulp'),
     gorshochek = require('../index'),
     token = '54fa292690dc4b5410bb' + '57d08170f11d32691633';
@@ -97,7 +97,7 @@ gulp.task('default', ['rsync']);
 Таким образом требования описанные выше позволяют записать код простейшей задачи которая
 выводит в консоль параметр `name` переданный ей в качестве опции:
 
-```
+```js
 export default function(model, options = {}) {
     return function() {
         console.log('Hello ' + options.name);
@@ -109,12 +109,12 @@ export default function(model, options = {}) {
 ## Тестирование
 
 Запуск тестов с вычислением покрытия кода тестами с помощью инструмента [istanbul](https://www.npmjs.com/package/istanbul):
-```
+```bash
 npm test
 ```
 
 Проверка синтаксиса кода с помощью [eslint](http://eslint.org) и [jscs](https://www.npmjs.com/package/jscs)
-```
+```bash
 npm run lint
 ```
 
