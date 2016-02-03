@@ -9,8 +9,8 @@ gulp.task('merge-model', tasks.core.mergeModels(model, {modelPath: './examples/m
 gulp.task('normalize-model', ['merge-model'], tasks.core.normalizeModel(model));
 gulp.task('process-model', ['normalize-model']);
 
-gulp.task('load-from-github', ['process-model'], tasks.docs.loadFromGithub(model, {token: token}));
-gulp.task('load-from-file', ['process-model'], tasks.docs.loadFromFile(model));
+gulp.task('load-from-github', ['process-model'], tasks.docs.loadSourceFromGithub(model, {token: token}));
+gulp.task('load-from-file', ['process-model'], tasks.docs.loadSourceFromLocal(model));
 gulp.task('transform-md-html', ['load-from-github', 'load-from-file'], tasks.docs.transformMdToHtml(model));
 gulp.task('process-docs', ['transform-md-html']);
 

@@ -12,6 +12,20 @@ const debug = require('debug')('meta-tags');
  * @param {String} [options.baseUrl] - base url for tags section
  * @param {String} [options.baseTitle] - base title for tags section
  * @returns {Function}
+ * @example
+ * var Q = require('q');
+ * var gorshochek = require('gorshochek');
+ * var model = gorshochek.createModel();
+ * Q()
+ *    .then(tasks.core.mergeModels(model, {modelPath: './examples/model.ru.json'}))
+ *    .then(tasks.core.normalizeModel(model))
+ *    .then(tasks.meta.createTagPages(model, {baseUrl: '/tags', baseTitle: 'Tags'}))
+ *    .then(tasks.core.saveModel(model))
+ *    .then(tasks.core.rsync(model, {
+ *        dest: './data',
+ *        exclude: ['*.meta.json', 'model.json', '*.md']
+ *    }))
+ *    .done();
  */
 export default function generateTagPages(model, options = {}) {
     options.baseUrl = options.baseUrl || '/tags';

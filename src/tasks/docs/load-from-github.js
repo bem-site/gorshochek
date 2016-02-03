@@ -17,6 +17,25 @@ const debug = require('debug')('docs github load');
  * @param {Boolean} [options.branch] - if set to true then advance meta-information about source branch will be loaded.
  * If source is corresponded to tag reference then default repository branch name will be loaded
  * @returns {Function}
+ * @example
+ * var Q = require('q');
+ * var gorshochek = require('gorshochek');
+ * var model = gorshochek.createModel();
+ * Q()
+ *    .then(tasks.core.mergeModels(model, {modelPath: './examples/model.ru.json'}))
+ *    .then(tasks.core.normalizeModel(model))
+ *    .then(tasks.docs.loadSourcesFromGithub(model, {
+ *        token: 'your github token',
+ *        updateDate: true,
+ *        hasIssues: true,
+ *        branch: true
+ *    }))
+ *    .then(tasks.core.saveModel(model))
+ *    .then(tasks.core.rsync(model, {
+ *        dest: './data',
+ *        exclude: ['*.meta.json', 'model.json', '*.md']
+ *    }))
+ *    .done();
  */
 export default function loadSourcesFromGithub(model, options = {}) {
     const GITHUB_URL_REGEXP = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/;

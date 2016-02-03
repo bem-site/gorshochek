@@ -13,6 +13,19 @@ const debug = require('debug')('rsync');
  * @param {String} [options.options] - rsync options.
  * @param {String[]} [options.exclude] - array of exclude patterns. Empty array by default
  * @returns {Function}
+ * @example
+ * var Q = require('q');
+ * var gorshochek = require('gorshochek');
+ * var model = gorshochek.createModel();
+ * Q()
+ *    .then(tasks.core.mergeModels(model, {modelPath: './examples/model.ru.json'}))
+ *    .then(tasks.core.normalizeModel(model))
+ *    .then(tasks.core.saveModel(model))
+ *    .then(tasks.core.rsync(model, {
+ *        dest: './data',
+ *        exclude: ['*.meta.json', 'model.json', '*.md']
+ *    }))
+ *    .done();
  */
 export default function rsync(model, options = {}) {
 

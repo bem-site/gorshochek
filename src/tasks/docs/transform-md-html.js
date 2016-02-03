@@ -7,6 +7,21 @@ import * as baseUtil from '../../util';
  * Transforms page content source files from markdown format to html
  * @param {Model} model - application model instance
  * @returns {Function}
+ * @example
+ * var Q = require('q');
+ * var gorshochek = require('gorshochek');
+ * var model = gorshochek.createModel();
+ * Q()
+ *    .then(tasks.core.mergeModels(model, {modelPath: './examples/model.ru.json'}))
+ *    .then(tasks.core.normalizeModel(model))
+ *    .then(tasks.docs.loadSourcesFromLocal(model))
+ *    .then(tasks.docs.transformMdToHtml(model))
+ *    .then(tasks.core.saveModel(model))
+ *    .then(tasks.core.rsync(model, {
+ *        dest: './data',
+ *        exclude: ['*.meta.json', 'model.json', '*.md']
+ *    }))
+ *    .done();
  */
 export default function transformMdToHtml(model) {
 

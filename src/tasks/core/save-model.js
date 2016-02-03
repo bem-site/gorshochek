@@ -7,6 +7,19 @@ import * as baseUtil from '../../util';
  * @param {Object} [options] - task options object
  * @param {String} [options.dataPath] - destination file path for model saving
  * @returns {Function}
+ * @example
+ * var Q = require('q');
+ * var gorshochek = require('gorshochek');
+ * var model = gorshochek.createModel();
+ * Q()
+ *    .then(tasks.core.mergeModels(model, {modelPath: './examples/model.ru.json'}))
+ *    .then(tasks.core.normalizeModel(model))
+ *    .then(tasks.core.saveModel(model))
+ *    .then(tasks.core.rsync(model, {
+ *        dest: './data',
+ *        exclude: ['*.meta.json', 'model.json', '*.md']
+ *    }))
+ *    .done();
  */
 export default function saveModel(model, options = {}) {
     return function() {

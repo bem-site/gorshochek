@@ -16,8 +16,8 @@ module.exports = {
             rsync: require('./lib/tasks/core/rsync')
         },
         docs: {
-            loadFromGithub: require('./lib/tasks/docs/load-from-github'),
-            loadFromFile: require('./lib/tasks/docs/load-from-file'),
+            loadSourceFromGithub: require('./lib/tasks/docs/load-from-github'),
+            loadSourceFromLocal: require('./lib/tasks/docs/load-from-file'),
             transformMdToHtml: require('./lib/tasks/docs/transform-md-html')
         },
         meta: {

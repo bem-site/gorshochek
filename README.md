@@ -26,7 +26,7 @@ $ npm install --save gorshochek
 Простой запуск сборки путем последовательного выполнения всех необходимых задач:
 ```js
 var Q = require('q'),
-    gorshochek = require('../index'),
+    gorshochek = require('gorshochek'),
     token = process.env.TOKEN;
 
 var model = gorshochek.createModel(),
@@ -54,7 +54,7 @@ Q()
 Запуск с помощью [gulp](https://npmjs.org/package/gulp):
 ```js
 var gulp = require('gulp'),
-    gorshochek = require('../index'),
+    gorshochek = require('gorshochek'),
     token = process.env.TOKEN;
 
 var model = gorshochek.createModel(),
