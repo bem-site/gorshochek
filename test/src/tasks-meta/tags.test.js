@@ -36,6 +36,16 @@ describe('tasks-meta/tags', function() {
         });
     });
 
+    it('it should properly work for model without tags', function() {
+        model.setPages([
+            {
+                url: '/url1',
+                title: 'some-title'
+            }
+        ]);
+        return generateTagPages(model)().should.eventually.instanceOf(Model);
+    });
+
     it('should generate page for existed tag', function() {
         return generateTagPages(model)().then(function(model) {
             model.getPages()[1].should.eql({
