@@ -49,7 +49,7 @@ describe('tasks-meta/tags', function() {
     it('should generate page for existed tag', function() {
         return generateTagPages(model)().then(function(model) {
             model.getPages()[1].should.eql({
-                url: '/tags/tag1',
+                url: '/tags/tag1/',
                 aliases: [],
                 title: 'tag1',
                 published: true,
@@ -75,7 +75,7 @@ describe('tasks-meta/tags', function() {
                     title: 'some-title',
                     tags: [
                         {
-                            url: '/tags/tag1',
+                            url: '/tags/tag1/',
                             title: 'tag1'
                         }
                     ]
@@ -87,7 +87,7 @@ describe('tasks-meta/tags', function() {
     it('should generate base tags page', function() {
         return generateTagPages(model)().then(function(model) {
             model.getPages()[2].should.eql({
-                url: '/tags',
+                url: '/tags/',
                 aliases: [],
                 title: 'Tags',
                 published: true,
@@ -100,7 +100,7 @@ describe('tasks-meta/tags', function() {
     it('should generate base tags page with custom url received from task options', function() {
         return generateTagPages(model, {baseUrl: '/some-tag-url'})().then(function(model) {
             model.getPages()[2].should.eql({
-                url: '/some-tag-url',
+                url: '/some-tag-url/',
                 aliases: [],
                 title: 'Tags',
                 published: true,
@@ -113,7 +113,7 @@ describe('tasks-meta/tags', function() {
     it('should generate base tags page with custom title received from task options', function() {
         return generateTagPages(model, {baseTitle: 'Custom Title'})().then(function(model) {
             model.getPages()[2].should.eql({
-                url: '/tags',
+                url: '/tags/',
                 aliases: [],
                 title: 'Custom Title',
                 published: true,
@@ -128,7 +128,7 @@ describe('tasks-meta/tags', function() {
             model.getPages()[0].should.eql({
                 url: '/url1',
                 title: 'some-title',
-                tags: [{title: 'tag1', url: '/tags/tag1'}]
+                tags: [{title: 'tag1', url: '/tags/tag1/'}]
             });
         });
     });
@@ -149,7 +149,7 @@ describe('tasks-meta/tags', function() {
                     title: 'some-title',
                     tags: [
                         {
-                            url: '/tags/tag1',
+                            url: '/tags/tag1/',
                             title: 'tag1'
                         }
                     ]

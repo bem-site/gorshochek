@@ -28,8 +28,10 @@ const debug = require('debug')('meta-tags');
  *    .done();
  */
 export default function generateTagPages(model, options = {}) {
-    options.baseUrl = options.baseUrl || '/tags';
+    options.baseUrl = options.baseUrl || '/tags/';
     options.baseTitle = options.baseTitle || 'Tags';
+
+    options.baseUrl = options.baseUrl + (_.endsWith(options.baseUrl, '/') ? '' : '/');
 
     /**
      * Returns array of unique tag values collected from all model pages
@@ -74,7 +76,7 @@ export default function generateTagPages(model, options = {}) {
         }
 
         return tags.map(tag => _.extend({
-            url: options.baseUrl + '/' + tag,
+            url: options.baseUrl + tag + '/',
             title: tag,
             source: _getByTag(tag)
         }, _getCommonPageProperties()));
