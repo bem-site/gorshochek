@@ -6,6 +6,9 @@ import * as baseUtil from '../../util';
 /**
  * Transforms page content source files from markdown format to html
  * @param {Model} model - application model instance
+ * @param {Object} options - task options
+ * @param {Object} [options.markedOptions] - marked options for markdown parsing
+ * @param {Number} [options.concurrency] - number of pages processed at the same time
  * @returns {Function}
  * @example
  * var Q = require('q');
@@ -23,7 +26,10 @@ import * as baseUtil from '../../util';
  *    }))
  *    .done();
  */
-export default function transformMdToHtml(model) {
+export default function transformMdToHtml(model, options = {}) {
+
+    options.markedOptions = options.markedOptions || {};
+    options.concurrency = options.concurrency || 20;
 
     /**
      * Returns true if given page has contentFile field
@@ -42,7 +48,7 @@ export default function transformMdToHtml(model) {
      * @returns {Promise}
      */
     function transform(page, md) {
-        return Q.denodeify(mdToHtml.render)(md)
+        return Q.denodeify(mdToHtml.render)(md, options.markedOptions)
             .catch(error => {
                 console.error(`Error occur while transform md -> html for page: ${page.url}`);
                 console.error(error.stack);
@@ -72,6 +78,8 @@ export default function transformMdToHtml(model) {
     }
 
     return function() {
-        return baseUtil.processPagesAsync(model, hasMarkdownSource, processPage, 20).thenResolve(model);
+        return baseUtil
+            .processPagesAsync(model, hasMarkdownSource, processPage, options.concurrency)
+            .thenResolve(model);
     };
 }
