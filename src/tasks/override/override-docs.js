@@ -131,7 +131,13 @@ export default function overrideDocLinks(model) {
             return imgSrc;
         }
 
-        const result = Url.resolve(page.sourceUrl, imgSrc) + '?raw=true';
+        const sourceUrl = Url.parse(page.sourceUrl);
+
+        if(util.isGithubUrl(sourceUrl)) {
+            sourceUrl.host = 'raw.githubusercontent.com';
+        }
+
+        const result = Url.resolve(Url.format(sourceUrl), imgSrc);
         debug(imgSrc + ' => ' + result);
         return result;
     }
