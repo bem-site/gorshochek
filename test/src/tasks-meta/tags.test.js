@@ -11,7 +11,8 @@ describe('tasks-meta/tags', function() {
         sandbox.stub(baseUtil, 'writeFileToCache').returns(Q());
         model.setPages([
             {
-                url: '/url1',
+                url: '/url1/',
+                site: '/url1/',
                 title: 'some-title',
                 tags: ['tag1']
             }
@@ -39,7 +40,7 @@ describe('tasks-meta/tags', function() {
     it('it should properly work for model without tags', function() {
         model.setPages([
             {
-                url: '/url1',
+                url: '/url1/',
                 title: 'some-title'
             }
         ]);
@@ -50,6 +51,7 @@ describe('tasks-meta/tags', function() {
         return generateTagPages(model)().then(function(model) {
             model.getPages()[1].should.eql({
                 url: '/tags/tag1/',
+                site: '/tags/',
                 aliases: [],
                 title: 'tag1',
                 published: true,
@@ -71,7 +73,7 @@ describe('tasks-meta/tags', function() {
             baseUtil.writeFileToCache.should.be.calledTwice;
             baseUtil.writeFileToCache.firstCall.should.be.calledWith('/tags/tag1/index.json',
                 JSON.stringify([{
-                    url: '/url1',
+                    url: '/url1/',
                     title: 'some-title',
                     tags: [
                         {
@@ -88,6 +90,7 @@ describe('tasks-meta/tags', function() {
         return generateTagPages(model)().then(function(model) {
             model.getPages()[2].should.eql({
                 url: '/tags/',
+                site: '/tags/',
                 aliases: [],
                 title: 'Tags',
                 published: true,
@@ -101,6 +104,7 @@ describe('tasks-meta/tags', function() {
         return generateTagPages(model, {baseUrl: '/some-tag-url'})().then(function(model) {
             model.getPages()[2].should.eql({
                 url: '/some-tag-url/',
+                site: '/some-tag-url/',
                 aliases: [],
                 title: 'Tags',
                 published: true,
@@ -114,6 +118,7 @@ describe('tasks-meta/tags', function() {
         return generateTagPages(model, {baseTitle: 'Custom Title'})().then(function(model) {
             model.getPages()[2].should.eql({
                 url: '/tags/',
+                site: '/tags/',
                 aliases: [],
                 title: 'Custom Title',
                 published: true,
@@ -126,7 +131,8 @@ describe('tasks-meta/tags', function() {
     it('should replace page tags with data for links creation', function() {
         return generateTagPages(model, {baseTitle: 'Custom Title'})().then(function(model) {
             model.getPages()[0].should.eql({
-                url: '/url1',
+                url: '/url1/',
+                site: '/url1/',
                 title: 'some-title',
                 tags: [{title: 'tag1', url: '/tags/tag1/'}]
             });
@@ -145,7 +151,7 @@ describe('tasks-meta/tags', function() {
             baseUtil.writeFileToCache.should.be.calledTwice;
             baseUtil.writeFileToCache.secondCall.should.be.calledWith('/tags/index.json',
                 JSON.stringify([{
-                    url: '/url1',
+                    url: '/url1/',
                     title: 'some-title',
                     tags: [
                         {

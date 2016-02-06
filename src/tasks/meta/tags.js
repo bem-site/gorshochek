@@ -77,6 +77,7 @@ export default function generateTagPages(model, options = {}) {
 
         return tags.map(tag => _.extend({
             url: options.baseUrl + tag + '/',
+            site: options.baseUrl,
             title: tag,
             source: _getByTag(tag)
         }, _getCommonPageProperties()));
@@ -91,6 +92,7 @@ export default function generateTagPages(model, options = {}) {
         debug(`generate base page for tag pages section`);
         return _.extend({
             url: options.baseUrl,
+            site: options.baseUrl,
             title: options.baseTitle,
             source: model.getPages().map(_.partialRight(_.pick, ['url', 'title', 'tags']))
         }, _getCommonPageProperties());
