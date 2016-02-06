@@ -136,8 +136,12 @@ export default function overrideDocLinks(model) {
         if(util.isGithubUrl(sourceUrl)) {
             sourceUrl.host = 'raw.githubusercontent.com';
             sourceUrl.path = sourceUrl.path
-                .replace(/\/tree\//, '')
-                .replace(/\/blob\//, '');
+                .replace(/\/tree/, '')
+                .replace(/\/blob/, '');
+
+            sourceUrl.pathname = sourceUrl.pathname
+                .replace(/\/tree/, '')
+                .replace(/\/blob/, '');
         }
 
         const result = Url.resolve(Url.format(sourceUrl), imgSrc);

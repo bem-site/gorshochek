@@ -73,13 +73,13 @@ describe('tasks-override/override-docs', function() {
 
         it('should rewrite relative links to images from github sources', function() {
             var html = '<img src="./relative-image-url">';
-            model.getPages()[0].sourceUrl = 'http://github.com/some-user/some-repo/url';
+            model.getPages()[0].sourceUrl = 'http://github.com/some-user/some-repo/tree/ref/url';
             baseUtil.readFileFromCache.returns(Q(html));
 
             return overrideDocs(model)().then(function() {
                 baseUtil.writeFileToCache.should.be
                     .calledWith('/url1/index.html',
-                        '<img src="http://raw.githubusercontent.com/some-user/some-repo/relative-image-url">');
+                        '<img src="http://raw.githubusercontent.com/some-user/some-repo/ref/relative-image-url">');
             });
         });
     });
