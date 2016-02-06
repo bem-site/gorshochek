@@ -202,6 +202,8 @@ export default class Model {
              * Для остальных полей нужно провести проверку и выставить значения по умолчанию
              *
              */
+            page.url = page.url + (_.endsWith(page.url, '/') ? '' : '/');
+
             page.aliases = page.aliases || []; // массив алиасов
             page.view = page.view || 'post'; // поле представления страницы
             page.published = !!page.published;

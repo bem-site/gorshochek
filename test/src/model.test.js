@@ -146,6 +146,18 @@ describe('Model', function() {
             model.setPages([_.merge(pageProperty, commonPageProperties)]);
         }
 
+        it('should add / to end of url if it was not already set', function() {
+            prepareModelPages({});
+            model.normalize();
+            model.getPages().shift().url.should.equal('/url1/');
+        });
+
+        it('should not add / to end of url if it was already set', function() {
+            prepareModelPages([{url: '/url1/'}]);
+            model.normalize();
+            model.getPages().shift().url.should.equal('/url1/');
+        });
+
         it('should set given "aliases" property value as is if it was set', function() {
             prepareModelPages({aliases: ['/url11', '/url22']});
             model.normalize();

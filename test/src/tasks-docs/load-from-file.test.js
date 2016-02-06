@@ -27,14 +27,14 @@ describe('tasks-docs/load-from-file', function() {
     });
 
     it('should not process pages without "sourceUrl" property', function() {
-        model.setPages([{url: '/url1'}]);
+        model.setPages([{url: '/url1/'}]);
         return loadSourceFromLocal(model)().then(function() {
             baseUtil.readFileFromCache.should.not.be.called;
         });
     });
 
     it('should not process page if "sourceUrl" value does not match local file regular expression', function() {
-        model.setPages([{url: '/url1', sourceUrl: 'http://github.com/foo/bar'}]);
+        model.setPages([{url: '/url1/', sourceUrl: 'http://github.com/foo/bar'}]);
         return loadSourceFromLocal(model)().then(function() {
             baseUtil.readFileFromCache.should.not.be.called;
         });

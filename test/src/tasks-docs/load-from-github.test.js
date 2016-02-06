@@ -7,7 +7,7 @@ var Q = require('q'),
 
 describe('tasks-docs/load-from-github', function() {
     var pageStub = {
-            url: '/url',
+            url: '/url/',
             sourceUrl: 'https://github.com/org/user/blob/ref/path.ext'
         },
         githubStubRes = {
@@ -45,14 +45,14 @@ describe('tasks-docs/load-from-github', function() {
     });
 
     it('should not process pages without "sourceUrl" property', function() {
-        model.setPages([{url: '/url1'}]);
+        model.setPages([{url: '/url1/'}]);
         return loadSourceFromGithub(model)().then(function() {
             githubGetContentStub.should.not.be.called;
         });
     });
 
     it('should not process page if "sourceUrl" value does not match github url regular expression', function() {
-        model.setPages([{url: '/url1', sourceUrl: '//foo/bar'}]);
+        model.setPages([{url: '/url1/', sourceUrl: '//foo/bar'}]);
         return loadSourceFromGithub(model)().then(function() {
             githubGetContentStub.should.not.be.called;
         });

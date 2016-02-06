@@ -4,8 +4,8 @@ var Model = require('../../../lib/model'),
 describe('tasks-page/header-title', function() {
     var pages = [
             {url: '/', title: 'index title'},
-            {url: '/url1', title: 'url1 title'},
-            {url: '/url1/url2', title: 'url2 title'}
+            {url: '/url1/', title: 'url1 title'},
+            {url: '/url1/url2/', title: 'url2 title'}
         ],
         model = new Model();
 

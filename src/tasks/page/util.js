@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Q from 'q';
 
 /**
@@ -8,8 +9,7 @@ import Q from 'q';
  */
 export function createPageTitlesMap(pages) {
     return pages.reduce((pagesMap, page) => {
-        pagesMap[page.url] = page.title;
-        return pagesMap;
+        return _.set(pagesMap, page.url, page.title);
     }, {});
 }
 
@@ -26,10 +26,11 @@ export function getParentUrls(page) {
     const chunks = page.url.split(DELIMITER);
     const result = [DELIMITER];
 
-    for(let i = 1; i < chunks.length; i++) {
+    for(let i = 1; i < chunks.length - 1; i++) {
         let url = '';
         for(let j = 0; j <= i; j++) {
             chunks[j].length && (url += (DELIMITER + chunks[j]));
+            j === i && (url+= DELIMITER);
         }
         url.length && result.push(url);
     }

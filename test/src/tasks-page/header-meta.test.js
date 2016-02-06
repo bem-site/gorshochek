@@ -4,7 +4,7 @@ var Model = require('../../../lib/model'),
 describe('tasks-page/header-meta', function() {
     var pages = [
             {url: '/', title: '/ title', tags: ['index1', 'index2']},
-            {url: '/url1', title: '/url1 title'}
+            {url: '/url1/', title: '/url1 title'}
         ],
         model = new Model();
 

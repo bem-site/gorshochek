@@ -5,8 +5,8 @@ describe('tasks-pages/breadcrumbs', function() {
     var model = new Model(),
         pages = [
             {url: '/', title: 'index title'},
-            {url: '/url1', title: 'url1 title'},
-            {url: '/url1/url2', title: 'url2 title'}
+            {url: '/url1/', title: 'url1 title'},
+            {url: '/url1/url2/', title: 'url2 title'}
         ];
 
     beforeEach(function() {
@@ -27,7 +27,7 @@ describe('tasks-pages/breadcrumbs', function() {
         return createBreadcrumbs(model)().then(function(result) {
             result.getPages()[1].breadcrumbs.should.eql([
                 {url: '/', title: 'index title'},
-                {url: '/url1', title: 'url1 title'}
+                {url: '/url1/', title: 'url1 title'}
             ]);
         });
     });
@@ -36,8 +36,8 @@ describe('tasks-pages/breadcrumbs', function() {
         return createBreadcrumbs(model)().then(function(result) {
             result.getPages()[2].breadcrumbs.should.eql([
                 {url: '/', title: 'index title'},
-                {url: '/url1', title: 'url1 title'},
-                {url: '/url1/url2', title: 'url2 title'}
+                {url: '/url1/', title: 'url1 title'},
+                {url: '/url1/url2/', title: 'url2 title'}
             ]);
         });
     });

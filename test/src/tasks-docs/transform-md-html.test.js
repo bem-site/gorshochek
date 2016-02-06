@@ -24,21 +24,21 @@ describe('tasks-docs/transform-md-html', function() {
     });
 
     it('should not transform pages without "contentFile" fields', function() {
-        model.setPages([{url: '/url1'}]);
+        model.setPages([{url: '/url1/'}]);
         return transformMdToHtml(model)().then(function() {
             mdToHtml.render.should.not.be.called;
         });
     });
 
     it('should not transform pages with not-markdown content files', function() {
-        model.setPages([{url: '/url1', contentFile: '/not-md.file'}]);
+        model.setPages([{url: '/url1/', contentFile: '/not-md.file'}]);
         return transformMdToHtml(model)().then(function() {
             mdToHtml.render.should.not.be.called;
         });
     });
 
     it('should read source file from cache by valid path', function() {
-        model.setPages([{url: '/url1', contentFile: '/some-content.md'}]);
+        model.setPages([{url: '/url1/', contentFile: '/some-content.md'}]);
         return transformMdToHtml(model)().then(function() {
             baseUtil.readFileFromCache.should.be.calledOnce;
             baseUtil.readFileFromCache.should.be.calledWithMatch('/some-content.md');
@@ -46,7 +46,7 @@ describe('tasks-docs/transform-md-html', function() {
     });
 
     it('should write source file to cache by valid path', function() {
-        model.setPages([{url: '/url1', contentFile: '/foo/some-content.md'}]);
+        model.setPages([{url: '/url1/', contentFile: '/foo/some-content.md'}]);
         return transformMdToHtml(model)().then(function() {
             baseUtil.writeFileToCache.should.be.calledOnce;
             baseUtil.writeFileToCache.should.be.calledWithMatch('foo/index.html');
@@ -54,7 +54,7 @@ describe('tasks-docs/transform-md-html', function() {
     });
 
     it('should update "contentFile" property of page model', function() {
-        model.setPages([{url: '/url1', contentFile: '/foo/some-content.md'}]);
+        model.setPages([{url: '/url1/', contentFile: '/foo/some-content.md'}]);
         return transformMdToHtml(model)().then(function() {
             model.getPages()[0].contentFile.should.equal('/foo/index.html');
         });
@@ -63,14 +63,14 @@ describe('tasks-docs/transform-md-html', function() {
     describe('transform errors', function() {
         beforeEach(function() {
             mdToHtml.render.yields(new Error('some-error'));
-            model.setPages([{url: '/url1', contentFile: '/foo/some-content.md'}]);
+            model.setPages([{url: '/url1/', contentFile: '/foo/some-content.md'}]);
         });
 
         it('should print log error message if md -> html transformation failed for source', function() {
             return transformMdToHtml(model)().then(function() {
                 console.error.should.be.calledTwice;
                 console.error.firstCall.should.be
-                    .calledWithExactly('Error occur while transform md -> html for page: /url1');
+                    .calledWithExactly('Error occur while transform md -> html for page: /url1/');
             });
         });
 

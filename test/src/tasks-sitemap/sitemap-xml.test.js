@@ -25,7 +25,7 @@ function buildExpectedXML(items) {
 
 describe('tasks-sitemap/sitemap-xml', function() {
     var sandbox = sinon.sandbox.create(),
-        basePage = {url: '/url1', published: true},
+        basePage = {url: '/url1/', published: true},
         options = {host: 'https://en.site.com'},
         expecedFilePath = '.builder/cache/sitemap.xml',
         model;
@@ -54,7 +54,7 @@ describe('tasks-sitemap/sitemap-xml', function() {
 
         return createSiteMapXML(model, options)().then(function() {
             fs.writeFile.should.be.calledWith(expecedFilePath, buildExpectedXML([
-                {loc: 'https://en.site.com/url1', changefreq: 'weekly', priority: 0.5}
+                {loc: 'https://en.site.com/url1/', changefreq: 'weekly', priority: 0.5}
             ]));
         });
     });
@@ -64,7 +64,7 @@ describe('tasks-sitemap/sitemap-xml', function() {
 
         return createSiteMapXML(model, options)().then(function() {
             fs.writeFile.should.be.calledWith(expecedFilePath, buildExpectedXML([
-                {loc: 'https://en.site.com/url1', changefreq: 'daily', priority: 0.5}
+                {loc: 'https://en.site.com/url1/', changefreq: 'daily', priority: 0.5}
             ]));
         });
     });
@@ -74,18 +74,18 @@ describe('tasks-sitemap/sitemap-xml', function() {
 
         return createSiteMapXML(model, options)().then(function() {
             fs.writeFile.should.be.calledWithMatch(expecedFilePath, buildExpectedXML([
-                {loc: 'https://en.site.com/url1', changefreq: 'weekly', priority: 1.0}
+                {loc: 'https://en.site.com/url1/', changefreq: 'weekly', priority: 1.0}
             ]));
         });
     });
 
     it('should also append nodes for page aliases', function() {
-        model.setPages([_.extend({}, basePage, {aliases: ['/url11']})]);
+        model.setPages([_.extend({}, basePage, {aliases: ['/url1/1']})]);
 
         return createSiteMapXML(model, options)().then(function() {
             fs.writeFile.should.be.calledWithMatch(expecedFilePath, buildExpectedXML([
-                {loc: 'https://en.site.com/url1', changefreq: 'weekly', priority: 0.5},
-                {loc: 'https://en.site.com/url11', changefreq: 'weekly', priority: 0.5}
+                {loc: 'https://en.site.com/url1/', changefreq: 'weekly', priority: 0.5},
+                {loc: 'https://en.site.com/url1/1', changefreq: 'weekly', priority: 0.5}
             ]));
         });
     });

@@ -14,27 +14,27 @@ describe('tasks-page/util', function() {
         });
 
         it('should get parent urls for first level pages', function() {
-            util.getParentUrls({url: '/url1'}).should.eql(['/', '/url1']);
+            util.getParentUrls({url: '/url1/'}).should.eql(['/', '/url1/']);
         });
 
         it('should get parent urls for second level', function() {
-            util.getParentUrls({url: '/url1/url2'}).should.eql(['/', '/url1', '/url1/url2']);
+            util.getParentUrls({url: '/url1/url2/'}).should.eql(['/', '/url1/', '/url1/url2/']);
         });
 
         it('should get parent urls for third level', function() {
-            util.getParentUrls({url: '/url1/url2/url3'}).should.eql(['/', '/url1', '/url1/url2', '/url1/url2/url3']);
+            util.getParentUrls({url: '/url1/url2/url3/'}).should.eql(['/', '/url1/', '/url1/url2/', '/url1/url2/url3/']);
         });
     });
 
     describe('getPagesMap', function() {
         var pages = [
             {url: '/', title: '/title'},
-            {url: '/url1', title: '/url1 title'}
+            {url: '/url1/', title: '/url1 title'}
         ];
         it('should build valid complex map of titles by urls and languages', function() {
             var pagesMap = util.createPageTitlesMap(pages);
             pagesMap['/'].should.equal('/title');
-            pagesMap['/url1'].should.equal('/url1 title');
+            pagesMap['/url1/'].should.equal('/url1 title');
         });
     });
 
@@ -53,13 +53,13 @@ describe('tasks-page/util', function() {
             var model = new Model();
             model.setPages([
                 {url: '/', title: '/title'},
-                {url: '/url1', title: '/url1 title'}
+                {url: '/url1/', title: '/url1 title'}
             ]);
 
             return util.getExecFunction(model, spy)().then(function() {
                 spy.should.be.calledTwice;
                 spy.firstCall.should.be.calledWithMatch(sinon.match.any, {url: '/', title: '/title'});
-                spy.secondCall.should.be.calledWithMatch(sinon.match.any, {url: '/url1', title: '/url1 title'});
+                spy.secondCall.should.be.calledWithMatch(sinon.match.any, {url: '/url1/', title: '/url1 title'});
             });
         });
     });
