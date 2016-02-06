@@ -25,14 +25,14 @@ describe('tasks-override/override-docs', function() {
     });
 
     it('should not process pages without "contentFile" field', function() {
-        model.setPages([{url: '/url1'}]);
+        model.setPages([{url: '/url1/'}]);
         return overrideDocs(model)().then(function() {
             baseUtil.readFileFromCache.should.not.be.called;
         });
     });
 
     it('should not process pages with non-html "contentFile" field', function() {
-        model.setPages([{url: '/url1', contentFile: '/url1/index.json'}]);
+        model.setPages([{url: '/url1/', contentFile: '/url1/index.json'}]);
         return overrideDocs(model)().then(function() {
             baseUtil.readFileFromCache.should.not.be.called;
         });
@@ -40,7 +40,7 @@ describe('tasks-override/override-docs', function() {
 
     describe('override image sources', function() {
         beforeEach(function() {
-            model.setPages([{url: '/url1', contentFile: '/url1/index.html'}]);
+            model.setPages([{url: '/url1/', contentFile: '/url1/index.html'}]);
         });
 
         it('should not process image tags without src attributes', function() {
@@ -84,12 +84,12 @@ describe('tasks-override/override-docs', function() {
         beforeEach(function() {
             var sourceUrlsMap = util.createSourceUrlsMap([
                 {
-                    url: '/url1',
+                    url: '/url1/',
                     sourceUrl: 'https://github.com/org/user/blob/ref/some-path1',
                     published: true
                 },
                 {
-                    url: '/url2',
+                    url: '/url2/',
                     sourceUrl: 'https://github.com/org/user/blob/ref/some-path2',
                     published: true
                 }
@@ -98,7 +98,7 @@ describe('tasks-override/override-docs', function() {
             sandbox.stub(util, 'createArrayOfModelPageUrls').returns(['/url1', '/url2']);
 
             model.setPages([{
-                url: '/url1',
+                url: '/url1/',
                 sourceUrl: 'https://github.com/org/user/blob/ref/some-path1',
                 contentFile: '/url1/index.html'
             }]);
@@ -115,7 +115,7 @@ describe('tasks-override/override-docs', function() {
         });
 
         it('should not rewrite native website links', function() {
-            var html = '<a href="/url1"></a>';
+            var html = '<a href="/url1/"></a>';
             return shouldRewriteFromTo(html, html);
         });
 
@@ -126,14 +126,14 @@ describe('tasks-override/override-docs', function() {
 
         it('should replace absolute link to gh source (if it also persisted in model)', function() {
             return shouldRewriteFromTo(
-                '<a href="https://github.com/org/user/blob/ref/some-path2"></a>', '<a href="/url2"></a>');
+                '<a href="https://github.com/org/user/blob/ref/some-path2"></a>', '<a href="/url2/"></a>');
         });
 
         it('should replace relative link to gh source (if it also persisted in model)', function() {
-            return shouldRewriteFromTo('<a href="./some-path2"></a>', '<a href="/url2"></a>');
+            return shouldRewriteFromTo('<a href="./some-path2"></a>', '<a href="/url2/"></a>');
         });
 
-        it('should replace relative link (with anchor) to gh source', function() {
+            it('should replace relative link (with anchor) to gh source', function() {
             return shouldRewriteFromTo('<a href="./some-path2#anchor"></a>', '<a href="/url2#anchor"></a>');
         });
 

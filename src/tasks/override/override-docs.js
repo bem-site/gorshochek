@@ -108,6 +108,7 @@ export default function overrideDocLinks(model) {
         }
 
         if(anchor) {
+            linkHref = linkHref.replace(/\/$/, '');
             linkHref = Url.format(_.merge(Url.parse(linkHref), {hash: anchor}));
         }
         return linkHref;
