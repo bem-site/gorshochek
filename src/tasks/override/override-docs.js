@@ -123,7 +123,7 @@ export default function overrideDocLinks(model) {
      */
     function findImageSourceReplacement(imgSrc, page) {
         if(!imgSrc) {
-            return imgSrc;
+            return;
         }
 
         const url = Url.parse(imgSrc);

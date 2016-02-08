@@ -52,7 +52,7 @@ export default function mergeModels(model, options = {}) {
     return function() {
         return Q.all([
             baseUtil.readFileFromCache('model.json', []),
-            baseUtil.readJSONFile(options.modelPath, null)
+            baseUtil.readJSONFile(options.modelPath)
         ])
         .spread(model.merge.bind(model))
         .then(logModelChanges)

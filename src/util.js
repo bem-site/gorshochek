@@ -84,8 +84,8 @@ export function readJSONFile(filePath, fallbackValue) {
  */
 export function readFileFromCache(filePath, fallbackValue) {
     debug(`read file from cache: ${filePath}`);
-    return (path.extname(filePath) === '.json' ? readJSONFile : readFile)
-        .call(null, path.join(getCacheFolder(), filePath), fallbackValue);
+    return (path.extname(filePath) === '.json' ?
+        readJSONFile : readFile)(path.join(getCacheFolder(), filePath), fallbackValue);
 }
 
 /**
@@ -130,7 +130,7 @@ export function processPagesAsync(model, criteria, processFunc, portionSize = 5)
     criteria = criteria || (() => true);
 
     return _(criteria)
-        .thru(model.getPagesByCriteria.bind(model))
+        .thru(model.getPages().filter)
         .chunk(portionSize)
         .reduce((prev, portion, index) => {
             return prev.then(() => {

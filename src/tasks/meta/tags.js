@@ -61,7 +61,7 @@ export default function generateTagPages(model, options = {}) {
     }
 
     /**
-     * Generates model pages for each of tag
+     * Generates model pages for each tag
      * @param {Model} model - application model instance
      * @param {String[]} tags - array of tags
      * @returns {Object[]}
@@ -105,8 +105,8 @@ export default function generateTagPages(model, options = {}) {
      * @returns {Object}
      */
     function generateTagPagesMap(tagPages) {
-        return tagPages.reduce((prev, item) => {
-            prev[item.title] = _.pick(item, ['url', 'title']);
+        return tagPages.reduce((prev, tagPage) => {
+            prev[tagPage.title] = _.pick(tagPage, ['url', 'title']);
             return prev;
         }, {});
     }
