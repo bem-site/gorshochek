@@ -112,7 +112,7 @@ export default function generateTagPages(model, options = {}) {
     }
 
     function _replaceTags(tagPagesMap, obj) {
-        obj.tags && (obj.tags = obj.tags.map(tag => tagPagesMap[tag]));
+        obj.tags && (obj.tagLinks = obj.tags.map(tag => tagPagesMap[tag]));
         return obj;
     }
 

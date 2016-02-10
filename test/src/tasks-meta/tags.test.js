@@ -75,7 +75,8 @@ describe('tasks-meta/tags', function() {
                 JSON.stringify([{
                     url: '/url1/',
                     title: 'some-title',
-                    tags: [
+                    tags: ['tag1'],
+                    tagLinks: [
                         {
                             url: '/tags/tag1/',
                             title: 'tag1'
@@ -134,7 +135,8 @@ describe('tasks-meta/tags', function() {
                 url: '/url1/',
                 site: '/url1/',
                 title: 'some-title',
-                tags: [{title: 'tag1', url: '/tags/tag1/'}]
+                tags: ['tag1'],
+                tagLinks: [{title: 'tag1', url: '/tags/tag1/'}]
             });
         });
     });
@@ -153,7 +155,8 @@ describe('tasks-meta/tags', function() {
                 JSON.stringify([{
                     url: '/url1/',
                     title: 'some-title',
-                    tags: [
+                    tags: ['tag1'],
+                    tagLinks: [
                         {
                             url: '/tags/tag1/',
                             title: 'tag1'
