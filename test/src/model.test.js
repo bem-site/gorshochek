@@ -17,32 +17,32 @@ describe('Model', function() {
     });
 
     it('should add new items to changes add collection', function() {
-        model.pushChangeAdd('url1');
+        model.pushChangeToAddedGroup('url1');
         model.getChanges().added[0].should.be.equal('url1');
     });
 
     it('should mark changes as modified after pushing new item into added collection', function() {
-        model.pushChangeAdd('url1');
+        model.pushChangeToAddedGroup('url1');
         model.hasChanges().should.be.equal(true);
     });
 
     it('should add new items to modified collection', function() {
-        model.pushChangeModify('url1');
+        model.pushChangeToModifiedGroup('url1');
         model.getChanges().modified[0].should.be.equal('url1');
     });
 
     it('should mark changes as modified after pushing new item into modified collection', function() {
-        model.pushChangeModify('url1');
+        model.pushChangeToModifiedGroup('url1');
         model.hasChanges().should.be.equal(true);
     });
 
     it('should add new items to removed collection', function() {
-        model.pushChangeRemove('url1');
+        model.pushChangeToRemovedGroup('url1');
         model.getChanges().removed[0].should.be.equal('url1');
     });
 
     it('should mark changes as modified after pushing new item into removed collection', function() {
-        model.pushChangeRemove('url1');
+        model.pushChangeToRemovedGroup('url1');
         model.hasChanges().should.be.equal(true);
     });
 
@@ -146,18 +146,6 @@ describe('Model', function() {
             model.setPages([_.merge(pageProperty, commonPageProperties)]);
         }
 
-        it('should add / to end of url if it was not already set', function() {
-            prepareModelPages({});
-            model.normalize();
-            model.getPages().shift().url.should.equal('/url1/');
-        });
-
-        it('should not add / to end of url if it was already set', function() {
-            prepareModelPages([{url: '/url1/'}]);
-            model.normalize();
-            model.getPages().shift().url.should.equal('/url1/');
-        });
-
         it('should set given "aliases" property value as is if it was set', function() {
             prepareModelPages({aliases: ['/url11', '/url22']});
             model.normalize();
@@ -176,28 +164,10 @@ describe('Model', function() {
             model.getPages().shift().view.should.be.equal('index');
         });
 
-        it('should set default "view" property value as "post"', function() {
-            prepareModelPages({});
-            model.normalize();
-            model.getPages().shift().view.should.be.equal('post');
-        });
-
         it('should set given "published" property value as is', function() {
             prepareModelPages({published: true, title: 'Hello World'});
             model.normalize();
             model.getPages().shift().published.should.be.true;
-        });
-
-        it('should set default "published" property value as false', function() {
-            prepareModelPages({});
-            model.normalize();
-            model.getPages().shift().published.should.be.false;
-        });
-
-        it('should set "published" false when title as missed', function() {
-            prepareModelPages({published: true});
-            model.normalize();
-            model.getPages().shift().published.should.be.false;
         });
     });
 });

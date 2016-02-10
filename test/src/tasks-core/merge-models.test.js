@@ -36,7 +36,7 @@ describe('tasks-core/merge-models', function() {
     it('should read current model from local path given by "modelPath" option', function() {
         return mergeModels(model, options)().then(function() {
             readJSONFileStub.should.be.calledOnce;
-            readJSONFileStub.should.be.calledWithExactly('./some-model.json', null);
+            readJSONFileStub.should.be.calledWithExactly('./some-model.json');
         });
     });
 

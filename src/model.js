@@ -2,7 +2,6 @@
 
 import _ from 'lodash';
 import deepDiff from 'deep-diff';
-import deepExtend from 'deep-extend';
 
 /**
  * @desc Application model class
@@ -33,9 +32,9 @@ export default class Model {
      * @returns {Object}
      * @private
      */
-    static _generateUrlPageMap(arr) {
-        return arr.reduce((prev, item) => {
-            prev[item.url] = item;
+    static _generateUrlPageMap(pages) {
+        return pages.reduce((prev, page) => {
+            prev[page.url] = page;
             return prev;
         }, {});
     }
@@ -45,9 +44,8 @@ export default class Model {
      * @returns {Boolean}
      */
     hasChanges() {
-        return this.getChanges().added.length > 0 ||
-            this.getChanges().modified.length > 0 ||
-            this.getChanges().removed.length > 0;
+        const changes = this.getChanges();
+        return !!changes.added.length || !!changes.modified.length || !!changes.removed.length;
     }
 
     /**
@@ -63,7 +61,7 @@ export default class Model {
      * @param {Object} item
      * @returns {Model}
      */
-    pushChangeAdd(item) {
+    pushChangeToAddedGroup(item) {
         this.getChanges().added.push(item);
         return this;
     }
@@ -73,7 +71,7 @@ export default class Model {
      * @param {Object} item
      * @returns {Model}
      */
-    pushChangeModify(item) {
+    pushChangeToModifiedGroup(item) {
         this.getChanges().modified.push(item);
         return this;
     }
@@ -83,7 +81,7 @@ export default class Model {
      * @param {Object} item
      * @returns {Model}
      */
-    pushChangeRemove(item) {
+    pushChangeToRemovedGroup(item) {
         this.getChanges().removed.push(item);
         return this;
     }
@@ -119,23 +117,24 @@ export default class Model {
         /*
          Для массивов объектов из нового и старого файлов моделей
          вызываем метод _generateUrlPageMap, который строит из данных массивов
-         объекты в которых ключами являются url страниц, а значениями сами объекты
+         объекты, в которых ключами являются url страниц, а значениями сами объекты
          */
-        const newModel = this.constructor._generateUrlPageMap(currentModel);
-        const oldModel = this.constructor._generateUrlPageMap(previousModel);
+        const generateUrlPageMap = this.constructor._generateUrlPageMap;
+        const newModel = generateUrlPageMap(currentModel);
+        const oldModel = generateUrlPageMap(previousModel);
 
         const newPages = _.keys(newModel); // получить все url из новой модели
         let oldPages = _.keys(oldModel); // получить все url из старой модели
 
         /*
          Добавленные страницы можно получить вычислив разницу между массивом url из новой и старой моделей
-         Для удаленных страницы наоборот надо вычислить разницу между массивом url из старой и новой моделей
+         Для удаленных страниц наоборот надо вычислить разницу между массивом url из старой и новой моделей
          */
         const addedPages = _.difference(newPages, oldPages);
         const removedPages = _.difference(oldPages, newPages);
 
         removedPages.forEach(url => {
-            this.pushChangeRemove({type: 'page', url});
+            this.pushChangeToRemovedGroup({type: 'page', url});
         });
 
         // отбрасываем удаленные страницы
@@ -143,7 +142,7 @@ export default class Model {
 
         /*
          страницы в старой модели делятся на 2 группы:
-         1. Страницы мета-информация (набор полей в модели) для которых была изменена
+         1. Страницы, мета-информация (набор полей в модели) для которых была изменена
          2. Страницы, которые остались неизменными
          Соответственно вычисляя глубокий diff делим старые страницы на 2 таких группы
          */
@@ -159,7 +158,7 @@ export default class Model {
         // add new pages
         this.setPages(
             this.getPages().concat(addedPages.map(url => {
-                this.pushChangeAdd({type: 'page', url});
+                this.pushChangeToAddedGroup({type: 'page', url});
                 return newModel[url];
             }))
         );
@@ -172,14 +171,14 @@ export default class Model {
             }))
         );
 
-        // Добавляем измененные страницы, предварительно внедряя изменения которые
-        // пришли и новой модели
+        // Добавляем измененные страницы, предварительно внедряя изменения, которые
+        // пришли, и новой модели
         // merge modifications
         // add modified pages
         this.setPages(
             this.getPages().concat(modifiedPages.map(url => {
-                this.pushChangeModify({type: 'page', url});
-                return deepExtend(oldModel[url], newModel[url]);
+                this.pushChangeToModifiedGroup({type: 'page', url});
+                return _.merge(oldModel[url], newModel[url]);
             }, this))
         );
         return this;
@@ -202,29 +201,14 @@ export default class Model {
              * Для остальных полей нужно провести проверку и выставить значения по умолчанию
              *
              */
-            page.url = page.url + (_.endsWith(page.url, '/') ? '' : '/');
 
-            page.aliases = page.aliases || []; // массив алиасов
-            page.view = page.view || 'post'; // поле представления страницы
-            page.published = !!page.published;
+            page.aliases || (page.aliases = []); // массив алиасов
+            page.published = typeof page.published === 'undefined' ? true : !!page.published;
 
-            if(!page.title) {
-                page.published = false;
-            }
             return page;
         };
 
         this.setPages(this.getPages().map(normalizePage));
         return this;
-    }
-
-    /**
-     * Returns pages with anyone language version satisfy getCriteria function criteria
-     * @param {Function} criteria function
-     * @returns {Array} filtered array of pages
-     * @public
-     */
-    getPagesByCriteria(criteria) {
-        return this.getPages().filter(criteria);
     }
 }

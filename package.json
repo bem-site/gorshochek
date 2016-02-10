@@ -64,7 +64,6 @@
     "cheerio": "^0.19.0",
     "debug": "^2.2.0",
     "deep-diff": "^0.3.x",
-    "deep-extend": "^0.4.x",
     "fs-extra": "^0.26.x",
     "github": "^0.2.4",
     "js2xmlparser": "^1.0.0",

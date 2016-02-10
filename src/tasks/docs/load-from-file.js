@@ -47,23 +47,23 @@ export default function loadSourcesFromLocal(model) {
         const fileName = path.basename(filePath); // имя файла (с расширением)
         const fileExt = path.extname(fileName); // расширение файла
 
-        const localFilePath = path.resolve(filePath);
+        const absFilePath = path.resolve(filePath);
         const cacheFilePath = path.join(page.url, ('index' + fileExt));
 
         const onAddedDocument = (promise) => {
             debug('Doc added: %s %s', page.url, page.title);
-            model.pushChangeAdd({type: 'doc', url: page.url, title: page.title});
+            model.pushChangeToAddedGroup({type: 'doc', url: page.url, title: page.title});
             return baseUtil.writeFileToCache(cacheFilePath, promise.value);
         };
         const onModifiedDocument = (promise) => {
             debug('Doc modified: %s %s', page.url, page.title);
-            model.pushChangeModify({type: 'doc', url: page.url, title: page.title});
+            model.pushChangeToModifiedGroup({type: 'doc', url: page.url, title: page.title});
             return baseUtil.writeFileToCache(cacheFilePath, promise.value);
         };
 
         return Q.allSettled([
             baseUtil.readFileFromCache(cacheFilePath),
-            baseUtil.readFile(localFilePath, null)
+            baseUtil.readFile(absFilePath)
         ]).spread((cache, local) => {
             if(local.state === 'rejected') {
                 return Q.reject(local);

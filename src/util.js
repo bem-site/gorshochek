@@ -57,7 +57,7 @@ function _readFile(method, filePath, fallbackValue) {
 /**
  * Reads file from local filesystem
  * @param {String} filePath - path to file on local filesystem
- * @param {*} fallbackValue - value which will be returned if file does not exist on local filesystem
+ * @param {*} [fallbackValue] - value which will be returned if file does not exist on local filesystem
  * @returns {*|Promise.<T>}
  */
 export function readFile(filePath, fallbackValue) {
@@ -68,7 +68,7 @@ export function readFile(filePath, fallbackValue) {
 /**
  * Read JSON file from local filesystem
  * @param {String} filePath - path to file
- * @param {*} fallbackValue - value which will be returned if file does not exist on local filesystem
+ * @param {*} [fallbackValue] - value which will be returned if file does not exist on local filesystem
  * @returns {*|Promise.<T>}
  */
 export function readJSONFile(filePath, fallbackValue) {
@@ -84,8 +84,8 @@ export function readJSONFile(filePath, fallbackValue) {
  */
 export function readFileFromCache(filePath, fallbackValue) {
     debug(`read file from cache: ${filePath}`);
-    return (path.extname(filePath) === '.json' ? readJSONFile : readFile)
-        .call(null, path.join(getCacheFolder(), filePath), fallbackValue);
+    return (path.extname(filePath) === '.json' ?
+        readJSONFile : readFile)(path.join(getCacheFolder(), filePath), fallbackValue);
 }
 
 /**
@@ -129,8 +129,8 @@ export function writeFile(filePath, content) {
 export function processPagesAsync(model, criteria, processFunc, portionSize = 5) {
     criteria = criteria || (() => true);
 
-    return _(criteria)
-        .thru(model.getPagesByCriteria.bind(model))
+    return _(model.getPages())
+        .filter(criteria)
         .chunk(portionSize)
         .reduce((prev, portion, index) => {
             return prev.then(() => {
