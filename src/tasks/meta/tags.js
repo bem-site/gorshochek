@@ -18,7 +18,6 @@ const debug = require('debug')('meta-tags');
  * var model = gorshochek.createModel();
  * Q()
  *    .then(tasks.core.mergeModels(model, {modelPath: './examples/model.ru.json'}))
- *    .then(tasks.core.normalizeModel(model))
  *    .then(tasks.meta.createTagPages(model, {baseUrl: '/tags', baseTitle: 'Tags'}))
  *    .then(tasks.core.saveModel(model))
  *    .then(tasks.core.rsync(model, {

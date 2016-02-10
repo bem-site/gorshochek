@@ -23,7 +23,6 @@ const debug = require('debug')('docs github load');
  * var model = gorshochek.createModel();
  * Q()
  *    .then(tasks.core.mergeModels(model, {modelPath: './examples/model.ru.json'}))
- *    .then(tasks.core.normalizeModel(model))
  *    .then(tasks.docs.loadSourcesFromGithub(model, {
  *        token: 'your github token',
  *        updateDate: true,

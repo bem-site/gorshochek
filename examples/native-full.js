@@ -1,17 +1,16 @@
-var Q = require('q'),
-    gorshochek = require('../index'),
-    token = process.env.TOKEN;
+const Q = require('q');
+const gorshochek = require('../index');
+const token = process.env.TOKEN;
 
-var model = gorshochek.createModel(),
-    tasks = gorshochek.tasks;
+const model = gorshochek.createModel();
+const tasks = gorshochek.tasks;
 
 // TODO: run everything possible in parallel
 
 Q()
     .then(tasks.core.mergeModels(model, {modelPath: './examples/model.ru.json'}))
-    .then(tasks.core.normalizeModel(model))
     .then(tasks.meta.generateTagPages(model))
-    .then(tasks.docs.loadSourceFromGithub(model, {token: token}))
+    .then(tasks.docs.loadSourceFromGithub(model, {token}))
     .then(tasks.docs.loadSourceFromLocal(model))
     .then(tasks.docs.transformMdToHtml(model))
     .then(tasks.page.createHeaderTitle(model))

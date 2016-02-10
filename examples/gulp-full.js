@@ -1,15 +1,15 @@
-var gulp = require('gulp'),
-    gorshochek = require('../index'),
-    token = '54fa292690dc4b5410bb' + '57d08170f11d32691633';
+const gulp = require('gulp');
+const gorshochek = require('../index');
 
-var model = gorshochek.createModel(),
-    tasks = gorshochek.tasks;
+const token = process.env.TOKEN;
+
+const model = gorshochek.createModel();
+const tasks = gorshochek.tasks;
 
 gulp.task('merge-model', tasks.core.mergeModels(model, {modelPath: './examples/model.ru.json'}));
-gulp.task('normalize-model', ['merge-model'], tasks.core.normalizeModel(model));
-gulp.task('process-model', ['normalize-model']);
+gulp.task('process-model', ['merge-model']);
 
-gulp.task('load-from-github', ['process-model'], tasks.docs.loadSourceFromGithub(model, {token: token}));
+gulp.task('load-from-github', ['process-model'], tasks.docs.loadSourceFromGithub(model, {token}));
 gulp.task('load-from-file', ['process-model'], tasks.docs.loadSourceFromLocal(model));
 gulp.task('transform-md-html', ['load-from-github', 'load-from-file'], tasks.docs.transformMdToHtml(model));
 gulp.task('process-docs', ['transform-md-html']);

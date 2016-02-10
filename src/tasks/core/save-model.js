@@ -13,7 +13,6 @@ import * as baseUtil from '../../util';
  * var model = gorshochek.createModel();
  * Q()
  *    .then(tasks.core.mergeModels(model, {modelPath: './examples/model.ru.json'}))
- *    .then(tasks.core.normalizeModel(model))
  *    .then(tasks.core.saveModel(model))
  *    .then(tasks.core.rsync(model, {
  *        dest: './data',
