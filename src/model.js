@@ -44,8 +44,8 @@ export default class Model {
      * @returns {Boolean}
      */
     hasChanges() {
-        var changes = this.getChanges();
-        return changes.added.length || changes.modified.length || changes.removed.length;
+        const changes = this.getChanges();
+        return !!changes.added.length || !!changes.modified.length || !!changes.removed.length;
     }
 
     /**
