@@ -11,7 +11,6 @@ module.exports = {
     tasks: {
         core: {
             mergeModels: require('./lib/tasks/core/merge-models'),
-            normalizeModel: require('./lib/tasks/core/normalize-model'),
             saveModel: require('./lib/tasks/core/save-model'),
             rsync: require('./lib/tasks/core/rsync')
         },

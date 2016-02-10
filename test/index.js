@@ -8,7 +8,6 @@ require('./src/tasks-libraries/model/level.test.js');
 require('./src/tasks-libraries/model/version.test.js');
 
 require('./src/tasks-core/merge-models.test.js');
-require('./src/tasks-core/normalize-model.test.js');
 require('./src/tasks-core/save-model.test.js');
 require('./src/tasks-core/rsync.test.js');
 

@@ -56,6 +56,14 @@ describe('tasks-core/merge-models', function() {
         });
     });
 
+    it('should normalize effective model', function() {
+        var modelNormalizeSpy = sandbox.spy(model, 'normalize');
+
+        return mergeModels(model, options)().then(function() {
+            modelNormalizeSpy.should.be.calledOnce;
+        });
+    });
+
     it('should replace old model file by current', function() {
         return mergeModels(model, options)().then(function() {
             copyFileStub.should.be.calledOnce;
