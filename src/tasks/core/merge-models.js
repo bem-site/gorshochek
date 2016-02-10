@@ -55,6 +55,7 @@ export default function mergeModels(model, options = {}) {
             baseUtil.readJSONFile(options.modelPath)
         ])
         .spread(model.merge.bind(model))
+        .then(model.normalize.bind(model))
         .then(logModelChanges)
         .then(replaceModelFileInCache)
         .thenResolve(model);
