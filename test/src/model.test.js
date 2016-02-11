@@ -136,6 +136,13 @@ describe('Model', function() {
                 model.merge(oldModel, newModel);
                 model.getChanges().removed.should.eql([{type: 'page', url: '/url2'}]);
             });
+
+            it('should respect initial pages order', function() {
+                model.merge(oldModel, newModel);
+                model.getPages()[0].url.should.equal('/url1');
+                model.getPages()[1].url.should.equal('/url3');
+                model.getPages()[2].url.should.equal('/url4');
+            });
         });
     });
 
