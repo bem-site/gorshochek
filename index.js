@@ -17,6 +17,7 @@ module.exports = {
         docs: {
             loadSourceFromGithub: require('./lib/tasks/docs/load-from-github'),
             loadSourceFromLocal: require('./lib/tasks/docs/load-from-file'),
+            loadSourceFromHttp: require('./lib/tasks/docs/load-from-http'),
             transformMdToHtml: require('./lib/tasks/docs/transform-md-html')
         },
         meta: {
