@@ -28,14 +28,25 @@ export default class Model {
 
     /**
      * Generates map with page urls as keys and page object as values
-     * @param {Object[]} arr - array of page objects
+     * @param {Object[]} pages - array of page objects
      * @returns {Object}
      * @private
      */
     static _generateUrlPageMap(pages) {
         return pages.reduce((prev, page) => {
-            prev[page.url] = page;
-            return prev;
+            return _.set(prev, page.url, page);
+        }, {});
+    }
+
+    /**
+     * Generates map with page urls as keys and page order indexes as values
+     * @param {Object[]} pages - array of page objects
+     * @returns {Object}
+     * @private
+     */
+    static _generateUrlOrderMap(pages) {
+        return pages.reduce((prev, page, index) => {
+            return _.set(prev, page.url, index);
         }, {});
     }
 
@@ -181,6 +192,15 @@ export default class Model {
                 return _.merge(oldModel[url], newModel[url]);
             }, this))
         );
+
+        // Restore original pages order in current model
+        const orderMap = this.constructor._generateUrlOrderMap(currentModel);
+        this.setPages(
+            this.getPages().sort((a, b) => {
+                return orderMap[a.url] - orderMap[b.url];
+            })
+        );
+
         return this;
     }
 
