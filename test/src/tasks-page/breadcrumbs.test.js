@@ -1,7 +1,7 @@
-var Model = require('../../../lib/model'),
+var Model = require('../../../src/model'),
     createBreadcrumbs = require('../../../index').tasks.page.createBreadcrumbs;
 
-describe('tasks-pages/breadcrumbs', function() {
+describe('tasks-pages/breadcrumbs', () => {
     var model = new Model(),
         pages = [
             {url: '/', title: 'index title'},
@@ -9,21 +9,21 @@ describe('tasks-pages/breadcrumbs', function() {
             {url: '/url1/url2/', title: 'url2 title'}
         ];
 
-    beforeEach(function() {
+    beforeEach(() => {
         model.setPages(pages);
     });
 
-    it('should return function as result', function() {
+    it('should return function as result', () => {
         createBreadcrumbs(model).should.be.instanceOf(Function);
     });
 
-    it('should create valid breadcrumbs model for index page', function() {
+    it('should create valid breadcrumbs model for index page', () => {
         return createBreadcrumbs(model)().then(function(result) {
             result.getPages()[0].breadcrumbs.should.eql([{url: '/', title: 'index title'}]);
         });
     });
 
-    it('should create valid breadcrumbs model for first-level pages', function() {
+    it('should create valid breadcrumbs model for first-level pages', () => {
         return createBreadcrumbs(model)().then(function(result) {
             result.getPages()[1].breadcrumbs.should.eql([
                 {url: '/', title: 'index title'},
@@ -32,7 +32,7 @@ describe('tasks-pages/breadcrumbs', function() {
         });
     });
 
-    it('should create valid breadcrumbs model for second-level pages', function() {
+    it('should create valid breadcrumbs model for second-level pages', () => {
         return createBreadcrumbs(model)().then(function(result) {
             result.getPages()[2].breadcrumbs.should.eql([
                 {url: '/', title: 'index title'},

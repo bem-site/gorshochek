@@ -1,13 +1,15 @@
-import Q from 'q';
-import Base from './base';
-import Block from './block';
+'use strict';
+
+const Q = require('q');
+const Base = require('./base');
+const Block = require('./block');
 
 /**
  * @exports
  * @class Level
  * @desc level library model class
  */
-export default class Level extends Base {
+class Level extends Base {
     /**
      * Level constructor
      * @param {Object} version data object
@@ -67,3 +69,5 @@ export default class Level extends Base {
         });
     }
 }
+
+module.export = Level;

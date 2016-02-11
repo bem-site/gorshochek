@@ -1,8 +1,10 @@
-import path from 'path';
-import _ from 'lodash';
-import Q from 'q';
-import got from 'got';
-import * as baseUtil from '../../util';
+'use strict';
+
+const path = require('path');
+const _ = require('lodash');
+const got = require('got');
+const Q = require('q');
+const baseUtil = require('../../util');
 
 const debug = require('debug')('docs http(s) load');
 
@@ -29,7 +31,8 @@ const debug = require('debug')('docs http(s) load');
  *    }))
  *    .done();
  */
-export default function loadSourcesFromHttp(model, options = {}) {
+module.exports = function(model, options) {
+    options = options || {};
     options.concurrency = options.concurrency || 20;
 
     options.timeout = options.timeout || 10000;

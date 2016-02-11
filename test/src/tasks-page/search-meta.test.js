@@ -1,22 +1,22 @@
-var Model = require('../../../lib/model'),
+var Model = require('../../../src/model'),
     createSearchMeta = require('../../../index').tasks.page.createSearchMeta;
 
-describe('tasks-page/search-meta', function() {
+describe('tasks-page/search-meta', () => {
     var model = new Model(),
         pages = [
             {url: '/', title: '/ title'},
             {url: '/url1/', title: 'url1 title', tags: ['tag1', 'tag2']}
         ];
 
-    beforeEach(function() {
+    beforeEach(() => {
         model.setPages(pages);
     });
 
-    it('should return function as result', function() {
+    it('should return function as result', () => {
         createSearchMeta(model).should.be.instanceOf(Function);
     });
 
-    it('should set valid search meta-information for page without tags', function() {
+    it('should set valid search meta-information for page without tags', () => {
         return createSearchMeta(model)().then(function(result) {
             result.getPages()[0].meta.should.eql({
                 breadcrumbs: [
@@ -30,7 +30,7 @@ describe('tasks-page/search-meta', function() {
         });
     });
 
-    it('should set valid search meta-information for tagged pages', function() {
+    it('should set valid search meta-information for tagged pages', () => {
         return createSearchMeta(model)().then(function(result) {
             result.getPages()[1].meta.should.eql({
                 breadcrumbs: [

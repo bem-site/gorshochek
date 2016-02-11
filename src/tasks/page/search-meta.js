@@ -1,4 +1,6 @@
-import * as util from './util';
+'use strict';
+
+const util = require('./util');
 
 /**
  * Creates advanced meta-information for search service
@@ -18,7 +20,7 @@ import * as util from './util';
  *    }))
  *    .done();
  */
-export default function createSearchMeta(model) {
+module.exports = function(model) {
     return util.getExecFunction(model, (map, page) => {
         const urlSet = util.getParentUrls(page);
         page.meta = {
@@ -26,4 +28,4 @@ export default function createSearchMeta(model) {
             fields: {type: 'doc', keywords: page.tags || []}
         };
     });
-}
+};

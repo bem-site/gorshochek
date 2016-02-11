@@ -1,51 +1,51 @@
 var Q = require('q'),
-    Model = require('../../../lib/model'),
-    baseUtil = require('../../../lib/util'),
+    Model = require('../../../src/model'),
+    baseUtil = require('../../../src/util'),
     saveModel = require('../../../index').tasks.core.saveModel;
 
-describe('tasks-core/save-model', function() {
+describe('tasks-core/save-model', () => {
     var sandbox = sinon.sandbox.create(),
         model = new Model();
 
-    beforeEach(function() {
+    beforeEach(() => {
         sandbox.stub(console, 'error');
         sandbox.stub(baseUtil, 'writeFile').returns(Q());
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sandbox.restore();
     });
 
-    it('should return function as result', function() {
+    it('should return function as result', () => {
         saveModel(model).should.be.instanceOf(Function);
     });
 
-    it('should return promise with model instance', function() {
+    it('should return promise with model instance', () => {
         return saveModel(model)().should.eventually.be.instanceOf(Model);
     });
 
-    it('should save model file to default path: .builder/cache/data.json', function() {
-        return saveModel(model)().then(function() {
+    it('should save model file to default path: .builder/cache/data.json', () => {
+        return saveModel(model)().then(() => {
             baseUtil.writeFile.should.be.calledWith('.builder/cache/data.json');
         });
     });
 
-    it('should dave model file to given path defined by "dataPath" option', function() {
-        return saveModel(model, {dataPath: './some-path'})().then(function() {
+    it('should dave model file to given path defined by "dataPath" option', () => {
+        return saveModel(model, {dataPath: './some-path'})().then(() => {
             baseUtil.writeFile.should.be.calledWith('some-path/data.json');
         });
     });
 
-    it('should show valid console error message if model saving error occur', function() {
+    it('should show valid console error message if model saving error occur', () => {
         baseUtil.writeFile.returns(Q.reject('some-error'));
 
-        return saveModel(model)().catch(function() {
+        return saveModel(model)().catch(() => {
             console.error.should.be.calledTwice;
             console.error.firstCall.should.be.calledWith('Error occured while saving model to file');
         });
     });
 
-    it('should return rejected promise if model saving error occur', function() {
+    it('should return rejected promise if model saving error occur', () => {
         baseUtil.writeFile.returns(Q.reject('some-error'));
         return saveModel(model)().should.be.rejectedWith('some-error');
     });

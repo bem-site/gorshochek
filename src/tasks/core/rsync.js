@@ -1,6 +1,8 @@
-import Q from 'q';
-import * as baseUtil from '../../util';
-import rsyncSlim from 'rsync-slim';
+'use strict';
+
+const Q  = require('q');
+const baseUtil = require('../../util');
+const rsyncSlim = require('rsync-slim');
 
 const debug = require('debug')('rsync');
 
@@ -26,7 +28,8 @@ const debug = require('debug')('rsync');
  *    }))
  *    .done();
  */
-export default function rsync(model, options = {}) {
+module.exports = function(model, options) {
+    options = options || {};
 
     /**
      * Returns rsync options object

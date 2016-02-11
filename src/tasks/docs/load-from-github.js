@@ -1,7 +1,9 @@
-import path from 'path';
-import Q from 'q';
-import GitHub from './github/index';
-import * as baseUtil from '../../util';
+'use strict';
+
+const path = require('path');
+const Q = require('q');
+const GitHub = require('./github/index');
+const baseUtil = require('../../util');
 
 const debug = require('debug')('docs github load');
 
@@ -36,7 +38,9 @@ const debug = require('debug')('docs github load');
  *    }))
  *    .done();
  */
-export default function loadSourcesFromGithub(model, options = {}) {
+module.exports = function(model, options) {
+    options = options || {};
+
     const GITHUB_URL_REGEXP = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/;
     const api = new GitHub({token: options.token});
 
@@ -128,18 +132,17 @@ export default function loadSourcesFromGithub(model, options = {}) {
      * Loads content from github repository via github API
      * @param {...{Object}} params - parameters for github API call
      */
-    function getContentFromGithubSource(...params) {
-        return Q.denodeify(api.executeAPIMethod.bind(api))('getContent', ...params);
+    function getContentFromGithubSource() {
+        return Q.denodeify(api.executeAPIMethod.bind(api))('getContent', arguments);
     }
 
     /**
      * Returns timestamp of last commit for given source
-     * @param {...{Object}} params - parameters for github API call
      * @returns {*|Promise.<T>}
      * @returns {Promise}
      */
-    function getSourceLastUpdateDate(...params) {
-        return Q.denodeify(api.executeAPIMethod.bind(api))('getCommits', ...params)
+    function getSourceLastUpdateDate() {
+        return Q.denodeify(api.executeAPIMethod.bind(api))('getCommits', arguments)
             .catch(() => null)
             .then(commits => {
                 return (commits && commits.length) ?
@@ -149,11 +152,10 @@ export default function loadSourcesFromGithub(model, options = {}) {
 
     /**
      * Returns information about repo issues section existence
-     * @param {...{Object}} params - parameters for github API call
      * @returns {*|Promise.<T>}
      */
-    function hasRepoIssues(...params) {
-        return Q.denodeify(api.executeAPIMethod.bind(api))('get', ...params)
+    function hasRepoIssues() {
+        return Q.denodeify(api.executeAPIMethod.bind(api))('get', arguments)
             .get('has_issues')
             .catch(() => null);
     }

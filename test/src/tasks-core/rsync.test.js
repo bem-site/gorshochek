@@ -1,8 +1,8 @@
 var _ = require('lodash'),
     proxyquire = require('proxyquire'),
-    Model = require('../../../lib/model');
+    Model = require('../../../src/model');
 
-describe('tasks-core/rsync', function() {
+describe('tasks-core/rsync', () => {
     var rsync,
         rsyncStub,
         sandbox = sinon.sandbox.create(),
@@ -14,55 +14,55 @@ describe('tasks-core/rsync', function() {
             sync: false
         };
 
-    beforeEach(function() {
+    beforeEach(() => {
         sandbox.stub(console, 'error');
         rsyncStub = sandbox.stub().yields(null);
-        rsync = proxyquire('../../../lib/tasks/core/rsync', {'rsync-slim': rsyncStub});
+        rsync = proxyquire('../../../src/tasks/core/rsync', {'rsync-slim': rsyncStub});
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sandbox.restore();
     });
 
-    it('should return function as result', function() {
+    it('should return function as result', () => {
         rsync(model).should.be.instanceOf(Function);
     });
 
-    it('should return promise with model instance', function() {
+    it('should return promise with model instance', () => {
         return rsync(model)().should.eventually.be.instanceOf(Model);
     });
 
-    it('should rejected with error if error occur while synchronization', function() {
+    it('should rejected with error if error occur while synchronization', () => {
         rsyncStub.yields(new Error('some-error'));
         return rsync(model)().should.rejectedWith('some-error');
     });
 
-    it('should rsync with default parameters', function() {
-        return rsync(model)().then(function() {
+    it('should rsync with default parameters', () => {
+        return rsync(model)().then(() => {
             rsyncStub.should.be.calledWithMatch(baseParams);
         });
     });
 
-    it('should rsync from custom source path', function() {
-        return rsync(model, {src: './some-source'})().then(function() {
+    it('should rsync from custom source path', () => {
+        return rsync(model, {src: './some-source'})().then(() => {
             rsyncStub.should.be.calledWithMatch(_.extend({}, baseParams, {src: './some-source'}));
         });
     });
 
-    it('should rsync to custom destination path', function() {
-        return rsync(model, {dest: './some-destination'})().then(function() {
+    it('should rsync to custom destination path', () => {
+        return rsync(model, {dest: './some-destination'})().then(() => {
             rsyncStub.should.be.calledWithMatch(_.extend({}, baseParams, {dest: './some-destination'}));
         });
     });
 
-    it('should use custom given rsync raw options', function() {
-        return rsync(model, {options: '-rtvhcz'})().then(function() {
+    it('should use custom given rsync raw options', () => {
+        return rsync(model, {options: '-rtvhcz'})().then(() => {
             rsyncStub.should.be.calledWithMatch(_.extend({}, baseParams, {options: '-rtvhcz'}));
         });
     });
 
-    it('should be able to set given excluded patterns', function() {
-        return rsync(model, {options: '-rd', exclude: ['*.js', '*.css']})().then(function() {
+    it('should be able to set given excluded patterns', () => {
+        return rsync(model, {options: '-rd', exclude: ['*.js', '*.css']})().then(() => {
             rsyncStub.should.be
                 .calledWithMatch(_.extend({}, baseParams, {options: '-rd --exclude \'*.js\' --exclude \'*.css\''}));
         });

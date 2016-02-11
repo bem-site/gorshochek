@@ -1,7 +1,9 @@
-import path from 'path';
-import _ from 'lodash';
-import Q from 'q';
-import * as baseUtil from '../../util';
+'use strict';
+
+const path = require('path');
+const _ = require('lodash');
+const Q = require('q');
+const baseUtil = require('../../util');
 
 const debug = require('debug')('meta-tags');
 
@@ -26,7 +28,8 @@ const debug = require('debug')('meta-tags');
  *    }))
  *    .done();
  */
-export default function generateTagPages(model, options = {}) {
+module.exports = function(model, options) {
+    options = options || {};
     options.baseUrl = options.baseUrl || '/tags/';
     options.baseTitle = options.baseTitle || 'Tags';
 

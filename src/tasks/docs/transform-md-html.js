@@ -1,7 +1,9 @@
-import path from 'path';
-import Q from 'q';
-import mdToHtml from 'bem-md-renderer';
-import * as baseUtil from '../../util';
+'use strict';
+
+const path = require('path');
+const Q = require('q');
+const mdToHtml = require('bem-md-renderer');
+const baseUtil = require('../../util');
 
 /**
  * Transforms page content source files from markdown format to html
@@ -25,8 +27,8 @@ import * as baseUtil from '../../util';
  *    }))
  *    .done();
  */
-export default function transformMdToHtml(model, options = {}) {
-
+module.exports = function(model, options) {
+    options = options || {};
     options.markedOptions = options.markedOptions || {};
     options.concurrency = options.concurrency || 20;
 
@@ -67,9 +69,9 @@ export default function transformMdToHtml(model, options = {}) {
         const htmlFilePath = path.join(mdFileDirectory, 'index.html');
 
         return Q(sourceFilePath)
-            .then(baseUtil.readFileFromCache)
+            .then(baseUtil.readFileFromCache.bind(baseUtil))
             .then(transform.bind(null, page))
-            .then(baseUtil.writeFileToCache.bind(null, htmlFilePath))
+            .then(baseUtil.writeFileToCache.bind(baseUtil, htmlFilePath))
             .then(() => {
                 page.contentFile = htmlFilePath;
                 return page;
@@ -81,4 +83,4 @@ export default function transformMdToHtml(model, options = {}) {
             .processPagesAsync(model, hasMarkdownSource, processPage, options.concurrency)
             .thenResolve(model);
     };
-}
+};

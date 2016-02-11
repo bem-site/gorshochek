@@ -1,4 +1,4 @@
-const Model = require('./lib/model');
+const Model = require('./src/model');
 
 module.exports = {
     /**
@@ -10,30 +10,30 @@ module.exports = {
     },
     tasks: {
         core: {
-            mergeModels: require('./lib/tasks/core/merge-models'),
-            saveModel: require('./lib/tasks/core/save-model'),
-            rsync: require('./lib/tasks/core/rsync')
+            mergeModels: require('./src/tasks/core/merge-models'),
+            saveModel: require('./src/tasks/core/save-model'),
+            rsync: require('./src/tasks/core/rsync')
         },
         docs: {
-            loadSourceFromGithub: require('./lib/tasks/docs/load-from-github'),
-            loadSourceFromLocal: require('./lib/tasks/docs/load-from-file'),
-            loadSourceFromHttp: require('./lib/tasks/docs/load-from-http'),
-            transformMdToHtml: require('./lib/tasks/docs/transform-md-html')
+            loadSourceFromGithub: require('./src/tasks/docs/load-from-github'),
+            loadSourceFromLocal: require('./src/tasks/docs/load-from-file'),
+            loadSourceFromHttp: require('./src/tasks/docs/load-from-http'),
+            transformMdToHtml: require('./src/tasks/docs/transform-md-html')
         },
         meta: {
-            generateTagPages: require('./lib/tasks/meta/tags')
+            generateTagPages: require('./src/tasks/meta/tags')
         },
         page: {
-            createHeaderTitle: require('./lib/tasks/page/header-title'),
-            createHeaderMeta: require('./lib/tasks/page/header-meta'),
-            createBreadcrumbs: require('./lib/tasks/page/breadcrumbs'),
-            createSearchMeta: require('./lib/tasks/page/search-meta')
+            createHeaderTitle: require('./src/tasks/page/header-title'),
+            createHeaderMeta: require('./src/tasks/page/header-meta'),
+            createBreadcrumbs: require('./src/tasks/page/breadcrumbs'),
+            createSearchMeta: require('./src/tasks/page/search-meta')
         },
         override: {
-            overrideDocLinks: require('./lib/tasks/override/override-docs')
+            overrideDocLinks: require('./src/tasks/override/override-docs')
         },
         sitemap: {
-            createSitemapXML: require('./lib/tasks/sitemap/sitemap-xml')
+            createSitemapXML: require('./src/tasks/sitemap/sitemap-xml')
         }
     }
 };

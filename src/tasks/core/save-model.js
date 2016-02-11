@@ -1,5 +1,7 @@
-import path from 'path';
-import * as baseUtil from '../../util';
+'use strict';
+
+const path = require('path');
+const baseUtil = require('../../util');
 
 /**
  * Saves model to JSON file
@@ -20,7 +22,8 @@ import * as baseUtil from '../../util';
  *    }))
  *    .done();
  */
-export default function saveModel(model, options = {}) {
+module.exports = function(model, options) {
+    options = options || {};
     return function() {
         const destinationPath = path.join(options.dataPath || baseUtil.getCacheFolder(), 'data.json');
         return baseUtil.writeFile(destinationPath, JSON.stringify(model.getPages()))
@@ -31,4 +34,4 @@ export default function saveModel(model, options = {}) {
                 throw error;
             });
     };
-}
+};

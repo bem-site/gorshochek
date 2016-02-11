@@ -1,13 +1,15 @@
-import path from 'path';
-import Q from 'q';
-import Base from './base';
+'use strict';
+
+const path = require('path');
+const Q = require('q');
+const Base = require('./base');
 
 /**
  * @exports
  * @class Block
  * @desc block library model class
  */
-export default class Block extends Base {
+class Block extends Base {
     /**
      * Block constructor
      * @param {Object} level data object
@@ -69,7 +71,9 @@ export default class Block extends Base {
      * @private
      */
     _setSource(data) {
-        const {basePath, baseUrl, lib, version, language} = this.level.version;
+        const versionData = this.level.version;
+        const basePath = versionData.basePath;
+        const language = versionData.language;
         const sourcePath = path.join(basePath, lib, version, this.level.level, this.block);
         const filePath = path.join(sourcePath, 'index.json');
         const contentFilePath = [baseUrl, lib, version,
@@ -88,7 +92,10 @@ export default class Block extends Base {
      * @returns {Promise}
      */
     processData(data) {
-        const {baseUrl, lib, version} = this.level.version;
+        const versionData = this.level.version;
+        const baseUrl = versionData.baseUrl;
+        const lib = versionData.lib;
+        const version = versionData.version;
 
         return this
             .setValue('url', [baseUrl, lib, version, this.level.level, this.block].join('/'))
@@ -105,3 +112,5 @@ export default class Block extends Base {
             .then(this.getData.bind(this));
     }
 }
+
+module.export = Block;

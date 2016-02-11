@@ -1,12 +1,14 @@
-import path from 'path';
-import Base from './base';
+'use strict';
+
+const path = require('path');
+const Base = require('./base');
 
 /**
  * @exports
  * @class Document
  * @desc library document model class
  */
-export default class Document extends Base {
+class Document extends Base {
     /**
      * Document constructor
      * @param {Object}    version data object
@@ -110,3 +112,5 @@ export default class Document extends Base {
             .then(this.getData.bind(this));
     }
 }
+
+module.export = Document;

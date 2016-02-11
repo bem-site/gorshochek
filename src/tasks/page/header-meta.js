@@ -1,4 +1,6 @@
-import Q from 'q';
+'use strict';
+
+const Q  = require('q');
 
 /*
  Для каждой страницы создаем
@@ -29,7 +31,7 @@ import Q from 'q';
  *    }))
  *    .done();
  */
-export default function createHeaderMeta(model) {
+module.exports = function(model) {
     return function() {
         const getKeywords = p => {return p.tags ? p.tags.join(', ') : '';};
         model.getPages().forEach(page => {

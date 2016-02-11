@@ -1,10 +1,12 @@
-import Path from 'path';
-import Url from 'url';
-import _ from 'lodash';
-import Q from 'q';
-import cheerio from 'cheerio';
-import * as baseUtil from '../../util';
-import * as util from './util';
+'use strict';
+
+const Path = require('path');
+const Url = require('url');
+const _ = require('lodash');
+const Q = require('q');
+const cheerio = require('cheerio');
+const baseUtil = require('../../util');
+const util = require('./util');
 
 const debug = require('debug')('override-docs');
 
@@ -28,7 +30,7 @@ const debug = require('debug')('override-docs');
  *    }))
  *    .done();
  */
-export default function overrideDocLinks(model) {
+module.exports = function(model) {
     /**
      * Returns true if page satisfies criteria. Otherwise returns fals
      * @param {Object} page - model page object
@@ -197,4 +199,4 @@ export default function overrideDocLinks(model) {
             .processPagesAsync(model, isHtmlContentFile, createProcessPageFunc(model), 20)
             .thenResolve(model);
     };
-}
+};

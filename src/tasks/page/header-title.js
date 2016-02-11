@@ -1,4 +1,6 @@
-import * as util from './util';
+'use strict';
+
+const util = require('./util');
 
 /*
  Для каждой страницы создаем
@@ -27,10 +29,11 @@ import * as util from './util';
  *    }))
  *    .done();
  */
-export default function createPageTitle(model, options = {delimiter: ' / '}) {
+module.exports = function(model, options) {
+    options = options || {delimiter: ' / '};
     return util.getExecFunction(model, (map, page) => {
         const urlSet = util.getParentUrls(page).reverse();
         page.header || (page.header = {});
         page.header.title = urlSet.map(url => map[url]).join(options.delimiter);
     });
-}
+};

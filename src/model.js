@@ -1,12 +1,12 @@
+'use strict';
 
-
-import _ from 'lodash';
-import deepDiff from 'deep-diff';
+const _ = require('lodash');
+const deepDiff = require('deep-diff');
 
 /**
  * @desc Application model class
  */
-export default class Model {
+class Model {
     constructor() {
         /**
          * Model changes
@@ -232,3 +232,5 @@ export default class Model {
         return this;
     }
 }
+
+module.exports = Model;

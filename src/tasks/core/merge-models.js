@@ -1,6 +1,8 @@
-import path from 'path';
-import Q from 'q';
-import * as baseUtil from '../../util';
+'use strict';
+
+const path = require('path');
+const Q = require('q');
+const baseUtil = require('../../util');
 
 /**
  * Find difference between current and previous models
@@ -22,7 +24,8 @@ import * as baseUtil from '../../util';
  *    }))
  *    .done();
  */
-export default function mergeModels(model, options = {}) {
+module.exports = function(model, options) {
+    options = options || {};
 
     // modelPath is required param
     if(!options.modelPath) {

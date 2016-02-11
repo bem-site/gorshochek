@@ -1,12 +1,14 @@
-import Q from 'q';
-import fsExtra from 'fs-extra';
+'use strict';
+
+const Q = require('q');
+const fsExtra = require('fs-extra');
 
 /**
  * @exports
  * @class Base
  * @desc base library model class
  */
-export default class Base {
+class Base {
     /**
      * @constructor
      */
@@ -60,3 +62,5 @@ export default class Base {
         return this._data;
     }
 }
+
+module.export = Base;

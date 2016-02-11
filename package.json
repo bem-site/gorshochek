@@ -45,9 +45,6 @@
     "lint": "gulp lint",
     "jsdoc": "gulp esdoc",
     "publish-doc": "gulp publish-doc",
-    "compile": "gulp compile",
-    "pretest": "npm run compile",
-    "prepublish": "gulp compile",
     "deps": "npm install && gulp compile",
     "mocha": "NODE_ENV=testing mocha",
     "test": "NODE_ENV=testing ./node_modules/.bin/istanbul cover _mocha",
@@ -59,7 +56,6 @@
     "url": "https://github.com/bem-site/gorshochek/blob/master/LICENSE"
   },
   "dependencies": {
-    "babel-runtime": "^6.x",
     "bem-md-renderer": "^0.3.0",
     "cheerio": "^0.19.0",
     "debug": "^2.2.0",
@@ -76,8 +72,6 @@
     "worker-farm": "^1.3.1"
   },
   "devDependencies": {
-    "babel": "^5.x",
-    "babel-eslint": "^4.1.1",
     "chai": "^3.4.1",
     "chai-as-promised": "^5.1.0",
     "esdoc": "^1.0.0",

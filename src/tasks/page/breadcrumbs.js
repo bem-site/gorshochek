@@ -1,4 +1,6 @@
-import * as util from './util';
+'use strict';
+
+const util = require('./util');
 
 /*
  Для каждой страницы создаем
@@ -28,10 +30,10 @@ import * as util from './util';
  *    }))
  *    .done();
  */
-export default function createBreadcrumbs(model) {
+module.exports = function(model) {
     return util.getExecFunction(model, (map, page) => {
         page.breadcrumbs = util
             .getParentUrls(page)
             .map(url => ({url, title: map[url]}));
     });
-}
+};

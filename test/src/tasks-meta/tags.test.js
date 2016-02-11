@@ -1,13 +1,13 @@
 var Q = require('q'),
-    Model = require('../../../lib/model'),
-    baseUtil = require('../../../lib/util'),
+    Model = require('../../../src/model'),
+    baseUtil = require('../../../src/util'),
     generateTagPages = require('../../../index').tasks.meta.generateTagPages;
 
-describe('tasks-meta/tags', function() {
+describe('tasks-meta/tags', () => {
     var sandbox = sinon.sandbox.create(),
         model = new Model();
 
-    beforeEach(function() {
+    beforeEach(() => {
         sandbox.stub(baseUtil, 'writeFileToCache').returns(Q());
         model.setPages([
             {
@@ -19,25 +19,25 @@ describe('tasks-meta/tags', function() {
         ]);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sandbox.restore();
     });
 
-    it('should return function as result', function() {
+    it('should return function as result', () => {
         generateTagPages(model).should.be.instanceOf(Function);
     });
 
-    it('should return promise with model instance', function() {
+    it('should return promise with model instance', () => {
         return generateTagPages(model)().should.eventually.instanceOf(Model);
     });
 
-    it('should extend model with generated pages', function() {
-        return generateTagPages(model)().then(function() {
+    it('should extend model with generated pages', () => {
+        return generateTagPages(model)().then(() => {
             model.getPages().should.have.length(3);
         });
     });
 
-    it('it should properly work for model without tags', function() {
+    it('it should properly work for model without tags', () => {
         model.setPages([
             {
                 url: '/url1/',
@@ -47,7 +47,7 @@ describe('tasks-meta/tags', function() {
         return generateTagPages(model)().should.eventually.instanceOf(Model);
     });
 
-    it('should generate page for existed tag', function() {
+    it('should generate page for existed tag', () => {
         return generateTagPages(model)().then(function(model) {
             model.getPages()[1].should.eql({
                 url: '/tags/tag1/',
@@ -61,15 +61,15 @@ describe('tasks-meta/tags', function() {
         });
     });
 
-    it('should save content of tag page into file', function() {
-        return generateTagPages(model)().then(function() {
+    it('should save content of tag page into file', () => {
+        return generateTagPages(model)().then(() => {
             baseUtil.writeFileToCache.should.be.calledTwice;
             baseUtil.writeFileToCache.firstCall.should.be.calledWith('/tags/tag1/index.json');
         });
     });
 
-    it('should generate valid content file for tag page', function() {
-        return generateTagPages(model)().then(function() {
+    it('should generate valid content file for tag page', () => {
+        return generateTagPages(model)().then(() => {
             baseUtil.writeFileToCache.should.be.calledTwice;
             baseUtil.writeFileToCache.firstCall.should.be.calledWith('/tags/tag1/index.json',
                 JSON.stringify([{
@@ -87,7 +87,7 @@ describe('tasks-meta/tags', function() {
         });
     });
 
-    it('should generate base tags page', function() {
+    it('should generate base tags page', () => {
         return generateTagPages(model)().then(function(model) {
             model.getPages()[2].should.eql({
                 url: '/tags/',
@@ -101,7 +101,7 @@ describe('tasks-meta/tags', function() {
         });
     });
 
-    it('should generate base tags page with custom url received from task options', function() {
+    it('should generate base tags page with custom url received from task options', () => {
         return generateTagPages(model, {baseUrl: '/some-tag-url'})().then(function(model) {
             model.getPages()[2].should.eql({
                 url: '/some-tag-url/',
@@ -115,7 +115,7 @@ describe('tasks-meta/tags', function() {
         });
     });
 
-    it('should generate base tags page with custom title received from task options', function() {
+    it('should generate base tags page with custom title received from task options', () => {
         return generateTagPages(model, {baseTitle: 'Custom Title'})().then(function(model) {
             model.getPages()[2].should.eql({
                 url: '/tags/',
@@ -129,7 +129,7 @@ describe('tasks-meta/tags', function() {
         });
     });
 
-    it('should replace page tags with data for links creation', function() {
+    it('should replace page tags with data for links creation', () => {
         return generateTagPages(model, {baseTitle: 'Custom Title'})().then(function(model) {
             model.getPages()[0].should.eql({
                 url: '/url1/',
@@ -141,15 +141,15 @@ describe('tasks-meta/tags', function() {
         });
     });
 
-    it('should save content of base tags page into file', function() {
-        return generateTagPages(model)().then(function() {
+    it('should save content of base tags page into file', () => {
+        return generateTagPages(model)().then(() => {
             baseUtil.writeFileToCache.should.be.calledTwice;
             baseUtil.writeFileToCache.secondCall.should.be.calledWith('/tags/index.json');
         });
     });
 
-    it('should generate valid content file for base tags page', function() {
-        return generateTagPages(model)().then(function() {
+    it('should generate valid content file for base tags page', () => {
+        return generateTagPages(model)().then(() => {
             baseUtil.writeFileToCache.should.be.calledTwice;
             baseUtil.writeFileToCache.secondCall.should.be.calledWith('/tags/index.json',
                 JSON.stringify([{

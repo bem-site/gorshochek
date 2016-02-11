@@ -1,14 +1,17 @@
-import _ from 'lodash';
-import Api from 'github';
+'use strict';
+
+const _ = require('lodash');
+const Api = require('github');
 
 const debug = require('debug')('github api');
 
-export default class Github {
+class Github {
     /**
      * Constructor
      * @param {Object} options object
      */
-    constructor(options = {}) {
+    constructor(options) {
+        options = options || {};
         const defaultParams = {
             version: '3.0.0',
             protocol: 'https',
@@ -32,7 +35,7 @@ export default class Github {
      */
     _initPublicAPI(options, defaultParams) {
         const publicAPI = new Api(_.extend({host: 'api.github.com'}, defaultParams));
-        const {token} = options;
+        const token = options.token;
 
         if(!token) {
             console.warn('No github authorization token were set. ' +
@@ -94,3 +97,5 @@ export default class Github {
         requestFunc(0);
     }
 }
+
+module.exports = Github;

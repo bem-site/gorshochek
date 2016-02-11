@@ -1,6 +1,8 @@
-import _ from 'lodash';
-import js2xml from 'js2xmlparser';
-import * as baseUtil from '../../util';
+'use strict';
+
+const _ = require('lodash');
+const js2xml = require('js2xmlparser');
+const baseUtil = require('../../util');
 
 const debug = require('debug')('sitemap-xml');
 
@@ -24,7 +26,9 @@ const debug = require('debug')('sitemap-xml');
  *    }))
  *    .done();
  */
-export default function createSitemapXML(model, options = {}) {
+module.exports = function(model, options) {
+    options = options || {};
+
     // option host is required parameter
     if(!options.host) {
         throw new Error('Host parameter undefined. It is necessary for sitemap.xml creation');
@@ -59,7 +63,7 @@ export default function createSitemapXML(model, options = {}) {
         return _(buildSiteMapModel())
             .thru(value => ({url: value}))
             .thru(js2xml.bind(this, 'urlset'))
-            .thru(baseUtil.writeFileToCache.bind(null, 'sitemap.xml'))
+            .thru(baseUtil.writeFileToCache.bind(baseUtil, 'sitemap.xml'))
             .value()
             .thenResolve(model)
             .catch(error => {

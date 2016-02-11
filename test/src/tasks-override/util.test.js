@@ -1,78 +1,78 @@
 var Url = require('url'),
-    util = require('../../../lib/tasks/override/util');
+    util = require('../../../src/tasks/override/util');
 
-describe('tasks-override/util', function() {
-    describe('isAbsoluteHttpUrl', function() {
-        it('should return true for absolute http url: "http://some-website.com"', function() {
+describe('tasks-override/util', () => {
+    describe('isAbsoluteHttpUrl', () => {
+        it('should return true for absolute http url: "http://some-website.com"', () => {
             util.isAbsoluteHttpUrl(Url.parse('http://some-website.com')).should.equal(true);
         });
 
-        it('should return true for absolute https url: "https://some-website.com"', function() {
+        it('should return true for absolute https url: "https://some-website.com"', () => {
             util.isAbsoluteHttpUrl(Url.parse('https://some-website.com')).should.equal(true);
         });
 
-        it('should return false for non-http(s) absolute url: "git://some-website.com"', function() {
+        it('should return false for non-http(s) absolute url: "git://some-website.com"', () => {
             util.isAbsoluteHttpUrl(Url.parse('git://some-website.com')).should.equal(false);
         });
 
-        it('should return false for relative url', function() {
+        it('should return false for relative url', () => {
             util.isAbsoluteHttpUrl(Url.parse('../some-website.com')).should.equal(false);
         });
     });
 
-    describe('hasUnsupportedProtocol', function() {
-        it('should return true for absolute non-http(s) url "git://some-website.com"', function() {
+    describe('hasUnsupportedProtocol', () => {
+        it('should return true for absolute non-http(s) url "git://some-website.com"', () => {
             util.hasUnsupportedProtocol(Url.parse('git://some-website.com')).should.equal(true);
         });
 
-        it('should return false for absolute http(s) url "http://some-website.com"', function() {
+        it('should return false for absolute http(s) url "http://some-website.com"', () => {
             util.hasUnsupportedProtocol(Url.parse('http://some-website.com')).should.equal(false);
         });
 
-        it('should return false for relative url', function() {
+        it('should return false for relative url', () => {
             util.hasUnsupportedProtocol(Url.parse('../some-website.com')).should.equal(false);
         });
     });
 
-    describe('isAnchor', function() {
-        it('should return false for non-anchor absolute url', function() {
+    describe('isAnchor', () => {
+        it('should return false for non-anchor absolute url', () => {
             util.isOnlyAnchor(Url.parse('http://some-website.com#some-anchor')).should.equal(false);
         });
 
-        it('should return false for non-anchor relative url', function() {
+        it('should return false for non-anchor relative url', () => {
             util.isOnlyAnchor(Url.parse('../some-website.com#some-anchor')).should.equal(false);
         });
 
-        it('should return true for anchor url', function() {
+        it('should return true for anchor url', () => {
             util.isOnlyAnchor(Url.parse('#some-anchor')).should.equal(true);
         });
     });
 
-    describe('isGithubUrl', function() {
-        it('should return true for github url', function() {
+    describe('isGithubUrl', () => {
+        it('should return true for github url', () => {
             util.isGithubUrl(Url.parse('https://github.com/some-org/some-user')).should.equal(true);
         });
 
-        it('should return false for non-github url', function() {
+        it('should return false for non-github url', () => {
             util.isGithubUrl(Url.parse('https://some-website.com/some-org/some-user')).should.equal(false);
         });
     });
 
-    describe('isNativeWebsiteUrl', function() {
-        it('should return true if url is native website url', function() {
+    describe('isNativeWebsiteUrl', () => {
+        it('should return true if url is native website url', () => {
             util.isNativeWebsiteUrl(Url.parse('/url1'), ['/url1']).should.equal(true);
         });
 
-        it('should return true if url (with trailing slash) is native website url', function() {
+        it('should return true if url (with trailing slash) is native website url', () => {
             util.isNativeWebsiteUrl(Url.parse('/url1/'), ['/url1']).should.equal(true);
         });
 
-        it('should return false if url is non-native website url', function() {
+        it('should return false if url is non-native website url', () => {
             util.isNativeWebsiteUrl(Url.parse('http://some-website.com'), ['/url1']).should.equal(false);
         });
     });
 
-    describe('findReplacement', function() {
+    describe('findReplacement', () => {
         var pages = [
                 {url: '/url1', sourceUrl: '/sourceUrl1', published: true},
                 {url: '/url2', sourceUrl: '/sourceUrl2/README.md', published: true}
@@ -80,31 +80,31 @@ describe('tasks-override/util', function() {
             sourceUrlMap,
             existedUrls;
 
-        beforeEach(function() {
+        beforeEach(() => {
             sourceUrlMap = util.createSourceUrlsMap(pages);
             existedUrls = util.createArrayOfModelPageUrls(pages);
         });
 
-        it('should find replacement from sourceUrlMap', function() {
+        it('should find replacement from sourceUrlMap', () => {
             util.findReplacement(['/sourceUrl1'], sourceUrlMap, existedUrls).should.equal('/url1');
         });
 
-        it('should find replacement from sourceUrlMap by alter key', function() {
+        it('should find replacement from sourceUrlMap by alter key', () => {
             util.findReplacement(['/sourceUrl2'], sourceUrlMap, existedUrls).should.equal('/url2');
         });
 
-        it('should find replacement from model page urls array', function() {
+        it('should find replacement from model page urls array', () => {
             util.findReplacement(['/url1'], sourceUrlMap, existedUrls).should.equal('/url1');
         });
 
-        it('should return null if replacement was not found', function() {
+        it('should return null if replacement was not found', () => {
             var result = util.findReplacement(['/non-existed'], sourceUrlMap, existedUrls);
             (result == null).should.equal(true);
         });
     });
 
-    describe('createArrayOfModelPageUrls', function() {
-        it('should create array of model pages urls', function() {
+    describe('createArrayOfModelPageUrls', () => {
+        it('should create array of model pages urls', () => {
             var pages = [
                 {url: '/url1'},
                 {url: '/url2'}
@@ -113,8 +113,8 @@ describe('tasks-override/util', function() {
         });
     });
 
-    describe('createSourceUrlsMap', function() {
-        it('should create map with sourceUrls as keys and urls as values', function() {
+    describe('createSourceUrlsMap', () => {
+        it('should create map with sourceUrls as keys and urls as values', () => {
             var pages = [
                 {url: '/url1', sourceUrl: '/sourceUrl1', published: true},
                 {url: '/url2', sourceUrl: '/sourceUrl2', published: true}
@@ -124,7 +124,7 @@ describe('tasks-override/util', function() {
             sourceUrlMap.get('/sourceUrl2').should.equal('/url2');
         });
 
-        it('should skip pages without "sourceUrl" fields', function() {
+        it('should skip pages without "sourceUrl" fields', () => {
             var pages = [
                 {url: '/url1', sourceUrl: '/sourceUrl1', published: true},
                 {url: '/url2', published: true}
@@ -133,7 +133,7 @@ describe('tasks-override/util', function() {
             sourceUrlMap.size.should.equal(1);
         });
 
-        it('should skip unpublished pages', function() {
+        it('should skip unpublished pages', () => {
             var pages = [
                 {url: '/url1', sourceUrl: '/sourceUrl1', published: true},
                 {url: '/url2', sourceUrl: '/sourceUrl1', published: false}

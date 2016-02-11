@@ -1,11 +1,11 @@
 var _ = require('lodash'),
     nock = require('nock'),
     proxyquire = require('proxyquire'),
-    GithubAPI = require('../../../../lib/tasks/docs/github');
+    GithubAPI = require('../../../../src/tasks/docs/github');
 
 proxyquire.preserveCache();
 
-describe('GithubAPI', function() {
+describe('GithubAPI', () => {
     var sandbox = sinon.sandbox.create(),
         githubAPI,
         callOptions = {
@@ -14,17 +14,17 @@ describe('GithubAPI', function() {
             repo: 'some-repo'
         };
 
-    beforeEach(function() {
+    beforeEach(() => {
         sandbox.stub(console, 'warn');
         sandbox.stub(console, 'error');
         githubAPI = new GithubAPI({token: 'some-gh-token'});
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sandbox.restore();
     });
 
-    it('should show warning message if token for public API was not set', function() {
+    it('should show warning message if token for public API was not set', () => {
         githubAPI = new GithubAPI();
         console.warn.firstCall.should.be.calledWith('No github authorization token were set. ' +
             'Number of requests will be limited by 60 requests per hour according to API rules')
@@ -103,9 +103,9 @@ describe('GithubAPI', function() {
             });
     });
 
-    it('should also initialize APIs for advanced hosts given by "githubHosts" option', function() {
+    it('should also initialize APIs for advanced hosts given by "githubHosts" option', () => {
         var githubAPIStub = sinon.stub();
-        GithubAPI = proxyquire('../../../../lib/tasks/docs/github/index.js', {github: githubAPIStub});
+        GithubAPI = proxyquire('../../../../src/tasks/docs/github/index.js', {github: githubAPIStub});
         githubAPI = new GithubAPI({githubHosts: [{host: 'my.github.com'}]});
         githubAPIStub.should.be.calledWithNew;
         githubAPIStub.secondCall.should.be.calledWith({

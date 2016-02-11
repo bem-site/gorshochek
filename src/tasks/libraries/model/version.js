@@ -1,15 +1,17 @@
-import path from 'path';
-import Q from 'q';
-import Base from './base';
-import Document from './document';
-import Level from './level';
+'use strict';
+
+const path = require('path');
+const Q = require('q');
+const Base = require('./base');
+const Document = require('./document');
+const Level = require('./level');
 
 /**
  * @exports
  * @class Version
  * @desc version library model class
  */
-export default class Version extends Base {
+class Version extends Base {
     /**
      * Version constructor
      * @param {String} baseUrl - base libraries url
@@ -158,3 +160,5 @@ export default class Version extends Base {
             .then(this._saveToCache.bind(this));
     }
 }
+
+module.export = Version;

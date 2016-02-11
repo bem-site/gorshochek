@@ -1,5 +1,7 @@
-import _ from 'lodash';
-import Q from 'q';
+'use strict';
+
+const _ = require('lodash');
+const Q = require('q');
 
 /**
  * Creates map url -> lang -> title
@@ -7,11 +9,11 @@ import Q from 'q';
  * @returns {Object}
  * @protected
  */
-export function createPageTitlesMap(pages) {
+exports.createPageTitlesMap = function(pages) {
     return pages.reduce((pagesMap, page) => {
         return _.set(pagesMap, page.url, page.title);
     }, {});
-}
+};
 
 /**
  * Retrieves array with url of given page and all parent urls
@@ -19,7 +21,7 @@ export function createPageTitlesMap(pages) {
  * @returns {Array<String>}
  * @protected
  */
-export function getParentUrls(page) {
+exports.getParentUrls = function(page) {
     // TODO: не хардкодить /, брать из модели
     // TODO: избавиться от вложенного цикла за счет chunks.splice().join('/')
     const DELIMITER = '/';
@@ -35,7 +37,7 @@ export function getParentUrls(page) {
         url.length && result.push(url);
     }
     return result;
-}
+};
 
 /**
  * Returns execution function
@@ -43,9 +45,10 @@ export function getParentUrls(page) {
  * @param {Function} pageProcessingFunction - function which should be performed for each of model pages
  * @returns {Function}
  */
-export function getExecFunction(model, pageProcessingFunction) {
+exports.getExecFunction = function(model, pageProcessingFunction) {
     return function() {
-        model.getPages().forEach(pageProcessingFunction.bind(null, createPageTitlesMap(model.getPages())));
+        model.getPages()
+            .forEach(pageProcessingFunction.bind(null, exports.createPageTitlesMap(model.getPages())));
         return Q(model);
     };
-}
+};

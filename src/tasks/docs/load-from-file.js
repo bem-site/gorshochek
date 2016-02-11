@@ -1,6 +1,8 @@
-import path from 'path';
-import Q from 'q';
-import * as baseUtil from '../../util';
+'use strict';
+
+const path = require('path');
+const Q = require('q');
+const baseUtil = require('../../util');
 
 const debug = require('debug')('docs file load');
 
@@ -22,7 +24,7 @@ const debug = require('debug')('docs file load');
  *    }))
  *    .done();
  */
-export default function loadSourcesFromLocal(model) {
+module.exports = function(model) {
     /**
      * Returns true if page[language] exists and have sourceUrl
      * which can be matched as relative file path on filesystem. Otherwise returns false
