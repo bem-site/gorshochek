@@ -24,7 +24,7 @@ const baseUtil = require('../../util');
  *    }))
  *    .done();
  */
-module.exports = function(model, options) {
+module.exports = (model, options) => {
     options = options || {};
 
     // modelPath is required param
@@ -52,7 +52,7 @@ module.exports = function(model, options) {
         return baseUtil.copyFile(options.modelPath, path.join(baseUtil.getCacheFolder(), 'model.json'));
     }
 
-    return function() {
+    return () => {
         return Q.all([
             baseUtil.readFileFromCache('model.json', []),
             baseUtil.readJSONFile(options.modelPath)

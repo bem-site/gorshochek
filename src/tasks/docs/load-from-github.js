@@ -38,7 +38,7 @@ const debug = require('debug')('docs github load');
  *    }))
  *    .done();
  */
-module.exports = function(model, options) {
+module.exports = (model, options) => {
     options = options || {};
 
     const GITHUB_URL_REGEXP = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/;
@@ -96,7 +96,8 @@ module.exports = function(model, options) {
      * @returns {Promise.<T>}
      */
     function readMetaFromCache(page) {
-        return baseUtil.readFileFromCache(path.join(page.url, 'index.meta.json'), {})
+        return baseUtil
+            .readFileFromCache(path.join(page.url, 'index.meta.json'), {})
             .catch(() => ({}));
     }
 
@@ -246,7 +247,9 @@ module.exports = function(model, options) {
             });
     }
 
-    return function() {
-        return baseUtil.processPagesAsync(model, hasGithubSource, processPage, 5).thenResolve(model);
+    return () => {
+        return baseUtil
+            .processPagesAsync(model, hasGithubSource, processPage, 5)
+            .thenResolve(model);
     };
-}
+};

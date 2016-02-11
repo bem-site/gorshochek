@@ -30,7 +30,7 @@ const debug = require('debug')('override-docs');
  *    }))
  *    .done();
  */
-module.exports = function(model) {
+module.exports = (model) => {
     /**
      * Returns true if page satisfies criteria. Otherwise returns fals
      * @param {Object} page - model page object
@@ -182,7 +182,7 @@ module.exports = function(model) {
         const sourceUrlsMap = util.createSourceUrlsMap(model.getPages());
         const existedUrls = util.createArrayOfModelPageUrls(model.getPages());
 
-        return function(model, page) {
+        return (model, page) => {
             const sourceFilePath = page.contentFile;
 
             debug(`override links for: ${page.url}`);
@@ -194,7 +194,7 @@ module.exports = function(model) {
         };
     }
 
-    return function() {
+    return () => {
         return baseUtil
             .processPagesAsync(model, isHtmlContentFile, createProcessPageFunc(model), 20)
             .thenResolve(model);

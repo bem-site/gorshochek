@@ -26,7 +26,7 @@ const debug = require('debug')('sitemap-xml');
  *    }))
  *    .done();
  */
-module.exports = function(model, options) {
+module.exports = (model, options) => {
     options = options || {};
 
     // option host is required parameter
@@ -59,7 +59,7 @@ module.exports = function(model, options) {
         }, []);
     }
 
-    return function() {
+    return () => {
         return _(buildSiteMapModel())
             .thru(value => ({url: value}))
             .thru(js2xml.bind(this, 'urlset'))
@@ -72,4 +72,4 @@ module.exports = function(model, options) {
                 throw error;
             });
     };
-}
+};

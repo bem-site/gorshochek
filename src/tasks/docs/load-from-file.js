@@ -24,7 +24,7 @@ const debug = require('debug')('docs file load');
  *    }))
  *    .done();
  */
-module.exports = function(model) {
+module.exports = (model) => {
     /**
      * Returns true if page[language] exists and have sourceUrl
      * which can be matched as relative file path on filesystem. Otherwise returns false
@@ -85,7 +85,9 @@ module.exports = function(model) {
         });
     }
 
-    return function() {
-        return baseUtil.processPagesAsync(model, hasLocalSource, processPage, 20).thenResolve(model);
+    return () => {
+        return baseUtil
+            .processPagesAsync(model, hasLocalSource, processPage, 20)
+            .thenResolve(model);
     };
-}
+};

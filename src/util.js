@@ -14,7 +14,7 @@ const debug = require('debug')('util');
  * By default it is pointed to ./.builder/cache relative to current working directory
  * @returns {String}
  */
-exports.getCacheFolder = function() {
+exports.getCacheFolder = () => {
     return process.env.GORSHOCHEK_CACHE_FOLDER || './.builder/cache';
 };
 
@@ -22,7 +22,7 @@ exports.getCacheFolder = function() {
  * Creates folder for given path if it does not exists yet
  * @param {String} folder - path to folder which should be created
  */
-exports.createFolder = function(folder) {
+exports.createFolder = (folder) => {
     debug(`create folder: ${folder}`);
     fsExtra.ensureDirSync(folder);
 };
@@ -32,7 +32,7 @@ exports.createFolder = function(folder) {
  * @param {String} sourcePath - source file path
  * @param {String} destinationPath - destination file path
  */
-exports.copyFile = function(sourcePath, destinationPath) {
+exports.copyFile = (sourcePath, destinationPath) => {
     debug(`copy file from: ${sourcePath} to: ${destinationPath}`);
     return Q.denodeify(fsExtra.copy)(sourcePath, destinationPath);
 };
@@ -62,7 +62,7 @@ function _readFile(method, filePath, fallbackValue) {
  * @param {*} [fallbackValue] - value which will be returned if file does not exist on local filesystem
  * @returns {Promise}
  */
-exports.readFile = function(filePath, fallbackValue) {
+exports.readFile = (filePath, fallbackValue) => {
     debug(`read file from: ${filePath}`);
     return _readFile(fs.readFile, filePath, fallbackValue);
 };
@@ -73,7 +73,7 @@ exports.readFile = function(filePath, fallbackValue) {
  * @param {*} [fallbackValue] - value which will be returned if file does not exist on local filesystem
  * @returns {Promise}
  */
-exports.readJSONFile = function(filePath, fallbackValue) {
+exports.readJSONFile = (filePath, fallbackValue) => {
     debug(`read JSON file from: ${filePath}`);
     return _readFile(fsExtra.readJSON, filePath, fallbackValue);
 };
@@ -84,7 +84,7 @@ exports.readJSONFile = function(filePath, fallbackValue) {
  * @param {Object|Array} [fallbackValue] value which will be returned if file does not exist on local filesystem
  * @returns {Promise}
  */
-exports.readFileFromCache = function(filePath, fallbackValue) {
+exports.readFileFromCache = (filePath, fallbackValue) => {
     debug(`read file from cache: ${filePath}`);
     return (path.extname(filePath) === '.json' ?
         this.readJSONFile : this.readFile)(path.join(this.getCacheFolder(), filePath), fallbackValue);
@@ -96,7 +96,7 @@ exports.readFileFromCache = function(filePath, fallbackValue) {
  * @param {String} content of file
  * @returns {Promise}
  */
-exports.writeFileToCache = function(filePath, content) {
+exports.writeFileToCache = (filePath, content) => {
     debug(`write file to cache: ${filePath}`);
     return this.writeFile(path.join(this.getCacheFolder(), filePath), content);
 };
@@ -107,7 +107,7 @@ exports.writeFileToCache = function(filePath, content) {
  * @param {String} content - content of file
  * @returns {Promise}
  */
-exports.writeFile = function(filePath, content) {
+exports.writeFile = (filePath, content) => {
     debug(`write file to: ${filePath}`);
     const dirPath = path.dirname(filePath);
     return Q.denodeify(fsExtra.ensureDir)(dirPath)
@@ -128,7 +128,7 @@ exports.writeFile = function(filePath, content) {
  * @param {Number} portionSize - number of portion of pages for parallel operations
  * @returns {Promise}
  */
-exports.processPagesAsync = function(model, criteria, processFunc, portionSize) {
+exports.processPagesAsync = (model, criteria, processFunc, portionSize) => {
     portionSize = portionSize || 5;
     criteria = criteria || (() => true);
 

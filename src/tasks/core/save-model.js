@@ -22,9 +22,9 @@ const baseUtil = require('../../util');
  *    }))
  *    .done();
  */
-module.exports = function(model, options) {
+module.exports = (model, options) => {
     options = options || {};
-    return function() {
+    return () => {
         const destinationPath = path.join(options.dataPath || baseUtil.getCacheFolder(), 'data.json');
         return baseUtil.writeFile(destinationPath, JSON.stringify(model.getPages()))
             .thenResolve(model)

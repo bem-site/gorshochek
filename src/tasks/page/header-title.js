@@ -29,7 +29,7 @@ const util = require('./util');
  *    }))
  *    .done();
  */
-module.exports = function(model, options) {
+module.exports = (model, options) => {
     options = options || {delimiter: ' / '};
     return util.getExecFunction(model, (map, page) => {
         const urlSet = util.getParentUrls(page).reverse();

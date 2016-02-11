@@ -30,7 +30,7 @@ const util = require('./util');
  *    }))
  *    .done();
  */
-module.exports = function(model) {
+module.exports = (model) => {
     return util.getExecFunction(model, (map, page) => {
         page.breadcrumbs = util
             .getParentUrls(page)

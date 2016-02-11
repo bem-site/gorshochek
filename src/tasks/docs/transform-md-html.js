@@ -27,7 +27,7 @@ const baseUtil = require('../../util');
  *    }))
  *    .done();
  */
-module.exports = function(model, options) {
+module.exports = (model, options) => {
     options = options || {};
     options.markedOptions = options.markedOptions || {};
     options.concurrency = options.concurrency || 20;
@@ -78,7 +78,7 @@ module.exports = function(model, options) {
             });
     }
 
-    return function() {
+    return () => {
         return baseUtil
             .processPagesAsync(model, hasMarkdownSource, processPage, options.concurrency)
             .thenResolve(model);

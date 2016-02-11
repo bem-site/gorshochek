@@ -28,7 +28,7 @@ const debug = require('debug')('meta-tags');
  *    }))
  *    .done();
  */
-module.exports = function(model, options) {
+module.exports = (model, options) => {
     options = options || {};
     options.baseUrl = options.baseUrl || '/tags/';
     options.baseTitle = options.baseTitle || 'Tags';
@@ -156,7 +156,7 @@ module.exports = function(model, options) {
         return baseUtil.writeFileToCache(filePath, fileContent);
     }
 
-    return function() {
+    return () => {
         const tagPages = _(model)
             .thru(collectTags)
             .thru(generateTagPages.bind(null, model))

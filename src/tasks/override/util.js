@@ -5,7 +5,7 @@
  * @param {Object} url - parsed url
  * @returns {Boolean}
  */
-exports.isAbsoluteHttpUrl = function(url) {
+exports.isAbsoluteHttpUrl = (url) => {
     // url.protocol is not defined for relative links
     return !!url.protocol && url.protocol.indexOf('http') === 0;
 };
@@ -15,7 +15,7 @@ exports.isAbsoluteHttpUrl = function(url) {
  * @param {Object} url - parsed url
  * @returns {Boolean}
  */
-exports.hasUnsupportedProtocol = function(url) {
+exports.hasUnsupportedProtocol = (url) => {
     return !!url.protocol && !this.isAbsoluteHttpUrl(url);
 };
 
@@ -24,7 +24,7 @@ exports.hasUnsupportedProtocol = function(url) {
  * @param {Object} url - parsed url
  * @returns {Boolean}
  */
-exports.isOnlyAnchor = function(url) {
+exports.isOnlyAnchor = (url) => {
     return url.hash && !url.protocol && !url.host && !url.path;
 };
 
@@ -34,7 +34,7 @@ exports.isOnlyAnchor = function(url) {
  * @param {Object} url - parsed url
  * @returns {Boolean}
  */
-exports.isGithubUrl = function(url) {
+exports.isGithubUrl = (url) => {
     return url.hostname && url.hostname.indexOf('github') > -1;
 };
 
@@ -44,7 +44,7 @@ exports.isGithubUrl = function(url) {
  * @param {Array} existedUrls - array of existed model urls
  * @returns {Boolean}
  */
-exports.isNativeWebsiteUrl = function(url, existedUrls) {
+exports.isNativeWebsiteUrl = (url, existedUrls) => {
     return existedUrls.indexOf(url.path.replace(/\/$/, '')) > -1;
 };
 
@@ -55,7 +55,7 @@ exports.isNativeWebsiteUrl = function(url, existedUrls) {
  * @param {String[]} existedUrls - array of site existed urls
  * @returns {String|null}
  */
-exports.findReplacement = function(variants, urlHash, existedUrls) {
+exports.findReplacement = (variants, urlHash, existedUrls) => {
     let replacement = null;
 
     variants.some(item => {
@@ -84,7 +84,7 @@ exports.findReplacement = function(variants, urlHash, existedUrls) {
  * @param {Object[]} pages - array of model pages
  * @returns {String[]}
  */
-exports.createArrayOfModelPageUrls = function(pages) {
+exports.createArrayOfModelPageUrls = (pages) => {
     return pages.map(page => page.url);
 };
 
@@ -93,7 +93,7 @@ exports.createArrayOfModelPageUrls = function(pages) {
  * @param {Object[]} pages - array of model pages
  * @returns {Map}
  */
-exports.createSourceUrlsMap = function(pages) {
+exports.createSourceUrlsMap = (pages) => {
     return pages.reduce((prev, page) => {
         if(page.published && page.sourceUrl) {
             prev.set(page.sourceUrl, page.url);

@@ -31,8 +31,8 @@ const Q  = require('q');
  *    }))
  *    .done();
  */
-module.exports = function(model) {
-    return function() {
+module.exports = (model) => {
+    return () => {
         const getKeywords = p => {return p.tags ? p.tags.join(', ') : '';};
         model.getPages().forEach(page => {
             page.header || (page.header = {});

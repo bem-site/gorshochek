@@ -9,7 +9,7 @@ const Q = require('q');
  * @returns {Object}
  * @protected
  */
-exports.createPageTitlesMap = function(pages) {
+exports.createPageTitlesMap = (pages) => {
     return pages.reduce((pagesMap, page) => {
         return _.set(pagesMap, page.url, page.title);
     }, {});
@@ -21,7 +21,7 @@ exports.createPageTitlesMap = function(pages) {
  * @returns {Array<String>}
  * @protected
  */
-exports.getParentUrls = function(page) {
+exports.getParentUrls = (page) => {
     // TODO: не хардкодить /, брать из модели
     // TODO: избавиться от вложенного цикла за счет chunks.splice().join('/')
     const DELIMITER = '/';
@@ -45,8 +45,8 @@ exports.getParentUrls = function(page) {
  * @param {Function} pageProcessingFunction - function which should be performed for each of model pages
  * @returns {Function}
  */
-exports.getExecFunction = function(model, pageProcessingFunction) {
-    return function() {
+exports.getExecFunction = (model, pageProcessingFunction) => {
+    return () => {
         model.getPages()
             .forEach(pageProcessingFunction.bind(null, exports.createPageTitlesMap(model.getPages())));
         return Q(model);

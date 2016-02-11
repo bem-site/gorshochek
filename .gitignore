@@ -9,10 +9,8 @@ lib-cov
 *.gz
 
 pids
-
+.builder
 npm-debug.log
 node_modules
 coverage
 data
-.builder
-lib

@@ -126,4 +126,4 @@ module.exports = function(model, options) {
             .processPagesAsync(model, hasLocalSource, processPage, options.concurrency)
             .thenResolve(model);
     };
-}
+};
