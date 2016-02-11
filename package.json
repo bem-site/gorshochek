@@ -32,7 +32,7 @@
     "Vladimir Grinenko <tadatuta@yandex-team.ru> (http://github.com/tadatuta)"
   ],
   "engines": {
-    "node": ">= 0.10.0"
+    "node": ">= 4.x"
   },
   "os": [
     "darwin",
@@ -78,7 +78,6 @@
     "eslint-plugin-arrow-function": "^2.0.0",
     "estraverse": "^4.x",
     "gulp": "^3.9.0",
-    "gulp-babel": "^5.x",
     "gulp-clean": "^0.3.1",
     "gulp-esdoc": "0.x",
     "gulp-eslint": "^1.0.0",
