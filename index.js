@@ -5,7 +5,7 @@ module.exports = {
      * Creates empty model instance
      * @returns {Model}
      */
-    createModel: function() {
+    createModel: () => {
         return new Model();
     },
     tasks: {
@@ -34,6 +34,9 @@ module.exports = {
         },
         sitemap: {
             createSitemapXML: require('./src/tasks/sitemap/sitemap-xml')
+        },
+        template: {
+            applyBEM: require('./src/tasks/template/full-bem')
         }
     }
 };
