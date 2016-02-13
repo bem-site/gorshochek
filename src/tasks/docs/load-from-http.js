@@ -46,7 +46,7 @@ module.exports = function(model, options) {
      */
     function hasLocalSource(page) {
         const sourceUrl = page.sourceUrl;
-        return !!sourceUrl && !!sourceUrl.match(/^https?$/);
+        return !!sourceUrl && !!sourceUrl.match(/^https?/);
     }
 
     /**

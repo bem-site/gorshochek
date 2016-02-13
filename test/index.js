@@ -15,6 +15,7 @@ require('./src/tasks-docs/github/index.test');
 
 require('./src/tasks-docs/load-from-github.test');
 require('./src/tasks-docs/load-from-file.test');
+require('./src/tasks-docs/load-from-http.test');
 require('./src/tasks-docs/transform-md-html.test');
 
 require('./src/tasks-meta/tags.test');
