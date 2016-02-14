@@ -3,7 +3,6 @@
 Набор плагинов сборки данных для BEM сайтов.
 
 [![NPM version](http://img.shields.io/npm/v/gorshochek.svg?style=flat)](http://www.npmjs.org/package/gorshochek)
-[![GitHub version](https://badge.fury.io/gh/bem-site%2Fgorshochek.svg)](https://badge.fury.io/gh/bem-site%2Fgorshochek)
 [![Coveralls branch](https://img.shields.io/coveralls/bem-site/gorshochek/master.svg)](https://coveralls.io/r/bem-site/gorshochek?branch=master)
 [![Travis](https://img.shields.io/travis/bem-site/gorshochek.svg)](https://travis-ci.org/bem-site/gorshochek)
 [![Code Climate](https://codeclimate.com/github/bem-site/gorshochek/badges/gpa.svg)](https://codeclimate.com/github/bem-site/gorshochek)
