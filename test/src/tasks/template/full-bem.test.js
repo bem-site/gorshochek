@@ -75,13 +75,13 @@ describe('tasks/template/full-bem', () => {
         });
     });
 
-    it('should set page content from page source field value', () => {
+    it('should set page content from page content field value', () => {
         model.setPages([
             {
                 url: '/url1/',
                 site: '/url1/',
                 title: 'some title 1',
-                source: 'some-source'
+                content: 'some-source'
             }
         ]);
         return applyBEM(model, options)().then(model => {

@@ -107,7 +107,7 @@ class Document extends Base {
             .setValue('title', this.getTitle(data)) // имя уровня переопределения
             .setValue('published', true) // флаг о том что страница опубликована
             .setValue('updateDate', +(new Date())) // дата обновления
-            .setValue('sourceUrl', this._getSourceUrl(data))
+            .setValue('source', this._getSourceUrl(data))
             ._setSource(data)
             .then(this.getData.bind(this));
     }

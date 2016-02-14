@@ -51,7 +51,7 @@ exports.isNativeWebsiteUrl = (url, existedUrls) => {
 /**
  * Tries to find link replacement from urlHash and site existed urls array for given variants
  * @param {String[]} variants - array of link variants
- * @param {Object} urlHash - hash of page sourceUrl -> page url
+ * @param {Object} urlHash - hash of page source -> page url
  * @param {String[]} existedUrls - array of site existed urls
  * @returns {String|null}
  */
@@ -95,8 +95,8 @@ exports.createArrayOfModelPageUrls = (pages) => {
  */
 exports.createSourceUrlsMap = (pages) => {
     return pages.reduce((prev, page) => {
-        if(page.published && page.sourceUrl) {
-            prev.set(page.sourceUrl, page.url);
+        if(page.published && page.source) {
+            prev.set(page.source, page.url);
         }
         return prev;
     }, new Map());

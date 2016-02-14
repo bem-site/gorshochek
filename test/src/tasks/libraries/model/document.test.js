@@ -128,21 +128,21 @@ describe('task/libraries/model/Document', () => {
             });
         });
 
-        it('should set null "sourceUrl" if it was not set', () => {
+        it('should set null "source" if it was not set', () => {
             return document.processData(_.merge({}, docData, {url: null})).then(() => {
-                should.not.exist(document.getData().sourceUrl);
+                should.not.exist(document.getData().source);
             });
         });
 
-        it('should set null "sourceUrl" if it was not set for given language', () => {
+        it('should set null "source" if it was not set for given language', () => {
             return document.processData(_.merge({}, docData, {url: {en: null}})).then(() => {
-                should.not.exist(document.getData().sourceUrl);
+                should.not.exist(document.getData().source);
             });
         });
 
-        it('should return valid "sourceUrl" value for given lang', () => {
+        it('should return valid "source" value for given lang', () => {
             return document.processData(_.merge({url: {en: 'http://url1'}}, docData)).then(() => {
-                document.getData().sourceUrl.should.equal('http://url1');
+                document.getData().source.should.equal('http://url1');
             });
         });
 

@@ -34,7 +34,6 @@ var model = gorshochek.createModel(),
 
 Q()
     .then(tasks.core.mergeModels(model, {modelPath: './examples/model.ru.json'}))
-    .then(tasks.core.normalizeModel(model))
     .then(tasks.meta.generateTagPages(model))
     .then(tasks.docs.loadFromGithub(model, {token: token}))
     .then(tasks.docs.loadFromFile(model))

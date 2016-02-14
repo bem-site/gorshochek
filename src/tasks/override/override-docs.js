@@ -57,7 +57,7 @@ module.exports = (model) => {
     }
 
     /**
-     * Resolves full github url by sourceUrl of doc and relative link to another doc
+     * Resolves full github url by source of doc and relative link to another doc
      * @param {String} href - link to another doc
      * @param {String} baseUrl - source url of doc
      */
@@ -99,7 +99,7 @@ module.exports = (model) => {
 
         util.isGithubUrl(url) ?
             variants.push(linkHref) :
-            variants.push(resolveFullGithubUrl(linkHref, page.sourceUrl));
+            variants.push(resolveFullGithubUrl(linkHref, page.source));
 
         const replacement = util.findReplacement(variants, sourceUrlsMap, existedUrls);
 
@@ -132,20 +132,20 @@ module.exports = (model) => {
             return imgSrc;
         }
 
-        const sourceUrl = Url.parse(page.sourceUrl);
+        const source = Url.parse(page.source);
 
-        if(util.isGithubUrl(sourceUrl)) {
-            sourceUrl.host = 'raw.githubusercontent.com';
-            sourceUrl.path = sourceUrl.path
+        if(util.isGithubUrl(source)) {
+            source.host = 'raw.githubusercontent.com';
+            source.path = source.path
                 .replace(/\/tree/, '')
                 .replace(/\/blob/, '');
 
-            sourceUrl.pathname = sourceUrl.pathname
+            source.pathname = source.pathname
                 .replace(/\/tree/, '')
                 .replace(/\/blob/, '');
         }
 
-        const result = Url.resolve(Url.format(sourceUrl), imgSrc);
+        const result = Url.resolve(Url.format(source), imgSrc);
         debug(imgSrc + ' => ' + result);
         return result;
     }

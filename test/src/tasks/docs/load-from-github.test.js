@@ -11,7 +11,7 @@ const loadSourceFromGithub = require('../../../../index').tasks.docs.loadSourceF
 describe('tasks/docs/load-from-github', () => {
     const pageStub = {
         url: '/url/',
-        sourceUrl: 'https://github.com/org/user/blob/ref/path.ext'
+        source: 'https://github.com/org/user/blob/ref/path.ext'
     };
     const githubStubRes = {
         meta: {},
@@ -47,41 +47,41 @@ describe('tasks/docs/load-from-github', () => {
         loadSourceFromGithub(model).should.be.instanceOf(Function);
     });
 
-    it('should not process pages without "sourceUrl" property', () => {
+    it('should not process pages without "source" property', () => {
         model.setPages([{url: '/url1/'}]);
         return loadSourceFromGithub(model)().then(() => {
             githubGetContentStub.should.not.be.called;
         });
     });
 
-    it('should not process page if "sourceUrl" value does not match github url regular expression', () => {
-        model.setPages([{url: '/url1/', sourceUrl: '//foo/bar'}]);
+    it('should not process page if "source" value does not match github url regular expression', () => {
+        model.setPages([{url: '/url1/', source: '//foo/bar'}]);
         return loadSourceFromGithub(model)().then(() => {
             githubGetContentStub.should.not.be.called;
         });
     });
 
-    describe('sourceUrl matches github url criteria', () => {
+    describe('source matches github url criteria', () => {
         function testAsseptedSourceUrl(url) {
-            model.setPages([{url: '/url', sourceUrl: url}]);
+            model.setPages([{url: '/url', source: url}]);
             return loadSourceFromGithub(model)().then(() => {
                 githubGetContentStub.should.be.calledOnce;
             });
         }
 
-        it('should process page with sourceUrl like a "http://github.com/org/user/blob/ref/path"', () => {
+        it('should process page with source like a "http://github.com/org/user/blob/ref/path"', () => {
             return testAsseptedSourceUrl('http://github.com/org/user/blob/ref/path');
         });
 
-        it('should process page with sourceUrl like a "https://github.com/org/user/blob/ref/path"', () => {
+        it('should process page with source like a "https://github.com/org/user/blob/ref/path"', () => {
             return testAsseptedSourceUrl('https://github.com/org/user/blob/ref/path');
         });
 
-        it('should process page with sourceUrl like "http://github.com/org/user/tree/ref/path"', () => {
+        it('should process page with source like "http://github.com/org/user/tree/ref/path"', () => {
             return testAsseptedSourceUrl('http://github.com/org/user/tree/ref/path');
         });
 
-        it('should process page with sourceUrl like "https://github.com/org/user/tree/ref/path"', () => {
+        it('should process page with source like "https://github.com/org/user/tree/ref/path"', () => {
             return testAsseptedSourceUrl('https://github.com/org/user/tree/ref/path');
         });
     });

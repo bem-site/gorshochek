@@ -116,9 +116,9 @@ describe('task/libraries/model/Version', () => {
         });
          */
 
-        it('should set null value for "sourceUrl" property if version data has not "url" property', () => {
+        it('should set null value for "source" property if version data has not "url" property', () => {
             return version.processData(_.omit(versionData, 'url')).then(() => {
-                should.not.exist(version.getData().sourceUrl);
+                should.not.exist(version.getData().source);
             });
         });
 

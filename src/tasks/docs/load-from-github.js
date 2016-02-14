@@ -50,7 +50,7 @@ module.exports = (model, options) => {
      * @returns {Boolean}
      */
     function hasGithubSource(page) {
-        return !!(page.sourceUrl && GITHUB_URL_REGEXP.test(page.sourceUrl));
+        return !!(page.source && GITHUB_URL_REGEXP.test(page.source));
     }
 
     /**
@@ -218,7 +218,7 @@ module.exports = (model, options) => {
      */
     function processPage(model, page) {
         debug(`Load doc file for page with url: => ${page.url}`);
-        const repoInfo = parseSourceUrl(page.sourceUrl);
+        const repoInfo = parseSourceUrl(page.source);
         return readMetaFromCache(page)
             .then(cache => Q.all([
                 getContentFromGithubSource(repoInfo, getHeadersByCache(cache)),

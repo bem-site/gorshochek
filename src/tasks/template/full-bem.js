@@ -46,9 +46,7 @@ module.exports = function(model, options) {
      * @returns {Object[]}
      */
     function getPagesDataForMenuCreation() {
-        return model.getPages().map(page => {
-            return _.pick(page, ['url', 'site', 'title']);
-        });
+        return model.getPages().map(page => _.pick(page, ['url', 'site', 'title']));
     }
 
     /**
@@ -57,12 +55,12 @@ module.exports = function(model, options) {
      * @returns {Object}
      */
     function getPageContent(page) {
-        if(!page.source && !page.contentFile) {
+        if(!page.content && !page.contentFile) {
             return Q('');
         }
 
-        return page.source
-            ? Q(page.source)
+        return page.content
+            ? Q(page.content)
             : baseUtil.readFile(path.join(options.source, page.contentFile), '');
     }
 

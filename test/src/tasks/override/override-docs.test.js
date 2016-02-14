@@ -62,7 +62,7 @@ describe('tasks/override/override-docs', () => {
 
         it('should rewrite relative links to images', () => {
             var html = '<img src="./relative-image-url">';
-            model.getPages()[0].sourceUrl = 'http://page/source/url';
+            model.getPages()[0].source = 'http://page/source/url';
             baseUtil.readFileFromCache.returns(Q(html));
 
             return overrideDocs(model)().then(() => {
@@ -73,7 +73,7 @@ describe('tasks/override/override-docs', () => {
 
         it('should rewrite relative links to images from github sources', () => {
             var html = '<img src="./relative-image-url">';
-            model.getPages()[0].sourceUrl = 'http://github.com/some-user/some-repo/tree/ref/url';
+            model.getPages()[0].source = 'http://github.com/some-user/some-repo/tree/ref/url';
             baseUtil.readFileFromCache.returns(Q(html));
 
             return overrideDocs(model)().then(() => {
@@ -97,12 +97,12 @@ describe('tasks/override/override-docs', () => {
             var sourceUrlsMap = util.createSourceUrlsMap([
                 {
                     url: '/url1/',
-                    sourceUrl: 'https://github.com/org/user/blob/ref/some-path1',
+                    source: 'https://github.com/org/user/blob/ref/some-path1',
                     published: true
                 },
                 {
                     url: '/url2/',
-                    sourceUrl: 'https://github.com/org/user/blob/ref/some-path2',
+                    source: 'https://github.com/org/user/blob/ref/some-path2',
                     published: true
                 }
             ]);
@@ -111,7 +111,7 @@ describe('tasks/override/override-docs', () => {
 
             model.setPages([{
                 url: '/url1/',
-                sourceUrl: 'https://github.com/org/user/blob/ref/some-path1',
+                source: 'https://github.com/org/user/blob/ref/some-path1',
                 contentFile: '/url1/index.html'
             }]);
         });

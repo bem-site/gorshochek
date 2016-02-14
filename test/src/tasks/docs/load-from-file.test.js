@@ -11,7 +11,7 @@ const loadSourceFromLocal = require('../../../../index').tasks.docs.loadSourceFr
 
 describe('tasks/docs/load-from-file', () => {
     const sandbox = sinon.sandbox.create();
-    const defaultPage = {url: '/url', sourceUrl: '../foo.file'};
+    const defaultPage = {url: '/url', source: '../foo.file'};
     let model;
 
     beforeEach(() => {
@@ -30,44 +30,44 @@ describe('tasks/docs/load-from-file', () => {
         loadSourceFromLocal(model).should.be.instanceOf(Function);
     });
 
-    it('should not process pages without "sourceUrl" property', () => {
+    it('should not process pages without "source" property', () => {
         model.setPages([{url: '/url1/'}]);
         return loadSourceFromLocal(model)().then(() => {
             baseUtil.readFileFromCache.should.not.be.called;
         });
     });
 
-    it('should not process page if "sourceUrl" value does not match local file regular expression', () => {
-        model.setPages([{url: '/url1/', sourceUrl: 'http://github.com/foo/bar'}]);
+    it('should not process page if "source" value does not match local file regular expression', () => {
+        model.setPages([{url: '/url1/', source: 'http://github.com/foo/bar'}]);
         return loadSourceFromLocal(model)().then(() => {
             baseUtil.readFileFromCache.should.not.be.called;
         });
     });
 
-    describe('sourceUrl matches local file path criteria', () => {
+    describe('source matches local file path criteria', () => {
         it('should match on file path like a "/foo/bar.file"', () => {
-            model.setPages([{url: '/url', sourceUrl: '/foo/bar.md'}]);
+            model.setPages([{url: '/url', source: '/foo/bar.md'}]);
             return loadSourceFromLocal(model)().then(() => {
                 baseUtil.readFileFromCache.should.be.calledOnce;
             });
         });
 
         it('should match on file path like a "./foo/bar.md"', () => {
-            model.setPages([{url: '/url', sourceUrl: './foo/bar.md'}]);
+            model.setPages([{url: '/url', source: './foo/bar.md'}]);
             return loadSourceFromLocal(model)().then(() => {
                 baseUtil.readFileFromCache.should.be.calledOnce;
             });
         });
 
         it('should match on file path like a "../foo/bar.md"', () => {
-            model.setPages([{url: '/url', sourceUrl: '../foo/bar.md'}]);
+            model.setPages([{url: '/url', source: '../foo/bar.md'}]);
             return loadSourceFromLocal(model)().then(() => {
                 baseUtil.readFileFromCache.should.be.calledOnce;
             });
         });
 
         it('should match on file path like a "../../foo/bar.md"', () => {
-            model.setPages([{url: '/url', sourceUrl: '../../foo/bar.md'}]);
+            model.setPages([{url: '/url', source: '../../foo/bar.md'}]);
             return loadSourceFromLocal(model)().then(() => {
                 baseUtil.readFileFromCache.should.be.calledOnce;
             });

@@ -26,14 +26,14 @@ const debug = require('debug')('docs file load');
  */
 module.exports = (model) => {
     /**
-     * Returns true if page[language] exists and have sourceUrl
+     * Returns true if page[language] exists and have source
      * which can be matched as relative file path on filesystem. Otherwise returns false
      * @param {Object} page - page object
      * @returns {Boolean}
      */
     function hasLocalSource(page) {
-        const sourceUrl = page.sourceUrl;
-        return !!sourceUrl && !!sourceUrl.match(/^(\/)?([^\/\0]+(\/)?)+$/);
+        const source = page.source;
+        return !!source && !!source.match(/^(\/)?([^\/\0]+(\/)?)+$/);
     }
 
     /**
@@ -44,7 +44,7 @@ module.exports = (model) => {
     function processPage(model, page) {
         debug(`load local file page with url: => ${page.url}`);
 
-        const filePath = page.sourceUrl; // относительный путь к файлу
+        const filePath = page.source; // относительный путь к файлу
         const fileName = path.basename(filePath); // имя файла (с расширением)
         const fileExt = path.extname(fileName); // расширение файла
 

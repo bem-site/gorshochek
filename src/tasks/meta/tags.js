@@ -81,7 +81,7 @@ module.exports = (model, options) => {
             url: options.baseUrl + tag + '/',
             site: options.baseUrl,
             title: tag,
-            source: _getByTag(tag)
+            content: _getByTag(tag)
         }, _getCommonPageProperties()));
     }
 
@@ -96,7 +96,7 @@ module.exports = (model, options) => {
             url: options.baseUrl,
             site: options.baseUrl,
             title: options.baseTitle,
-            source: model.getPages().map(_.partialRight(_.pick, ['url', 'title', 'tags']))
+            content: model.getPages().map(_.partialRight(_.pick, ['url', 'title', 'tags']))
         }, _getCommonPageProperties());
     }
 
@@ -138,7 +138,7 @@ module.exports = (model, options) => {
      */
     function replaceTagsOnLinksForTagPages(tagPages, tagPagesMap) {
         return tagPages.map(page => {
-            page.source.map(_replaceTags.bind(null, tagPagesMap));
+            page.content.map(_replaceTags.bind(null, tagPagesMap));
             return page;
         });
     }
@@ -150,8 +150,8 @@ module.exports = (model, options) => {
      */
     function saveTagPageSource(page) {
         const filePath = path.join(page.url, 'index.json');
-        const fileContent = JSON.stringify(page.source);
-        delete page.source;
+        const fileContent = JSON.stringify(page.content);
+        delete page.content;
         page.contentFile = filePath;
         return baseUtil.writeFileToCache(filePath, fileContent);
     }
@@ -175,4 +175,4 @@ module.exports = (model, options) => {
                 return model;
             });
     };
-}
+};

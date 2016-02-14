@@ -13,7 +13,7 @@ let loadSourceFromHttp;
 
 describe('tasks/docs/load-from-http', () => {
     const sandbox = sinon.sandbox.create();
-    const defaultPage = {url: '/url1/', sourceUrl: 'http://foo/file.ext'};
+    const defaultPage = {url: '/url1/', source: 'http://foo/file.ext'};
     let gotStub;
     let model;
 
@@ -35,30 +35,30 @@ describe('tasks/docs/load-from-http', () => {
         loadSourceFromHttp(model).should.be.instanceOf(Function);
     });
 
-    it('should not process pages without "sourceUrl" property', () => {
+    it('should not process pages without "source" property', () => {
         model.setPages([{url: '/url1/'}]);
         return loadSourceFromHttp(model)().then(() => {
             baseUtil.readFileFromCache.should.not.be.called;
         });
     });
 
-    it('should not process page if "sourceUrl" value does not match http url regular expression', () => {
-        model.setPages([{url: '/url1/', sourceUrl: '../some/path/to/local/file'}]);
+    it('should not process page if "source" value does not match http url regular expression', () => {
+        model.setPages([{url: '/url1/', source: '../some/path/to/local/file'}]);
         return loadSourceFromHttp(model)().then(() => {
             baseUtil.readFileFromCache.should.not.be.called;
         });
     });
 
-    describe('sourceUrl matches http(s) url regular expression', () => {
+    describe('source matches http(s) url regular expression', () => {
         it('should match on file path like a "http://foo/bar.md"', () => {
-            model.setPages([{url: '/url1/', sourceUrl: 'http://foo/bar.md'}]);
+            model.setPages([{url: '/url1/', source: 'http://foo/bar.md'}]);
             return loadSourceFromHttp(model)().then(() => {
                 baseUtil.readFileFromCache.should.be.calledOnce;
             });
         });
 
         it('should match on file path like a "https://foo/bar.md"', () => {
-            model.setPages([{url: '/url1/', sourceUrl: 'https://foo/bar.md'}]);
+            model.setPages([{url: '/url1/', source: 'https://foo/bar.md'}]);
             return loadSourceFromHttp(model)().then(() => {
                 baseUtil.readFileFromCache.should.be.calledOnce;
             });

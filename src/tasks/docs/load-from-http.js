@@ -39,14 +39,14 @@ module.exports = function(model, options) {
     options.retries = options.retries || 5;
 
     /**
-     * Returns true if page[language] exists and have sourceUrl
+     * Returns true if page[language] exists and have source
      * which can be matched as relative file path on filesystem. Otherwise returns false
      * @param {Object} page - page object
      * @returns {Boolean}
      */
     function hasLocalSource(page) {
-        const sourceUrl = page.sourceUrl;
-        return !!sourceUrl && !!sourceUrl.match(/^https?/);
+        const source = page.source;
+        return !!source && !!source.match(/^https?/);
     }
 
     /**
@@ -81,7 +81,7 @@ module.exports = function(model, options) {
     function processPage(model, page) {
         debug(`load source viw http(s) for page with url: => ${page.url}`);
 
-        const filePath = page.sourceUrl; // относительный путь к файлу
+        const filePath = page.source; // относительный путь к файлу
         const fileName = path.basename(filePath); // имя файла (с расширением)
         const fileExt = path.extname(fileName); // расширение файла
 
@@ -100,7 +100,7 @@ module.exports = function(model, options) {
 
         return Q.allSettled([
             baseUtil.readFileFromCache(cacheFilePath),
-            loadDataFromUrl(page.sourceUrl)
+            loadDataFromUrl(page.source)
         ]).spread((cache, remote) => {
             if(remote.state === 'rejected') {
                 return Q.reject(remote);

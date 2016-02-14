@@ -74,8 +74,8 @@ describe('tasks/override/util', () => {
 
     describe('findReplacement', () => {
         var pages = [
-                {url: '/url1', sourceUrl: '/sourceUrl1', published: true},
-                {url: '/url2', sourceUrl: '/sourceUrl2/README.md', published: true}
+                {url: '/url1', source: '/sourceUrl1', published: true},
+                {url: '/url2', source: '/sourceUrl2/README.md', published: true}
             ],
             sourceUrlMap,
             existedUrls;
@@ -116,17 +116,17 @@ describe('tasks/override/util', () => {
     describe('createSourceUrlsMap', () => {
         it('should create map with sourceUrls as keys and urls as values', () => {
             var pages = [
-                {url: '/url1', sourceUrl: '/sourceUrl1', published: true},
-                {url: '/url2', sourceUrl: '/sourceUrl2', published: true}
+                {url: '/url1', source: '/sourceUrl1', published: true},
+                {url: '/url2', source: '/sourceUrl2', published: true}
             ];
             var sourceUrlMap = util.createSourceUrlsMap(pages);
             sourceUrlMap.get('/sourceUrl1').should.equal('/url1');
             sourceUrlMap.get('/sourceUrl2').should.equal('/url2');
         });
 
-        it('should skip pages without "sourceUrl" fields', () => {
+        it('should skip pages without "source" fields', () => {
             var pages = [
-                {url: '/url1', sourceUrl: '/sourceUrl1', published: true},
+                {url: '/url1', source: '/sourceUrl1', published: true},
                 {url: '/url2', published: true}
             ];
             var sourceUrlMap = util.createSourceUrlsMap(pages);
@@ -135,8 +135,8 @@ describe('tasks/override/util', () => {
 
         it('should skip unpublished pages', () => {
             var pages = [
-                {url: '/url1', sourceUrl: '/sourceUrl1', published: true},
-                {url: '/url2', sourceUrl: '/sourceUrl1', published: false}
+                {url: '/url1', source: '/sourceUrl1', published: true},
+                {url: '/url2', source: '/sourceUrl1', published: false}
             ];
             var sourceUrlMap = util.createSourceUrlsMap(pages);
             sourceUrlMap.has('/sourceUrl1').should.equal(true);
