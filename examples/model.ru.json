@@ -11,7 +11,7 @@
     "site": "/methodology/",
     "title": "Методология",
     "published": true,
-    "sourceUrl": "./examples/bemjson/methodology.ru.bemjson.js",
+    "source": "./examples/bemjson/methodology.ru.bemjson.js",
     "type": "bemjson.js"
   },
   {
@@ -19,7 +19,7 @@
     "site": "/methodology/",
     "title": "Основные понятия",
     "published": true,
-    "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/method/key-concepts/key-concepts.ru.md",
+    "source": "https://github.com/bem/bem-method/blob/bem-info-data/method/key-concepts/key-concepts.ru.md",
     "tags": ["methodology", "key-concepts"]
   },
   {
@@ -27,14 +27,14 @@
     "site": "/methodology/",
     "title": "Соглашение по именованию",
     "published": true,
-    "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/method/naming-convention/naming-convention.ru.md"
+    "source": "https://github.com/bem/bem-method/blob/bem-info-data/method/naming-convention/naming-convention.ru.md"
   },
   {
     "url": "/methodology/filesystem",
     "site": "/methodology/",
     "title": "Файловая система",
     "published": true,
-    "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/method/filesystem/filesystem.ru.md",
+    "source": "https://github.com/bem/bem-method/blob/bem-info-data/method/filesystem/filesystem.ru.md",
     "tags": ["methodology", "filesystem"]
   },
   {
@@ -42,28 +42,28 @@
     "site": "/methodology/",
     "title": "Сборка",
     "published": true,
-    "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/method/build/build.ru.md"
+    "source": "https://github.com/bem/bem-method/blob/bem-info-data/method/build/build.ru.md"
   },
   {
     "url": "/methodology/declarations",
     "site": "/methodology/",
     "title": "Декларации",
     "published": true,
-    "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/method/declarations/declarations.ru.md"
+    "source": "https://github.com/bem/bem-method/blob/bem-info-data/method/declarations/declarations.ru.md"
   },
   {
     "url": "/methodology/solved-problems",
     "site": "/methodology/",
     "title": "Какие проблемы решает",
     "published": true,
-    "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/method/solved-problems/solved-problems.ru.md"
+    "source": "https://github.com/bem/bem-method/blob/bem-info-data/method/solved-problems/solved-problems.ru.md"
   },
   {
     "url": "/methodology/history",
     "site": "/methodology/",
     "title": "История создания",
     "published": true,
-    "sourceUrl": "https://github.com/bem/bem-method/blob/bem-info-data/method/history/history.ru.md",
+    "source": "https://github.com/bem/bem-method/blob/bem-info-data/method/history/history.ru.md",
     "tags": ["methodology", "history"]
   },
   {
@@ -71,7 +71,7 @@
     "site": "/platform/",
     "title": "Платформа",
     "published": true,
-    "sourceUrl": "./examples/bemjson/platform.ru.bemjson.js",
+    "source": "./examples/bemjson/platform.ru.bemjson.js",
     "type": "bemjson.js"
   },
   {
