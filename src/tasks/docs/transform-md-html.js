@@ -2,8 +2,20 @@
 
 const path = require('path');
 const Q = require('q');
-const mdToHtml = require('bem-md-renderer');
+const _ = require('lodash');
+const marked = require('marked');
 const baseUtil = require('../../util');
+
+const DEFAULT_MARKED_OPTIONS = {
+    renderer: new marked.Renderer(),
+    gfm: true,
+    tables: true,
+    breaks: false,
+    pedantic: false,
+    sanitize: true,
+    smartLists: true,
+    smartypants: false
+};
 
 /**
  * Transforms page content source files from markdown format to html
@@ -32,6 +44,8 @@ module.exports = (model, options) => {
     options.markedOptions = options.markedOptions || {};
     options.concurrency = options.concurrency || 20;
 
+    marked.setOptions(_.merge(DEFAULT_MARKED_OPTIONS, options.markedOptions));
+
     /**
      * Returns true if given page has contentFile field
      * and value of this field ends on .md
@@ -49,7 +63,7 @@ module.exports = (model, options) => {
      * @returns {Promise}
      */
     function transform(page, md) {
-        return Q.denodeify(mdToHtml.render)(md, options.markedOptions)
+        return Q.denodeify(marked)(md)
             .catch(error => {
                 console.error(`Error occur while transform md -> html for page: ${page.url}`);
                 console.error(error.stack);
