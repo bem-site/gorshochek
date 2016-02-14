@@ -1,10 +1,13 @@
-var fs = require('fs'),
-    fsExtra = require('fs-extra'),
-    Model = require('../../src/model'),
-    util = require('../../src/util');
+'use strict';
+
+const fs = require('fs');
+const fsExtra = require('fs-extra');
+
+const Model = require('../../src/model');
+const util = require('../../src/util');
 
 describe('util', () => {
-    var sandbox = sinon.sandbox.create();
+    const sandbox = sinon.sandbox.create();
 
     beforeEach(() => {
         sandbox.stub(console, 'error');
@@ -32,7 +35,7 @@ describe('util', () => {
     });
 
     describe('readFile', () => {
-        var readFileStub;
+        let readFileStub;
 
         beforeEach(() => {
             readFileStub = sandbox.stub(fs, 'readFile');
@@ -73,7 +76,7 @@ describe('util', () => {
     });
 
     describe('readJSONFile', () => {
-        var readFileStub;
+        let readFileStub;
 
         beforeEach(() => {
             readFileStub = sandbox.stub(fsExtra, 'readJSON');
@@ -115,7 +118,7 @@ describe('util', () => {
     });
 
     describe('readFileFromCache', () => {
-        var readFileStub;
+        let readFileStub;
 
         beforeEach(() => {
             readFileStub = sandbox.stub(fs, 'readFile');
@@ -209,16 +212,14 @@ describe('util', () => {
 
     describe('processPagesAsync', () => {
         it('should call process function for each of filtered pages', () => {
-            var model = new Model();
+            const model = new Model();
             model.setPages([
                 {url: '/url1'},
                 {url: '/url12'}
             ]);
-            var criteria = function(page) {
-                return page.url.indexOf('/url1') > -1;
-            };
-            var processFunc = () => {return true;};
-            var processFuncSpy = sandbox.spy(processFunc);
+            const criteria = page => page.url.indexOf('/url1') > -1;
+            const processFunc = () => true;
+            const processFuncSpy = sandbox.spy(processFunc);
 
             return util.processPagesAsync(model, criteria, processFuncSpy).then(() => {
                 processFuncSpy.should.be.calledTwice;
@@ -226,13 +227,13 @@ describe('util', () => {
         });
 
         it('should process all pages if criteria function was not given', () => {
-            var model = new Model();
+            const model = new Model();
             model.setPages([
                 {url: '/url1'},
                 {url: '/url2'}
             ]);
-            var processFunc = () => {return true;};
-            var processFuncSpy = sandbox.spy(processFunc);
+            const processFunc = () => true;
+            const processFuncSpy = sandbox.spy(processFunc);
 
             return util.processPagesAsync(model, null, processFuncSpy).then(() => {
                 processFuncSpy.should.be.calledTwice;

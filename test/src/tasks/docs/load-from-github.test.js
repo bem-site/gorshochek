@@ -1,27 +1,30 @@
-var Q = require('q'),
-    _ = require('lodash'),
-    Model = require('../../../../src/model'),
-    baseUtil = require('../../../../src/util'),
-    GithubAPI = require('../../../../src/tasks/docs/github'),
-    loadSourceFromGithub = require('../../../../index').tasks.docs.loadSourceFromGithub;
+'use strict';
+
+const Q = require('q');
+const _ = require('lodash');
+
+const Model = require('../../../../src/model');
+const baseUtil = require('../../../../src/util');
+const GithubAPI = require('../../../../src/tasks/docs/github');
+const loadSourceFromGithub = require('../../../../index').tasks.docs.loadSourceFromGithub;
 
 describe('tasks-docs/load-from-github', () => {
-    var pageStub = {
-            url: '/url/',
-            sourceUrl: 'https://github.com/org/user/blob/ref/path.ext'
-        },
-        githubStubRes = {
-            meta: {},
-            name: 'some-name.ext',
-            sha: 'some-sha',
-            content: 'some-content'
-        },
-        sandbox = sinon.sandbox.create(),
-        githubGetContentStub,
-        githubGetCommitsStub,
-        githubGetStub,
-        githubGetBranchStub,
-        model;
+    const pageStub = {
+        url: '/url/',
+        sourceUrl: 'https://github.com/org/user/blob/ref/path.ext'
+    };
+    const githubStubRes = {
+        meta: {},
+        name: 'some-name.ext',
+        sha: 'some-sha',
+        content: 'some-content'
+    };
+    const sandbox = sinon.sandbox.create();
+    let githubGetContentStub;
+    let githubGetCommitsStub;
+    let githubGetStub;
+    let githubGetBranchStub;
+    let model;
 
     beforeEach(() => {
         sandbox.stub(console, 'warn');

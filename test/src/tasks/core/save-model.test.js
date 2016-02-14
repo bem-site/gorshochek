@@ -1,11 +1,14 @@
-var Q = require('q'),
-    Model = require('../../../../src/model'),
-    baseUtil = require('../../../../src/util'),
-    saveModel = require('../../../../index').tasks.core.saveModel;
+'use strict';
+
+const Q = require('q');
+
+const Model = require('../../../../src/model');
+const baseUtil = require('../../../../src/util');
+const saveModel = require('../../../../index').tasks.core.saveModel;
 
 describe('tasks-core/save-model', () => {
-    var sandbox = sinon.sandbox.create(),
-        model = new Model();
+    const sandbox = sinon.sandbox.create();
+    const model = new Model();
 
     beforeEach(() => {
         sandbox.stub(console, 'error');

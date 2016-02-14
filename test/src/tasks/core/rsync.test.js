@@ -1,18 +1,21 @@
-var _ = require('lodash'),
-    proxyquire = require('proxyquire'),
-    Model = require('../../../../src/model');
+'use strict';
+
+const _ = require('lodash');
+const proxyquire = require('proxyquire');
+const Model = require('../../../../src/model');
 
 describe('tasks-core/rsync', () => {
-    var rsync,
-        rsyncStub,
-        sandbox = sinon.sandbox.create(),
-        model = new Model(),
-        baseParams = {
-            src: './.builder/cache/',
-            dest: './data',
-            options: '-rd --delete --delete-excluded --force',
-            sync: false
-        };
+    const sandbox = sinon.sandbox.create();
+    const model = new Model();
+    const baseParams = {
+        src: './.builder/cache/',
+        dest: './data',
+        options: '-rd --delete --delete-excluded --force',
+        sync: false
+    };
+
+    let rsync;
+    let rsyncStub;
 
     beforeEach(() => {
         sandbox.stub(console, 'error');

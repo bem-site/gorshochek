@@ -1,18 +1,20 @@
-var _ = require('lodash'),
-    nock = require('nock'),
-    proxyquire = require('proxyquire'),
-    GithubAPI = require('../../../../../src/tasks/docs/github');
+'use strict';
+
+const _ = require('lodash');
+const nock = require('nock');
+const proxyquire = require('proxyquire');
+let GithubAPI = require('../../../../../src/tasks/docs/github');
 
 proxyquire.preserveCache();
 
 describe('GithubAPI', () => {
-    var sandbox = sinon.sandbox.create(),
-        githubAPI,
-        callOptions = {
-            host: 'github.com',
-            user: 'some-user',
-            repo: 'some-repo'
-        };
+    const  sandbox = sinon.sandbox.create();
+    const callOptions = {
+        host: 'github.com',
+        user: 'some-user',
+        repo: 'some-repo'
+    };
+    let githubAPI;
 
     beforeEach(() => {
         sandbox.stub(console, 'warn');

@@ -1,8 +1,12 @@
-var EOL = require('os').EOL,
-    fs = require('fs'),
-    _ = require('lodash'),
-    Model = require('../../../../src/model'),
-    createSiteMapXML = require('../../../../index').tasks.sitemap.createSitemapXML;
+'use strict';
+
+const EOL = require('os').EOL;
+const fs = require('fs');
+
+const _ = require('lodash');
+
+const Model = require('../../../../src/model');
+const createSiteMapXML = require('../../../../index').tasks.sitemap.createSitemapXML;
 
 function buildExpectedXML(items) {
     var items = items.map(function(item) {

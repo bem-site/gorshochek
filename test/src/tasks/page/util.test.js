@@ -1,8 +1,10 @@
-var Model = require('../../../../src/model'),
-    util = require('../../../../src/tasks/page/util');
+'use strict';
+
+const Model = require('../../../../src/model');
+const util = require('../../../../src/tasks/page/util');
 
 describe('tasks-page/util', () => {
-    var sandbox = sinon.sandbox.create();
+    const sandbox = sinon.sandbox.create();
 
     afterEach(() => {
         sandbox.restore();
@@ -27,12 +29,12 @@ describe('tasks-page/util', () => {
     });
 
     describe('getPagesMap', () => {
-        var pages = [
+        const pages = [
             {url: '/', title: '/title'},
             {url: '/url1/', title: '/url1 title'}
         ];
         it('should build valid complex map of titles by urls and languages', () => {
-            var pagesMap = util.createPageTitlesMap(pages);
+            const pagesMap = util.createPageTitlesMap(pages);
             pagesMap['/'].should.equal('/title');
             pagesMap['/url1/'].should.equal('/url1 title');
         });
@@ -49,8 +51,8 @@ describe('tasks-page/util', () => {
         });
 
         it('should call given pageProcessingFunction for each of model pages', () => {
-            var spy = sandbox.spy();
-            var model = new Model();
+            const spy = sandbox.spy();
+            const model = new Model();
             model.setPages([
                 {url: '/', title: '/title'},
                 {url: '/url1/', title: '/url1 title'}

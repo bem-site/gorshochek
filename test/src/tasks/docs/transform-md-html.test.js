@@ -1,4 +1,7 @@
+'use strict';
+
 const Q = require('q');
+
 const Model = require('../../../../src/model');
 const baseUtil = require('../../../../src/util');
 const proxyquire = require('proxyquire');

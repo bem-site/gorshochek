@@ -1,14 +1,18 @@
-var path = require('path'),
-    _ = require('lodash'),
-    Q = require('q'),
-    Model = require('../../../../src/model'),
-    baseUtil = require('../../../../src/util'),
-    loadSourceFromLocal = require('../../../../index').tasks.docs.loadSourceFromLocal;
+'use strict';
+
+const path = require('path');
+
+const _ = require('lodash');
+const Q = require('q');
+
+const Model = require('../../../../src/model');
+const baseUtil = require('../../../../src/util');
+const loadSourceFromLocal = require('../../../../index').tasks.docs.loadSourceFromLocal;
 
 describe('tasks-docs/load-from-file', () => {
-    var sandbox = sinon.sandbox.create(),
-        defaultPage = {url: '/url', sourceUrl: '../foo.file'},
-        model;
+    const sandbox = sinon.sandbox.create();
+    const defaultPage = {url: '/url', sourceUrl: '../foo.file'};
+    let model;
 
     beforeEach(() => {
         sandbox.stub(console, 'error');

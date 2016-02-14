@@ -1,18 +1,22 @@
-var path = require('path'),
-    Q = require('q'),
-    Model = require('../../../../src/model'),
-    baseUtil = require('../../../../src/util'),
-    mergeModels = require('../../../../index').tasks.core.mergeModels;
+'use strict';
+
+const path = require('path');
+
+const Q = require('q');
+
+const Model = require('../../../../src/model');
+const baseUtil = require('../../../../src/util');
+const mergeModels = require('../../../../index').tasks.core.mergeModels;
 
 describe('tasks-core/merge-models', () => {
-    var sandbox = sinon.sandbox.create(),
-        model = new Model(),
-        options = {modelPath: './some-model.json'},
+    const sandbox = sinon.sandbox.create();
+    const model = new Model();
+    const options = {modelPath: './some-model.json'};
 
-        consoleInfoStub,
-        copyFileStub,
-        readFileFromCacheStub,
-        readJSONFileStub;
+    let consoleInfoStub;
+    let copyFileStub;
+    let readFileFromCacheStub;
+    let readJSONFileStub;
 
     beforeEach(() => {
         consoleInfoStub = sandbox.stub(console, 'info');
@@ -48,7 +52,7 @@ describe('tasks-core/merge-models', () => {
     });
 
     it('should merge models and find differences', () => {
-        var modelMergeSpy = sandbox.spy(model, 'merge');
+        const modelMergeSpy = sandbox.spy(model, 'merge');
 
         return mergeModels(model, options)().then(() => {
             modelMergeSpy.should.be.calledOnce;
@@ -57,7 +61,7 @@ describe('tasks-core/merge-models', () => {
     });
 
     it('should normalize effective model', () => {
-        var modelNormalizeSpy = sandbox.spy(model, 'normalize');
+        const modelNormalizeSpy = sandbox.spy(model, 'normalize');
 
         return mergeModels(model, options)().then(() => {
             modelNormalizeSpy.should.be.calledOnce;

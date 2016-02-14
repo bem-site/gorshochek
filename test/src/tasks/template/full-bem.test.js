@@ -1,5 +1,8 @@
+'use strict';
+
 const _ = require('lodash');
 const Q = require('q');
+
 const Model = require('../../../../src/model');
 const baseUtil = require('../../../../src/util');
 const BEMTREE = require('../../../stub/bemtree').BEMTREE;

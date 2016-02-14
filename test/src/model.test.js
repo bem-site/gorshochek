@@ -1,8 +1,10 @@
-var _ = require('lodash'),
-    Model = require('../../src/model');
+'use strict';
+
+const _ = require('lodash');
+const Model = require('../../src/model');
 
 describe('Model', () => {
-    var model;
+    let model;
 
     beforeEach(() => {
         model = new Model();
@@ -102,7 +104,7 @@ describe('Model', () => {
         });
 
         describe('merge no-empty models', () => {
-            var oldModel, newModel;
+            let oldModel, newModel;
 
             beforeEach(() => {
                 oldModel = [
@@ -147,7 +149,7 @@ describe('Model', () => {
     });
 
     describe('normalize', () => {
-        var commonPageProperties = {url: '/url1'};
+        const commonPageProperties = {url: '/url1'};
 
         function prepareModelPages(pageProperty) {
             model.setPages([_.merge(pageProperty, commonPageProperties)]);
