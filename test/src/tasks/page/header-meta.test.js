@@ -3,7 +3,7 @@
 const Model = require('../../../../src/model');
 const createHeaderMeta = require('../../../../index').tasks.page.createHeaderMeta;
 
-describe('tasks-page/header-meta', () => {
+describe('tasks/page/header-meta', () => {
     const pages = [
         {url: '/', title: '/ title', tags: ['index1', 'index2']},
         {url: '/url1/', title: '/url1 title'}

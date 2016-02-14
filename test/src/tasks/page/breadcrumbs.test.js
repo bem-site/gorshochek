@@ -3,7 +3,7 @@
 const Model = require('../../../../src/model');
 const createBreadcrumbs = require('../../../../index').tasks.page.createBreadcrumbs;
 
-describe('tasks-pages/breadcrumbs', () => {
+describe('tasks/pages/breadcrumbs', () => {
     const model = new Model();
     const pages = [
         {url: '/', title: 'index title'},

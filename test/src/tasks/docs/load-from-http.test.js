@@ -11,7 +11,7 @@ const Model = require('../../../../src/model');
 const baseUtil = require('../../../../src/util');
 let loadSourceFromHttp;
 
-describe('tasks-docs/load-from-http', () => {
+describe('tasks/docs/load-from-http', () => {
     const sandbox = sinon.sandbox.create();
     const defaultPage = {url: '/url1/', sourceUrl: 'http://foo/file.ext'};
     let gotStub;

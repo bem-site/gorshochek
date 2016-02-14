@@ -27,7 +27,7 @@ function buildExpectedXML(items) {
     return items.join(EOL);
 }
 
-describe('tasks-sitemap/sitemap-xml', () => {
+describe('tasks/sitemap/sitemap-xml', () => {
     var sandbox = sinon.sandbox.create(),
         basePage = {url: '/url1/', published: true},
         options = {host: 'https://en.site.com'},

@@ -3,7 +3,7 @@
 const Model = require('../../../../src/model');
 const createSearchMeta = require('../../../../index').tasks.page.createSearchMeta;
 
-describe('tasks-page/search-meta', () => {
+describe('tasks/page/search-meta', () => {
     const model = new Model();
     const pages = [
         {url: '/', title: '/ title'},

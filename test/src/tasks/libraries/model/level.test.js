@@ -2,7 +2,7 @@ var Q = require('q'),
     Block = require('../../../../../src/tasks/libraries/model/block'),
     Level = require('../../../../../src/tasks/libraries/model/level');
 
-describe('task-libraries/model/Level', () => {
+describe('task/libraries/model/Level', () => {
     var sandbox = sinon.sandbox.create(),
         versionData = {
             baseUrl: '/libraries',

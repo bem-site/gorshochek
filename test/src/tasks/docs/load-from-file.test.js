@@ -9,7 +9,7 @@ const Model = require('../../../../src/model');
 const baseUtil = require('../../../../src/util');
 const loadSourceFromLocal = require('../../../../index').tasks.docs.loadSourceFromLocal;
 
-describe('tasks-docs/load-from-file', () => {
+describe('tasks/docs/load-from-file', () => {
     const sandbox = sinon.sandbox.create();
     const defaultPage = {url: '/url', sourceUrl: '../foo.file'};
     let model;

@@ -6,7 +6,7 @@ const Model = require('../../../../src/model');
 const baseUtil = require('../../../../src/util');
 const saveModel = require('../../../../index').tasks.core.saveModel;
 
-describe('tasks-core/save-model', () => {
+describe('tasks/core/save-model', () => {
     const sandbox = sinon.sandbox.create();
     const model = new Model();
 

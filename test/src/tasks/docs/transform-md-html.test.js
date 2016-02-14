@@ -6,7 +6,7 @@ const Model = require('../../../../src/model');
 const baseUtil = require('../../../../src/util');
 const proxyquire = require('proxyquire');
 
-describe('tasks-docs/transform-md-html', () => {
+describe('tasks/docs/transform-md-html', () => {
     const sandbox = sinon.sandbox.create();
     const markedStub = sandbox.stub();
     const transformMdToHtml = proxyquire('../../../../src/tasks/docs/transform-md-html', {marked: markedStub});

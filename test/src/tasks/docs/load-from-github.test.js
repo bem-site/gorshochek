@@ -8,7 +8,7 @@ const baseUtil = require('../../../../src/util');
 const GithubAPI = require('../../../../src/tasks/docs/github');
 const loadSourceFromGithub = require('../../../../index').tasks.docs.loadSourceFromGithub;
 
-describe('tasks-docs/load-from-github', () => {
+describe('tasks/docs/load-from-github', () => {
     const pageStub = {
         url: '/url/',
         sourceUrl: 'https://github.com/org/user/blob/ref/path.ext'

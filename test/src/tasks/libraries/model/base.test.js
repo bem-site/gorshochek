@@ -1,7 +1,7 @@
 var fsExtra = require('fs-extra'),
     Base = require('../../../../../src/tasks/libraries/model/base');
 
-describe('task-libraries/model/Base', () => {
+describe('task/libraries/model/Base', () => {
     var sandbox = sinon.sandbox.create(),
         base;
 

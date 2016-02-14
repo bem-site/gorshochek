@@ -4,7 +4,7 @@ const _ = require('lodash');
 const proxyquire = require('proxyquire');
 const Model = require('../../../../src/model');
 
-describe('tasks-core/rsync', () => {
+describe('tasks/core/rsync', () => {
     const sandbox = sinon.sandbox.create();
     const model = new Model();
     const baseParams = {

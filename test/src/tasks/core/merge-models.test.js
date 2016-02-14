@@ -8,7 +8,7 @@ const Model = require('../../../../src/model');
 const baseUtil = require('../../../../src/util');
 const mergeModels = require('../../../../index').tasks.core.mergeModels;
 
-describe('tasks-core/merge-models', () => {
+describe('tasks/core/merge-models', () => {
     const sandbox = sinon.sandbox.create();
     const model = new Model();
     const options = {modelPath: './some-model.json'};

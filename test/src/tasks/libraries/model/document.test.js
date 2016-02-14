@@ -2,7 +2,7 @@ var _ = require('lodash'),
     Q = require('q'),
     Document = require('../../../../../src/tasks/libraries/model/document');
 
-describe('task-libraries/model/Document', () => {
+describe('task/libraries/model/Document', () => {
     var sandbox = sinon.sandbox.create(),
         versionData = {
             baseUrl: '/libraries',

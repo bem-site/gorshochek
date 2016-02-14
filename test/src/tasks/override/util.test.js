@@ -1,7 +1,7 @@
 var Url = require('url'),
     util = require('../../../../src/tasks/override/util');
 
-describe('tasks-override/util', () => {
+describe('tasks/override/util', () => {
     describe('isAbsoluteHttpUrl', () => {
         it('should return true for absolute http url: "http://some-website.com"', () => {
             util.isAbsoluteHttpUrl(Url.parse('http://some-website.com')).should.equal(true);

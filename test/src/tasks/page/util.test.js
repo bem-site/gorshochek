@@ -3,7 +3,7 @@
 const Model = require('../../../../src/model');
 const util = require('../../../../src/tasks/page/util');
 
-describe('tasks-page/util', () => {
+describe('tasks/page/util', () => {
     const sandbox = sinon.sandbox.create();
 
     afterEach(() => {

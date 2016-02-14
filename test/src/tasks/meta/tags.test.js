@@ -3,7 +3,7 @@ var Q = require('q'),
     baseUtil = require('../../../../src/util'),
     generateTagPages = require('../../../../index').tasks.meta.generateTagPages;
 
-describe('tasks-meta/tags', () => {
+describe('tasks/meta/tags', () => {
     var sandbox = sinon.sandbox.create(),
         model = new Model();
 

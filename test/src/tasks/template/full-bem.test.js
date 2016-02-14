@@ -9,7 +9,7 @@ const BEMTREE = require('../../../stub/bemtree').BEMTREE;
 const BEMHTML = require('../../../stub/bemhtml').BEMHTML;
 const applyBEM = require('../../../../index').tasks.template.applyBEM;
 
-describe('template/full-bem', () => {
+describe('tasks/template/full-bem', () => {
     const sandbox = sinon.sandbox.create();
     const options = {
         bemtree: '../../../test/stub/bemtree.js',
