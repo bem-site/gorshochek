@@ -131,10 +131,9 @@ module.exports = (model, options) => {
 
     /**
      * Loads content from github repository via github API
-     * @param {...{Object}} params - parameters for github API call
      */
-    function getContentFromGithubSource() {
-        return Q.denodeify(api.executeAPIMethod.bind(api))('getContent', arguments);
+    function getContentFromGithubSource(options, headers) {
+        return Q.denodeify(api.executeAPIMethod.bind(api))('getContent', options, headers);
     }
 
     /**
@@ -142,8 +141,8 @@ module.exports = (model, options) => {
      * @returns {*|Promise.<T>}
      * @returns {Promise}
      */
-    function getSourceLastUpdateDate() {
-        return Q.denodeify(api.executeAPIMethod.bind(api))('getCommits', arguments)
+    function getSourceLastUpdateDate(options, headers) {
+        return Q.denodeify(api.executeAPIMethod.bind(api))('getCommits', options, headers)
             .catch(() => null)
             .then(commits => {
                 return (commits && commits.length) ?
@@ -155,8 +154,8 @@ module.exports = (model, options) => {
      * Returns information about repo issues section existence
      * @returns {*|Promise.<T>}
      */
-    function hasRepoIssues() {
-        return Q.denodeify(api.executeAPIMethod.bind(api))('get', arguments)
+    function hasRepoIssues(options, headers) {
+        return Q.denodeify(api.executeAPIMethod.bind(api))('get', options, headers)
             .get('has_issues')
             .catch(() => null);
     }
