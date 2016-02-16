@@ -10,6 +10,7 @@ module.exports = {
     },
     tasks: {
         core: {
+            importModel: require('./src/tasks/core/import-model'),
             mergeModels: require('./src/tasks/core/merge-models'),
             saveModel: require('./src/tasks/core/save-model'),
             rsync: require('./src/tasks/core/rsync')
