@@ -35,8 +35,8 @@ module.exports = (model) => {
     return () => {
         const getKeywords = p => {return p.tags ? p.tags.join(', ') : '';};
         model.getPages().forEach(page => {
-            page.header || (page.header = {});
-            page.header.meta = {
+            page.head || (page.head = {});
+            page.head.meta = {
                 ogUrl: page.url,
                 ogType: 'article',
                 description: page.title,

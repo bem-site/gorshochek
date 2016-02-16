@@ -33,7 +33,7 @@ module.exports = (model, options) => {
     options = options || {delimiter: ' / '};
     return util.getExecFunction(model, (map, page) => {
         const urlSet = util.getParentUrls(page).reverse();
-        page.header || (page.header = {});
-        page.header.title = urlSet.map(url => map[url]).join(options.delimiter);
+        page.head || (page.head = {});
+        page.head.title = urlSet.map(url => map[url]).join(options.delimiter);
     });
 };

@@ -12,7 +12,7 @@ describe('tasks/page/header-meta', () => {
 
     function getMetaFieldValue(result, field, pageIndex) {
         pageIndex = pageIndex || 0;
-        return result.getPages()[pageIndex].header.meta[field];
+        return result.getPages()[pageIndex].head.meta[field];
     }
 
     beforeEach(() => {
