@@ -12,8 +12,8 @@ const applyBEM = require('../../../../index').tasks.template.applyBEM;
 describe('tasks/template/full-bem', () => {
     const sandbox = sinon.sandbox.create();
     const options = {
-        bemtree: '../../../test/stub/bemtree.js',
-        bemhtml: '../../../test/stub/bemhtml.js',
+        bemtree: './test/stub/bemtree.js',
+        bemhtml: './test/stub/bemhtml.js',
         ctx: {}
     };
     const model = new Model();

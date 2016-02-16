@@ -37,8 +37,8 @@ module.exports = function(model, options) {
     options.destination = options.destination || './output';
     options.concurrency = options.concurrency || 20;
 
-    const BEMTREE = require(options.bemtree).BEMTREE;
-    const BEMHTML = require(options.bemhtml).BEMHTML;
+    const BEMTREE = require(path.join(process.cwd(), options.bemtree)).BEMTREE;
+    const BEMHTML = require(path.join(process.cwd(), options.bemhtml)).BEMHTML;
 
     /**
      * Receives pages for menu
