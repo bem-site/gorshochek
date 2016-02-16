@@ -34,7 +34,8 @@ class Model {
      */
     static _generateUrlPageMap(pages) {
         return pages.reduce((prev, page) => {
-            return _.set(prev, page.url, page);
+            prev[page.url] = page;
+            return prev;
         }, {});
     }
 
@@ -46,7 +47,8 @@ class Model {
      */
     static _generateUrlOrderMap(pages) {
         return pages.reduce((prev, page, index) => {
-            return _.set(prev, page.url, index);
+            prev[page.url] = index;
+            return prev;
         }, {});
     }
 

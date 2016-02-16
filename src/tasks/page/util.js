@@ -1,6 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
 const Q = require('q');
 
 /**
@@ -11,7 +10,8 @@ const Q = require('q');
  */
 exports.createPageTitlesMap = (pages) => {
     return pages.reduce((pagesMap, page) => {
-        return _.set(pagesMap, page.url, page.title);
+        pagesMap[page.url] = page.title;
+        return pagesMap;
     }, {});
 };
 
