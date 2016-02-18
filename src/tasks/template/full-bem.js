@@ -5,6 +5,8 @@ const _ = require('lodash');
 const Q = require('q');
 const baseUtil = require('../../util');
 
+const debug = require('debug')('full-bem');
+
 /**
  * Applies BEMTREE + BEMHTML templates to each of model pages
  * Saves result html to destination dir
@@ -84,8 +86,9 @@ module.exports = function(model, options) {
      * @returns {Promise}
      */
     function saveCompiledPage(page, html) {
-        console.log('save compiled page: ' + page.url);
         const filePath = path.join(options.destination, page.url, 'index.html');
+        debug(`${filePath} ${page.title}`);
+
         return baseUtil.writeFile(filePath, html);
     }
 
@@ -115,7 +118,11 @@ module.exports = function(model, options) {
                 .then(compoundPage.bind(null, page))
                 .then(createBEMJSON.bind(null, pages))
                 .then(BEMHTML.apply)
-                .then(saveCompiledPage.bind(null, page));
+                .then(saveCompiledPage.bind(null, page))
+                .catch(error => {
+                    console.error(`Error occurred while compiling page for url ${page.url}`);
+                    console.error(error.stack);
+                });
         }
     }
 

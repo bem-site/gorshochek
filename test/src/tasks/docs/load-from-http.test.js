@@ -159,4 +159,3 @@ describe('tasks/docs/load-from-http', () => {
         loadSourceFromHttp(model)().should.eventually.be.instanceOf(Model);
     });
 });
-
