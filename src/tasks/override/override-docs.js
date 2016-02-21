@@ -122,6 +122,7 @@ module.exports = (model) => {
      * @returns {String} replacement
      * @private
      */
+    /*
     function findImageSourceReplacement(imgSrc, page) {
         if(!imgSrc) {
             return;
@@ -149,6 +150,7 @@ module.exports = (model) => {
         debug(imgSrc + ' => ' + result);
         return result;
     }
+    */
 
     /**
      * Parses html source with help of cheerio model.
@@ -167,9 +169,11 @@ module.exports = (model) => {
             $(this).attr('href',
                 findLinkHrefReplacement($(this).attr('href'), page, sourceUrlsMap, existedUrls));
         });
+        /*
         $('img').each(function() {
             $(this).attr('src', findImageSourceReplacement($(this).attr('src'), page));
         });
+        */
         return $.html();
     }
 
