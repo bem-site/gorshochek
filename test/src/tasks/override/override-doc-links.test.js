@@ -3,7 +3,7 @@ var Q = require('q'),
     Model = require('../../../../src/model'),
     baseUtil = require('../../../../src/util'),
     util = require('../../../../src/tasks/override/util'),
-    overrideDocs = require('../../../../src/tasks/override/override-docs');
+    overrideDocs = require('../../../../src/tasks/override/override-doc-links');
 
 describe('tasks/override/override-docs', () => {
     var sandbox = sinon.sandbox.create(),

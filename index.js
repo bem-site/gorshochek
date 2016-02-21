@@ -31,7 +31,8 @@ module.exports = {
             createSearchMeta: require('./src/tasks/page/search-meta')
         },
         override: {
-            overrideDocLinks: require('./src/tasks/override/override-docs')
+            overrideDocLinks: require('./src/tasks/override/override-doc-links'),
+            processDocImages: require('./src/tasks/override/process-doc-images')
         },
         sitemap: {
             createSitemapXML: require('./src/tasks/sitemap/sitemap-xml')

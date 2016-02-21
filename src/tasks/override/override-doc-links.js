@@ -8,7 +8,7 @@ const cheerio = require('cheerio');
 const baseUtil = require('../../util');
 const util = require('./util');
 
-const debug = require('debug')('override-docs');
+const debug = require('debug')('override-doc-links');
 
 /**
  * Override links in *.html source files

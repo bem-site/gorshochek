@@ -21,7 +21,7 @@ require('./src/tasks/docs/transform-md-html.test');
 require('./src/tasks/meta/tags.test');
 
 require('./src/tasks/override/util.test');
-require('./src/tasks/override/override-docs.test');
+require('./src/tasks/override/override-doc-links.test');
 
 require('./src/tasks/page/util.test');
 require('./src/tasks/page/header-title.test');

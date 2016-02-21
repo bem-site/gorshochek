@@ -17,6 +17,7 @@ Q()
     .then(tasks.page.createHeaderMeta(model))
     .then(tasks.page.createBreadcrumbs(model))
     .then(tasks.override.overrideDocLinks(model))
+    .then(tasks.override.processDocImages(model))
     .then(tasks.sitemap.createSitemapXML(model, {host: 'https://ru.bem.info'}))
     .then(tasks.core.saveModel(model))
     .then(tasks.core.rsync(model, {
