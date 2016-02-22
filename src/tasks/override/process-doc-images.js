@@ -67,7 +67,7 @@ module.exports = (model, options) => {
         }
 
         const filePath = Path.join(options.imageFolder, sha1(imageUrl));
-        return Q.denodeify(fs.exists)(Path.join(baseUtil.getCacheFolder(), filePath))
+        return baseUtil.isFileExists(Path.join(baseUtil.getCacheFolder(), filePath))
             .then(exists => {
                 if(exists) {
                     return Q(filePath);

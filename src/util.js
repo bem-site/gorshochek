@@ -146,6 +146,10 @@ exports.loadFileToCacheFromUrl = (url, filePath, fallbackValue) => {
     return defer.promise;
 };
 
+exports.isFileExists = (filePath) => {
+    return Q.denodeify(fs.stat)(filePath).then(stats => stats.isFile());
+};
+
 /**
  * Processes all pages in model which satisfies to given criteria function
  * @param {Model} model - application model instance
