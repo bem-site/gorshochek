@@ -7,7 +7,7 @@
  */
 exports.isAbsoluteHttpUrl = (url) => {
     // url.protocol is not defined for relative links
-    return !!url.protocol && url.protocol.match(/^https?:\/\//)
+    return !!url.protocol && /^https?/.test(url.protocol)
 };
 
 /**

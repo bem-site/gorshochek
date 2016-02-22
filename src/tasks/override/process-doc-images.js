@@ -30,6 +30,12 @@ module.exports = (model, options) => {
         return !!page.contentFile && _.includes(page.contentFile, '.html');
     }
 
+    /**
+     * Resolves full image remote url based on page source
+     * @param {String} imgSrc - value of img src attribute
+     * @param {Object} page - model page entity
+     * @returns {String|null}
+     */
     function resolveImageUrl(imgSrc, page) {
         if(!imgSrc) {
             return null;
@@ -48,6 +54,13 @@ module.exports = (model, options) => {
         return Url.resolve(Url.format(source), imgSrc);
     }
 
+    /**
+     * Tries to load image from resolved image url
+     * Saves loaded image file into static folder and returns promise with path to this file
+     * @param {String} imgSrc - img src attribute value
+     * @param {Object} page - model page entity object
+     * @returns {Promise}
+     */
     function replaceImageSource(imgSrc, page) {
         const imageUrl = resolveImageUrl(imgSrc, page);
         if(!imageUrl) {
@@ -70,6 +83,15 @@ module.exports = (model, options) => {
         return defer.promise;
     }
 
+    /**
+     * Parses html source with help of cheerio model.
+     * Finds all "img" tags with their href and src attributes.
+     * Iterates over founded tags and finds replacement for each src attributes
+     * @see https://www.npmjs.com/package/cheerio
+     * @param {Object} page - model page object
+     * @param {String} source - page source html string
+     * @returns {String}
+     */
     function override(page, source) {
         const $ = cheerio.load(source);
         const promises = [];
