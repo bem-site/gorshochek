@@ -5,7 +5,6 @@ const Path = require('path');
 const Url = require('url');
 const _ = require('lodash');
 const Q = require('q');
-const got = require('got');
 const sha1 = require('sha1');
 const cheerio = require('cheerio');
 const baseUtil = require('../../util');
@@ -66,21 +65,15 @@ module.exports = (model, options) => {
         if(!imageUrl) {
             return Q(null);
         }
-        const defer = Q.defer();
+
         const filePath = Path.join(options.imageFolder, sha1(imageUrl));
-
-        debug(`load image from ${imageUrl} to ${filePath}`);
-
-        got.stream(imageUrl)
-            .pipe(fs.createWriteStream(Path.join(baseUtil.getCacheFolder(), filePath)))
-            .on('close', () => defer.resolve(filePath))
-            .on('error', error => {
-                console.error(`Error occurred while loading: ${imageUrl}`);
-                console.error(error.stack);
-                defer.resolve(imgSrc);
+        return Q.denodeify(fs.exists)(Path.join(baseUtil.getCacheFolder(), filePath))
+            .then(exists => {
+                if(exists) {
+                    return Q(filePath);
+                }
+                return baseUtil.loadFileToCacheFromUrl(imageUrl, filePath, imgSrc);
             });
-
-        return defer.promise;
     }
 
     /**

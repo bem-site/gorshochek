@@ -1,5 +1,4 @@
 var Q = require('q'),
-    _ = require('lodash'),
     Model = require('../../../../src/model'),
     baseUtil = require('../../../../src/util'),
     util = require('../../../../src/tasks/override/util'),

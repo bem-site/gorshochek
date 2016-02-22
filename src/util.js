@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const Q = require('q');
 const _ = require('lodash');
+const got = require('got');
 const fsExtra = require('fs-extra');
 
 const debug = require('debug')('util');
@@ -118,6 +119,31 @@ exports.writeFile = (filePath, content) => {
             console.error(`Error occured while saving file ${filePath}`);
             throw error;
         });
+};
+
+/**
+ * Loads data from given url and pipes as stream to filePath resolved from cache folder
+ * Returns promise with fallbackValue on error
+ * @param {String} url - url of remote source
+ * @param {String} filePath - path for file
+ * @param {Object|null} fallbackValue which should be returned on error
+ * @returns {Promise}
+ */
+exports.loadFileToCacheFromUrl = (url, filePath, fallbackValue) => {
+    debug(`load file to cache from ${url} to ${filePath}`);
+
+    const fullPath = path.join(this.getCacheFolder(), filePath);
+    const defer = Q.defer();
+    got.stream(url)
+        .pipe(fs.createWriteStream(fullPath))
+        .on('close', () => defer.resolve(filePath))
+        .on('error', error => {
+            console.error(`Error occurred while loading: ${url}`);
+            console.error(error.stack);
+            defer.resolve(fallbackValue);
+        });
+
+    return defer.promise;
 };
 
 /**

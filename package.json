@@ -85,6 +85,7 @@
     "istanbul": "^0.3.x",
     "jscs": "^2.5.0",
     "jshint-stylish": "^2.0.1",
+    "memorystream": "^0.3.1",
     "mocha": "^2.3.4",
     "mocha-lcov-reporter": "^1.0.0",
     "nock": "^6.x",

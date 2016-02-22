@@ -22,6 +22,7 @@ require('./src/tasks/meta/tags.test');
 
 require('./src/tasks/override/util.test');
 require('./src/tasks/override/override-doc-links.test');
+require('./src/tasks/override/process-doc-images.test');
 
 require('./src/tasks/page/util.test');
 require('./src/tasks/page/header-title.test');
