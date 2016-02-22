@@ -1,9 +1,8 @@
 var Q = require('q'),
-    _ = require('lodash'),
     Model = require('../../../../src/model'),
     baseUtil = require('../../../../src/util'),
     util = require('../../../../src/tasks/override/util'),
-    overrideDocs = require('../../../../src/tasks/override/override-docs');
+    overrideDocs = require('../../../../src/tasks/override/override-doc-links');
 
 describe('tasks/override/override-docs', () => {
     var sandbox = sinon.sandbox.create(),
@@ -38,6 +37,7 @@ describe('tasks/override/override-docs', () => {
         });
     });
 
+    /*
     describe('override image sources', () => {
         beforeEach(() => {
             model.setPages([{url: '/url1/', contentFile: '/url1/index.html'}]);
@@ -83,6 +83,7 @@ describe('tasks/override/override-docs', () => {
             });
         });
     });
+    */
 
     describe('override link href attributes', () => {
         function shouldRewriteFromTo(from, to) {
