@@ -41,7 +41,7 @@ describe('tasks/override/process-doc-images', () => {
 
     describe('override image sources', () => {
         beforeEach(() => {
-            sandbox.stub(fs, 'exists').yields(null, false);
+            sandbox.stub(baseUtil, 'isFileExists').returns(Q(false));
             model.setPages([{url: '/url1/', contentFile: '/url1/index.html'}]);
         });
 
@@ -105,7 +105,7 @@ describe('tasks/override/process-doc-images', () => {
             const imageUrl = 'http://some-host/some-image.png';
 
             baseUtil.readFileFromCache.returns(Q(`<img src="${imageUrl}">`));
-            fs.exists.yields(null, true);
+            baseUtil.isFileExists.returns(Q(true));
 
             return processDocImages(model)().then(() => {
                 baseUtil.loadFileToCacheFromUrl.should.not.be.called;
