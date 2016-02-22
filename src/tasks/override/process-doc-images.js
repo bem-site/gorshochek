@@ -67,6 +67,8 @@ module.exports = (model, options) => {
         }
 
         const filePath = Path.join(options.imageFolder, sha1(imageUrl));
+
+        debug(`load image from: ${imageUrl} to: ${filePath}`);
         return baseUtil.isFileExists(Path.join(baseUtil.getCacheFolder(), filePath))
             .then(exists => {
                 if(exists) {

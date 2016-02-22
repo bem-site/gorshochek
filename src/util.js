@@ -147,7 +147,11 @@ exports.loadFileToCacheFromUrl = (url, filePath, fallbackValue) => {
 };
 
 exports.isFileExists = (filePath) => {
-    return Q.denodeify(fs.stat)(filePath).then(stats => stats.isFile());
+    debug(`is file exists: ${filePath}`);
+
+    return Q.denodeify(fs.stat)(filePath)
+        .then(stats => stats.isFile())
+        .catch(error => false);
 };
 
 /**
