@@ -9,6 +9,7 @@ require('./src/util.test');
 
 require('./src/tasks/core/merge-models.test');
 require('./src/tasks/core/save-model.test');
+require('./src/tasks/core/import-model.test');
 require('./src/tasks/core/rsync.test');
 
 require('./src/tasks/docs/github/index.test');
