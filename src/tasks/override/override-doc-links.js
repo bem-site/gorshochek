@@ -164,7 +164,7 @@ module.exports = (model) => {
      * @returns {String}
      */
     function override(page, sourceUrlsMap, existedUrls, source) {
-        const $ = cheerio.load(source);
+        const $ = cheerio.load(source, {decodeEntities: false});
         $('a').each(function() {
             $(this).attr('href',
                 findLinkHrefReplacement($(this).attr('href'), page, sourceUrlsMap, existedUrls));
@@ -174,7 +174,7 @@ module.exports = (model) => {
             $(this).attr('src', findImageSourceReplacement($(this).attr('src'), page));
         });
         */
-        return $.html();
+        return _.unescape($.html());
     }
 
     /**

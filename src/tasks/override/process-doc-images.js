@@ -88,13 +88,13 @@ module.exports = (model, options) => {
      * @returns {String}
      */
     function override(page, source) {
-        const $ = cheerio.load(source);
+        const $ = cheerio.load(source, {decodeEntities: false});
         const promises = [];
         $('img').each(function() {
              promises.push(replaceImageSource($(this).attr('src'), page)
                  .then(src => $(this).attr('src', src)));
         });
-        return Q.allSettled(promises).then(() => $.html());
+        return Q.allSettled(promises).then(() => _.unescape($.html()));
     }
 
     function processPage(model, page) {
