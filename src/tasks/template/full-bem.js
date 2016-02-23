@@ -12,8 +12,8 @@ const debug = require('debug')('full-bem');
  * Saves result html to destination dir
  * @param {Model} model - application model instance
  * @param {Object} options - task options object
- * @param {String} options.bemtree - path to BEMTREE template file
- * @param {String} options.bemhtml - path to BEMHTML template file
+ * @param {Object} options.bemtree - paths to BEMTREE template files { bundle1: path1, bundle2: path2, …}
+ * @param {Object} options.bemhtml - paths to BEMHTML template files { bundle1: path1, bundle2: path2, …}
  * @param {String} [options.source] - source data directory path
  * @param {String} [options.destination] - output folder path for compiled html pages
  * @param {Number} [options.concurrency] - number of pages which should be processed per time
@@ -24,11 +24,11 @@ module.exports = function(model, options) {
     options = options || {};
 
     if(!options.bemtree) {
-        throw new Error('Path to BEMTREE template file was not set');
+        throw new Error('Paths to BEMTREE template files was not set');
     }
 
     if(!options.bemhtml) {
-        throw new Error('Path to BEMHTML template file was not set');
+        throw new Error('Paths to BEMHTML template files was not set');
     }
 
     if(!options.ctx) {
@@ -39,8 +39,15 @@ module.exports = function(model, options) {
     options.destination = options.destination || './output';
     options.concurrency = options.concurrency || 20;
 
-    const BEMTREE = require(path.join(process.cwd(), options.bemtree)).BEMTREE;
-    const BEMHTML = require(path.join(process.cwd(), options.bemhtml)).BEMHTML;
+    const BEMTREE = {};
+    for(var bundle in options.bemtree) {
+        BEMTREE[bundle] = require(path.join(process.cwd(), options.bemtree[bundle])).BEMTREE;
+    }
+
+    const BEMHTML = {};
+    for(var bundle in options.bemhtml) {
+        BEMHTML[bundle] = require(path.join(process.cwd(), options.bemhtml[bundle])).BEMHTML;
+    }
 
     /**
      * Receives pages for menu
@@ -76,7 +83,7 @@ module.exports = function(model, options) {
         const ctx = {};
         ctx.block = options.ctx.block;
         ctx.data = _.merge({page, pages}, options.ctx.data);
-        return BEMTREE.apply(ctx);
+        return BEMTREE[page.bundle].apply(ctx);
     }
 
     /**
@@ -100,7 +107,7 @@ module.exports = function(model, options) {
      */
     function compoundPage(page, content) {
         if(_.includes(page.contentFile, '.js')) {
-            content = BEMHTML.apply(vm.runInNewContext(content))
+            content = BEMHTML[page.bundle].apply(vm.runInNewContext(content))
         }
         return _.set(page, 'content', content);
     }
@@ -117,7 +124,7 @@ module.exports = function(model, options) {
                 .then(getPageContent)
                 .then(compoundPage.bind(null, page))
                 .then(createBEMJSON.bind(null, pages))
-                .then(BEMHTML.apply)
+                .then(BEMHTML[page.bundle].apply)
                 .then(saveCompiledPage.bind(null, page))
                 .catch(error => {
                     console.error(`Error occurred while compiling page for url ${page.url}`);
