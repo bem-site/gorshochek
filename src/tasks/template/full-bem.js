@@ -14,13 +14,16 @@ const debug = require('debug')('full-bem');
  * @param {Object} options - task options object
  * @param {String} options.bemtree - path to BEMTREE template file
  * @param {String} options.bemhtml - path to BEMHTML template file
- * @param {String} [options.source] - source data directory path
- * @param {String} [options.destination] - output folder path for compiled html pages
+ * @param {String} [options.bundle] - bundle name. (index by default)
+ * @param {String} [options.source] - source data directory path (./data by default)
+ * @param {String} [options.destination] - output folder path for compiled html pages (./output by default)
  * @param {Number} [options.concurrency] - number of pages which should be processed per time
  * @param {Object} [options.ctx] - advanced context
  * @returns {Function}
  */
 module.exports = function(model, options) {
+    const DEFAULT_BUNDLE = 'index';
+
     options = options || {};
 
     if(!options.bemtree) {
@@ -35,6 +38,7 @@ module.exports = function(model, options) {
         throw new Error('Context was not set')
     }
 
+    options.bundle = options.bundle || DEFAULT_BUNDLE;
     options.source = options.source || './data';
     options.destination = options.destination || './output';
     options.concurrency = options.concurrency || 20;
@@ -42,13 +46,18 @@ module.exports = function(model, options) {
     const BEMTREE = require(path.join(process.cwd(), options.bemtree)).BEMTREE;
     const BEMHTML = require(path.join(process.cwd(), options.bemhtml)).BEMHTML;
 
+    function getCriteria(page) {
+        page.bundle = page.bundle || DEFAULT_BUNDLE;
+        return page.bundle === options.bundle;
+    }
+
     /**
      * Receives pages for menu
      * Pick only url, title and site fields from each of model pages
      * @returns {Object[]}
      */
     function getPagesDataForMenuCreation() {
-        return model.getPages().map(page => _.pick(page, ['url', 'site', 'title']));
+        return model.getPages().map(page => _.pick(page, ['url', 'site', 'title', 'type']));
     }
 
     /**
@@ -128,7 +137,7 @@ module.exports = function(model, options) {
 
     return () => {
         return baseUtil
-            .processPagesAsync(model, _.identity, createProcessPageFunc(), options.concurrency)
+            .processPagesAsync(model, getCriteria, createProcessPageFunc(), options.concurrency)
             .thenResolve(model);
     };
 };

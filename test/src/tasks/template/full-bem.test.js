@@ -111,6 +111,7 @@ describe('tasks/template/full-bem', () => {
                 data: {
                     foo: 'bar',
                     page: {
+                        bundle: 'index',
                         content: 'some-content',
                         contentFile: '/url1/index.html',
                         site: '/url1/',
