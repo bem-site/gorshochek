@@ -22,34 +22,94 @@ $ npm install --save gorshochek
 
 ## Примеры использования
 
-Простой запуск сборки путем последовательного выполнения всех необходимых задач:
-```js
-var Q = require('q'),
-    gorshochek = require('gorshochek'),
-    token = process.env.TOKEN;
-
-var model = gorshochek.createModel(),
-    tasks = gorshochek.tasks;
-
-Q()
-    .then(tasks.core.mergeModels(model, {modelPath: './examples/model.ru.json'}))
-    .then(tasks.meta.generateTagPages(model))
-    .then(tasks.docs.loadFromGithub(model, {token: token}))
-    .then(tasks.docs.loadFromFile(model))
-    .then(tasks.docs.transformMdToHtml(model))
-    .then(tasks.page.createHeaderTitle(model))
-    .then(tasks.page.createHeaderMeta(model))
-    .then(tasks.page.createBreadcrumbs(model))
-    .then(tasks.override.overrideDocLinks(model))
-    .then(tasks.sitemap.createSitemapXML(model, {host: 'https://ru.bem.info'}))
-    .then(tasks.core.saveModel(model))
-    .then(tasks.core.rsync(model, {
-        dest: './data',
-        exclude: ['*.meta.json', 'model.json', '*.md']
-    }));
-```
+Простой запуск сборки путем последовательного выполнения всех необходимых задач: [пример](./examples/native-full.js)
 
 Запуск с помощью [gulp](https://npmjs.org/package/gulp) можно посмотреть [здесь](./examples/gulp-full.js)
+
+## Спецификация модели данных
+
+Модель данных описывается в JSON-файле, который должен содержать массив объектов каждый из которых представляет
+собой совокупность мета-данных для определенной страницы сайта. Пример такой структуры приведен ниже:
+```json
+[
+ {
+    "url": "/",
+    "site": "/",
+    "title": "БЭМ",
+    "content": "БЭМ прекрасен"
+  },
+  {
+    "url": "/methodology",
+    "site": "/methodology/",
+    "title": "Методология",
+    "source": "./examples/bemjson/methodology.ru.bemjson.js",
+    "type": "bemjson.js"
+  },
+  ...
+]  
+```
+
+Каждый объект в массиве страниц модели может иметь следующий набор полей:
+
+#### url
+Url страницы в браузере.
+* Тип данных: `String`
+* Обязательное поле 
+* Должно быть уникальным
+* Должно заканчиваться символом `/`
+
+#### site
+Url раздела сайта для страницы
+* Тип данных: `String`
+* Обязательное поле
+* Должно заканчиваться символом `/`
+
+#### title
+
+Заголовок страницы. Будет использован при построении меню, хлебных крошек, тега `<title>` страницы и т.д.
+* Тип данных: `String`
+* Обязательное поле
+
+#### published
+
+Флаг страницы, при указании которого в false страница будет исключена из сборки.
+* Тип данных: `Boolean`
+* Значение по умолчанию: `true`
+
+#### content
+
+Контент страницы. Может быть использован для страниц у которых есть небольшой неизменяемый контент.
+* Тип данных: `String`
+* Значение по умолчанию: нет
+
+#### source
+Ccылка на источник с которого будет загружен контент для страницы. 
+Может быть относительной (относительно рабочей директории проекта) ссылкой 
+на файл локальной файловой системы или http-ресурс.
+* Тип данных: `String`
+* Значение по умолчанию: нет
+
+Примеры:
+* `./examples/bemjson/methodology.ru.bemjson.js`
+* `https://github.com/bem-site/gorshochek/README.md`
+
+#### type
+
+Тип данных страницы, например: `bemjson.js`. Используется при шаблонизации страниц.
+* Тип данных: `String`
+* Значение по умолчанию: нет
+
+#### bundle
+
+Имя BEM - бандла для сборки страниц.
+* Тип данных: `String`
+* Значение по умолчанию: `index`
+
+#### tags
+
+Массив тегов для страницы, для которых могут быть построены соответствующие страницы.
+* Тип данных: `String[]`
+* Значение по умолчанию: `[]`
 
 ## Создание собственной задачи сборки
 
@@ -64,7 +124,7 @@ Q()
 выводит в консоль параметр `name` переданный ей в качестве опции:
 
 ```js
-export default function(model, options = {}) {
+module.exports = function(model, options = {}) {
     return function() {
         console.log('Hello ' + options.name);
         return Promise.resolve(model);
