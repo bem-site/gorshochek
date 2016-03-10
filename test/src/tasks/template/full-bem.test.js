@@ -119,12 +119,32 @@ describe('tasks/template/full-bem', () => {
                         url: '/url1/'
                     },
                     pages: [{
+                        url: '/url1/',
                         site: '/url1/',
                         title: 'some title 1',
-                        url: '/url1/'
+                        contentFile: '/url1/index.html',
+                        bundle: 'index',
+                        content: 'some-content'
                     }]
                 }
             });
+        });
+    });
+
+    it('should apply BEMHTML to passed "*.js" file', () => {
+        model.setPages([
+            {
+                content: "[{ block: 'b1', content: 'b1-content' }]",
+                contentFile: 'bemjson.js'
+            }
+        ]);
+
+        return applyBEM(model, options)().then(() => {
+            BEMHTML.apply.should.be.calledTwice;
+            BEMHTML.apply.should.be.calledWith([{
+                block: 'b1',
+                content: 'b1-content'
+            }]);
         });
     });
 

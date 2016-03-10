@@ -52,15 +52,6 @@ module.exports = function(model, options) {
     }
 
     /**
-     * Receives pages for menu
-     * Pick only url, title and site fields from each of model pages
-     * @returns {Object[]}
-     */
-    function getPagesDataForMenuCreation() {
-        return model.getPages().map(page => _.pick(page, ['url', 'site', 'title', 'type']));
-    }
-
-    /**
      * Loads page content
      * @param {Object} page
      * @returns {Object}
@@ -119,7 +110,7 @@ module.exports = function(model, options) {
      * @returns {Function}
      */
     function createProcessPageFunc() {
-        const pages = getPagesDataForMenuCreation();
+        const pages = model.getPages();
 
         return (model, page) => {
             return Q(page)
