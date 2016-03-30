@@ -174,7 +174,7 @@ module.exports = (model) => {
             $(this).attr('src', findImageSourceReplacement($(this).attr('src'), page));
         });
         */
-        return _.unescape($.html());
+        return $.html();
     }
 
     /**

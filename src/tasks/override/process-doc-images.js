@@ -94,7 +94,7 @@ module.exports = (model, options) => {
              promises.push(replaceImageSource($(this).attr('src'), page)
                  .then(src => $(this).attr('src', src)));
         });
-        return Q.allSettled(promises).then(() => _.unescape($.html()));
+        return Q.allSettled(promises).then(() => $.html());
     }
 
     function processPage(model, page) {
