@@ -56,6 +56,7 @@
     "url": "https://github.com/bem-site/gorshochek/blob/master/LICENSE"
   },
   "dependencies": {
+    "borschik": "^1.5.3",
     "cheerio": "^0.20.0",
     "debug": "^2.2.0",
     "deep-diff": "^0.3.x",

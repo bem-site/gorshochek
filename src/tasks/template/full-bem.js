@@ -3,6 +3,7 @@ const path = require('path');
 
 const _ = require('lodash');
 const Q = require('q');
+const freeze = require('borschik/lib/freeze');
 const baseUtil = require('../../util');
 
 const debug = require('debug')('full-bem');
@@ -17,6 +18,7 @@ const debug = require('debug')('full-bem');
  * @param {String} [options.bundle] - bundle name. (index by default)
  * @param {String} [options.source] - source data directory path (./data by default)
  * @param {String} [options.destination] - output folder path for compiled html pages (./output by default)
+ * @param {String} [options.destinationRoot] - output folder path for freezed images, frozen image URL is substraction of destinationRoot from full file path (`options.destination` by default)
  * @param {Number} [options.concurrency] - number of pages which should be processed per time
  * @param {Object} [options.ctx] - advanced context
  * @returns {Function}
@@ -41,6 +43,7 @@ module.exports = function(model, options) {
     options.bundle = options.bundle || DEFAULT_BUNDLE;
     options.source = options.source || './data';
     options.destination = options.destination || './output';
+    options.destinationRoot = options.destinationRoot || options.destination;
     options.concurrency = options.concurrency || 20;
 
     const BEMTREE = require(path.join(process.cwd(), options.bemtree)).BEMTREE;
@@ -100,7 +103,13 @@ module.exports = function(model, options) {
      */
     function compoundPage(page, content) {
         if(_.includes(page.contentFile, '.js')) {
-            content = BEMHTML.apply(vm.runInNewContext(content))
+            content = BEMHTML.apply(vm.runInNewContext(content, {
+                freeze: file => {
+                    var absFilePath = path.resolve(path.dirname(page.source), file);
+
+                    return freeze.freeze(absFilePath).replace(path.resolve(options.destinationRoot), '');
+                }
+            }));
         }
         return _.set(page, 'content', content);
     }
