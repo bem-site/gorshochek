@@ -54,7 +54,7 @@ describe('tasks/override/process-doc-images', () => {
         });
 
         it('should load images given by absolute http urls in html', () => {
-            const staticPath = '/static/004be58d47d1c4a523e00e086e3832bb2abc56b3';
+            const staticPath = '/static/AEvljUfRxKUj4A4Ibjgyuyq8VrM.png';
             const imageUrl = 'http://some-host/some-image.png';
 
             baseUtil.readFileFromCache.returns(Q(`<img src="${imageUrl}">`));
@@ -68,7 +68,7 @@ describe('tasks/override/process-doc-images', () => {
         });
 
         it('should load images given by relative urls in html', () => {
-            const staticPath = '/static/004be58d47d1c4a523e00e086e3832bb2abc56b3';
+            const staticPath = '/static/AEvljUfRxKUj4A4Ibjgyuyq8VrM.png';
             const imageUrl = '../some-image.png';
 
             baseUtil.readFileFromCache.returns(Q(`<img src="${imageUrl}">`));
@@ -84,7 +84,7 @@ describe('tasks/override/process-doc-images', () => {
         });
 
         it('should load images given by relative urls for github source', () => {
-            const staticPath = '/static/95170956e857f816d18d4c73be0449ae7a53c939';
+            const staticPath = '/static/lRcJVuhX-BbRjUxzvgRJrnpTyTk.png';
             const imageUrl = '../some-image.png';
 
             baseUtil.readFileFromCache.returns(Q(`<img src="${imageUrl}">`));
@@ -101,7 +101,7 @@ describe('tasks/override/process-doc-images', () => {
         });
 
         it('should not load image file if it already exists in cache', function() {
-            const staticPath = '/static/004be58d47d1c4a523e00e086e3832bb2abc56b3';
+            const staticPath = '/static/AEvljUfRxKUj4A4Ibjgyuyq8VrM.png';
             const imageUrl = 'http://some-host/some-image.png';
 
             baseUtil.readFileFromCache.returns(Q(`<img src="${imageUrl}">`));
