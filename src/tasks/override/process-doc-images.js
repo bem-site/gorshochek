@@ -17,6 +17,7 @@ module.exports = (model, options) => {
 
     options.concurrency = options.concurrency || 20;
     options.imageFolder = options.imageFolder || '/static';
+    options.root = options.root || '';
 
     baseUtil.createFolder(Path.join(baseUtil.getCacheFolder(), options.imageFolder));
 
@@ -94,7 +95,7 @@ module.exports = (model, options) => {
         const promises = [];
         $('img').each(function() {
              promises.push(replaceImageSource($(this).attr('src'), page)
-                 .then(src => $(this).attr('src', src)));
+                 .then(src => $(this).attr('src', src ? options.root + src : src)));
         });
         return Q.allSettled(promises).then(() => $.html());
     }
