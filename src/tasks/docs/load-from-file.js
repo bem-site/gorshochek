@@ -46,10 +46,10 @@ module.exports = (model) => {
 
         const filePath = page.source; // относительный путь к файлу
         const fileName = path.basename(filePath); // имя файла (с расширением)
-        const fileExt = path.extname(fileName); // расширение файла
+        const fileExt = fileName.replace(/.*?\./, ''); // расширение файла
 
         const absFilePath = path.resolve(filePath);
-        const cacheFilePath = path.join(page.url, ('index' + fileExt));
+        const cacheFilePath = path.join(page.url, ('index.' + fileExt));
 
         const onAddedDocument = (promise) => {
             debug('Doc added: %s %s', page.url, page.title);
