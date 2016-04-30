@@ -131,20 +131,17 @@ describe('tasks/template/full-bem', () => {
         });
     });
 
-    it('should apply BEMHTML to passed "*.js" file', () => {
+    it('should apply BEMHTML to passed "*.bemjson.js" file', () => {
         model.setPages([
             {
+                url: '/test-url/',
                 content: "[{ block: 'b1', content: 'b1-content' }]",
-                contentFile: 'bemjson.js'
+                contentFile: 'index.bemjson.js'
             }
         ]);
 
         return applyBEM(model, options)().then(() => {
             BEMHTML.apply.should.be.calledTwice;
-            BEMHTML.apply.should.be.calledWith([{
-                block: 'b1',
-                content: 'b1-content'
-            }]);
         });
     });
 
