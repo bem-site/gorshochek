@@ -1,9 +1,9 @@
-const vm = require('vm');
 const path = require('path');
 
 const _ = require('lodash');
 const Q = require('q');
 const freeze = require('freeze');
+const safeEval = require('node-eval');
 const baseUtil = require('../../util');
 
 const debug = require('debug')('full-bem');
@@ -115,9 +115,14 @@ module.exports = function(model, options) {
      * @returns {Object} page
      */
     function compoundPage(page, content) {
-        if(_.endsWith(page.contentFile, '.bemjson.js')) {
-            content = _bemhtml(vm.runInNewContext(content));
+        if(_.endsWith(page.contentFile, '.js')) {
+            content = safeEval(content, page.contentFile);
+
+            if(_.endsWith(page.contentFile, '.bemjson.js')) {
+                content = _bemhtml(content);
+            }
         }
+
         return _.set(page, 'content', content);
     }
 
