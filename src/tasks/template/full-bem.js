@@ -3,7 +3,7 @@ const path = require('path');
 
 const _ = require('lodash');
 const Q = require('q');
-const freeze = require('borschik/lib/freeze');
+const freeze = require('freeze');
 const baseUtil = require('../../util');
 
 const debug = require('debug')('full-bem');
@@ -17,6 +17,7 @@ const debug = require('debug')('full-bem');
  * @param {String} options.bemhtml - path to BEMHTML template file
  * @param {String} [options.bundle] - bundle name. (index by default)
  * @param {String} [options.source] - source data directory path (./data by default)
+ * @param {String} [options.static] - path to folder with static resources (./static by default)
  * @param {String} [options.destination] - output folder path for compiled html pages (./output by default)
  * @param {String} [options.destinationRoot] - output folder path for freezed images, frozen image URL is substraction of destinationRoot from full file path (`options.destination` by default)
  * @param {Number} [options.concurrency] - number of pages which should be processed per time
@@ -42,12 +43,24 @@ module.exports = function(model, options) {
 
     options.bundle = options.bundle || DEFAULT_BUNDLE;
     options.source = options.source || './data';
+    options.static = options.static || './static';
     options.destination = options.destination || './output';
     options.destinationRoot = options.destinationRoot || options.destination;
     options.concurrency = options.concurrency || 20;
 
     const BEMTREE = require(path.join(process.cwd(), options.bemtree)).BEMTREE;
     const BEMHTML = require(path.join(process.cwd(), options.bemhtml)).BEMHTML;
+
+    function _bemhtml(bemjson) {
+        return BEMHTML.apply({
+            block: 'root',
+            content: bemjson,
+            freeze: freeze.file({
+                folder: options.static,
+                cutPrefix: options.destinationRoot
+            })
+        });
+    }
 
     function getCriteria(page) {
         page.bundle = page.bundle || DEFAULT_BUNDLE;
@@ -102,14 +115,8 @@ module.exports = function(model, options) {
      * @returns {Object} page
      */
     function compoundPage(page, content) {
-        if(_.includes(page.contentFile, '.js')) {
-            content = BEMHTML.apply(vm.runInNewContext(content, {
-                freeze: file => {
-                    var absFilePath = path.resolve(path.dirname(page.source), file);
-
-                    return freeze.freeze(absFilePath).replace(path.resolve(options.destinationRoot), '');
-                }
-            }));
+        if(_.endsWith(page.contentFile, '.bemjson.js')) {
+            content = _bemhtml(vm.runInNewContext(content));
         }
         return _.set(page, 'content', content);
     }
@@ -126,7 +133,7 @@ module.exports = function(model, options) {
                 .then(getPageContent)
                 .then(compoundPage.bind(null, page))
                 .then(createBEMJSON.bind(null, pages))
-                .then(BEMHTML.apply)
+                .then(_bemhtml)
                 .then(saveCompiledPage.bind(null, page))
                 .catch(error => {
                     console.error(`Error occurred while compiling page for url ${page.url}`);
