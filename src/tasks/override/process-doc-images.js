@@ -69,7 +69,7 @@ module.exports = (model, options) => {
 
         // FIXME: freeze file content, not imageUrl !!!
         const freezeFileName = freeze.fixBase64(freeze.sha1Base64(imageUrl)) + Path.extname(imageUrl);
-        const filePath = Path.join(options.imageFolder, freezeFileName);
+        const filePath = Path.join(options.imageFolder, freezeFileName).split('?')[0];
 
         debug(`load image from: ${imageUrl} to: ${filePath}`);
         return baseUtil.isFileExists(Path.join(baseUtil.getCacheFolder(), filePath))
