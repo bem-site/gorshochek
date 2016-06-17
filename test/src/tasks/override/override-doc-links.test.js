@@ -86,10 +86,15 @@ describe('tasks/override/override-docs', () => {
     */
 
     describe('override link href attributes', () => {
-        function shouldRewriteFromTo(from, to) {
+        var params = {
+            host: 'https://en.bem.info',
+            root: '/bem.info/en'
+        };
+
+        function shouldRewriteFromTo(from, to, params) {
             baseUtil.readFileFromCache.returns(Q(from));
 
-            return overrideDocs(model)().then(() => {
+            return overrideDocs(model, params)().then(() => {
                 baseUtil.writeFileToCache.should.be.calledWith('/url1/index.html', to);
             });
         }
@@ -147,7 +152,39 @@ describe('tasks/override/override-docs', () => {
         });
 
             it('should replace relative link (with anchor) to gh source', () => {
-            return shouldRewriteFromTo('<a href="./some-path2#anchor"></a>', '<a href="/url2#anchor"></a>');
+            return shouldRewriteFromTo('<a href="./some-path2#anchor"></a>', '<a href="/url2/#anchor"></a>');
+        });
+
+        it('should replace absolute link to gh source (if it also persisted in model) with params', () => {
+            return shouldRewriteFromTo(
+                '<a href="https://github.com/org/user/blob/ref/some-path2"></a>',
+                '<a href="/bem.info/en/url2/"></a>',
+                params
+            );
+        });
+
+        it('should replace relative link to gh source (if it also persisted in model) with params', () => {
+            return shouldRewriteFromTo(
+                '<a href="./some-path2"></a>',
+                '<a href="/bem.info/en/url2/"></a>',
+                params
+            );
+        });
+
+            it('should replace relative link (with anchor) to gh source with params', () => {
+            return shouldRewriteFromTo(
+                '<a href="./some-path2#anchor"></a>',
+                '<a href="/bem.info/en/url2/#anchor"></a>',
+                params
+            );
+        });
+
+        it('should rewrite params.host with params.root', () => {
+            return shouldRewriteFromTo(
+                '<a href="https://en.bem.info/methodology/"></a>',
+                '<a href="/bem.info/en/methodology/"></a>',
+                params
+            );
         });
 
         it('should left original link if replacement was not found', () => {
