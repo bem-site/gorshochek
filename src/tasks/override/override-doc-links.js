@@ -22,7 +22,7 @@ const debug = require('debug')('override-doc-links');
  *    .then(tasks.core.mergeModels(model, {modelPath: './examples/model.ru.json'}))
  *    .then(tasks.docs.loadSourcesFromLocal(model))
  *    .then(tasks.docs.transformMdToHtml(model))
- *    .then(tasks.override.overrideDocLinks(model))
+ *    .then(tasks.override.overrideDocLinks(model, {host: 'https://en.bem.info', root: '/bem.info/en'}))
  *    .then(tasks.core.saveModel(model))
  *    .then(tasks.core.rsync(model, {
  *        dest: './data',
@@ -30,7 +30,7 @@ const debug = require('debug')('override-doc-links');
  *    }))
  *    .done();
  */
-module.exports = (model) => {
+module.exports = (model, params) => {
     /**
      * Returns true if page satisfies criteria. Otherwise returns fals
      * @param {Object} page - model page object
@@ -70,6 +70,11 @@ module.exports = (model) => {
     function findLinkHrefReplacement(linkHref, page, sourceUrlsMap, existedUrls) {
         const _linkHref = linkHref;
 
+        // If URL starts with `https://${lang}.bem.info` replace it with `root`
+        if(params && params.host && linkHref.indexOf(params.host) === 0) {
+            return linkHref.replace(params.host, params.root)
+        }
+
         // Не уверен, что этот код понадобиться.
         // Пока оставлю его здесь
         /*
@@ -104,12 +109,11 @@ module.exports = (model) => {
         const replacement = util.findReplacement(variants, sourceUrlsMap, existedUrls);
 
         if(replacement) {
-            linkHref = replacement;
+            linkHref = params && params.root ? params.root + replacement : replacement;
             debug(`Replace from: ${_linkHref} to: ${linkHref}`);
         }
 
         if(anchor) {
-            linkHref = linkHref.replace(/\/$/, '');
             linkHref = Url.format(_.merge(Url.parse(linkHref), {hash: anchor}));
         }
         return linkHref;
@@ -174,7 +178,7 @@ module.exports = (model) => {
             $(this).attr('src', findImageSourceReplacement($(this).attr('src'), page));
         });
         */
-        return $.html();
+        return $.html().replace(/ —/g, ' —'); // TODO: move to separate task
     }
 
     /**
