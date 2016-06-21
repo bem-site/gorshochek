@@ -21,7 +21,7 @@ const DEFAULT_MARKED_OPTIONS = {
  * Transforms page content source files from markdown format to html
  * @param {Model} model - application model instance
  * @param {Object} options - task options
- * @param {Object} [options.markedOptions] - marked options for markdown parsing
+ * @param {Function} [options.markedOptionsFunc] - function, which returns marked options for markdown parsing
  * @param {Number} [options.concurrency] - number of pages processed at the same time
  * @returns {Function}
  * @example
@@ -41,10 +41,7 @@ const DEFAULT_MARKED_OPTIONS = {
  */
 module.exports = (model, options) => {
     options = options || {};
-    options.markedOptions = options.markedOptions || {};
     options.concurrency = options.concurrency || 20;
-
-    marked.setOptions(_.merge(DEFAULT_MARKED_OPTIONS, options.markedOptions));
 
     /**
      * Returns true if given page has contentFile field
@@ -63,7 +60,11 @@ module.exports = (model, options) => {
      * @returns {Promise}
      */
     function transform(page, md) {
-        return Q.denodeify(marked)(md)
+        var markedOptions = options.markedOptionsFunc ?
+            _.merge(DEFAULT_MARKED_OPTIONS, options.markedOptionsFunc()) :
+            DEFAULT_MARKED_OPTIONS;
+
+        return Q.denodeify(marked)(md, markedOptions)
             .catch(error => {
                 console.error(`Error occur while transform md -> html for page: ${page.url}`);
                 console.error(error.stack);
