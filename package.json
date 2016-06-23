@@ -1,6 +1,6 @@
 {
   "name": "gorshochek",
-  "version": "2.5.1",
+  "version": "2.6.0",
   "description": "Set of plugins for BEM site data generation",
   "keywords": [
     "BEM",
