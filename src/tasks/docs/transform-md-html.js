@@ -41,10 +41,8 @@ const DEFAULT_MARKED_OPTIONS = {
  */
 module.exports = (model, options) => {
     options = options || {};
-    options.markedOptions = options.markedOptions || {};
+    options.markedOptions = _.merge(DEFAULT_MARKED_OPTIONS, options.markedOptions || {});
     options.concurrency = options.concurrency || 20;
-
-    marked.setOptions(_.merge(DEFAULT_MARKED_OPTIONS, options.markedOptions));
 
     /**
      * Returns true if given page has contentFile field
@@ -63,7 +61,9 @@ module.exports = (model, options) => {
      * @returns {Promise}
      */
     function transform(page, md) {
-        return Q.denodeify(marked)(md)
+        options.markedOptions.slugger && options.markedOptions.slugger.reset();
+
+        return Q.denodeify(marked)(md, options.markedOptions)
             .catch(error => {
                 console.error(`Error occur while transform md -> html for page: ${page.url}`);
                 console.error(error.stack);
