@@ -71,6 +71,14 @@ module.exports = (model, options) => {
             });
     }
 
+    function processHTML(page, html) {
+        if (options.processHTML) {
+            return options.processHTML(page, html);
+        }
+
+        return html;
+    }
+
     /**
      * Transform md content of page source file into html syntax
      * @param {Model} model - data model
@@ -85,6 +93,7 @@ module.exports = (model, options) => {
         return Q(sourceFilePath)
             .then(baseUtil.readFileFromCache.bind(baseUtil))
             .then(transform.bind(null, page))
+            .then(processHTML.bind(null, page))
             .then(baseUtil.writeFileToCache.bind(baseUtil, htmlFilePath))
             .then(() => {
                 page.contentFile = htmlFilePath;
