@@ -28,8 +28,8 @@ describe('GithubAPI', () => {
 
     it('should show warning message if token for public API was not set', () => {
         githubAPI = new GithubAPI();
-        console.warn.firstCall.should.be.calledWith('No github authorization token were set. ' +
-            'Number of requests will be limited by 60 requests per hour according to API rules')
+        console.warn.firstCall.should.be.calledWith(`No github authorization token were set.
+                Number of requests will be limited by 60 requests per hour according to API rules`);
     });
 
     it('should execute github API method and return result', function(done) {

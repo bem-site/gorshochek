@@ -27,6 +27,7 @@ const debug = require('debug')('docs github load');
  *    .then(tasks.core.mergeModels(model, {modelPath: './examples/model.ru.json'}))
  *    .then(tasks.docs.loadSourcesFromGithub(model, {
  *        token: 'your github token',
+ *        githubHosts: [{ host: 'api.github.company.com', url: 'github.company.com' }],
  *        updateDate: true,
  *        hasIssues: true,
  *        branch: true
@@ -42,7 +43,13 @@ module.exports = (model, options) => {
     options = options || {};
 
     const GITHUB_URL_REGEXP = /^https?:\/\/(.+?)\/(.+?)\/(.+?)\/(tree|blob)\/(.+?)\/(.+)/;
-    const api = new GitHub({token: options.token});
+    const githubOptions = {token: options.token};
+
+    if (options.githubHosts) {
+        githubOptions.githubHosts = options.githubHosts;
+    }
+
+    const api = new GitHub(githubOptions);
 
     /**
      * Checks if given page source is GH
