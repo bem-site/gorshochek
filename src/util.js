@@ -134,14 +134,18 @@ exports.loadFileToCacheFromUrl = (url, filePath, fallbackValue) => {
 
     const fullPath = path.join(this.getCacheFolder(), filePath);
     const defer = Q.defer();
+
+    function onError(error) {
+        console.error(`Error occurred while loading: ${url}`);
+        console.error(error.stack);
+        defer.resolve(fallbackValue);
+    }
+
     got.stream(url)
+        .on('error', onError)
         .pipe(fs.createWriteStream(fullPath))
         .on('close', () => defer.resolve(filePath))
-        .on('error', error => {
-            console.error(`Error occurred while loading: ${url}`);
-            console.error(error.stack);
-            defer.resolve(fallbackValue);
-        });
+        .on('error', onError);
 
     return defer.promise;
 };
