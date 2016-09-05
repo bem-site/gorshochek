@@ -21,7 +21,16 @@ class Github {
 
         const githubHosts = options.githubHosts || [];
         this._apis = githubHosts.reduce((prev, item) => {
-            prev[item.host] = new Api(_.extend(item, defaultParams));
+            const url = item.url;
+            delete item.url;
+
+            prev[url] = new Api(_.extend(item, defaultParams));
+
+            options.token ?
+                prev[url].authenticate({type: 'oauth', token: options.token}) :
+                console.warn(`No github authorization token were set.
+                    Number of requests will be limited by 60 requests per hour according to API rules`);
+
             return prev;
         }, {public: this._initPublicAPI(options, defaultParams)});
     }
@@ -37,13 +46,11 @@ class Github {
         const publicAPI = new Api(_.extend({host: 'api.github.com'}, defaultParams));
         const token = options.token;
 
-        if(!token) {
-            console.warn('No github authorization token were set. ' +
-                'Number of requests will be limited by 60 requests per hour according to API rules');
-            return;
-        }
+        token ?
+            publicAPI.authenticate({type: 'oauth', token}) :
+            console.warn(`No github authorization token were set.
+                Number of requests will be limited by 60 requests per hour according to API rules`);
 
-        publicAPI['authenticate']({type: 'oauth', token});
         return publicAPI;
     }
 
@@ -66,10 +73,10 @@ class Github {
         debug(' - ref: ' + options.ref);
         debug(' - path: ' + options.path);
 
-        const api = this._apis[options.host] || this._apis['public'];
+        const api = this._apis[options.host] || this._apis.public;
         const requestFunc = (count) => {
             debug(`attempt #${count}`);
-            return api['repos'][method](_.extend(headers ? {headers} : {}, options),
+            return api.repos[method](_.extend(headers ? {headers} : {}, options),
                 (error, result) => {
                     if(!error) {
                         return callback(null, result);
