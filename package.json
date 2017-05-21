@@ -1,6 +1,6 @@
 {
   "name": "gorshochek",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "description": "Set of plugins for BEM site data generation",
   "keywords": [
     "BEM",
@@ -56,11 +56,11 @@
     "url": "https://github.com/bem-site/gorshochek/blob/master/LICENSE"
   },
   "dependencies": {
-    "borschik": "^1.5.3",
-    "freeze": "vithar/freeze",
+    "borschik-hash": "^1.1.1",
     "cheerio": "^0.20.0",
     "debug": "^2.2.0",
     "deep-diff": "^0.3.x",
+    "freeze": "vithar/freeze",
     "fs-extra": "^0.26.x",
     "github": "^0.2.4",
     "got": "^6.1.1",
