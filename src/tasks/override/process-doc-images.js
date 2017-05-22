@@ -5,7 +5,7 @@ const Path = require('path');
 const Url = require('url');
 const _ = require('lodash');
 const Q = require('q');
-const freeze = require('borschik/lib/freeze');
+const borschikHash = require('borschik-hash');
 const cheerio = require('cheerio');
 const baseUtil = require('../../util');
 const util = require('./util');
@@ -68,7 +68,7 @@ module.exports = (model, options) => {
         }
 
         // FIXME: freeze file content, not imageUrl !!!
-        const freezeFileName = freeze.fixBase64(freeze.sha1Base64(imageUrl)) + Path.extname(imageUrl);
+        const freezeFileName = borschikHash(imageUrl) + Path.extname(imageUrl);
         const filePath = Path.join(options.imageFolder, freezeFileName).split('?')[0];
 
         debug(`load image from: ${imageUrl} to: ${filePath}`);
