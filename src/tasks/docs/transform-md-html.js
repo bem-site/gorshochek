@@ -1,27 +1,22 @@
 'use strict';
 
-const path = require('path');
 const Q = require('q');
 const _ = require('lodash');
-const marked = require('marked');
-const baseUtil = require('../../util');
+const path = require('path');
+const hljs = require('highlight.js');
+const bemhtml = require('bem-xjst').bemhtml;
+const slugger = new (require('github-slugger'))();
+const mdToBemjson = require('md-to-bemjson');
 
-const DEFAULT_MARKED_OPTIONS = {
-    renderer: new marked.Renderer(),
-    gfm: true,
-    tables: true,
-    breaks: false,
-    pedantic: false,
-    sanitize: false,
-    smartLists: true,
-    smartypants: false
-};
+const baseUtil = require('../../util');
 
 /**
  * Transforms page content source files from markdown format to html
  * @param {Model} model - application model instance
  * @param {Object} options - task options
- * @param {Object} [options.markedOptions] - marked options for markdown parsing
+ * @param {Object} [options.mdToBemjson] - md-to-bemjson options
+ * @param {Function} [options.templates] - bem-xjst templates
+ * @param {Function} [options.processHTML] - function to process HTML before saving to file
  * @param {Number} [options.concurrency] - number of pages processed at the same time
  * @returns {Function}
  * @example
@@ -41,7 +36,6 @@ const DEFAULT_MARKED_OPTIONS = {
  */
 module.exports = (model, options) => {
     options = options || {};
-    options.markedOptions = _.merge(DEFAULT_MARKED_OPTIONS, options.markedOptions || {});
     options.concurrency = options.concurrency || 20;
 
     /**
@@ -55,15 +49,15 @@ module.exports = (model, options) => {
     }
 
     /**
-     * Transforms source text into html syntax.
+     * Transforms source text into BEMJSON.
      * @param {Object} page - page object
      * @param {String} md - markdown content of page
      * @returns {Promise}
      */
-    function transform(page, md) {
-        options.markedOptions.slugger && options.markedOptions.slugger.reset();
+    function transformToBemjson(page, md) {
+        slugger.reset();
 
-        return Q.denodeify(marked)(md, options.markedOptions)
+        return Q(mdToBemjson.convert(md, options.mdToBemjson))
             .catch(error => {
                 console.error(`Error occur while transform md -> html for page: ${page.url}`);
                 console.error(error.stack);
@@ -71,6 +65,24 @@ module.exports = (model, options) => {
             });
     }
 
+    /**
+     * Transforms BEMJSON into html syntax.
+     * @param {Object} page - page object
+     * @param {Object} bemjson - bemjson content of page
+     * @returns {String}
+     */
+    function transformToHtml(page, bemjson) {
+        bemjson.hljs = hljs;
+        bemjson.slugger = slugger;
+
+        return (options.templates || bemhtml.compile(function() {})).apply(bemjson);
+    }
+
+    /**
+     * @param {Object} page - page object
+     * @param {String} html - html content of page
+     * @returns {String}
+     */
     function processHTML(page, html) {
         if (options.processHTML) {
             return options.processHTML(page, html);
@@ -89,15 +101,31 @@ module.exports = (model, options) => {
         const sourceFilePath = page.contentFile;
         const mdFileDirectory = path.dirname(sourceFilePath);
         const htmlFilePath = path.join(mdFileDirectory, 'index.html');
+        const bemjsonFilePath = path.join(mdFileDirectory, 'index.bemjson.js');
 
         return Q(sourceFilePath)
             .then(baseUtil.readFileFromCache.bind(baseUtil))
-            .then(transform.bind(null, page))
-            .then(processHTML.bind(null, page))
-            .then(baseUtil.writeFileToCache.bind(baseUtil, htmlFilePath))
-            .then(() => {
-                page.contentFile = htmlFilePath;
-                return page;
+            .then(transformToBemjson.bind(null, page))
+            .then(bemjson => {
+                return Q.all([
+                    baseUtil.writeFileToCache(
+                        bemjsonFilePath,
+                        'module.exports = ' + JSON.stringify(bemjson, null, 2) + ';'
+                    ),
+                    baseUtil.writeFileToCache(
+                        htmlFilePath,
+                        processHTML(page, transformToHtml(page, bemjson))
+                    ),
+                    () => {
+                        page.contentFile = htmlFilePath;
+                        page.contentBemjsonFile = bemjsonFilePath;
+                    }
+                ]);
+            })
+            .catch(error => {
+                console.error(`Error occur while transform md -> html for page: ${page.url}`);
+                console.error(error.stack);
+                throw error;
             });
     }
 
