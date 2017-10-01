@@ -121,7 +121,7 @@ module.exports = (model, options) => {
                         page.contentBemjsonFile = bemjsonFilePath;
                     }
                 ]);
-            })
+            }).then(() => page)
             .catch(error => {
                 console.error(`Error occur while transform md -> html for page: ${page.url}`);
                 console.error(error.stack);
