@@ -5,6 +5,7 @@ const _ = require('lodash');
 const path = require('path');
 const hljs = require('highlight.js');
 const bemhtml = require('bem-xjst').bemhtml;
+const bemhtmlTemplates = bemhtml.compile();
 const slugger = new (require('github-slugger'))();
 const mdToBemjson = require('md-to-bemjson');
 
@@ -49,33 +50,26 @@ module.exports = (model, options) => {
     }
 
     /**
-     * Transforms source text into BEMJSON.
+     * Transforms BEMJSON into html syntax.
      * @param {Object} page - page object
-     * @param {String} md - markdown content of page
-     * @returns {Promise}
+     * @param {Object} md - markdown content of page
+     * @returns {String}
      */
-    function transformToBemjson(page, md) {
+    function transform(page, md) {
         slugger.reset();
 
         return Q(mdToBemjson.convert(md, options.mdToBemjson))
+            .then(bemjson => {
+                bemjson.hljs = hljs;
+                bemjson.slugger = slugger;
+
+                return (options.templates || bemhtmlTemplates).apply(bemjson);
+            })
             .catch(error => {
                 console.error(`Error occur while transform md -> html for page: ${page.url}`);
                 console.error(error.stack);
                 throw error;
             });
-    }
-
-    /**
-     * Transforms BEMJSON into html syntax.
-     * @param {Object} page - page object
-     * @param {Object} bemjson - bemjson content of page
-     * @returns {String}
-     */
-    function transformToHtml(page, bemjson) {
-        bemjson.hljs = hljs;
-        bemjson.slugger = slugger;
-
-        return (options.templates || bemhtml.compile(function() {})).apply(bemjson);
     }
 
     /**
@@ -101,31 +95,15 @@ module.exports = (model, options) => {
         const sourceFilePath = page.contentFile;
         const mdFileDirectory = path.dirname(sourceFilePath);
         const htmlFilePath = path.join(mdFileDirectory, 'index.html');
-        const bemjsonFilePath = path.join(mdFileDirectory, 'index.bemjson.js');
-
-        page.contentFile = htmlFilePath;
-        page.contentBemjsonFile = bemjsonFilePath;
 
         return Q(sourceFilePath)
             .then(baseUtil.readFileFromCache.bind(baseUtil))
-            .then(transformToBemjson.bind(null, page))
-            .then(bemjson => {
-                return Q.all([
-                    baseUtil.writeFileToCache(
-                        bemjsonFilePath,
-                        'module.exports = ' + JSON.stringify(bemjson, null, 2) + ';'
-                    ),
-                    baseUtil.writeFileToCache(
-                        htmlFilePath,
-                        processHTML(page, transformToHtml(page, bemjson))
-                    )
-                ]);
-            })
-            .then(() => page)
-            .catch(error => {
-                console.error(`Error occur while transform md -> html for page: ${page.url}`);
-                console.error(error.stack);
-                throw error;
+            .then(transform.bind(null, page))
+            .then(processHTML.bind(null, page))
+            .then(baseUtil.writeFileToCache.bind(baseUtil, htmlFilePath))
+            .then(() => {
+                page.contentFile = htmlFilePath;
+                return page;
             });
     }
 
