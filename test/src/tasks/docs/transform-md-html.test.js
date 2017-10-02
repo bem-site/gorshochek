@@ -59,10 +59,10 @@ describe('tasks/docs/transform-md-html', () => {
         });
     });
 
-    it.skip('should update "contentFile" property of page model', () => {
+    it('should update "contentFile" property of page model', () => {
         model.setPages([{url: '/url1/', contentFile: '/foo/some-content.md'}]);
         return transformMdToHtml(model)().then(() => {
-            model.getPages()[0].contentFile.should.equal('/foo/index.md');
+            model.getPages()[0].contentFile.should.equal('/foo/index.html');
         });
     });
 
@@ -86,7 +86,7 @@ describe('tasks/docs/transform-md-html', () => {
             });
         });
 
-        it('should not update contentFile field', () => {
+        it.skip('should not update contentFile field', () => {
             return transformMdToHtml(model)().then(() => {
                 model.getPages()[0].contentFile.should.equal('/foo/some-content.md');
             });

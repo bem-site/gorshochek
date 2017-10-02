@@ -103,6 +103,9 @@ module.exports = (model, options) => {
         const htmlFilePath = path.join(mdFileDirectory, 'index.html');
         const bemjsonFilePath = path.join(mdFileDirectory, 'index.bemjson.js');
 
+        page.contentFile = htmlFilePath;
+        page.contentBemjsonFile = bemjsonFilePath;
+
         return Q(sourceFilePath)
             .then(baseUtil.readFileFromCache.bind(baseUtil))
             .then(transformToBemjson.bind(null, page))
@@ -115,13 +118,10 @@ module.exports = (model, options) => {
                     baseUtil.writeFileToCache(
                         htmlFilePath,
                         processHTML(page, transformToHtml(page, bemjson))
-                    ),
-                    () => {
-                        page.contentFile = htmlFilePath;
-                        page.contentBemjsonFile = bemjsonFilePath;
-                    }
+                    )
                 ]);
-            }).then(() => page)
+            })
+            .then(() => page)
             .catch(error => {
                 console.error(`Error occur while transform md -> html for page: ${page.url}`);
                 console.error(error.stack);
