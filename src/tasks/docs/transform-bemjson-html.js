@@ -4,7 +4,7 @@ const Q = require('q');
 const path = require('path');
 const hljs = require('highlight.js');
 const bemhtml = require('bem-xjst').bemhtml;
-const bemhtmlTemplates = bemhtml.compile();
+const bemhtmlTemplates = bemhtml.compile('', { escapeContent: false });
 const slugger = new (require('github-slugger'))();
 
 const baseUtil = require('../../util');
