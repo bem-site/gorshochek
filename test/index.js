@@ -30,6 +30,7 @@ require('./src/tasks/page/header-title.test');
 require('./src/tasks/page/header-meta.test');
 require('./src/tasks/page/breadcrumbs.test');
 require('./src/tasks/page/search-meta.test');
+require('./src/tasks/page/aliases.test');
 
 require('./src/tasks/sitemap/sitemap-xml.test');
 

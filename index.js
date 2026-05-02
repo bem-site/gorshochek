@@ -29,7 +29,8 @@ module.exports = {
             createHeaderTitle: require('./src/tasks/page/header-title'),
             createHeaderMeta: require('./src/tasks/page/header-meta'),
             createBreadcrumbs: require('./src/tasks/page/breadcrumbs'),
-            createSearchMeta: require('./src/tasks/page/search-meta')
+            createSearchMeta: require('./src/tasks/page/search-meta'),
+            createAliasPages: require('./src/tasks/page/aliases')
         },
         override: {
             overrideDocLinks: require('./src/tasks/override/override-doc-links'),
