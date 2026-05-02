@@ -53,7 +53,7 @@ function _readFile(method, filePath, fallbackValue) {
             if(fallbackValue && error.code === 'ENOENT') {
                 return fallbackValue;
             }
-            console.error(`Can\'t read file ${filePath}`);
+            console.error(`Can't read file ${filePath}`);
             throw error;
         });
 }

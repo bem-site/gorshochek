@@ -163,6 +163,11 @@ module.exports = function(model, options = {}) {
 npm test
 ```
 
+Проверка синтаксиса кода с помощью [ESLint](https://eslint.org):
+```bash
+npm run lint
+```
+
 Особая благодарность за помощь в разработке:
 
 * Гриненко Владимир (http://github.com/tadatuta)
