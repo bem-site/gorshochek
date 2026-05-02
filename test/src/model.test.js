@@ -62,6 +62,16 @@ describe('Model', () => {
             model.setPages([{url: '/url1'}]);
             model.getPages().should.be.eql([{url: '/url1'}]);
         });
+
+        it('should expose pages as plain JavaScript object', () => {
+            model.setPages([{url: '/url1'}, {url: '/url2'}]);
+            model.toJSON().should.be.eql([{url: '/url1'}, {url: '/url2'}]);
+        });
+
+        it('should serialize to pages array', () => {
+            model.setPages([{url: '/url1'}]);
+            JSON.stringify(model).should.equal('[{"url":"/url1"}]');
+        });
     });
 
     describe('merge models', () => {

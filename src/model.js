@@ -108,6 +108,14 @@ class Model {
     }
 
     /**
+     * Returns plain JavaScript representation of model pages.
+     * @returns {Array|*}
+     */
+    toJSON() {
+        return this.getPages();
+    }
+
+    /**
      * Sets array of pages
      * @param {Array} pages array
      * @returns {Model}
