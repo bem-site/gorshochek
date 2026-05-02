@@ -158,14 +158,9 @@ module.exports = function(model, options = {}) {
 
 ## Тестирование
 
-Запуск тестов с вычислением покрытия кода тестами с помощью инструмента [istanbul](https://www.npmjs.com/package/istanbul):
+Запуск тестов с вычислением покрытия кода:
 ```bash
 npm test
-```
-
-Проверка синтаксиса кода с помощью [eslint](http://eslint.org) и [jscs](https://www.npmjs.com/package/jscs)
-```bash
-npm run lint
 ```
 
 Особая благодарность за помощь в разработке:
