@@ -8,6 +8,25 @@ const baseUtil = require('../../util');
 const debug = require('debug')('full-bem');
 
 /**
+ * Resolves an asset URL passed to `freeze` in BEMHTML templates.
+ *
+ * Returns external (`scheme:`, `//host`), root-relative (`/`) and fragment
+ * (`#`) URLs unchanged. Bare names like `foo.jpg` get a leading `/` so they
+ * resolve against the site root rather than the current page directory; this
+ * is what consumers of gorshochek expect when they copy static assets next to
+ * the language root and post-process absolute URLs into relative ones.
+ *
+ * @param {String} url
+ * @returns {String}
+ */
+function freezeUrl(url) {
+    if(!url || /^([a-z][a-z0-9+.-]*:|\/\/|\/|#)/i.test(url)) {
+        return url;
+    }
+    return '/' + url;
+}
+
+/**
  * Applies BEMTREE + BEMHTML templates to each of model pages
  * Saves result html to destination dir
  * @param {Model} model - application model instance
@@ -54,10 +73,7 @@ module.exports = function(model, options) {
         return BEMHTML.apply({
             block: 'root',
             content: bemjson,
-            freeze(url) {
-                // Return relative URL: static assets are copied alongside HTML.
-                return url;
-            }
+            freeze: freezeUrl
         });
     }
 
@@ -152,3 +168,5 @@ module.exports = function(model, options) {
             .thenResolve(model);
     };
 };
+
+module.exports.freezeUrl = freezeUrl;

@@ -8,6 +8,7 @@ const baseUtil = require('../../../../src/util');
 const BEMTREE = require('../../../stub/bemtree').BEMTREE;
 const BEMHTML = require('../../../stub/bemhtml').BEMHTML;
 const applyBEM = require('../../../../index').tasks.template.applyBEM;
+const {freezeUrl} = require('../../../../src/tasks/template/full-bem');
 
 describe('tasks/template/full-bem', () => {
     const sandbox = sinon.sandbox.create();
@@ -174,6 +175,45 @@ describe('tasks/template/full-bem', () => {
         return applyBEM(model, options)().then(() => {
             baseUtil.writeFile.should.be.calledOnce;
             baseUtil.writeFile.should.be.calledWith('output/url1/index.html', 'some-html');
+        });
+    });
+
+    it('should pass freeze function which makes bare asset names root-relative', () => {
+        return applyBEM(model, options)().then(() => {
+            const ctx = BEMHTML.apply.firstCall.args[0];
+            ctx.freeze.should.be.a('function');
+            ctx.freeze('foo.jpg').should.equal('/foo.jpg');
+        });
+    });
+
+    describe('freezeUrl', () => {
+        it('should add a leading slash to a bare asset name', () => {
+            freezeUrl('foo.jpg').should.equal('/foo.jpg');
+            freezeUrl('people/harry-roberts.jpg').should.equal('/people/harry-roberts.jpg');
+        });
+
+        it('should leave root-relative URLs unchanged', () => {
+            freezeUrl('/foo.jpg').should.equal('/foo.jpg');
+        });
+
+        it('should leave protocol-qualified URLs unchanged', () => {
+            freezeUrl('https://example.com/foo.jpg').should.equal('https://example.com/foo.jpg');
+            freezeUrl('http://example.com/foo.jpg').should.equal('http://example.com/foo.jpg');
+            freezeUrl('data:image/png;base64,AAAA').should.equal('data:image/png;base64,AAAA');
+        });
+
+        it('should leave protocol-relative URLs unchanged', () => {
+            freezeUrl('//cdn.example.com/foo.jpg').should.equal('//cdn.example.com/foo.jpg');
+        });
+
+        it('should leave fragment URLs unchanged', () => {
+            freezeUrl('#anchor').should.equal('#anchor');
+        });
+
+        it('should pass empty values through', () => {
+            freezeUrl('').should.equal('');
+            (freezeUrl(undefined) === undefined).should.be.true;
+            (freezeUrl(null) === null).should.be.true;
         });
     });
 });
