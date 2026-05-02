@@ -31,6 +31,22 @@ $ npm install --save gorshochek
 Экземпляр модели можно получить как обычный JavaScript-массив страниц через `model.toJSON()`.
 Этот же метод используется при `JSON.stringify(model)`.
 
+Для записей модели с `type: "lib"` можно сгенерировать страницы версий, документов и блоков
+из заранее подготовленных локальных checkout'ов библиотек:
+
+```js
+Q()
+   .then(tasks.core.mergeModels(model, {modelPath: './examples/model.ru.json'}))
+   .then(tasks.libraries.createLibraryPages(model, {
+       libsPath: './.cache/libs',
+       language: 'ru'
+   }))
+   .then(tasks.core.saveModel(model));
+```
+
+По умолчанию задача ожидает директории вида `./.cache/libs/<library>-<version>`.
+Checkout можно подключить отдельно через опцию `checkoutLibrary`.
+
 ## Спецификация модели данных
 
 Модель данных описывается в JSON-файле, который должен содержать массив объектов, каждый из которых представляет

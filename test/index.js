@@ -19,6 +19,8 @@ require('./src/tasks/docs/load-from-file.test');
 require('./src/tasks/docs/load-from-http.test');
 require('./src/tasks/docs/transform-md-html.test');
 
+require('./src/tasks/libraries/create-pages.test');
+
 require('./src/tasks/meta/tags.test');
 
 require('./src/tasks/override/util.test');

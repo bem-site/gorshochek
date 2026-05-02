@@ -25,6 +25,9 @@ module.exports = {
         meta: {
             generateTagPages: require('./src/tasks/meta/tags')
         },
+        libraries: {
+            createLibraryPages: require('./src/tasks/libraries/create-pages')
+        },
         page: {
             createHeaderTitle: require('./src/tasks/page/header-title'),
             createHeaderMeta: require('./src/tasks/page/header-meta'),
